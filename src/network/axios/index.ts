@@ -40,7 +40,7 @@ class MyAxios {
       (error) => {
         console.log(`axios error`, error)
         return Promise.reject(error)
-      },
+      }
     )
 
     this.axiosInstance.interceptors.response.use(
@@ -79,7 +79,7 @@ class MyAxios {
           }*/
 
         return Promise.reject(error)
-      },
+      }
     )
   }
 
@@ -104,7 +104,7 @@ class MyAxios {
     return this.axiosInstance.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
-      signal: controller ? controller.signal : undefined, //用于文件上传可以取消  只需在外部调用controller.abort()即可。 参考//https://juejin.cn/post/6954919023205154824
+      signal: controller ? controller.signal : undefined //用于文件上传可以取消  只需在外部调用controller.abort()即可。 参考//https://juejin.cn/post/6954919023205154824
     })
   }
 
@@ -121,7 +121,7 @@ class MyAxios {
     return this.axiosInstance.post(url, fileArrayBuffer, {
       headers: { 'Content-Type': 'application/octet-stream' },
       onUploadProgress,
-      signal: controller ? controller.signal : undefined,
+      signal: controller ? controller.signal : undefined
     })
   }
 
@@ -133,7 +133,7 @@ class MyAxios {
           params: data,
           responseType: 'blob',
           onDownloadProgress,
-          signal: controller ? controller.signal : undefined,
+          signal: controller ? controller.signal : undefined
         })
         .then((res) => {
           const blob = new Blob([res.data])
