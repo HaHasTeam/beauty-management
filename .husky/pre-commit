@@ -6,3 +6,4 @@ echo "FORMATING"
 npm run format
 echo "BUILDING"
 npm run build
+git add . 

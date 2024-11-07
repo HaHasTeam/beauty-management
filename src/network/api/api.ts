@@ -4,7 +4,7 @@ import { getCanvasData } from './api-params-moudle'
 import { GetCityTotal } from './api-res-model'
 
 enum APIS {
-  GET_CITY_TOTAL_NUMBER = '/xxxx/xxxx/xxxxx',
+  GET_CITY_TOTAL_NUMBER = '/xxxx/xxxx/xxxxx'
 }
 
 export const getCityTotalNumber = (params: getCanvasData) =>
