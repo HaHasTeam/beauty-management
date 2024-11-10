@@ -49,18 +49,23 @@ const UploadFileModal = <T extends FieldValues>({ Trigger, dropZoneConfigOptions
 
     const files: File[] = []
     if (typeof field?.value === 'string') {
-      createFile(field?.value).then((file) => {
-        files.push(file)
-        setFiles(files)
-      })
-    }
-    if (Array.isArray(field?.value)) {
-      const filesPromise = field.value.map((file: string) => {
-        return createFile(file)
-      })
-      Promise.all(filesPromise).then((files) => {
-        setFiles(files)
-      })
+      if ((field?.value == '' && field?.value.length !== 1) || (field?.value !== '' && field?.value.length === 0)) {
+        createFile(field?.value).then((file) => {
+          files.push(file)
+          setFiles(files)
+        })
+      }
+      if (Array.isArray(field?.value)) {
+        if (field?.value.length === files.length) {
+          return
+        }
+        const filesPromise = field.value.map((file: string) => {
+          return createFile(file)
+        })
+        Promise.all(filesPromise).then((files) => {
+          setFiles(files)
+        })
+      }
     }
   }, [field?.value])
 
@@ -104,6 +109,7 @@ const UploadFileModal = <T extends FieldValues>({ Trigger, dropZoneConfigOptions
       }
     }
   }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{Trigger}</DialogTrigger>
