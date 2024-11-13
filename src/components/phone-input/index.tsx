@@ -24,7 +24,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 const PhoneInputWithCountries = (() => {
   return forwardRef<HTMLInputElement, InputProps>(({ ...field }, ref) => {
-    const options = getCountriesOptions()
+    const options = getCountriesOptions().filter((option) => option.value === 'VN')
 
     // You can use a the country of the phone number to set the default country
     const defaultCountry = parsePhoneNumber('+84012345678910')?.country
