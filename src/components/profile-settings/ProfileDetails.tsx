@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { LuSaveAll } from 'react-icons/lu'
 import * as z from 'zod'
 
-import CardSection from '@/components/CardSection'
+import CardSection from '@/components/card-section'
 import FormLabel from '@/components/form-label'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'

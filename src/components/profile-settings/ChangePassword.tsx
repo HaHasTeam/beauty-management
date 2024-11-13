@@ -8,7 +8,7 @@ import FormLabel from '@/components/form-label'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { requiredRegex } from '@/constants/regex'
 
-import CardSection from '../CardSection'
+import CardSection from '../card-section'
 import { PasswordInput } from '../password-input'
 import { Button } from '../ui/button'
 

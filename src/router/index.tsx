@@ -8,7 +8,7 @@ import { RedirectToMainDashboard } from '@/views/dashboard/others'
 import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
-import Home from '@/views/home'
+import Home from '@/views/Home'
 
 export default function RouterProvider() {
   return useRoutes([
