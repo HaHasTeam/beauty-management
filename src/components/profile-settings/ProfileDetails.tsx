@@ -10,26 +10,28 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { emailRegex, requiredRegex } from '@/constants/regex'
+import { defaultRequiredRegex, emailRegex, longRequiredRegex, phoneRegex } from '@/constants/regex'
 import { UserGenderEnum } from '@/types/User'
 
-import { FlexDatePicker } from '../flexible-date-picker/date-picker'
+import { FlexDatePicker } from '../flexible-date-picker/FlexDatePicker'
 import { PhoneInputWithCountries } from '../phone-input'
 
 const formSchema = z.object({
-  firstName: z.string().regex(requiredRegex(1, 255).pattern, requiredRegex(1, 255).message),
-  lastName: z.string().regex(requiredRegex(1, 255).pattern, requiredRegex(1, 255).message),
-  userName: z.string().regex(requiredRegex(1, 255).pattern, requiredRegex(1, 255).message),
+  firstName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message),
+  lastName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message),
+  userName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message),
   email: z
     .string()
-    .regex(requiredRegex(1, 255).pattern, requiredRegex(1, 255).message)
+    .regex(longRequiredRegex.pattern, longRequiredRegex.message)
     .regex(emailRegex.pattern, emailRegex.message),
-  role: z.string().regex(requiredRegex().pattern, requiredRegex().message),
-  gender: z.string().regex(requiredRegex().pattern, requiredRegex().message),
-  phone: z.string().regex(requiredRegex().pattern, requiredRegex().message),
-
-  dob: z.string().regex(requiredRegex().pattern, requiredRegex().message),
-  address: z.string().regex(requiredRegex().pattern, requiredRegex().message)
+  role: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  gender: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  phone: z
+    .string()
+    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+    .refine(phoneRegex.pattern, phoneRegex.message),
+  dob: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  address: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
 })
 
 const ProfileDetails = () => {
@@ -152,12 +154,7 @@ const ProfileDetails = () => {
                 <FormItem>
                   <FormLabel required>Phone Number</FormLabel>
                   <FormControl>
-                    <PhoneInputWithCountries
-                      field={field}
-                      formState={{
-                        ...form
-                      }}
-                    />
+                    <PhoneInputWithCountries {...field} />
                   </FormControl>
                   <FormDescription>This is the phone number that will be displayed on your profile</FormDescription>
                   <FormMessage />

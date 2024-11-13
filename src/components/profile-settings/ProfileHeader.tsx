@@ -1,13 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { MdOutlineChangeCircle, MdPhoto } from 'react-icons/md'
+import { FaCameraRotate } from 'react-icons/fa6'
+import { MdPhoto } from 'react-icons/md'
 import { z } from 'zod'
 
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { requiredRegex } from '@/constants/regex'
 
-import UploadFileModal from '../file-input/file-upload-modal'
+import UploadFileModal from '../file-input/UploadFileModal'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
@@ -21,7 +22,7 @@ const ProfileHeader = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      avatar: ''
+      avatar: 'https://cdn.pixabay.com/photo/2021/12/12/00/54/french-horn-6863917_640.png'
     }
   })
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -43,11 +44,11 @@ const ProfileHeader = () => {
                       <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>A</AvatarFallback>
                       <UploadFileModal
                         field={field}
-                        formState={{
-                          ...form
-                        }}
                         Trigger={
-                          <MdOutlineChangeCircle className='cursor-pointer absolute bottom-3 right-3 hover:scale-150 transition-all shadow-lg duration-500 text-foreground p-0.5 rounded-full bg-primary/80' />
+                          <FaCameraRotate
+                            size={20}
+                            className='cursor-pointer absolute bottom-3 right-3 hover:scale-150 transition-all shadow-lg duration-500 text-foreground p-0.5 rounded-full bg-primary/80'
+                          />
                         }
                       />
                     </Avatar>

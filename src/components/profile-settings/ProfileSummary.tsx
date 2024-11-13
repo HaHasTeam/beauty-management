@@ -1,4 +1,4 @@
-import SummeryItem from '../ Summary/summary-item'
+import SummeryItem from '../ summary/summary-item'
 import CardSection from '../CardSection'
 
 const ProfileSummary = () => {

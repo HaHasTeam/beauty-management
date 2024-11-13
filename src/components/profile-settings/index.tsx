@@ -1,7 +1,7 @@
-import ChangePassword from './change-password'
-import ProfileDetails from './profile-details'
-import ProfileHeader from './profile-header'
-import ProfileSummary from './profile-summary'
+import ChangePassword from './ChangePassword'
+import ProfileDetails from './ProfileDetails'
+import ProfileHeader from './ProfileHeader'
+import ProfileSummary from './ProfileSummary'
 
 const index = () => {
   return (

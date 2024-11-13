@@ -1,7 +1,6 @@
 import { Upload } from 'lucide-react'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
-import { ControllerFieldState, FieldValues, UseFormReturn } from 'react-hook-form'
 import { TbWorldUpload } from 'react-icons/tb'
 
 import {
@@ -13,21 +12,42 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { createFile } from '@/utils/files'
+import { createFiles } from '@/utils/files'
 
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '.'
 
-type UploadFileModalProps<TFieldValues extends FieldValues> = {
+type UploadFileModalProps = {
   Trigger: ReactNode
   dropZoneConfigOptions?: DropzoneOptions
-  field?: React.InputHTMLAttributes<HTMLInputElement>
-  formState?: UseFormReturn<TFieldValues>
-  fieldState?: ControllerFieldState
+  field: React.InputHTMLAttributes<HTMLInputElement>
 }
 
-const UploadFileModal = <T extends FieldValues>({ Trigger, dropZoneConfigOptions, field }: UploadFileModalProps<T>) => {
-  const [files, setFiles] = useState<File[] | null>([])
+const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileModalProps) => {
+  const [files, setFiles] = useState<File[]>([])
   const [isOpen, setIsOpen] = useState(false)
+
+  const { fieldType, fieldValue } = useMemo<{
+    fieldType: 'string' | 'array'
+    fieldValue: string | string[]
+  }>(() => {
+    if (typeof field?.value === 'string') {
+      if (dropZoneConfigOptions?.maxFiles && dropZoneConfigOptions?.maxFiles > 1) {
+        throw new Error('Field value must be an array')
+      }
+
+      return {
+        fieldType: 'string',
+        fieldValue: field?.value as string
+      }
+    } else if (Array.isArray(field?.value)) {
+      return {
+        fieldType: 'array',
+        fieldValue: field?.value as string[]
+      }
+    }
+    throw new Error('Field value must be a string or an array')
+  }, [field?.value, dropZoneConfigOptions?.maxFiles])
+
   const isDragActive = false
   const dropZoneConfig = {
     accept: {
@@ -40,73 +60,95 @@ const UploadFileModal = <T extends FieldValues>({ Trigger, dropZoneConfigOptions
   } satisfies DropzoneOptions
 
   useEffect(() => {
-    if (!field?.value || (Array.isArray(field?.value) && field?.value.length === 0)) {
-      if (field?.value === '' || Array.isArray(field?.value)) {
-        return
-      }
-      throw new Error('Field value must be a string or an array')
-    }
-
-    const files: File[] = []
-    if (typeof field?.value === 'string') {
-      if ((field?.value == '' && field?.value.length !== 1) || (field?.value !== '' && field?.value.length === 0)) {
-        createFile(field?.value).then((file) => {
-          files.push(file)
-          setFiles(files)
-        })
-      }
-      if (Array.isArray(field?.value)) {
-        if (field?.value.length === files.length) {
-          return
+    const transferData = async () => {
+      try {
+        const resultFiles: File[] = []
+        if (fieldType === 'string') {
+          if ((fieldValue == '' && files.length !== 1) || (fieldValue !== '' && files.length === 0)) {
+            if (fieldValue) {
+              const parsedFiles = await createFiles([fieldValue as string])
+              resultFiles.push(...parsedFiles)
+              return setFiles(resultFiles)
+            } else {
+              return setFiles([])
+            }
+          }
         }
-        const filesPromise = field.value.map((file: string) => {
-          return createFile(file)
-        })
-        Promise.all(filesPromise).then((files) => {
-          setFiles(files)
-        })
+        if (Array.isArray(fieldValue)) {
+          if (fieldValue.length === files.length) {
+            return
+          }
+
+          const parsedFiles = await createFiles(fieldValue as string[])
+          resultFiles.push(...parsedFiles)
+          return setFiles(resultFiles)
+        }
+      } catch (error) {
+        console.log(error)
       }
     }
-  }, [field?.value])
+    transferData()
+  }, [fieldValue, fieldType, files.length])
 
-  const convertFileToUrl = (file: File) => {
-    return URL.createObjectURL(file)
+  const convertFileToUrl = async (files: File[]) => {
+    const fileUrls = files.map((file) => {
+      return URL.createObjectURL(file)
+    })
+    return fileUrls
   }
 
-  const onFileDrop = (value: File[] | null) => {
-    setFiles(value)
-    // Check file is string or array
-    // If string, convert to file and set to state
-    if (typeof field?.value === 'undefined' || typeof field?.value == 'string') {
-      // Value must be an array of files
-      if (field?.value) {
-        return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
-      }
-      if (value?.length) {
-        const fileUrl = convertFileToUrl(value[0])
-        return field?.onChange?.(fileUrl as unknown as React.ChangeEvent<HTMLInputElement>)
-      }
-    }
-    // If array, set to state
-    if (Array.isArray(field?.value)) {
-      if (!value) return field?.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
-      if (value.length > field?.value.length) {
-        const fileUrl = convertFileToUrl(value[value.length - 1])
-        return field?.onChange?.([
-          ...(field?.value as string[]),
-          fileUrl
-        ] as unknown as React.ChangeEvent<HTMLInputElement>)
-      } else {
-        const deletedFile = files?.filter((file: File) => {
-          return !value.some((newFile) => newFile.name === file.name)
-        })
-        if (deletedFile && deletedFile.length > 0) {
-          const newFiles = field?.value.filter((file: string) => {
-            return !deletedFile.some((delFile) => delFile.name === file)
-          })
-          field?.onChange?.(newFiles as unknown as React.ChangeEvent<HTMLInputElement>)
+  const onFileDrop = async (newFiles: File[] | null) => {
+    console.log('newFiles', newFiles)
+    setFiles(newFiles || [])
+    const oldFiles = files
+    try {
+      // Check file is string or array
+      // If string, convert to file and set to state
+      if (fieldType === 'string') {
+        // Value must be an array of files
+        if (!newFiles?.length) {
+          return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
+        }
+        if (newFiles?.length) {
+          const fileUrls = await convertFileToUrl(newFiles)
+          console.log('fileUrls', fileUrls)
+
+          return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
+      console.log('oldFiles', oldFiles)
+
+      // If array, set to state
+      if (fieldType === 'array') {
+        if (!newFiles?.length) return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
+
+        if (newFiles.length > oldFiles.length) {
+          const diffedFiles = newFiles.filter((file) => {
+            return !oldFiles?.some((oldFile) => oldFile.name === file.name)
+          })
+
+          const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
+          return field?.onChange?.([
+            ...(field?.value as string[]),
+            ...newDiffedFileUrls
+          ] as unknown as React.ChangeEvent<HTMLInputElement>)
+        } else {
+          const deletedFile = oldFiles.filter((file) => {
+            return !newFiles.some((newFile) => newFile.name === file.name)
+          })
+
+          if (deletedFile.length > 0) {
+            const newAppendFilesUrl = (field?.value as string[]).filter((file) => {
+              return !deletedFile.some((deleted) => deleted.name === file)
+            })
+
+            field?.onChange?.(newAppendFilesUrl as unknown as React.ChangeEvent<HTMLInputElement>)
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Err', error)
+      setFiles(oldFiles)
     }
   }
 

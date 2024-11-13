@@ -1,22 +1,15 @@
 import * as i18nIsoCountries from 'i18n-iso-countries'
 import enCountries from 'i18n-iso-countries/langs/en.json'
-import {
-  type CountryCallingCode,
-  type E164Number,
-  getExampleNumber,
-  isValidPhoneNumber as matchIsValidPhoneNumber,
-  parsePhoneNumber
-} from 'libphonenumber-js'
+import { type CountryCallingCode, type E164Number, getExampleNumber, parsePhoneNumber } from 'libphonenumber-js'
 import examples from 'libphonenumber-js/mobile/examples'
 import * as React from 'react'
 import { forwardRef, useState } from 'react'
-import { ControllerFieldState, FieldValues, UseFormReturn } from 'react-hook-form'
 import PhoneInput, { type Country } from 'react-phone-number-input/input'
 
 import { cn } from '@/lib/utils'
 
 import { Input } from '../ui/input'
-import { ComboboxCountryInput } from './combobox'
+import { ComboboxCountryInput } from './CountryCombobox'
 import { getCountriesOptions, isoToEmoji, replaceNumbersWithZeros } from './helpers'
 
 type CountryOption = {
@@ -27,16 +20,10 @@ type CountryOption = {
 
 i18nIsoCountries.registerLocale(enCountries)
 
-// eslint-disable-next-line
-type InputProps<TFieldValues extends FieldValues> = {
-  field: React.InputHTMLAttributes<HTMLInputElement>
-  formState?: UseFormReturn<TFieldValues>
-  fieldState?: ControllerFieldState
-}
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 const PhoneInputWithCountries = (() => {
-  // eslint-disable-next-line
-  return forwardRef<HTMLInputElement, InputProps<any>>(({ field, formState }, ref) => {
+  return forwardRef<HTMLInputElement, InputProps>(({ ...field }, ref) => {
     const options = getCountriesOptions()
 
     // You can use a the country of the phone number to set the default country
@@ -63,18 +50,6 @@ const PhoneInputWithCountries = (() => {
       setPhoneNumber(value)
 
       field.onChange?.(value as unknown as React.ChangeEvent<HTMLInputElement>)
-      const isValidPhoneNumber = matchIsValidPhoneNumber(phoneNumber ?? '')
-      console.log('isValidPhoneNumber', isValidPhoneNumber)
-
-      if (!isValidPhoneNumber) {
-        console.log(formState?.formState.errors)
-
-        formState?.setError?.(field.name as string, {
-          message: 'Please fill in a valid phone number'
-        })
-      } else {
-        formState?.clearErrors?.(field.name as string)
-      }
     }
 
     return (

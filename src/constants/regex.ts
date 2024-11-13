@@ -1,3 +1,5 @@
+import { isValidPhoneNumber } from 'libphonenumber-js'
+
 export const emailRegex = {
   pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
   message: 'Please enter a valid email address'
@@ -17,6 +19,13 @@ export const passwordRegex = {
 }
 
 export const phoneRegex = {
-  pattern: /^[0-9]{10,15}$/,
-  message: 'Please enter a valid phone number'
+  pattern: (value: string) => {
+    return isValidPhoneNumber(value)
+  },
+  message: 'Please fill in a valid phone number'
 }
+
+export const defaultRequiredRegex = requiredRegex()
+export const longRequiredRegex = requiredRegex(1, 255)
+export const shortRequiredRegex = requiredRegex(1, 50)
+export const mediumRequiredRegex = requiredRegex(1, 100)
