@@ -1,13 +1,13 @@
 import { useRoutes } from 'react-router-dom'
 
 import Layout from '@/components/layout/index'
-import Auth from '@/views/Auth'
-import DashboardHome from '@/views/Dashboard'
-import MerchantsDirectory from '@/views/Dashboard/MerchantsDirectory'
-import { RedirectToMainDashboard } from '@/views/Dashboard/others'
-import RequestsQueue from '@/views/Dashboard/RequestsQueue'
-import ServicesCatalog from '@/views/Dashboard/ServicesCatalog'
-import ProfileSettings from '@/views/Dashboard/Settings'
+import Auth from '@/views/auth'
+import DashboardHome from '@/views/dashboard'
+import MerchantsDirectory from '@/views/dashboard/merchants-directory'
+import { RedirectToMainDashboard } from '@/views/dashboard/others'
+import ProfileSettings from '@/views/dashboard/profile-settings'
+import RequestsQueue from '@/views/dashboard/requests-queue'
+import ServicesCatalog from '@/views/dashboard/service-catalog'
 import Home from '@/views/Home'
 
 export default function RouterProvider() {

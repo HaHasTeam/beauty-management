@@ -1,4 +1,4 @@
-import MerchantsDirectory from '@/components/MerchantsDirectory'
+import MerchantsDirectory from '@/components/merchants-directory'
 
 const index = () => {
   return <MerchantsDirectory />

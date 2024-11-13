@@ -1,8 +1,6 @@
-import { HiOutlineCheck } from 'react-icons/hi'
 import { HiOutlineBellAlert } from 'react-icons/hi2'
 
 import Notification from '@/components/notification'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 
@@ -41,10 +39,6 @@ export default function Settings(props: Props) {
           />
         )
       })}
-
-      <Button className='flex h-full w-full max-w-full mt-6 items-center justify-center rounded-lg px-4 py-4 text-base font-medium'>
-        <HiOutlineCheck className='me-2 h-6 w-6' /> Mark all as read
-      </Button>
     </Card>
   )
 }

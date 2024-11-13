@@ -4,3 +4,9 @@ export type User = {
   email: string
   avatar: string
 }
+
+export enum UserGenderEnum {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other'
+}

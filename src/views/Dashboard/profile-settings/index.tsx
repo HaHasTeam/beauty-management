@@ -1,4 +1,4 @@
-import ProfileSettings from '@/components/profileSettings'
+import ProfileSettings from '@/components/profile-settings'
 
 const index = () => {
   return <ProfileSettings />
