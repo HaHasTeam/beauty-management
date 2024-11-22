@@ -5,6 +5,7 @@ import Auth from '@/views/Auth'
 import DashboardHome from '@/views/Dashboard'
 import MerchantsDirectory from '@/views/Dashboard/merchants-directory'
 import { RedirectToMainDashboard } from '@/views/Dashboard/others'
+import ProductManagement from '@/views/Dashboard/product-management'
 import ProfileSettings from '@/views/Dashboard/profile-settings'
 import RequestsQueue from '@/views/Dashboard/requests-queue'
 import ServicesCatalog from '@/views/Dashboard/service-catalog'
@@ -43,6 +44,10 @@ export default function RouterProvider() {
         {
           path: 'profile-settings',
           element: <ProfileSettings />
+        },
+        {
+          path: '/dashboard/product-management',
+          element: <ProductManagement />
         },
         {
           path: '*',
