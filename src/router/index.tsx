@@ -1,6 +1,9 @@
 import { useRoutes } from 'react-router-dom'
 
 import Layout from '@/components/layout/index'
+import CreateProduct from '@/components/product-management/CreateProduct'
+import UpdateProduct from '@/components/product-management/UpdateProduct'
+import configs from '@/config'
 import Auth from '@/views/Auth'
 import DashboardHome from '@/views/Dashboard'
 import MerchantsDirectory from '@/views/Dashboard/merchants-directory'
@@ -14,11 +17,11 @@ import Home from '@/views/Home'
 export default function RouterProvider() {
   return useRoutes([
     {
-      path: '/',
+      path: configs.routes.home,
       element: <Home />
     },
     {
-      path: '/dashboard',
+      path: configs.routes.dashboard,
       element: <Layout />,
       children: [
         {
@@ -26,37 +29,45 @@ export default function RouterProvider() {
           element: <RedirectToMainDashboard />
         },
         {
-          path: 'home',
+          path: configs.routes.dashboardHome.replace('/dashboard/', ''),
           element: <DashboardHome />
         },
         {
-          path: 'requests-queue',
+          path: configs.routes.requestsQueue.replace('/dashboard/', ''),
           element: <RequestsQueue />
         },
         {
-          path: 'merchants-directory',
+          path: configs.routes.merchantsDirectory.replace('/dashboard/', ''),
           element: <MerchantsDirectory />
         },
         {
-          path: 'services-catalog',
+          path: configs.routes.servicesCatalog.replace('/dashboard/', ''),
           element: <ServicesCatalog />
         },
         {
-          path: 'profile-settings',
+          path: configs.routes.profileSettings.replace('/dashboard/', ''),
           element: <ProfileSettings />
         },
         {
-          path: '/dashboard/product-management',
+          path: configs.routes.productManagement.replace('/dashboard/', ''),
           element: <ProductManagement />
         },
         {
-          path: '*',
+          path: configs.routes.createProduct.replace('/dashboard/', ''),
+          element: <CreateProduct />
+        },
+        {
+          path: configs.routes.updateProduct.replace('/dashboard/', ''),
+          element: <UpdateProduct />
+        },
+        {
+          path: configs.routes.notFound,
           element: <RedirectToMainDashboard />
         }
       ]
     },
     {
-      path: '/auth/*',
+      path: configs.routes.auth,
       element: <Auth />
     }
   ])

@@ -1,3 +1,7 @@
+import { PlusCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
+import configs from '@/config'
 import { IProduct, IProductTable } from '@/types/Product'
 
 import ProductTable from './ProductTable'
@@ -79,7 +83,16 @@ const index = () => {
   }))
 
   return (
-    <div>
+    <div className='flex flex-col space-y-4'>
+      <div className='flex justify-end'>
+        <Link
+          to={configs.routes.createProduct}
+          className='flex gap-2 items-center rounded-lg px-4 p-2 bg-primary text-primary-foreground hover:text-primary-foreground hover:bg-primary/80'
+        >
+          <PlusCircle />
+          Create Product
+        </Link>
+      </div>
       <ProductTable tableData={tableData} />
     </div>
   )
