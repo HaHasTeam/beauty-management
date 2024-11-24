@@ -3,29 +3,26 @@ import { Outlet, useLocation } from 'react-router-dom'
 
 import Footer from '@/components/footer/FooterAdmin'
 import Navbar from '@/components/navbar/NavbarAdmin'
-import { routes } from '@/components/routes'
+import { routes } from '@/components/sidebar/routes'
 import Sidebar from '@/components/sidebar/Sidebar'
-import { Toaster } from '@/components/ui/toaster'
 import { OpenContext, UserContext, UserDetailsContext } from '@/contexts/layout'
-import { User } from '@/types/User'
+import { TUser } from '@/types/user'
 import { getActiveRoute } from '@/utils/navigation'
 
 interface Props {
   children?: React.ReactNode
-  user?: User
-  userDetails?: User
+  user?: TUser
+  userDetails?: TUser
 }
 
 const DashboardLayout: React.FC<Props> = (props: Props) => {
   const pathname = useLocation().pathname
   const [open, setOpen] = React.useState(false)
-
   return (
     <UserContext.Provider value={props.user}>
       <UserDetailsContext.Provider value={props.userDetails}>
         <OpenContext.Provider value={{ open, setOpen }}>
           <div className='flex h-full w-full'>
-            <Toaster />
             <Sidebar routes={routes} setOpen={setOpen} open={open} />
             <div className='h-full w-full dark:bg-primary/10'>
               <main className={`mx-2.5 flex-none transition-all  md:pr-2 xl:ml-[328px]`}>

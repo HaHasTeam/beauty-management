@@ -1,20 +1,27 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'sonner'
 
 import RouterProvider from '@/router'
 
+import { TooltipProvider } from './components/ui/tooltip'
+import AppProvider from './contexts/AppProvider'
+import QueryProvider from './contexts/QueryProvider'
 import { ThemeProvider } from './contexts/theme-provider'
 // Create a client
-const queryClient = new QueryClient()
+
 function App() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <RouterProvider />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </ThemeProvider>
-      </QueryClientProvider>
+      <QueryProvider>
+        <AppProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              <RouterProvider />
+            </TooltipProvider>
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            <Toaster closeButton position='top-center' richColors />
+          </ThemeProvider>
+        </AppProvider>
+      </QueryProvider>
     </>
   )
 }

@@ -36,6 +36,7 @@ export default tseslint.config(
       'import/no-duplicates': 'error',
       'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
       'unused-imports/no-unused-imports': 'error',
+      'no-console': ['error'],
       'unused-imports/no-unused-vars': [
         'warn',
         {
