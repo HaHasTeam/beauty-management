@@ -1,6 +1,6 @@
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { ControllerFieldState, FieldValues, UseFormReturn } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -14,9 +14,11 @@ type Props<TFieldValues extends FieldValues> = {
   field: React.InputHTMLAttributes<HTMLInputElement>
   formState?: UseFormReturn<TFieldValues>
   fieldState?: ControllerFieldState
+  onlyFutureDates?: boolean
+  onlyPastDates?: boolean
 }
 // eslint-disable-next-line
-const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(({ field }, ref) => {
+const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(({ field, onlyFutureDates, onlyPastDates }, ref) => {
   const [isOpen, setIsOpen] = useState(false)
   const [date, setDate] = useState<Date | undefined>(field.value ? new Date(field.value as string) : undefined)
 
@@ -24,6 +26,10 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(({ field }, ref
     setDate(selectedDate)
     if (field.onChange) field.onChange(selectedDate.toString() as unknown as React.ChangeEvent<HTMLInputElement>)
   }
+
+  useEffect(() => {
+    if (field.value) setDate(new Date(field.value as string))
+  }, [field.value])
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -43,6 +49,15 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(({ field }, ref
         <Calendar
           mode='single'
           captionLayout='dropdown'
+          disabled={(date) => {
+            if (onlyFutureDates) {
+              return date < new Date()
+            }
+            if (onlyPastDates) {
+              return date > new Date()
+            }
+            return false
+          }}
           selected={date as Date}
           onSelect={(date) => handlePickDate(date as Date)}
           onDayClick={() => setIsOpen(false)}

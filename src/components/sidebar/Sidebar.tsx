@@ -3,13 +3,16 @@ import { Scrollbars } from 'react-custom-scrollbars-2'
 import { HiX } from 'react-icons/hi'
 import { HiBolt, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
 import { useNavigate } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 
 import { renderThumb, renderTrack, renderView } from '@/components/scrollbar/Scrollbar'
 import Links from '@/components/sidebar/components/Links'
 import SidebarCard from '@/components/sidebar/components/SidebarCard'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
+import { Routes, routesConfig } from '@/configs/routes'
 import { OpenContext } from '@/contexts/layout'
+import { useStore } from '@/stores/store'
 import { IRoute } from '@/types/types'
 
 import { Badge } from '../ui/badge'
@@ -24,9 +27,15 @@ function Sidebar(props: SidebarProps) {
   const { routes } = props
   const { open, setOpen } = useContext(OpenContext)
   const router = useNavigate()
-
+  const { userProfile } = useStore(
+    useShallow((state) => {
+      return {
+        userProfile: state.user
+      }
+    })
+  )
   const handleLogout = () => {
-    router('/auth/password_signin')
+    router(routesConfig[Routes.AUTH_LOGIN].getPath())
   }
   // SIDEBAR
   return (
@@ -52,17 +61,17 @@ function Sidebar(props: SidebarProps) {
               >
                 <HiX />
               </span>
-              <div className={`mt-8 flex items-center justify-center`}>
+              <div className={`mt-8 flex items-center justify-center gap-1`}>
                 <div className='me-2 flex h-[40px] w-[40px] items-center justify-center rounded-md bg-primary text-white dark:bg-accent dark:text-zinc-950'>
                   <HiBolt className='h-5 w-5' />
                 </div>
-                <h5 className='me-2 text-2xl font-bold leading-5 text-primary dark:text-white'>Allure Portal</h5>
+                <h5 className='text-xl font-bold leading-5 text-primary dark:text-white'>Allure Portal</h5>
                 <Badge
                   variant='outline'
                   color='primary'
-                  className='my-auto w-max px-2 py-0.5 text-xs text-zinc-950 dark:border-none dark:bg-zinc-800 dark:text-white'
+                  className='my-auto w-max px-1 py-0.5 text-zinc-950 dark:border-none dark:bg-zinc-800 dark:text-white text-xs'
                 >
-                  Active
+                  {userProfile.role}
                 </Badge>
               </div>
               <div className='mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10' />

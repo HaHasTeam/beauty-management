@@ -25,60 +25,12 @@ class MyAxios {
   }
 
   private initInterceptors() {
-    this.axiosInstance.interceptors.request.use(
-      (config) => {
-        //headers Bearer access-token
-        const token: string | null = localStorage.getItem('token')
-        if (token) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          config.headers['authorization'] = `Bearer ${token}`
-        }
-        console.log(`Check Config header：`, config)
-        return config
-      },
-      (error) => {
-        console.log(`axios error`, error)
-        return Promise.reject(error)
-      }
-    )
-
     this.axiosInstance.interceptors.response.use(
       (response) => {
-        // formate Data
-        const { data } = response
-        console.log('data', data)
-        if (data.rsCode !== 0) {
-          alert(`${data.rsCause}`)
-          return Promise.reject(data.data)
-        }
-        if (data instanceof Blob) {
-          return response
-        } else {
-          return data.data
-        }
+        return response.data
       },
       (error: AxiosError) => {
-        console.log('axios error', error)
-
-        //ElementUI   import { Message } from 'element-ui';
-        /*    if(error?.response){
-              switch (error.response.status){
-                  case 400:
-                      Message.error('Bad Request', error.response);
-                      break;
-                  case 401:
-                      Message.error('unauthorized', error.response);
-                      break;
-                  case 404:
-                      Message.error('not Found', error.response);
-                      break;
-                  default:
-                      Message.error('Other error message', error.response);
-              }
-          }*/
-
-        return Promise.reject(error)
+        throw error.response?.data
       }
     )
   }
@@ -169,6 +121,12 @@ class MyAxios {
     URL.revokeObjectURL(a.href)
     document.body.removeChild(a)
   }
+
+  async axiosRequest<T>(options: AxiosRequestConfig): Promise<T> {
+    return this.axiosInstance.request(options)
+  }
 }
 
 export const request = new MyAxios(axiosBaseOptions)
+
+export const axiosRequest = request.axiosRequest.bind(request)

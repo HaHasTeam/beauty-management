@@ -33,6 +33,10 @@ const PhoneInputWithCountries = (() => {
     const [country, setCountry] = useState<CountryOption>(defaultCountryOption || options[0]!)
     const [phoneNumber, setPhoneNumber] = useState<E164Number>(field.value as unknown as E164Number)
 
+    React.useEffect(() => {
+      setPhoneNumber(field.value as unknown as E164Number)
+    }, [field.value])
+
     const placeholder = replaceNumbersWithZeros(getExampleNumber(country.value, examples)!.formatInternational())
 
     const onCountryChange = (value: CountryOption) => {

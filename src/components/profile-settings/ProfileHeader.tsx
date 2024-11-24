@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useId } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useId } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaCameraRotate } from 'react-icons/fa6'
 import { MdPhoto } from 'react-icons/md'
@@ -7,11 +8,15 @@ import { z } from 'zod'
 
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { requiredRegex } from '@/constants/regex'
+import useHandleServerError from '@/hooks/useHandleServerError'
+import { useToast } from '@/hooks/useToast'
+import { getUserProfileApi, updateProfileApi } from '@/network/apis/user'
 
+import Button from '../button'
 import UploadFileModal from '../file-input/UploadFileModal'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Button } from '../ui/button'
 import { Card } from '../ui/card'
+import { convertFormIntoProfile } from './helper'
 
 const formSchema = z.object({
   avatar: z.string().regex(requiredRegex().pattern, requiredRegex().message)
@@ -22,11 +27,44 @@ const ProfileHeader = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      avatar: 'https://cdn.pixabay.com/photo/2021/12/12/00/54/french-horn-6863917_640.png'
+      avatar: ''
     }
   })
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  const handleServerError = useHandleServerError()
+  const { successToast } = useToast()
+  const { data } = useQuery({
+    queryKey: [getUserProfileApi.queryKey],
+    queryFn: getUserProfileApi.fn
+  })
+  const queryClient = useQueryClient()
+  const userProfileData = data?.data
+
+  const { mutateAsync: updateProfileFn } = useMutation({
+    mutationKey: [updateProfileApi.mutationKey],
+    mutationFn: updateProfileApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Amazing! Your profile has been updated!'
+      })
+    }
+  })
+  useEffect(() => {
+    if (userProfileData?.avatar) {
+      form.setValue('avatar', userProfileData?.avatar)
+    }
+  }, [userProfileData?.avatar, form])
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await updateProfileFn(convertFormIntoProfile(values))
+      queryClient.invalidateQueries({
+        queryKey: [getUserProfileApi.queryKey]
+      })
+    } catch (error) {
+      handleServerError({
+        error
+      })
+    }
   }
   return (
     <Form {...form}>
@@ -57,9 +95,9 @@ const ProfileHeader = () => {
                       <p className='text-sm font-medium  md:mt-2 pl-4 md:text-base'>CEO and Founder</p>
                     </div>
                   </div>
-                  <Button>
+                  <Button loading={form.formState.isSubmitting}>
                     <MdPhoto className='flex items-center gap-2' />
-                    Save Avatar Settings
+                    Save Avatar
                   </Button>
                 </div>
               </Card>

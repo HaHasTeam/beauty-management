@@ -1,4 +1,5 @@
-import { Upload } from 'lucide-react'
+import { useMutation } from '@tanstack/react-query'
+import { FilesIcon, Upload } from 'lucide-react'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 import { TbWorldUpload } from 'react-icons/tb'
@@ -12,8 +13,13 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import useHandleServerError from '@/hooks/useHandleServerError'
+import { useToast } from '@/hooks/useToast'
+import { cn } from '@/lib/utils'
+import { uploadFilesApi } from '@/network/apis/file'
 import { createFiles } from '@/utils/files'
 
+import { Progress } from '../ui/progress'
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '.'
 
 type UploadFileModalProps = {
@@ -25,6 +31,29 @@ type UploadFileModalProps = {
 const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileModalProps) => {
   const [files, setFiles] = useState<File[]>([])
   const [isOpen, setIsOpen] = useState(false)
+  const handleServerError = useHandleServerError()
+  const { successToast } = useToast()
+
+  const [progress, setProgress] = useState(0)
+
+  const { mutateAsync: uploadFilesFn, isPending: isUploadingFiles } = useMutation({
+    mutationKey: [uploadFilesApi.mutationKey],
+    mutationFn: uploadFilesApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Amazing! Your files have been uploaded!'
+      })
+      setProgress(100)
+      setTimeout(() => {
+        setProgress(0)
+      }, 500)
+    },
+    onError: () => {
+      setTimeout(() => {
+        setProgress(0)
+      }, 500)
+    }
+  })
 
   const { fieldType, fieldValue } = useMemo<{
     fieldType: 'string' | 'array'
@@ -51,10 +80,12 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
   const isDragActive = false
   const dropZoneConfig = {
     accept: {
-      'image/*': ['.jpg', '.jpeg', '.png']
+      'image/*': ['.jpg', '.jpeg', '.png'],
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc']
     },
     multiple: true,
-    maxFiles: 1,
+    maxFiles: 2,
     maxSize: 1 * 1024 * 1024,
     ...dropZoneConfigOptions
   } satisfies DropzoneOptions
@@ -84,21 +115,27 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
           return setFiles(resultFiles)
         }
       } catch (error) {
-        console.log(error)
+        handleServerError({
+          error: error
+        })
       }
     }
     transferData()
+    // eslint-disable-next-line
   }, [fieldValue, fieldType, files.length])
 
   const convertFileToUrl = async (files: File[]) => {
-    const fileUrls = files.map((file) => {
-      return URL.createObjectURL(file)
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
     })
-    return fileUrls
+    setProgress(50)
+    const uploadedFilesResponse = await uploadFilesFn(formData)
+
+    return uploadedFilesResponse.data
   }
 
   const onFileDrop = async (newFiles: File[] | null) => {
-    console.log('newFiles', newFiles)
     setFiles(newFiles || [])
     const oldFiles = files
     try {
@@ -111,17 +148,14 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
         }
         if (newFiles?.length) {
           const fileUrls = await convertFileToUrl(newFiles)
-          console.log('fileUrls', fileUrls)
 
           return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
-      console.log('oldFiles', oldFiles)
 
       // If array, set to state
       if (fieldType === 'array') {
         if (!newFiles?.length) return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
-
         if (newFiles.length > oldFiles.length) {
           const diffedFiles = newFiles.filter((file) => {
             return !oldFiles?.some((oldFile) => oldFile.name === file.name)
@@ -147,17 +181,19 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
         }
       }
     } catch (error) {
-      console.error('Err', error)
+      handleServerError({
+        error
+      })
       setFiles(oldFiles)
     }
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen || isUploadingFiles} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{Trigger}</DialogTrigger>
       <DialogContent className='w-full bg-background border-border shadow-lg'>
         <DialogHeader>
-          <DialogTitle className='text-2xl font-bold text-foreground'>Upload Your Images</DialogTitle>
+          <DialogTitle className='text-2xl font-bold text-foreground'>Upload Your File(s)</DialogTitle>
           <DialogDescription className='text-muted-foreground'>
             Drag and drop your images here or click to select files
           </DialogDescription>
@@ -168,7 +204,7 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
           }`}
         >
           <FileUploader value={files} onValueChange={onFileDrop} dropzoneOptions={dropZoneConfig}>
-            <FileInput>
+            <FileInput disabled={isUploadingFiles}>
               <div className='overflow-hidden flex flex-col items-center justify-center text-center w-full border-b border-dashed border-primary py-4 bg-primary/20 hover:bg-primary transition-all duration-500'>
                 <Upload className='w-12 h-12 mb-4 text-muted-foreground' />
                 {isDragActive ? (
@@ -191,26 +227,37 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
               </div>
             </FileInput>
             <FileUploaderContent>
+              {
+                <div className={cn('w-full px-4 flex items-center gap-4', progress > 0 ? 'visible' : 'invisible')}>
+                  <Progress value={progress} className='w-full flex-1' />
+                  <span className='text-sm font-medium text-muted-foreground'>{progress}%</span>
+                </div>
+              }
               {files && files.length > 0 && (
                 <div className='pb-4'>
-                  <p className='text-sm font-medium text-muted-foreground flex justify-center gap-2 items-center py-4'>
+                  <p className='text-sm font-medium text-muted-foreground flex justify-center gap-2 items-center pb-2'>
                     <TbWorldUpload /> <span>{files.length} file(s) selected</span>
                   </p>
                   <ScrollArea className='h-[120px] w-full rounded-md shadow-2xl py-2 border-t-4 border-primary'>
                     <div className='flex flex-col gap-2 px-4'>
                       {files.map((file, index) => (
                         <FileUploaderItem
+                          key={index}
                           index={index}
                           className='flex items-center justify-between rounded-lg hover:bg-primary'
                         >
                           <div key={file.name} className='flex items-center space-x-3'>
                             <div className='rounded-md flex items-center justify-center'>
-                              <img
-                                src={URL.createObjectURL(file)}
-                                alt={file.name}
-                                className='size-12 object-cover rounded-lg border-2'
-                                onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
-                              />
+                              {file.type.includes('image') ? (
+                                <img
+                                  src={URL.createObjectURL(file)}
+                                  alt={file.name}
+                                  className='size-12 object-cover rounded-lg border-2'
+                                  onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
+                                />
+                              ) : (
+                                <FilesIcon className='w-12 h-12 text-muted-foreground' />
+                              )}
                             </div>
                             <span className='text-sm font-medium truncate max-w-[200px]'>{file.name}</span>
                           </div>
