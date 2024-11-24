@@ -2,7 +2,9 @@ import { TUser } from '@/types/user'
 
 export type TCreateUserRequestParams = Pick<TUser, 'username' | 'email' | 'password' | 'brand'> & {
   role: string
-} & Partial<Omit<TUser, 'role'>>
+} & Partial<Omit<TUser, 'role'>> & {
+    redirectUrl?: string
+  }
 
 export type TLoginUserRequestParams = Pick<TUser, 'email' | 'password'>
 

@@ -14,7 +14,7 @@ import {
 } from './type'
 
 const inviteCoWorkerRedirectUrl = import.meta.env.VITE_SITE_URL + routesConfig[Routes.AUTH_SIGN_UP].getPath()
-
+const verifyEmailRedirectUrl = import.meta.env.VITE_SITE_URL + routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath()
 export const getUserProfileApi = toQueryFetcher<void, TServerResponse<TUser>>('getUserProfileApi', async () => {
   return privateRequest('/accounts/me')
 })
@@ -24,7 +24,10 @@ export const createUserApi = toMutationFetcher<TCreateUserRequestParams, TServer
   async (data) => {
     return publicRequest('/accounts', {
       method: 'POST',
-      data
+      data: {
+        ...data,
+        url: data.redirectUrl || verifyEmailRedirectUrl
+      }
     })
   }
 )
