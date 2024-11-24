@@ -71,7 +71,7 @@ function Sidebar(props: SidebarProps) {
                   color='primary'
                   className='my-auto w-max px-1 py-0.5 text-zinc-950 dark:border-none dark:bg-zinc-800 dark:text-white text-xs'
                 >
-                  {userProfile.role}
+                  {userProfile?.role}
                 </Badge>
               </div>
               <div className='mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10' />

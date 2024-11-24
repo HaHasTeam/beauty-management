@@ -35,7 +35,7 @@ export const routesConfig: TRoutes = {
     description: 'Verify your email address to access the dashboard',
     path: '/auth/email-verification',
     getPath: (params) => {
-      return `/auth/email-verification?email=${params?.email}`
+      return `/auth/email-verification` + (params ? '?' + new URLSearchParams(params).toString() : '')
     }
   },
   [Routes.DASHBOARD_HOME]: {

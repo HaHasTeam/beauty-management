@@ -29,7 +29,15 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.MERCHANTS_DIRECTORY].name,
     path: routesConfig[Routes.MERCHANTS_DIRECTORY].path,
     icon: <HiOutlineUsers className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
-    collapse: false
+    collapse: false,
+    items: [
+      {
+        name: routesConfig[Routes.ACCOUNTS_DIRECTORY].name,
+        path: routesConfig[Routes.ACCOUNTS_DIRECTORY].path,
+        icon: <PiCompassToolBold className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+        collapse: false
+      }
+    ]
   },
   {
     name: routesConfig[Routes.SERVICES_CATALOG].name,
