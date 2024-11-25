@@ -11,7 +11,10 @@ export enum Routes {
   SERVICES_CATALOG = 'services-catalog',
   PROFILE_SETTINGS = 'profile-settings',
   ACCOUNTS_DIRECTORY = 'accounts-directory',
-  AUTH_SIGN_UP = 'auth-sign-up'
+  AUTH_SIGN_UP = 'auth-sign-up',
+  PRODUCT_LIST = 'product-list',
+  CREATE_PRODUCT = 'create-product',
+  UPDATE_PRODUCT = 'update-product'
 }
 
 export const routesConfig: TRoutes = {
@@ -79,5 +82,26 @@ export const routesConfig: TRoutes = {
     description: 'Manage your profile settings',
     path: '/dashboard/profile-settings',
     getPath: () => '/dashboard/profile-settings'
+  },
+  [Routes.PRODUCT_LIST]: {
+    name: 'Product List',
+    title: 'Product List',
+    description: 'Manage your beauty products',
+    path: '/dashboard/products/list',
+    getPath: () => '/dashboard/products/list'
+  },
+  [Routes.CREATE_PRODUCT]: {
+    name: 'Create Product',
+    title: 'Create Product',
+    description: 'Create a new beauty product',
+    path: '/dashboard/products/create',
+    getPath: () => '/dashboard/products/create'
+  },
+  [Routes.UPDATE_PRODUCT]: {
+    name: 'Update Product',
+    title: 'Update Product',
+    description: 'Update beauty product',
+    path: '/dashboard/products/update',
+    getPath: () => '/dashboard/products/update'
   }
 }
