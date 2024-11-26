@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import EmptyInbox from '@/assets/images/EmptyInbox.png'
 import { cn } from '@/lib/utils'
+import { IOption } from '@/types/option'
 
 import Button from '../button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
@@ -10,28 +11,60 @@ import { Input } from '../ui/input'
 import { Separator } from '../ui/separator'
 
 interface FormSelectProps {
+  fieldId?: string
   placeholder: string
   inputPlaceholder: string
   buttonText: string
   emptyText: string
-  items: { value: string; label: string }[]
+  items: IOption[]
+  type?: 'select' | 'multiselect'
+  maxMultiSelectItems?: number
+  handleChange: (fieldId: string, value: IOption | IOption[] | string) => void
 }
-const FormSelect = ({ placeholder, inputPlaceholder, emptyText, items: initialItems, buttonText }: FormSelectProps) => {
+const FormSelect = ({
+  fieldId = '0',
+  placeholder,
+  inputPlaceholder,
+  emptyText,
+  items: initialItems,
+  buttonText,
+  type = 'select',
+  maxMultiSelectItems,
+  handleChange
+}: FormSelectProps) => {
   const [items, setItems] = useState(initialItems)
-  const [selectedItem, setSelectedItem] = useState({ value: '', label: '' })
   const [hidden, setHidden] = useState(true)
   const [inputValue, setInputValue] = useState('')
   const [showInput, setShowInput] = useState(false)
   const [errorText, setErrorText] = useState('')
+  const [selectedItems, setSelectedItems] = useState<IOption[]>([])
 
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowCommandDialog = () => {
-    setHidden(!hidden)
+    setHidden((prev) => !prev)
   }
-  const handleSelectItem = (item: { value: string; label: string }) => {
-    setSelectedItem(item)
-    setHidden(true)
+  const handleSelectItem = (item: IOption) => {
+    let updatedSelectedItems: IOption[]
+
+    if (type === 'select') {
+      updatedSelectedItems = [item]
+      setHidden(true)
+    } else {
+      // For multiselect, toggle selection
+      updatedSelectedItems = selectedItems.some((selected) => selected.value === item.value)
+        ? selectedItems.filter((selected) => selected.value !== item.value)
+        : [...selectedItems, item]
+    }
+
+    setSelectedItems(updatedSelectedItems)
+    handleChange(fieldId, updatedSelectedItems)
+  }
+  const handleRemoveSelectedItem = (value: string) => {
+    setHidden(false)
+    const updatedSelectedItems = selectedItems.filter((item) => item.value !== value)
+    setSelectedItems((prev) => prev.filter((item) => item.value !== value))
+    handleChange(fieldId, updatedSelectedItems)
   }
   const handleInputValueChange = (value: string) => {
     setInputValue(value)
@@ -51,8 +84,15 @@ const FormSelect = ({ placeholder, inputPlaceholder, emptyText, items: initialIt
       } else {
         // Proceed to add the new item if it's not a duplicate
         const newItem = { value: inputValue.trim(), label: inputValue.trim() }
+        let updatedSelectedItems: IOption[]
         setItems((prevItems) => [...prevItems, newItem])
-        setSelectedItem(newItem)
+        if (type === 'select') {
+          updatedSelectedItems = [newItem]
+        } else {
+          updatedSelectedItems = [...selectedItems, newItem]
+        }
+        setSelectedItems(updatedSelectedItems)
+        handleChange(fieldId, updatedSelectedItems)
         setInputValue('')
         setShowInput(false)
         setHidden(true)
@@ -75,12 +115,33 @@ const FormSelect = ({ placeholder, inputPlaceholder, emptyText, items: initialIt
     <div className='relative' ref={dropdownRef}>
       <div
         onClick={handleShowCommandDialog}
-        className='hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 focus:border-primary shadow-sm rounded-md h-9 w-full border border-input bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+        className='hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 focus:border-primary shadow-sm rounded-md w-full border border-input bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
       >
-        {selectedItem?.value === '' ? (
-          <span className='text-muted-foreground'>{placeholder}</span>
+        {type === 'select' ? (
+          selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
+            <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
+          ) : (
+            <span>{selectedItems[0]?.label}</span>
+          )
         ) : (
-          <span>{selectedItem?.label}</span>
+          <div className='flex gap-1 flex-wrap'>
+            {selectedItems.length === 0 ? (
+              <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
+            ) : (
+              selectedItems.map((item) => (
+                <div
+                  key={item.value}
+                  className='flex items-center bg-primary/10 text-primary rounded-full px-2 py-1 text-xs gap-1'
+                >
+                  <span>{item.label}</span>
+                  <X
+                    className='cursor-pointer w-4 h-4 text-primary'
+                    onClick={() => handleRemoveSelectedItem(item.value)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
         )}
         <ChevronDown className='w-5 h-5 text-muted-foreground' />
       </div>
@@ -92,7 +153,7 @@ const FormSelect = ({ placeholder, inputPlaceholder, emptyText, items: initialIt
       >
         {!hidden && (
           <div className='w-full shadow-sm p-3 rounded-lg bg-white mt-1'>
-            <Command value={selectedItem?.label}>
+            <Command>
               <CommandInput placeholder={placeholder} />
               <CommandList>
                 <CommandEmpty className='space-y-2 flex flex-col gap-2 items-center p-3'>
@@ -107,10 +168,23 @@ const FormSelect = ({ placeholder, inputPlaceholder, emptyText, items: initialIt
                       key={item?.value}
                       onSelect={() => handleSelectItem(item)}
                       className={cn('cursor-pointer px-3 py-2 rounded-md')}
+                      disabled={
+                        !!(
+                          maxMultiSelectItems &&
+                          selectedItems.length >= maxMultiSelectItems &&
+                          !selectedItems.some((selected) => selected.value === item.value)
+                        )
+                      }
                     >
                       <div className='w-full flex justify-between items-center'>
                         <span>{item?.label}</span>
-                        {selectedItem?.value === item.value && <Check className='text-muted-foreground w-5 h-5' />}
+                        {type === 'select'
+                          ? selectedItems[0]?.value === item.value && (
+                              <Check className='text-muted-foreground w-5 h-5' />
+                            )
+                          : selectedItems.some((selected) => selected.value === item.value) && (
+                              <Check className='text-muted-foreground w-5 h-5' />
+                            )}
                       </div>
                     </CommandItem>
                   ))}
@@ -127,7 +201,7 @@ const FormSelect = ({ placeholder, inputPlaceholder, emptyText, items: initialIt
                     value={inputValue}
                     onChange={(e) => handleInputValueChange(e.target.value)}
                   />
-                  {errorText && <span className='text-destructive'>{errorText}</span>}
+                  {errorText && <span className='text-destructive text-sm'>{errorText}</span>}
                 </div>
                 <Button
                   type='button'
