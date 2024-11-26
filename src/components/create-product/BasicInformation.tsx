@@ -12,7 +12,7 @@ const BasicInformation = () => {
     setCountName(productName?.length)
   }
   return (
-    <div className='bg-white rounded-xl shadow-md p-4 space-y-4'>
+    <div className='bg-white rounded-lg shadow-md p-4 lg:p-6 space-y-4'>
       <h3 className='font-bold text-xl'>Thông tin cơ bản</h3>
       <div>
         <Label htmlFor='product-image'>Hình ảnh sản phẩm</Label>
@@ -27,7 +27,7 @@ const BasicInformation = () => {
             id='product-name'
             value={name}
             placeholder='Tên sản phẩm + Thương hiệu + Model + Thông số kỹ thuật'
-            className='w-[88%] border-secondary'
+            className='w-[88%] border-primary/40'
             onChange={(e) => handleCountName(e.target.value)}
           />
         </div>

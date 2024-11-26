@@ -17,9 +17,10 @@ interface DetailInformationProps {
   setFormValues: Dispatch<SetStateAction<IFormValues>>
 }
 export default function DetailInformation({ formValues, setFormValues }: DetailInformationProps) {
+  const MAX_MULTI_SELECT_ITEMS = 5
   const [date, setDate] = useState<Date>()
 
-  const handleChange = (fieldId: string, value: IOption | IOption[] | string) => {
+  const handleChange = (fieldId: string, value: IOption[] | string) => {
     setFormValues(
       (prevValues: IFormValues): IFormValues => ({
         ...prevValues,
@@ -29,7 +30,7 @@ export default function DetailInformation({ formValues, setFormValues }: DetailI
   }
 
   return (
-    <div className='w-full p-6 bg-white shadow-lg rounded-lg'>
+    <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
       <div className='mb-6 flex items-center justify-between'>
         <h2 className='text-lg font-semibold'>Thông tin chi tiết</h2>
         <span className='text-sm text-muted-foreground'>
@@ -40,7 +41,14 @@ export default function DetailInformation({ formValues, setFormValues }: DetailI
       <div className='grid grid-cols-2 gap-6'>
         {productFormDetailFields.map((field) => (
           <div key={field.id} className='space-y-2'>
-            <label className='text-sm'>{field.label}</label>
+            <div className='flex gap-1 justify-between items-center'>
+              <label className='text-sm'>{field.label}</label>
+              {field.type === 'multiselect' && (
+                <span className='text-xs text-muted-foreground text-right'>
+                  {Array.isArray(formValues[field.id]) ? formValues[field.id]?.length : 0}/{MAX_MULTI_SELECT_ITEMS}
+                </span>
+              )}
+            </div>
             {field.type === 'select' && (
               <FormSelect
                 fieldId={field?.id}
@@ -62,12 +70,16 @@ export default function DetailInformation({ formValues, setFormValues }: DetailI
                 inputPlaceholder={'Nhập vào'}
                 buttonText={'Thêm thuộc tính mới'}
                 type='multiselect'
-                maxMultiSelectItems={5}
+                maxMultiSelectItems={MAX_MULTI_SELECT_ITEMS}
                 handleChange={handleChange}
               />
             )}
             {field.type === 'input' && (
-              <Input placeholder={field.placeholder} onChange={(e) => handleChange(field?.id, e.target.value)} />
+              <Input
+                className='border-primary/40'
+                placeholder={field.placeholder}
+                onChange={(e) => handleChange(field?.id, e.target.value)}
+              />
             )}
             {field.type === 'date' && (
               <Popover>
@@ -91,7 +103,6 @@ export default function DetailInformation({ formValues, setFormValues }: DetailI
                 </PopoverContent>
               </Popover>
             )}
-            {field.helperText && <span className='text-xs text-muted-foreground'>{field.helperText}</span>}
           </div>
         ))}
       </div>

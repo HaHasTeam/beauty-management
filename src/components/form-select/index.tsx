@@ -1,4 +1,4 @@
-import { Check, ChevronDown, PlusCircle, X } from 'lucide-react'
+import { Check, ChevronDown, PlusCircle, X, XCircle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import EmptyInbox from '@/assets/images/EmptyInbox.png'
@@ -19,7 +19,7 @@ interface FormSelectProps {
   items: IOption[]
   type?: 'select' | 'multiselect'
   maxMultiSelectItems?: number
-  handleChange: (fieldId: string, value: IOption | IOption[] | string) => void
+  handleChange: (fieldId: string, value: IOption[] | string) => void
 }
 const FormSelect = ({
   fieldId = '0',
@@ -115,13 +115,19 @@ const FormSelect = ({
     <div className='relative' ref={dropdownRef}>
       <div
         onClick={handleShowCommandDialog}
-        className='hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 focus:border-primary shadow-sm rounded-md w-full border border-input bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+        className={`${!hidden && 'border-primary/100'} border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
       >
         {type === 'select' ? (
           selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
             <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
           ) : (
-            <span>{selectedItems[0]?.label}</span>
+            <div className='flex items-center justify-between gap-1 w-full'>
+              <span>{selectedItems[0]?.label}</span>
+              <XCircle
+                className='cursor-pointer w-4 h-4 hover:text-primary/80 text-primary/70 bg-primary/10 hover:bg-primary/20 rounded-full'
+                onClick={() => handleRemoveSelectedItem(selectedItems[0]?.value)}
+              />
+            </div>
           )
         ) : (
           <div className='flex gap-1 flex-wrap'>
@@ -152,7 +158,7 @@ const FormSelect = ({
         )}
       >
         {!hidden && (
-          <div className='w-full shadow-sm p-3 rounded-lg bg-white mt-1'>
+          <div className='w-full shadow-sm p-3 rounded-lg bg-white mt-1 border border-gray-300'>
             <Command>
               <CommandInput placeholder={placeholder} />
               <CommandList>
@@ -194,9 +200,9 @@ const FormSelect = ({
             <Separator className='my-1' />
             {showInput ? (
               <div className='flex gap-2 w-full px-3'>
-                <div>
+                <div className='w-full'>
                   <Input
-                    className='border border-primary/40'
+                    className='w-full border border-primary/40'
                     placeholder={inputPlaceholder}
                     value={inputValue}
                     onChange={(e) => handleInputValueChange(e.target.value)}
