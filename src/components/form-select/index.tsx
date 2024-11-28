@@ -1,17 +1,21 @@
 import { Check, ChevronDown, PlusCircle, X, XCircle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
 
 import EmptyInbox from '@/assets/images/EmptyInbox.png'
 import { cn } from '@/lib/utils'
 import { IOption } from '@/types/option'
+import { FormProductSchema, IFormProductFieldId } from '@/variables/productFormDetailFields'
 
 import Button from '../button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
+import { FormControl } from '../ui/form'
 import { Input } from '../ui/input'
 import { Separator } from '../ui/separator'
 
 interface FormSelectProps {
-  fieldId?: string
+  fieldId: IFormProductFieldId
   placeholder: string
   inputPlaceholder: string
   buttonText: string
@@ -19,10 +23,10 @@ interface FormSelectProps {
   items: IOption[]
   type?: 'select' | 'multiselect'
   maxMultiSelectItems?: number
-  handleChange: (fieldId: string, value: IOption[] | string) => void
+  form: UseFormReturn<z.infer<typeof FormProductSchema>>
 }
 const FormSelect = ({
-  fieldId = '0',
+  fieldId,
   placeholder,
   inputPlaceholder,
   emptyText,
@@ -30,7 +34,7 @@ const FormSelect = ({
   buttonText,
   type = 'select',
   maxMultiSelectItems,
-  handleChange
+  form
 }: FormSelectProps) => {
   const [items, setItems] = useState(initialItems)
   const [hidden, setHidden] = useState(true)
@@ -58,13 +62,20 @@ const FormSelect = ({
     }
 
     setSelectedItems(updatedSelectedItems)
-    handleChange(fieldId, updatedSelectedItems)
+    // handleChange(fieldId, updatedSelectedItems)
+    form.setValue(
+      fieldId,
+      updatedSelectedItems.map((item) => item.value)
+    )
   }
   const handleRemoveSelectedItem = (value: string) => {
     setHidden(false)
     const updatedSelectedItems = selectedItems.filter((item) => item.value !== value)
     setSelectedItems((prev) => prev.filter((item) => item.value !== value))
-    handleChange(fieldId, updatedSelectedItems)
+    form.setValue(
+      fieldId,
+      updatedSelectedItems.map((item) => item.value)
+    )
   }
   const handleInputValueChange = (value: string) => {
     setInputValue(value)
@@ -92,7 +103,10 @@ const FormSelect = ({
           updatedSelectedItems = [...selectedItems, newItem]
         }
         setSelectedItems(updatedSelectedItems)
-        handleChange(fieldId, updatedSelectedItems)
+        form.setValue(
+          fieldId,
+          updatedSelectedItems.map((item) => item.value)
+        )
         setInputValue('')
         setShowInput(false)
         setHidden(true)
@@ -113,44 +127,46 @@ const FormSelect = ({
   }, [])
   return (
     <div className='relative' ref={dropdownRef}>
-      <div
-        onClick={handleShowCommandDialog}
-        className={`${!hidden && 'border-primary/100'} border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
-      >
-        {type === 'select' ? (
-          selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
-            <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
-          ) : (
-            <div className='flex items-center justify-between gap-1 w-full'>
-              <span>{selectedItems[0]?.label}</span>
-              <XCircle
-                className='cursor-pointer w-4 h-4 hover:text-primary/80 text-primary/70 bg-primary/10 hover:bg-primary/20 rounded-full'
-                onClick={() => handleRemoveSelectedItem(selectedItems[0]?.value)}
-              />
-            </div>
-          )
-        ) : (
-          <div className='flex gap-1 flex-wrap'>
-            {selectedItems.length === 0 ? (
+      <FormControl>
+        <div
+          onClick={handleShowCommandDialog}
+          className={`${!hidden && 'outline-none ring-1 ring-ring'} border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
+        >
+          {type === 'select' ? (
+            selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
               <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
             ) : (
-              selectedItems.map((item) => (
-                <div
-                  key={item.value}
-                  className='flex items-center bg-primary/10 text-primary rounded-full px-2 py-1 text-xs gap-1'
-                >
-                  <span>{item.label}</span>
-                  <X
-                    className='cursor-pointer w-4 h-4 text-primary'
-                    onClick={() => handleRemoveSelectedItem(item.value)}
-                  />
-                </div>
-              ))
-            )}
-          </div>
-        )}
-        <ChevronDown className='w-5 h-5 text-muted-foreground' />
-      </div>
+              <div className='flex items-center justify-between gap-1 w-full'>
+                <span>{selectedItems[0]?.label}</span>
+                <XCircle
+                  className='cursor-pointer w-4 h-4 hover:text-primary/80 text-primary/70 bg-primary/10 hover:bg-primary/20 rounded-full'
+                  onClick={() => handleRemoveSelectedItem(selectedItems[0]?.value)}
+                />
+              </div>
+            )
+          ) : (
+            <div className='flex gap-1 flex-wrap'>
+              {selectedItems.length === 0 ? (
+                <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
+              ) : (
+                selectedItems.map((item) => (
+                  <div
+                    key={item.value}
+                    className='flex items-center bg-primary/10 text-primary rounded-full px-2 py-1 text-xs gap-1'
+                  >
+                    <span>{item.label}</span>
+                    <X
+                      className='cursor-pointer w-4 h-4 text-primary'
+                      onClick={() => handleRemoveSelectedItem(item.value)}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+          <ChevronDown className='w-5 h-5 text-muted-foreground' />
+        </div>
+      </FormControl>
       <div
         className={cn(
           'w-full absolute z-10 transition-all duration-300',

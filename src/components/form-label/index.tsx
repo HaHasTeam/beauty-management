@@ -8,8 +8,8 @@ type Props = {
 const index = ({ required, children }: Props) => {
   return (
     <FormLabel className='flex items-center gap-1'>
-      {children}
       {required && <span className='text-destructive'>*</span>}
+      {children}
     </FormLabel>
   )
 }

@@ -226,7 +226,7 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
                 )}
               </div>
             </FileInput>
-            <FileUploaderContent>
+            <FileUploaderContent className='px-1'>
               {
                 <div className={cn('w-full px-4 flex items-center gap-4', progress > 0 ? 'visible' : 'invisible')}>
                   <Progress value={progress} className='w-full flex-1' />

@@ -1,6 +1,21 @@
-export const productFormDetailFields = [
+import { z } from 'zod'
+
+import { IOption } from '@/types/option'
+
+export type IFormProductFieldId = keyof z.infer<typeof FormProductSchema>
+
+export type IProductFormFields = {
+  id: IFormProductFieldId
+  label: string
+  type: 'multiselect' | 'select' | 'input' | 'date'
+  options?: IOption[]
+  helperText?: string
+  placeholder?: string
+}
+
+export const productFormDetailFields: IProductFormFields[] = [
   {
-    id: '0',
+    id: 'organizationName',
     label: 'Tên tổ chức chịu trách nhiệm sản xuất',
     type: 'multiselect',
     options: [
@@ -10,7 +25,7 @@ export const productFormDetailFields = [
     helperText: '0/5'
   },
   {
-    id: '1',
+    id: 'organizationAddress',
     label: 'Địa chỉ tổ chức chịu trách nhiệm sản xuất',
     type: 'multiselect',
     options: [
@@ -20,27 +35,51 @@ export const productFormDetailFields = [
     helperText: '0/5'
   },
   {
-    id: '2',
+    id: 'origin',
+    label: 'Xuất xứ',
+    type: 'select',
+    options: [
+      { value: 'vn', label: 'Việt Nam' },
+      { value: 'other', label: 'Khác' }
+    ]
+  },
+  {
+    id: 'batchNumber',
+    label: 'Số lô sản xuất',
+    type: 'input',
+    placeholder: 'Vui lòng điền vào'
+  },
+  {
+    id: 'ingredients',
     label: 'Thành phần',
     type: 'input',
     placeholder: 'Vui lòng điền vào'
   },
   {
-    id: '3',
-    label: 'Hạn sử dụng',
-    type: 'select',
+    id: 'activeIngredients',
+    label: 'Thành phần hoạt tính',
+    type: 'multiselect',
     options: [
-      { value: '1', label: '1 tháng' },
-      { value: '2', label: '2 tháng' },
-      { value: '3', label: '3 tháng' },
-      { value: '6', label: '6 tháng' },
-      { value: '12', label: '12 tháng' },
-      { value: '24', label: '24 tháng' },
-      { value: '36', label: '36 tháng' }
-    ]
+      { value: 'anti_oxidants', label: 'Anti-oxidants' },
+      { value: 'bha', label: 'BHA' },
+      { value: 'ceramides', label: 'Ceramides' },
+      { value: 'fragrance_free', label: 'Không hương liệu' },
+      { value: 'hyaluronic_acid', label: 'Hyaluronic Acid' },
+      { value: 'mineral_oil', label: 'Dầu khoáng' },
+      { value: 'natural_origin', label: 'Nguồn gốc thiên nhiên' },
+      { value: 'natural', label: 'Tự nhiên' },
+      { value: 'paraben_free', label: 'Không chứa paraben' },
+      { value: 'silicone_free', label: 'Không chứa silicone' },
+      { value: 'vitamin_c', label: 'Vitamin C' },
+      { value: 'vitamin_e', label: 'Vitamin E' },
+      { value: 'alcohol_free', label: 'Alcohol Free' },
+      { value: 'amino_acid', label: 'Amino Acid' }
+    ],
+    helperText: '0/5'
   },
+
   {
-    id: '4',
+    id: 'volume',
     label: 'Thể tích',
     type: 'select',
     options: [
@@ -60,27 +99,7 @@ export const productFormDetailFields = [
     ]
   },
   {
-    id: '5',
-    label: 'Số lô sản xuất',
-    type: 'input',
-    placeholder: 'Vui lòng điền vào'
-  },
-  {
-    id: '6',
-    label: 'Ngày hết hạn',
-    type: 'date'
-  },
-  {
-    id: '7',
-    label: 'Xuất xứ',
-    type: 'select',
-    options: [
-      { value: 'vn', label: 'Việt Nam' },
-      { value: 'other', label: 'Khác' }
-    ]
-  },
-  {
-    id: '8',
+    id: 'weight',
     label: 'Trọng lượng',
     type: 'select',
     options: [
@@ -104,16 +123,38 @@ export const productFormDetailFields = [
     ]
   },
   {
-    id: '9',
-    label: 'Kiểu đóng gói',
+    id: 'expiryDate',
+    label: 'Ngày hết hạn',
+    type: 'date'
+  },
+  {
+    id: 'expiryPeriod',
+    label: 'Hạn sử dụng',
     type: 'select',
     options: [
-      { value: 'single', label: 'Bộ đơn' },
-      { value: 'double', label: 'Bộ đôi' }
+      { value: '1', label: '1 tháng' },
+      { value: '2', label: '2 tháng' },
+      { value: '3', label: '3 tháng' },
+      { value: '6', label: '6 tháng' },
+      { value: '12', label: '12 tháng' },
+      { value: '24', label: '24 tháng' },
+      { value: '36', label: '36 tháng' }
     ]
   },
   {
-    id: '10',
+    id: 'storageCondition',
+    label: 'Điều kiện bảo quản',
+    type: 'select',
+    options: [
+      { value: 'normal', label: 'Điều kiện thường' },
+      { value: 'cool_storage_23_26', label: 'Bảo quản mát (23°C - 26°C)' },
+      { value: 'cold_storage_5_10', label: 'Bảo quản lạnh (5°C - 10°C)' },
+      { value: 'freezer_storage_neg15_0', label: 'Bảo quản ngăn đá (-15°C - 0°C)' },
+      { value: 'deep_freeze_storage_below_neg15', label: 'Bảo quản đông lạnh (< -15°C)' }
+    ]
+  },
+  {
+    id: 'formula',
     label: 'Công thức',
     type: 'select',
     options: [
@@ -128,29 +169,7 @@ export const productFormDetailFields = [
     ]
   },
   {
-    id: '11',
-    label: 'Thành phần hoạt tính',
-    type: 'multiselect',
-    options: [
-      { value: 'anti_oxidants', label: 'Anti-oxidants' },
-      { value: 'bha', label: 'BHA' },
-      { value: 'ceramides', label: 'Ceramides' },
-      { value: 'fragrance_free', label: 'Không hương liệu' },
-      { value: 'hyaluronic_acid', label: 'Hyaluronic Acid' },
-      { value: 'mineral_oil', label: 'Dầu khoáng' },
-      { value: 'natural_origin', label: 'Nguồn gốc thiên nhiên' },
-      { value: 'natural', label: 'Tự nhiên' },
-      { value: 'paraben_free', label: 'Không chứa paraben' },
-      { value: 'silicone_free', label: 'Không chứa silicone' },
-      { value: 'vitamin_c', label: 'Vitamin C' },
-      { value: 'vitamin_e', label: 'Vitamin E' },
-      { value: 'alcohol_free', label: 'Alcohol Free' },
-      { value: 'amino_acid', label: 'Amino Acid' }
-    ],
-    helperText: '0/5'
-  },
-  {
-    id: '12',
+    id: 'skinType',
     label: 'Loại da',
     type: 'multiselect',
     options: [
@@ -166,7 +185,7 @@ export const productFormDetailFields = [
     helperText: '0/5'
   },
   {
-    id: '13',
+    id: 'productType',
     label: 'Loại bộ mỹ phẩm',
     type: 'select',
     options: [
@@ -177,7 +196,7 @@ export const productFormDetailFields = [
     ]
   },
   {
-    id: '14',
+    id: 'skinCare',
     label: 'Chăm sóc da',
     type: 'select',
     options: [
@@ -207,7 +226,7 @@ export const productFormDetailFields = [
     ]
   },
   {
-    id: '15',
+    id: 'specialFeatures',
     label: 'Loại đặc biệt',
     type: 'multiselect',
     options: [
@@ -227,16 +246,16 @@ export const productFormDetailFields = [
     helperText: '0/5'
   },
   {
-    id: '16',
-    label: 'Loại phiên bản',
+    id: 'packagingType',
+    label: 'Kiểu đóng gói',
     type: 'select',
     options: [
-      { value: 'normal', label: 'Thông thường' },
-      { value: 'limited', label: 'Limited Edition' }
+      { value: 'single', label: 'Bộ đơn' },
+      { value: 'double', label: 'Bộ đôi' }
     ]
   },
   {
-    id: '17',
+    id: 'quantityPerPack',
     label: 'Quantity per pack',
     type: 'select',
     options: [
@@ -250,15 +269,40 @@ export const productFormDetailFields = [
     ]
   },
   {
-    id: '18',
-    label: 'Điều kiện bảo quản',
+    id: 'versionType',
+    label: 'Loại phiên bản',
     type: 'select',
     options: [
-      { value: 'normal', label: 'Điều kiện thường' },
-      { value: 'cool_storage_23_26', label: 'Bảo quản mát (23°C - 26°C)' },
-      { value: 'cold_storage_5_10', label: 'Bảo quản lạnh (5°C - 10°C)' },
-      { value: 'freezer_storage_neg15_0', label: 'Bảo quản ngăn đá (-15°C - 0°C)' },
-      { value: 'deep_freeze_storage_below_neg15', label: 'Bảo quản đông lạnh (< -15°C)' }
+      { value: 'normal', label: 'Thông thường' },
+      { value: 'limited', label: 'Limited Edition' }
     ]
   }
 ]
+
+export const FormProductSchema = z.object({
+  // basic information
+  productName: z.string().min(1),
+  productImage: z.array(z.string()).min(1),
+  productDescription: z.string().min(1),
+  // detail information
+  organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+  organizationAddress: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+  ingredients: z.string().min(0).optional(), // Input field
+  expiryPeriod: z.array(z.string()).optional(), // Select field
+  volume: z.array(z.string()).optional(), // Select field
+  batchNumber: z.string().optional(), // Optional input
+  expiryDate: z.string().optional(), // Date
+  origin: z.array(z.string()).optional(), // Select field
+  weight: z.array(z.string()).optional(), // Select field
+  packagingType: z.array(z.string()).optional(), // Select field
+  formula: z.array(z.string()).optional(), // Select field
+  activeIngredients: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+  skinType: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+  productType: z.array(z.string()).optional(), // Select field
+  skinCare: z.array(z.string()).optional(), // Select field
+  specialFeatures: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+  versionType: z.array(z.string()).optional(), // Select field
+  quantityPerPack: z.array(z.string()).optional(), // Select field
+  storageCondition: z.array(z.string()).optional() // Select field
+  //  sale information
+})

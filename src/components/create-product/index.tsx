@@ -1,39 +1,41 @@
-import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useId } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { IFormValues } from '@/types/productForm'
+import { useToast } from '@/hooks/useToast'
+import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 import { Button } from '../ui/button'
+import { Form } from '../ui/form'
 import BasicInformation from './BasicInformation'
 import DetailInformation from './DetailInformation'
 import SalesInformation from './SalesInformation'
 
 const CreateProduct = () => {
-  const [formValues, setFormValues] = useState<IFormValues>({})
+  const id = useId()
+  const { successToast } = useToast()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const cleanFormValues = Object.entries(formValues).reduce((acc: IFormValues, [key, value]) => {
-      if (
-        value !== null && // Exclude null values
-        value !== undefined && // Exclude undefined values
-        !(Array.isArray(value) && value.length === 0) && // Exclude empty arrays
-        !(typeof value === 'string' && value.trim() === '') // Exclude empty strings
-      ) {
-        acc[key] = value // Include only valid values
-      }
-      return acc
-    }, {})
-    setFormValues(cleanFormValues)
+  const form = useForm<z.infer<typeof FormProductSchema>>({
+    resolver: zodResolver(FormProductSchema),
+    defaultValues: { productImage: [] }
+  })
+  function onSubmit(data: z.infer<typeof FormProductSchema>) {
+    successToast({
+      message: JSON.stringify(data, null, 2)
+    })
+    form.getValues()
   }
   return (
     <div>
-      <form className='space-y-4' onSubmit={handleSubmit}>
-        <BasicInformation />
-        <DetailInformation formValues={formValues} setFormValues={setFormValues} />
-        <SalesInformation />
-        <Button type='submit'>Submit</Button>
-      </form>
+      <Form {...form}>
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
+          <BasicInformation form={form} />
+          <DetailInformation form={form} />
+          <SalesInformation />
+          <Button type='submit'>Submit</Button>
+        </form>
+      </Form>
     </div>
   )
 }
