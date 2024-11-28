@@ -18,7 +18,15 @@ const CreateProduct = () => {
 
   const form = useForm<z.infer<typeof FormProductSchema>>({
     resolver: zodResolver(FormProductSchema),
-    defaultValues: { productImage: [] }
+    defaultValues: {
+      name: '',
+      images: [],
+      description: '',
+      detail: {},
+      productClassifications: [],
+      price: 0,
+      quantity: 1
+    }
   })
   function onSubmit(data: z.infer<typeof FormProductSchema>) {
     successToast({
@@ -32,7 +40,7 @@ const CreateProduct = () => {
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
           <BasicInformation form={form} />
           <DetailInformation form={form} />
-          <SalesInformation />
+          <SalesInformation form={form} />
           <Button type='submit'>Submit</Button>
         </form>
       </Form>

@@ -17,7 +17,7 @@ const BasicInformation = ({ form }: BasicInformationProps) => {
       <h3 className='font-bold text-xl'>Thông tin cơ bản</h3>
       <FormField
         control={form.control}
-        name='productImage'
+        name='images'
         render={({ field }) => (
           <FormItem className='w-full'>
             <div className='flex w-full'>
@@ -39,7 +39,7 @@ const BasicInformation = ({ form }: BasicInformationProps) => {
         <div className='flex w-full'>
           <FormField
             control={form.control}
-            name='productName'
+            name='name'
             render={({ field }) => (
               <FormItem className='w-full'>
                 <div className='w-full flex'>
@@ -68,7 +68,7 @@ const BasicInformation = ({ form }: BasicInformationProps) => {
         <div className='w-full'>
           <FormField
             control={form.control}
-            name='productDescription'
+            name='description'
             render={({ field }) => (
               <FormItem className='w-full'>
                 <div className='flex w-full'>

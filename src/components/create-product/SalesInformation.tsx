@@ -1,177 +1,189 @@
-import { ImageIcon, Plus, X } from 'lucide-react'
-import { useState } from 'react'
+import { Plus, X } from 'lucide-react'
+import { UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
 
+import FormLabel from '@/components/form-label'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FormProductSchema } from '@/variables/productFormDetailFields'
 
-interface Variant {
-  name: string
-  options: string[]
+import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
+
+interface BasicInformationProps {
+  form: UseFormReturn<z.infer<typeof FormProductSchema>>
 }
 
-interface VariantCombination {
-  id: string
-  values: Record<string, string>
-  price: string
-  stock: string
-  sku: string
-  image?: string
-}
-
-export default function SalesInformation() {
-  const [variants, setVariants] = useState<Variant[]>([])
-  const [combinations, setCombinations] = useState<VariantCombination[]>([])
-  const [newOption, setNewOption] = useState('')
-
-  const addVariant = () => {
-    setVariants([...variants, { name: '', options: [] }])
-  }
-
-  const removeVariant = (index: number) => {
-    const newVariants = [...variants]
-    newVariants.splice(index, 1)
-    setVariants(newVariants)
-  }
-
-  const updateVariantName = (index: number, name: string) => {
-    const newVariants = [...variants]
-    newVariants[index].name = name
-    setVariants(newVariants)
-  }
-
-  const addOption = (variantIndex: number) => {
-    if (!newOption) return
-    const newVariants = [...variants]
-    newVariants[variantIndex].options.push(newOption)
-    setVariants(newVariants)
-    setNewOption('')
-  }
-
-  const removeOption = (variantIndex: number, optionIndex: number) => {
-    const newVariants = [...variants]
-    newVariants[variantIndex].options.splice(optionIndex, 1)
-    setVariants(newVariants)
-  }
-
+export default function SalesInformation({ form }: BasicInformationProps) {
   return (
     <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
           <h2 className='text-lg font-semibold'>Thông tin bán hàng</h2>
         </div>
-
-        <div className='space-y-4'>
-          <div className='flex items-center gap-2'>
-            <div className='w-[12%]'>
-              <span className='text-destructive mr-1'>*</span>
-              <Label>Phân loại hàng</Label>
-            </div>
-            <Button variant='outline' size='sm' type='button' onClick={addVariant} className='flex items-center gap-1'>
-              <Plus className='w-4 h-4' />
-              Thêm nhóm phân loại
-            </Button>
-          </div>
-
-          {variants.map((variant, variantIndex) => (
-            <div key={variantIndex} className='space-y-4 p-4 bg-muted/30 rounded-lg'>
-              <div className='flex gap-4'>
-                <div className='flex-1'>
-                  <Input
-                    placeholder='e.g. Color, Size, etc'
-                    value={variant.name}
-                    onChange={(e) => updateVariantName(variantIndex, e.target.value)}
-                  />
-                </div>
-                <Button type='button' variant='ghost' size='icon' onClick={() => removeVariant(variantIndex)}>
-                  <X className='w-4 h-4' />
-                </Button>
-              </div>
-
-              <div className='flex gap-2'>
-                <Input
-                  placeholder='e.g. Red, Blue, etc'
-                  value={newOption}
-                  onChange={(e) => setNewOption(e.target.value)}
-                  className='max-w-[200px]'
-                />
-                <Button variant='outline' size='sm' type='button' onClick={() => addOption(variantIndex)}>
-                  <Plus className='w-4 h-4 mr-1' />
-                  Add
-                </Button>
-              </div>
-
-              <div className='flex flex-wrap gap-2'>
-                {variant.options.map((option, optionIndex) => (
-                  <div key={optionIndex} className='flex items-center gap-1 bg-background px-3 py-1 rounded-md border'>
-                    <span>{option}</span>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      className='h-4 w-4'
-                      onClick={() => removeOption(variantIndex, optionIndex)}
-                    >
-                      <X className='w-3 h-3' />
-                    </Button>
+        <div>
+          <FormField
+            control={form.control}
+            name='productClassifications'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='w-full flex'>
+                  <div className='w-[15%]'>
+                    <FormLabel>Phân loại hàng</FormLabel>
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
-
-          {variants.length > 0 && (
-            <div className='mt-6'>
-              <div className='grid grid-cols-[1fr,1fr,1fr,1fr] gap-4 mb-2'>
-                <div>Variant</div>
-                <div>Price</div>
-                <div>Stock</div>
-                <div>SKU</div>
-              </div>
-              {combinations.map((combination) => (
-                <div key={combination.id} className='grid grid-cols-[1fr,1fr,1fr,1fr] gap-4 items-center py-2 border-t'>
-                  <div className='flex items-center gap-2'>
-                    <div className='w-10 h-10 border rounded flex items-center justify-center'>
-                      <ImageIcon className='w-4 h-4 text-muted-foreground' />
+                  <div className='w-full space-y-1'>
+                    <div className='w-full space-y-3'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        type='button'
+                        className='flex items-center gap-1'
+                        onClick={() => {
+                          const updated = [...(field?.value ?? []), { title: '', price: 0, quantity: 1 }]
+                          field.onChange(updated)
+                        }}
+                      >
+                        <Plus className='w-4 h-4' />
+                        Thêm nhóm phân loại
+                      </Button>
+                      {(field?.value ?? []).length > 0 &&
+                        (field?.value ?? []).map((classification, index) => (
+                          <div className='relative bg-primary/5 rounded-lg p-4' key={classification?.title || index}>
+                            <X
+                              onClick={() => {}}
+                              className='text-destructive hover:cursor-pointer hover:text-destructive/80 absolute right-4 top-4'
+                            />
+                            <FormControl>
+                              <div className='space-y-2'>
+                                <div className='flex gap-2'>
+                                  <div className='w-[10%]'>
+                                    <FormLabel>Phân loại {index + 1}</FormLabel>
+                                  </div>
+                                  <div className='w-[50%]'>
+                                    <Input
+                                      placeholder='e.g. Color, etc'
+                                      className='border-primary/40'
+                                      {...field}
+                                      value={''}
+                                    />
+                                  </div>
+                                </div>
+                                <div className='flex gap-2'>
+                                  <div className='w-[10%]'>
+                                    <FormLabel>Tùy chọn</FormLabel>
+                                  </div>
+                                  <div className='w-[50%]'>
+                                    <Input
+                                      placeholder='e.g. Red, etc'
+                                      className='border-primary/40'
+                                      {...field}
+                                      value={classification?.title ?? ''}
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <Input
+                                    type='number'
+                                    placeholder='Nhập vào'
+                                    className='border-primary/40'
+                                    {...field}
+                                    value={classification?.price ?? ''}
+                                    onChange={(e) => {
+                                      const value = e.target.value
+                                      const updated = [...(field?.value ?? [])]
+                                      updated[index].price = value ? parseFloat(value) : undefined
+                                      field.onChange(updated)
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <Input
+                                    type='number'
+                                    placeholder='Nhập vào'
+                                    className='border-primary/40'
+                                    {...field}
+                                    value={classification?.quantity ?? ''}
+                                    onChange={(e) => {
+                                      const value = e.target.value
+                                      const updated = [...(field?.value ?? [])]
+                                      updated[index].quantity = value ? parseFloat(value) : undefined
+                                      field.onChange(updated)
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </FormControl>
+                          </div>
+                        ))}
                     </div>
-                    <div>{Object.values(combination.values).join(' / ')}</div>
+                    <FormMessage />
                   </div>
-                  <Input
-                    type='number'
-                    placeholder='Enter price'
-                    value={combination.price}
-                    onChange={(e) => {
-                      const newCombinations = [...combinations]
-                      const index = combinations.findIndex((c) => c.id === combination.id)
-                      newCombinations[index].price = e.target.value
-                      setCombinations(newCombinations)
-                    }}
-                  />
-                  <Input
-                    type='number'
-                    placeholder='Enter stock'
-                    value={combination.stock}
-                    onChange={(e) => {
-                      const newCombinations = [...combinations]
-                      const index = combinations.findIndex((c) => c.id === combination.id)
-                      newCombinations[index].stock = e.target.value
-                      setCombinations(newCombinations)
-                    }}
-                  />
-                  <Input
-                    placeholder='Enter SKU'
-                    value={combination.sku}
-                    onChange={(e) => {
-                      const newCombinations = [...combinations]
-                      const index = combinations.findIndex((c) => c.id === combination.id)
-                      newCombinations[index].sku = e.target.value
-                      setCombinations(newCombinations)
-                    }}
-                  />
                 </div>
-              ))}
-            </div>
-          )}
+              </FormItem>
+            )}
+          />
         </div>
+        {form?.getValues()?.productClassifications?.length === 0 && (
+          <div>
+            <FormField
+              control={form.control}
+              name='price'
+              render={({ field }) => (
+                <FormItem className='w-full'>
+                  <div className='w-full flex'>
+                    <div className='w-[15%]'>
+                      <FormLabel required>Giá</FormLabel>
+                    </div>
+                    <div className='w-full space-y-1'>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          placeholder='Nhập vào'
+                          className='border-primary/40'
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) => {
+                            const value = e.target.value
+                            field.onChange(value ? parseFloat(value) : undefined)
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='quantity'
+              render={({ field }) => (
+                <FormItem className='w-full'>
+                  <div className='w-full flex'>
+                    <div className='w-[15%]'>
+                      <FormLabel required>Kho hàng</FormLabel>
+                    </div>
+                    <div className='w-full space-y-1'>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          placeholder='Nhập vào'
+                          className='border-primary/40'
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) => {
+                            const value = e.target.value
+                            field.onChange(value ? parseFloat(value) : undefined)
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

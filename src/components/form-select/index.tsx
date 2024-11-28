@@ -64,7 +64,7 @@ const FormSelect = ({
     setSelectedItems(updatedSelectedItems)
     // handleChange(fieldId, updatedSelectedItems)
     form.setValue(
-      fieldId,
+      `detail.${fieldId}`,
       updatedSelectedItems.map((item) => item.value)
     )
   }
@@ -73,7 +73,7 @@ const FormSelect = ({
     const updatedSelectedItems = selectedItems.filter((item) => item.value !== value)
     setSelectedItems((prev) => prev.filter((item) => item.value !== value))
     form.setValue(
-      fieldId,
+      `detail.${fieldId}`,
       updatedSelectedItems.map((item) => item.value)
     )
   }
@@ -104,7 +104,7 @@ const FormSelect = ({
         }
         setSelectedItems(updatedSelectedItems)
         form.setValue(
-          fieldId,
+          `detail.${fieldId}`,
           updatedSelectedItems.map((item) => item.value)
         )
         setInputValue('')

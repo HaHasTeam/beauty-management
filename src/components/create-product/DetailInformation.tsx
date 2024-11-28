@@ -26,7 +26,7 @@ export default function DetailInformation({ form }: DetailInformationProps) {
           <div key={formField.id} className='space-y-2'>
             <FormField
               control={form.control}
-              name={formField?.id}
+              name={`detail.${formField.id}`}
               render={({ field, formState }) => (
                 <FormItem>
                   <FormLabel>

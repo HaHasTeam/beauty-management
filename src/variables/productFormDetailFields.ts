@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { IOption } from '@/types/option'
 
-export type IFormProductFieldId = keyof z.infer<typeof FormProductSchema>
+export type IFormProductFieldId = keyof z.infer<typeof FormProductSchema>['detail']
 
 export type IProductFormFields = {
   id: IFormProductFieldId
@@ -15,7 +15,7 @@ export type IProductFormFields = {
 
 export const productFormDetailFields: IProductFormFields[] = [
   {
-    id: 'organizationName',
+    id: 'organizationName' as IFormProductFieldId,
     label: 'Tên tổ chức chịu trách nhiệm sản xuất',
     type: 'multiselect',
     options: [
@@ -25,7 +25,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     helperText: '0/5'
   },
   {
-    id: 'organizationAddress',
+    id: 'organizationAddress' as IFormProductFieldId,
     label: 'Địa chỉ tổ chức chịu trách nhiệm sản xuất',
     type: 'multiselect',
     options: [
@@ -35,7 +35,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     helperText: '0/5'
   },
   {
-    id: 'origin',
+    id: 'origin' as IFormProductFieldId,
     label: 'Xuất xứ',
     type: 'select',
     options: [
@@ -44,19 +44,19 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'batchNumber',
+    id: 'batchNumber' as IFormProductFieldId,
     label: 'Số lô sản xuất',
     type: 'input',
     placeholder: 'Vui lòng điền vào'
   },
   {
-    id: 'ingredients',
+    id: 'ingredients' as IFormProductFieldId,
     label: 'Thành phần',
     type: 'input',
     placeholder: 'Vui lòng điền vào'
   },
   {
-    id: 'activeIngredients',
+    id: 'activeIngredients' as IFormProductFieldId,
     label: 'Thành phần hoạt tính',
     type: 'multiselect',
     options: [
@@ -79,7 +79,7 @@ export const productFormDetailFields: IProductFormFields[] = [
   },
 
   {
-    id: 'volume',
+    id: 'volume' as IFormProductFieldId,
     label: 'Thể tích',
     type: 'select',
     options: [
@@ -99,7 +99,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'weight',
+    id: 'weight' as IFormProductFieldId,
     label: 'Trọng lượng',
     type: 'select',
     options: [
@@ -123,12 +123,12 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'expiryDate',
+    id: 'expiryDate' as IFormProductFieldId,
     label: 'Ngày hết hạn',
     type: 'date'
   },
   {
-    id: 'expiryPeriod',
+    id: 'expiryPeriod' as IFormProductFieldId,
     label: 'Hạn sử dụng',
     type: 'select',
     options: [
@@ -142,7 +142,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'storageCondition',
+    id: 'storageCondition' as IFormProductFieldId,
     label: 'Điều kiện bảo quản',
     type: 'select',
     options: [
@@ -154,7 +154,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'formula',
+    id: 'formula' as IFormProductFieldId,
     label: 'Công thức',
     type: 'select',
     options: [
@@ -169,7 +169,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'skinType',
+    id: 'skinType' as IFormProductFieldId,
     label: 'Loại da',
     type: 'multiselect',
     options: [
@@ -185,7 +185,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     helperText: '0/5'
   },
   {
-    id: 'productType',
+    id: 'productType' as IFormProductFieldId,
     label: 'Loại bộ mỹ phẩm',
     type: 'select',
     options: [
@@ -196,7 +196,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'skinCare',
+    id: 'skinCare' as IFormProductFieldId,
     label: 'Chăm sóc da',
     type: 'select',
     options: [
@@ -226,7 +226,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'specialFeatures',
+    id: 'specialFeatures' as IFormProductFieldId,
     label: 'Loại đặc biệt',
     type: 'multiselect',
     options: [
@@ -246,7 +246,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     helperText: '0/5'
   },
   {
-    id: 'packagingType',
+    id: 'packagingType' as IFormProductFieldId,
     label: 'Kiểu đóng gói',
     type: 'select',
     options: [
@@ -255,7 +255,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'quantityPerPack',
+    id: 'quantityPerPack' as IFormProductFieldId,
     label: 'Quantity per pack',
     type: 'select',
     options: [
@@ -269,7 +269,7 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   },
   {
-    id: 'versionType',
+    id: 'versionType' as IFormProductFieldId,
     label: 'Loại phiên bản',
     type: 'select',
     options: [
@@ -281,28 +281,62 @@ export const productFormDetailFields: IProductFormFields[] = [
 
 export const FormProductSchema = z.object({
   // basic information
-  productName: z.string().min(1),
-  productImage: z.array(z.string()).min(1),
-  productDescription: z.string().min(1),
+  name: z.string().min(1),
+  images: z.array(z.string()).min(1),
+  description: z.string().min(1),
   // detail information
-  organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-  organizationAddress: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-  ingredients: z.string().min(0).optional(), // Input field
-  expiryPeriod: z.array(z.string()).optional(), // Select field
-  volume: z.array(z.string()).optional(), // Select field
-  batchNumber: z.string().optional(), // Optional input
-  expiryDate: z.string().optional(), // Date
-  origin: z.array(z.string()).optional(), // Select field
-  weight: z.array(z.string()).optional(), // Select field
-  packagingType: z.array(z.string()).optional(), // Select field
-  formula: z.array(z.string()).optional(), // Select field
-  activeIngredients: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-  skinType: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-  productType: z.array(z.string()).optional(), // Select field
-  skinCare: z.array(z.string()).optional(), // Select field
-  specialFeatures: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-  versionType: z.array(z.string()).optional(), // Select field
-  quantityPerPack: z.array(z.string()).optional(), // Select field
-  storageCondition: z.array(z.string()).optional() // Select field
+  detail: z.object({
+    organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+    organizationAddress: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+    ingredients: z.string().min(0).optional(), // Input field
+    expiryPeriod: z.array(z.string()).optional(), // Select field
+    volume: z.array(z.string()).optional(), // Select field
+    batchNumber: z.string().optional(), // Optional input
+    expiryDate: z.string().optional(), // Date
+    origin: z.array(z.string()).optional(), // Select field
+    weight: z.array(z.string()).optional(), // Select field
+    packagingType: z.array(z.string()).optional(), // Select field
+    formula: z.array(z.string()).optional(), // Select field
+    activeIngredients: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+    skinType: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+    productType: z.array(z.string()).optional(), // Select field
+    skinCare: z.array(z.string()).optional(), // Select field
+    specialFeatures: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+    versionType: z.array(z.string()).optional(), // Select field
+    quantityPerPack: z.array(z.string()).optional(), // Select field
+    storageCondition: z.array(z.string()).optional() // Select field
+  }),
   //  sale information
+  productClassifications: z
+    .array(
+      z.object({
+        title: z.string().min(0).optional(),
+        price: z.number().min(0).optional(),
+        quantity: z.number().min(1).optional()
+      })
+    )
+    .optional(),
+  price: z.number().min(0),
+  quantity: z.number().min(1)
 })
+
+export const generateDefaultDetailValues = () => {
+  const detail: Record<string, IOption[] | string | null | undefined> = {}
+  productFormDetailFields.forEach((field) => {
+    switch (field.type) {
+      case 'multiselect':
+      case 'select':
+        detail[field.id] = [] // Array default for multiselect/select
+        break
+      case 'input':
+        detail[field.id] = '' // Empty string for inputs
+        break
+      case 'date':
+        detail[field.id] = '' // Null for date fields
+        break
+      default:
+        detail[field.id] = undefined
+    }
+  })
+  return detail
+}
