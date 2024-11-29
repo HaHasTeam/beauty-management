@@ -15,24 +15,24 @@ import SalesInformation from './SalesInformation'
 const CreateProduct = () => {
   const id = useId()
   const { successToast } = useToast()
+  const defaultProductValues = {
+    name: '',
+    images: [],
+    description: '',
+    detail: {},
+    productClassifications: []
+  }
 
   const form = useForm<z.infer<typeof FormProductSchema>>({
     resolver: zodResolver(FormProductSchema),
-    defaultValues: {
-      name: '',
-      images: [],
-      description: '',
-      detail: {},
-      productClassifications: [],
-      price: 0,
-      quantity: 1
-    }
+    defaultValues: defaultProductValues
   })
   function onSubmit(data: z.infer<typeof FormProductSchema>) {
     successToast({
       message: JSON.stringify(data, null, 2)
     })
     form.getValues()
+    form.reset()
   }
   return (
     <div>

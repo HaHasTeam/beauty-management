@@ -279,46 +279,123 @@ export const productFormDetailFields: IProductFormFields[] = [
   }
 ]
 
-export const FormProductSchema = z.object({
-  // basic information
-  name: z.string().min(1),
-  images: z.array(z.string()).min(1),
-  description: z.string().min(1),
-  // detail information
-  detail: z.object({
-    organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-    organizationAddress: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-    ingredients: z.string().min(0).optional(), // Input field
-    expiryPeriod: z.array(z.string()).optional(), // Select field
-    volume: z.array(z.string()).optional(), // Select field
-    batchNumber: z.string().optional(), // Optional input
-    expiryDate: z.string().optional(), // Date
-    origin: z.array(z.string()).optional(), // Select field
-    weight: z.array(z.string()).optional(), // Select field
-    packagingType: z.array(z.string()).optional(), // Select field
-    formula: z.array(z.string()).optional(), // Select field
-    activeIngredients: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-    skinType: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-    productType: z.array(z.string()).optional(), // Select field
-    skinCare: z.array(z.string()).optional(), // Select field
-    specialFeatures: z.array(z.string()).min(0).max(5).optional(), // Multiselect
-    versionType: z.array(z.string()).optional(), // Select field
-    quantityPerPack: z.array(z.string()).optional(), // Select field
-    storageCondition: z.array(z.string()).optional() // Select field
-  }),
-  //  sale information
-  productClassifications: z
-    .array(
-      z.object({
-        title: z.string().min(0).optional(),
-        price: z.number().min(0).optional(),
-        quantity: z.number().min(1).optional()
-      })
-    )
-    .optional(),
-  price: z.number().min(0),
-  quantity: z.number().min(1)
-})
+export const FormProductSchema = z
+  .object({
+    // basic information
+    name: z.string().min(1),
+    images: z.array(z.string()).min(1),
+    description: z.string().min(1),
+    // detail information
+    detail: z.object({
+      organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+      organizationAddress: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+      ingredients: z.string().min(0).optional(), // Input field
+      expiryPeriod: z.array(z.string()).optional(), // Select field
+      volume: z.array(z.string()).optional(), // Select field
+      batchNumber: z.string().optional(), // Optional input
+      expiryDate: z.string().optional(), // Date
+      origin: z.array(z.string()).optional(), // Select field
+      weight: z.array(z.string()).optional(), // Select field
+      packagingType: z.array(z.string()).optional(), // Select field
+      formula: z.array(z.string()).optional(), // Select field
+      activeIngredients: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+      skinType: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+      productType: z.array(z.string()).optional(), // Select field
+      skinCare: z.array(z.string()).optional(), // Select field
+      specialFeatures: z.array(z.string()).min(0).max(5).optional(), // Multiselect
+      versionType: z.array(z.string()).optional(), // Select field
+      quantityPerPack: z.array(z.string()).optional(), // Select field
+      storageCondition: z.array(z.string()).optional() // Select field
+    }),
+    //  sale information
+    productClassifications: z
+      .array(
+        z.object({
+          title: z.string().min(1, { message: 'Title is required.' }).optional(),
+          price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),
+          quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional()
+        })
+      )
+      .optional(),
+    price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),
+    quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional()
+  })
+
+  .refine(
+    (data) => {
+      if (!data.productClassifications || data.productClassifications.length === 0) {
+        // If no productClassifications, require product price
+        return data.price !== undefined
+      }
+      return true
+    },
+    {
+      message: 'Price is required when no product classifications are provided.',
+      path: ['price']
+    }
+  )
+  .refine(
+    (data) => {
+      if (!data.productClassifications || data.productClassifications.length === 0) {
+        // If no productClassifications, require product quantity
+        return data.quantity !== undefined
+      }
+      return true
+    },
+    {
+      message: 'Quantity is required when no product classifications are provided.',
+      path: ['quantity']
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.productClassifications && data.productClassifications.length > 0) {
+        // If productClassifications exist, ensure all items have title, price, and quantity
+        return data.productClassifications.every(
+          (item) =>
+            item.title &&
+            item.price !== undefined &&
+            item.quantity !== undefined &&
+            item.title.trim() !== '' &&
+            typeof item.price === 'number' &&
+            item.price > 0 &&
+            typeof item.quantity === 'number' &&
+            item.quantity > 0
+        )
+      }
+      return true
+    },
+    {
+      message: 'Please enter title, price and quantity for each product classifications',
+      path: ['productClassifications']
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.productClassifications && data.productClassifications.length > 0) {
+        // If productClassifications exist, ensure price must be at least 1000đ
+        return data.productClassifications.every((item) => item.price !== undefined && item.price >= 1000)
+      }
+      return true
+    },
+    {
+      message: 'Price must be at least 1000đ.',
+      path: ['productClassifications']
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.productClassifications && data.productClassifications.length > 0) {
+        // If productClassifications exist, ensure quantity  must be at least 1
+        return data.productClassifications.every((item) => item.quantity !== undefined && item.quantity >= 1)
+      }
+      return true
+    },
+    {
+      message: 'Quantity must be at least 1.',
+      path: ['productClassifications']
+    }
+  )
 
 export const generateDefaultDetailValues = () => {
   const detail: Record<string, IOption[] | string | null | undefined> = {}
