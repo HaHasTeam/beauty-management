@@ -115,7 +115,7 @@ export default function SalesInformation({ form }: BasicInformationProps) {
     <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Thông tin bán hàng</h2>
+          <h2 className='font-bold text-xl'>Thông tin bán hàng</h2>
         </div>
         <div>
           <FormField

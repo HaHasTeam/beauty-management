@@ -17,7 +17,7 @@ export default function DetailInformation({ form }: DetailInformationProps) {
   return (
     <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
       <div className='mb-6 flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Thông tin chi tiết</h2>
+        <h2 className='font-bold text-xl'>Thông tin chi tiết</h2>
         <span className='text-sm text-muted-foreground'>Hoàn thành: 0 / {productFormDetailFields.length}</span>
       </div>
 
