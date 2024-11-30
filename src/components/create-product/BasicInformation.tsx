@@ -13,8 +13,9 @@ import UploadProductImages from './UploadProductImages'
 
 interface BasicInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
+  resetSignal?: boolean
 }
-const BasicInformation = ({ form }: BasicInformationProps) => {
+const BasicInformation = ({ form, resetSignal }: BasicInformationProps) => {
   return (
     <div className='bg-white rounded-lg shadow-md p-4 lg:p-6 space-y-4'>
       <h3 className='font-bold text-xl'>Thông tin cơ bản</h3>
@@ -85,6 +86,7 @@ const BasicInformation = ({ form }: BasicInformationProps) => {
                         onSelect={(selected: string) => {
                           field.onChange(selected)
                         }}
+                        resetSignal={resetSignal}
                       />
                     </FormControl>
                     <FormMessage />

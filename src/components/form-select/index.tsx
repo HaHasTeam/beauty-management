@@ -24,6 +24,7 @@ interface FormSelectProps {
   type?: 'select' | 'multiselect'
   maxMultiSelectItems?: number
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
+  resetSignal?: boolean
 }
 const FormSelect = ({
   fieldId,
@@ -34,7 +35,8 @@ const FormSelect = ({
   buttonText,
   type = 'select',
   maxMultiSelectItems,
-  form
+  form,
+  resetSignal
 }: FormSelectProps) => {
   const [items, setItems] = useState(initialItems)
   const [hidden, setHidden] = useState(true)
@@ -125,6 +127,15 @@ const FormSelect = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  useEffect(() => {
+    setItems(initialItems)
+    setHidden(true)
+    setInputValue('')
+    setShowInput(false)
+    setErrorText('')
+    setSelectedItems([])
+  }, [resetSignal, initialItems])
   return (
     <div className='relative' ref={dropdownRef}>
       <FormControl>

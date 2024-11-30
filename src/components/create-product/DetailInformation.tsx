@@ -10,8 +10,9 @@ import { Input } from '../ui/input'
 
 interface DetailInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
+  resetSignal?: boolean
 }
-export default function DetailInformation({ form }: DetailInformationProps) {
+export default function DetailInformation({ form, resetSignal }: DetailInformationProps) {
   const MAX_MULTI_SELECT_ITEMS = 5
 
   return (
@@ -50,6 +51,7 @@ export default function DetailInformation({ form }: DetailInformationProps) {
                       buttonText={'Thêm thuộc tính mới'}
                       type='select'
                       form={form}
+                      resetSignal={resetSignal}
                     />
                   )}
                   {formField.type === 'multiselect' && (
@@ -63,6 +65,7 @@ export default function DetailInformation({ form }: DetailInformationProps) {
                       type='multiselect'
                       maxMultiSelectItems={MAX_MULTI_SELECT_ITEMS}
                       form={form}
+                      resetSignal={resetSignal}
                     />
                   )}
                   {formField.type === 'input' && (
@@ -78,7 +81,7 @@ export default function DetailInformation({ form }: DetailInformationProps) {
                   {formField.type === 'date' && (
                     <FormControl>
                       <FlexDatePicker
-                        onlyPastDates
+                        onlyFutureDates
                         field={field}
                         formState={{
                           ...formState,

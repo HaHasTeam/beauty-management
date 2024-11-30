@@ -1,5 +1,5 @@
 import { Plus, Trash2, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -12,9 +12,10 @@ import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 
 interface BasicInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
+  resetSignal?: boolean
 }
 
-export default function SalesInformation({ form }: BasicInformationProps) {
+export default function SalesInformation({ form, resetSignal }: BasicInformationProps) {
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<{ title: string; options: string[] }[]>([])
   const [combinations, setCombinations] = useState<{ title: string; price: number | ''; quantity: number | '' }[]>([])
@@ -110,6 +111,14 @@ export default function SalesInformation({ form }: BasicInformationProps) {
     setClassificationsOptions(updatedOptions)
     regenerateCombinations(updatedOptions)
   }
+  const handleReset = () => {
+    setClassificationCount(0)
+    setClassificationsOptions([])
+    setCombinations([])
+  }
+  useEffect(() => {
+    handleReset()
+  }, [resetSignal])
 
   return (
     <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>

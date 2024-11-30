@@ -286,12 +286,14 @@ export const FormProductSchema = z
       .string()
       .min(1, { message: 'Product name is required.' })
       .max(120, { message: 'Product name must be less than 120 characters.' }),
+    brand: z.string().min(1, { message: 'Brand is required.' }),
     category: z.string().min(1, { message: 'Category is required.' }),
     images: z.array(z.string()).min(1, { message: 'Product images is required.' }),
     description: z
       .string()
       .min(1, { message: 'Product description is required.' })
       .max(3000, { message: 'Product description must be less than 3000 characters.' }),
+    status: z.string().min(1, { message: 'Status is required.' }),
     // detail information
     detail: z.object({
       organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect

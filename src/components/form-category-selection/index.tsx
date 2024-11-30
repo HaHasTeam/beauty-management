@@ -1,5 +1,5 @@
 import { Check, ChevronDown, ChevronRight, Info } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ICategory } from '@/types/category'
 
@@ -11,8 +11,9 @@ import { ScrollArea } from '../ui/scroll-area'
 interface FormCategorySelectionProps {
   categories: ICategory[]
   onSelect?: (selectedCategories: string) => void
+  resetSignal?: boolean
 }
-export default function FormCategorySelection({ categories, onSelect }: FormCategorySelectionProps) {
+export default function FormCategorySelection({ categories, onSelect, resetSignal }: FormCategorySelectionProps) {
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([])
   const [chosenCategories, setChosenCategories] = useState<ICategory[]>([])
   const [open, setOpen] = useState(false)
@@ -42,10 +43,12 @@ export default function FormCategorySelection({ categories, onSelect }: FormCate
   const handleShowCategorySelect = () => {
     setOpen((prev) => !prev)
   }
+
   const handleCancelCategorySelect = () => {
     setSelectedCategories([])
     setChosenCategories([])
     onSelect?.('')
+    setCategoryError('')
     setOpen(false)
   }
   const handleConfirmSelectCategory = () => {
@@ -71,6 +74,12 @@ export default function FormCategorySelection({ categories, onSelect }: FormCate
       onSelect?.(lastSelectedCategory.id)
     }
   }
+
+  useEffect(() => {
+    setSelectedCategories([])
+    setChosenCategories([])
+    setCategoryError('')
+  }, [resetSignal])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -138,6 +147,7 @@ export default function FormCategorySelection({ categories, onSelect }: FormCate
                     <div className='w-full bg-white mt-1 border border-gray-300'>
                       {subCategories.map((subCategory) => (
                         <div
+                          key={subCategory?.id}
                           className={`w-full flex justify-between p-2 cursor-pointer border-b border-gray-300 hover:bg-gray-200 ${
                             selectedCategories[index + 1]?.id === subCategory?.id ? 'bg-primary/10' : 'bg-white'
                           }`}
