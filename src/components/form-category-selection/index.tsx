@@ -7,13 +7,24 @@ import { Button } from '../ui/button'
 import { FormControl } from '../ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { ScrollArea } from '../ui/scroll-area'
+import { UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
+import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 interface FormCategorySelectionProps {
   categories: ICategory[]
   onSelect?: (selectedCategories: string) => void
   resetSignal?: boolean
+  defineFormSignal?: boolean
+  form: UseFormReturn<z.infer<typeof FormProductSchema>>
 }
-export default function FormCategorySelection({ categories, onSelect, resetSignal }: FormCategorySelectionProps) {
+export default function FormCategorySelection({
+  categories,
+  onSelect,
+  resetSignal,
+  defineFormSignal,
+  form
+}: FormCategorySelectionProps) {
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([])
   const [chosenCategories, setChosenCategories] = useState<ICategory[]>([])
   const [open, setOpen] = useState(false)
@@ -80,6 +91,10 @@ export default function FormCategorySelection({ categories, onSelect, resetSigna
     setChosenCategories([])
     setCategoryError('')
   }, [resetSignal])
+  // useEffect(() => {
+  //   setSelectedCategories(form.getValues('category'))
+  //   setChosenCategories([])
+  // }, [defineFormSignal])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

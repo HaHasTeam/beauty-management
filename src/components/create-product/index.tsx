@@ -2,9 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
 
+import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getUserProfileApi } from '@/network/apis/user'
@@ -36,6 +38,8 @@ const CreateProduct = () => {
 
   const id = useId()
   const { successToast } = useToast()
+  const navigate = useNavigate()
+
   const defaultProductValues = {
     name: '',
     brand: '9efbce21-328e-4189-a433-6852dbf76a45',
@@ -96,7 +100,14 @@ const CreateProduct = () => {
           <DetailInformation form={form} resetSignal={resetSignal} />
           <SalesInformation form={form} resetSignal={resetSignal} />
           <div className='w-full flex justify-end gap-3'>
-            <Button variant='outline' type='submit' onClick={() => {}}>
+            <Button
+              variant='outline'
+              type='submit'
+              onClick={() => {
+                handleReset()
+                navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
+              }}
+            >
               Hủy
             </Button>
             <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>

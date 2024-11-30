@@ -1,18 +1,19 @@
-import { TAuth } from '@/types/auth'
 import { ICreateProduct, IProduct } from '@/types/product'
-import { TServerResponse } from '@/types/request'
-import { TUser } from '@/types/user'
+import { TServerError, TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 export const getAllProductApi = toQueryFetcher<void, TServerResponse<IProduct[]>>('getAllProductApi', async () => {
   return privateRequest('/products')
 })
-export const getProductApi = toQueryFetcher<void, TServerResponse<IProduct>>('getProductApi', async (id) => {
-  return privateRequest('/products/get-by-id/' + id)
-})
+export const getProductApi = toQueryFetcher<string, TServerResponse<ICreateProduct>>(
+  'getProductApi',
+  async (productId) => {
+    return privateRequest(`/products/get-by-id/${productId}`)
+  }
+)
 
-export const createProductApi = toMutationFetcher<ICreateProduct, TServerResponse<TAuth>>(
+export const createProductApi = toMutationFetcher<ICreateProduct, TServerResponse<ICreateProduct>>(
   'createProductApi',
   async (data) => {
     return privateRequest('/products', {
@@ -22,10 +23,10 @@ export const createProductApi = toMutationFetcher<ICreateProduct, TServerRespons
   }
 )
 
-export const updateProductApi = toMutationFetcher<IProduct, TServerResponse<TUser>>(
+export const updateProductApi = toMutationFetcher<ICreateProduct, TServerResponse<ICreateProduct>>(
   'updateProductApi',
-  async (id, data) => {
-    return privateRequest('/products/get-by-id/' + id, {
+  async (productId, data) => {
+    return privateRequest(`/products/get-by-id/${productId}`, {
       method: 'PUT',
       data
     })

@@ -101,7 +101,7 @@ export const routesConfig: TRoutes = {
     name: 'Update Product',
     title: 'Update Product',
     description: 'Update beauty product',
-    path: '/dashboard/products/update',
-    getPath: () => '/dashboard/products/update'
+    path: '/dashboard/products/update/:id',
+    getPath: () => '/dashboard/products/update/:id'
   }
 }
