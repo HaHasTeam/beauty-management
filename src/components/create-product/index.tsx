@@ -17,6 +17,7 @@ const CreateProduct = () => {
   const { successToast } = useToast()
   const defaultProductValues = {
     name: '',
+    category: '',
     images: [],
     description: '',
     detail: {},

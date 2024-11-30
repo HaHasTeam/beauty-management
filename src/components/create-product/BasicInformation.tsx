@@ -2,10 +2,13 @@ import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
+import { categories } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
+import FormCategorySelection from '../form-category-selection'
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
+import { Textarea } from '../ui/textarea'
 import UploadProductImages from './UploadProductImages'
 
 interface BasicInformationProps {
@@ -65,6 +68,34 @@ const BasicInformation = ({ form }: BasicInformationProps) => {
         </div>
       </div>
       <div className='space-y-2 w-full'>
+        <div className='flex w-full'>
+          <FormField
+            control={form.control}
+            name='category'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='w-full flex'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>Ngành hàng</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <FormCategorySelection
+                        categories={categories}
+                        onSelect={(selected: string) => {
+                          field.onChange(selected)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+      <div className='space-y-2 w-full'>
         <div className='w-full'>
           <FormField
             control={form.control}
@@ -77,7 +108,7 @@ const BasicInformation = ({ form }: BasicInformationProps) => {
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>
-                      <Input placeholder='Mô tả sản phẩm' className='border-primary/40' {...field} />
+                      <Textarea placeholder='Mô tả sản phẩm' className='border-primary/40' {...field} />
                     </FormControl>
                     <FormMessage />
                   </div>

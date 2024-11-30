@@ -282,9 +282,16 @@ export const productFormDetailFields: IProductFormFields[] = [
 export const FormProductSchema = z
   .object({
     // basic information
-    name: z.string().min(1),
-    images: z.array(z.string()).min(1),
-    description: z.string().min(1),
+    name: z
+      .string()
+      .min(1, { message: 'Product name is required.' })
+      .max(120, { message: 'Product name must be less than 120 characters.' }),
+    category: z.string().min(1, { message: 'Category is required.' }),
+    images: z.array(z.string()).min(1, { message: 'Product images is required.' }),
+    description: z
+      .string()
+      .min(1, { message: 'Product description is required.' })
+      .max(3000, { message: 'Product description must be less than 3000 characters.' }),
     // detail information
     detail: z.object({
       organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiselect
@@ -320,7 +327,6 @@ export const FormProductSchema = z
     price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),
     quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional()
   })
-
   .refine(
     (data) => {
       if (!data.productClassifications || data.productClassifications.length === 0) {
