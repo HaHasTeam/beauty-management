@@ -14,9 +14,11 @@ import { LoadingCircle } from '../progress/CircleProgress'
 type UploadProductImagesProps = {
   dropZoneConfigOptions?: DropzoneOptions
   field: React.InputHTMLAttributes<HTMLInputElement>
+  maxFileInput: number
 }
 
-const UploadProductImages = ({ dropZoneConfigOptions, field }: UploadProductImagesProps) => {
+const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: UploadProductImagesProps) => {
+  console.log(field)
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
@@ -72,7 +74,7 @@ const UploadProductImages = ({ dropZoneConfigOptions, field }: UploadProductImag
       'application/msword': ['.doc']
     },
     multiple: true,
-    maxFiles: 7,
+    maxFiles: maxFileInput,
     maxSize: 1 * 1024 * 1024,
     ...dropZoneConfigOptions
   } satisfies DropzoneOptions
@@ -125,8 +127,9 @@ const UploadProductImages = ({ dropZoneConfigOptions, field }: UploadProductImag
   const onFileDrop = async (newFiles: File[] | null) => {
     if (!newFiles) return
     setFiles(newFiles)
-
+    console.log('new', newFiles)
     const oldFiles = files
+    console.log('old', oldFiles)
     try {
       // Check file is string or array
       // If string, convert to file and set to state

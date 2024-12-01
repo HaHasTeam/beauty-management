@@ -32,7 +32,7 @@ const BasicInformation = ({ form, resetSignal, defineFormSignal }: BasicInformat
               </div>
               <FormControl>
                 <div className='w-full space-y-1'>
-                  <UploadProductImages field={field} />
+                  <UploadProductImages field={field} maxFileInput={7} />
                   <FormMessage />
                 </div>
               </FormControl>

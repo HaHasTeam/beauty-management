@@ -288,7 +288,15 @@ export const FormProductSchema = z
       .max(120, { message: 'Product name must be less than 120 characters.' }),
     brand: z.string().min(1, { message: 'Brand is required.' }),
     category: z.string().min(1, { message: 'Category is required.' }),
-    images: z.array(z.string()).min(1, { message: 'Product images is required.' }),
+    images: z
+      .array(
+        // z.object({
+        //   fileUrl: z.string().min(1, { message: 'Image URL is required.' }).optional(),
+        //   name: z.string().optional()
+        // })
+        z.string()
+      )
+      .min(1, { message: 'Product images is required.' }),
     description: z
       .string()
       .min(1, { message: 'Product description is required.' })
@@ -321,8 +329,10 @@ export const FormProductSchema = z
       .array(
         z.object({
           title: z.string().min(1, { message: 'Title is required.' }).optional(),
+          type: z.string().min(0).optional(),
           price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),
-          quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional()
+          quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional(),
+          image: z.string().min(1, { message: 'Image URL is required.' }).optional()
         })
       )
       .optional(),
@@ -362,6 +372,7 @@ export const FormProductSchema = z
         return data.productClassifications.every(
           (item) =>
             item.title &&
+            item.image &&
             item.price !== undefined &&
             item.quantity !== undefined &&
             item.title.trim() !== '' &&
@@ -374,7 +385,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: 'Please enter title, price and quantity for each product classifications',
+      message: 'Please enter title, price, image and quantity for each product classifications',
       path: ['productClassifications']
     }
   )
@@ -417,7 +428,7 @@ export const generateDefaultDetailValues = () => {
         detail[field.id] = '' // Empty string for inputs
         break
       case 'date':
-        detail[field.id] = '' // Null for date fields
+        detail[field.id] = '' // Empty string for date fields
         break
       default:
         detail[field.id] = undefined

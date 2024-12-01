@@ -1,15 +1,15 @@
 import { Check, ChevronDown, ChevronRight, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
 
 import { ICategory } from '@/types/category'
+import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 import { Button } from '../ui/button'
 import { FormControl } from '../ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { ScrollArea } from '../ui/scroll-area'
-import { UseFormReturn } from 'react-hook-form'
-import { z } from 'zod'
-import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 interface FormCategorySelectionProps {
   categories: ICategory[]
@@ -91,10 +91,40 @@ export default function FormCategorySelection({
     setChosenCategories([])
     setCategoryError('')
   }, [resetSignal])
-  // useEffect(() => {
-  //   setSelectedCategories(form.getValues('category'))
-  //   setChosenCategories([])
-  // }, [defineFormSignal])
+  useEffect(() => {
+    if (defineFormSignal) {
+      const lastSelectedCategory = form.getValues('category')
+
+      if (!lastSelectedCategory) {
+        setSelectedCategories([])
+        return
+      }
+
+      // Helper to find the category object by ID
+      const findCategoryById = (id: string): ICategory | undefined => {
+        return categories.find((cat) => cat.id === id)
+      }
+
+      // Function to build the path from leaf to root
+      const buildCategoryPath = (categoryId: string): ICategory[] => {
+        const path: ICategory[] = []
+        let currentCategory = findCategoryById(categoryId)
+
+        while (currentCategory) {
+          path.unshift(currentCategory)
+          currentCategory = currentCategory.parentCategory
+            ? findCategoryById(currentCategory.parentCategory.id)
+            : undefined
+        }
+
+        return path
+      }
+
+      // Build the path and set selected categories
+      const categoryPath = buildCategoryPath(lastSelectedCategory)
+      setSelectedCategories(categoryPath)
+    }
+  }, [defineFormSignal, form, categories])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

@@ -8,17 +8,28 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
-import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
+import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
+import UploadProductImages from './UploadProductImages'
 
 interface BasicInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
+  defineFormSignal?: boolean
 }
 
-export default function SalesInformation({ form, resetSignal }: BasicInformationProps) {
+type IClassificationOption = { title: string; options: string[] }
+type ICombination = {
+  title?: string
+  price?: number
+  quantity?: number
+  image?: string
+}
+
+export default function SalesInformation({ form, resetSignal, defineFormSignal }: BasicInformationProps) {
   const [classificationCount, setClassificationCount] = useState<number>(0)
-  const [classificationsOptions, setClassificationsOptions] = useState<{ title: string; options: string[] }[]>([])
-  const [combinations, setCombinations] = useState<{ title: string; price: number | ''; quantity: number | '' }[]>([])
+  const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
+  const [combinations, setCombinations] = useState<ICombination[]>([])
 
   // const generateCombinations = () => {
   //   if (classificationsOptions.length === 0) return
@@ -41,7 +52,7 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
 
   const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
     const [options1 = [], options2 = ['']] = updatedOptions.map((c) => c.options)
-    const newCombinations: { title: string; price: number | ''; quantity: number | '' }[] = []
+    const newCombinations: ICombination[] = []
 
     options1.forEach((o1) => {
       options2.forEach((o2) => {
@@ -49,13 +60,42 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
 
         newCombinations.push({
           title: o2 ? `${o1}-${o2}` : `${o1}`,
-          price: existingCombination?.price ?? '',
-          quantity: existingCombination?.quantity ?? ''
+          price: existingCombination?.price ?? undefined,
+          quantity: existingCombination?.quantity ?? undefined
         })
       })
     })
 
     setCombinations(newCombinations)
+  }
+  const regenerateUpdatedOptions = (newCombinations: ICombination[]): IClassificationOption[] => {
+    const updatedOptions: IClassificationOption[] = []
+
+    // Extract unique options from combinations
+    const optionsSet1 = new Set<string>()
+    const optionsSet2 = new Set<string>()
+
+    newCombinations.forEach((combo) => {
+      const parts = combo?.title?.split('-') ?? ''
+      optionsSet1.add(parts[0])
+      if (parts[1]) {
+        optionsSet2.add(parts[1])
+      }
+    })
+
+    // Construct updatedOptions from sets
+    const options1 = Array.from(optionsSet1)
+    const options2 = Array.from(optionsSet2)
+
+    if (options1.length) {
+      updatedOptions.push({ title: `Phân loại 1`, options: options1 })
+    }
+
+    if (options2.length) {
+      updatedOptions.push({ title: `Phân loại 2`, options: options2 })
+    }
+
+    return updatedOptions
   }
 
   const handleAddClassification = () => {
@@ -64,7 +104,10 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
     setClassificationsOptions((prev) => [...prev, { title: '', options: [] }])
 
     const currentClassifications = form.getValues('productClassifications') || []
-    form.setValue('productClassifications', [...currentClassifications, { title: '', price: 0, quantity: 1 }])
+    form.setValue('productClassifications', [
+      ...currentClassifications,
+      { title: '', image: '', type: '', price: 0, quantity: 1 }
+    ])
 
     form.resetField('price')
     form.resetField('quantity')
@@ -96,6 +139,7 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
     const updatedOptions = [...classificationsOptions]
     updatedOptions[classificationIndex].options.push('')
     setClassificationsOptions(updatedOptions)
+    regenerateCombinations(updatedOptions)
   }
 
   const handleUpdateOption = (classificationIndex: number, optionIndex: number, value: string) => {
@@ -103,6 +147,16 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
     updatedOptions[classificationIndex].options[optionIndex] = value
     setClassificationsOptions(updatedOptions)
     regenerateCombinations(updatedOptions)
+    const currentClassifications = form.getValues('productClassifications')
+    form.setValue(
+      'productClassifications',
+      currentClassifications.map((item, idx) => {
+        if (idx === classificationIndex) {
+          return { ...item, options: updatedOptions[classificationIndex].options }
+        }
+        return item
+      })
+    )
   }
 
   const handleRemoveOption = (classificationIndex: number, optionIndex: number) => {
@@ -120,6 +174,19 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
     handleReset()
   }, [resetSignal])
 
+  useEffect(() => {
+    // Extract product classifications
+    const newCombinations = form?.getValues('productClassifications') ?? []
+    const classificationsOptions = regenerateUpdatedOptions(newCombinations)
+    const newClassificationCount = classificationsOptions?.length
+    // Generate combinations
+
+    // Update state
+    setClassificationCount(newClassificationCount)
+    setClassificationsOptions(classificationsOptions)
+    setCombinations(newCombinations)
+  }, [defineFormSignal, form])
+
   return (
     <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
       <div className='space-y-6'>
@@ -134,7 +201,7 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
               <FormItem className='w-full'>
                 <div className='w-full flex'>
                   <div className='w-[15%]'>
-                    <FormLabel>Phân loại hàng</FormLabel>
+                    <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
                   </div>
                   <div className='w-full space-y-1'>
                     <div className='w-full space-y-3'>
@@ -163,13 +230,13 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
                                 <div className='space-y-2'>
                                   <div className='flex gap-2 items-center'>
                                     <div className='w-[10%]'>
-                                      <FormLabel>Phân loại {index + 1}</FormLabel>
+                                      <FormLabel required={classificationCount > 0}>Phân loại {index + 1}</FormLabel>
                                     </div>
                                     <Button
                                       type='button'
                                       variant='outline'
                                       size='sm'
-                                      className='border border-primary/40 text-primary hover:bg-primary/20'
+                                      className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
                                       onClick={() => handleAddOption(index)}
                                     >
                                       Thêm Option
@@ -205,41 +272,106 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
                         </>
                       )}
                       {combinations.length > 0 && (
-                        <div className='mt-4 bg-primary/5 rounded-lg p-4'>
+                        <div className='mt-4 bg-primary/5 rounded-lg p-4 space-y-2'>
                           <h3 className='text-md font-semibold'>Tùy chọn giá và số lượng</h3>
-                          {combinations.map((combo, index) => (
-                            <div key={index} className='flex items-center gap-4 mt-2'>
-                              <div className='w-[10%]'>
-                                <FormLabel>{combo.title}</FormLabel>
-                              </div>
-                              <Input
-                                placeholder='Giá'
-                                type='number'
-                                {...field}
-                                value={combo?.price ?? 0}
-                                onChange={(e) => {
-                                  const updated = [...combinations]
-                                  updated[index].price = e.target.value && parseFloat(e.target.value)
-                                  setCombinations(updated)
-                                  field.onChange(updated)
-                                }}
-                                className='border-primary/40 w-[30%]'
-                              />
-                              <Input
-                                placeholder='Số lượng'
-                                type='number'
-                                {...field}
-                                value={combo.quantity ?? 1}
-                                onChange={(e) => {
-                                  const updated = [...combinations]
-                                  updated[index].quantity = e.target.value && parseFloat(e.target.value)
-                                  setCombinations(updated)
-                                  field.onChange(updated)
-                                }}
-                                className='border-primary/40 w-[30%]'
-                              />
-                            </div>
-                          ))}
+                          <div>
+                            <Table className='hover:bg-transparent items-center'>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>
+                                    <FormLabel required styleParent='justify-center'>
+                                      Phân loại 1
+                                    </FormLabel>
+                                  </TableHead>
+                                  {classificationCount === 2 && (
+                                    <TableHead>
+                                      <FormLabel required styleParent='justify-center'>
+                                        Phân loại 2
+                                      </FormLabel>
+                                    </TableHead>
+                                  )}
+                                  <TableHead>
+                                    <FormLabel required styleParent='justify-center'>
+                                      Giá
+                                    </FormLabel>
+                                  </TableHead>
+                                  <TableHead>
+                                    <FormLabel required styleParent='justify-center'>
+                                      Kho hàng
+                                    </FormLabel>
+                                  </TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {combinations.map((combo, index) => (
+                                  <TableRow key={index}>
+                                    {/* <div key={index} className='flex items-center gap-4 mt-2'> */}
+                                    <TableCell className='space-y-2'>
+                                      <FormLabel styleParent='justify-center'>
+                                        {combo?.title?.split('-')[0]?.trim()}
+                                      </FormLabel>
+                                      <FormField
+                                        control={form.control}
+                                        name={`productClassifications.${index}.image`}
+                                        render={({ field }) => (
+                                          <FormItem className='w-full'>
+                                            <div className='flex w-full'>
+                                              <FormControl>
+                                                <div className='w-full space-y-1 flex justify-center'>
+                                                  <UploadProductImages field={field} maxFileInput={1} />
+                                                  <FormMessage />
+                                                </div>
+                                              </FormControl>
+                                            </div>
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </TableCell>
+                                    {classificationCount === 2 && (
+                                      <TableCell>
+                                        <FormLabel styleParent='justify-center'>
+                                          {combo?.title?.split('-')[1]?.trim()}
+                                        </FormLabel>
+                                      </TableCell>
+                                    )}
+                                    <TableCell>
+                                      <Input
+                                        placeholder='Giá'
+                                        type='number'
+                                        {...field}
+                                        value={combo?.price ?? 0}
+                                        onChange={(e) => {
+                                          const updated = [...combinations]
+                                          updated[index].price = e.target.value ? parseFloat(e.target.value) : undefined
+                                          setCombinations(updated)
+                                          field.onChange(updated)
+                                        }}
+                                        className='border-primary/40 w-full'
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input
+                                        placeholder='Số lượng'
+                                        type='number'
+                                        {...field}
+                                        value={combo.quantity ?? 1}
+                                        onChange={(e) => {
+                                          const updated = [...combinations]
+                                          updated[index].quantity = e.target.value
+                                            ? parseFloat(e.target.value)
+                                            : undefined
+                                          setCombinations(updated)
+                                          field.onChange(updated)
+                                        }}
+                                        className='border-primary/40 w-full'
+                                      />
+                                    </TableCell>
+                                    {/* </div> */}
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -272,6 +404,8 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
                           onChange={(e) => {
                             const value = e.target.value
                             field.onChange(value && parseFloat(value))
+                            handleReset()
+                            form.resetField('productClassifications')
                           }}
                         />
                       </FormControl>
@@ -301,6 +435,8 @@ export default function SalesInformation({ form, resetSignal }: BasicInformation
                           onChange={(e) => {
                             const value = e.target.value
                             field.onChange(value && parseFloat(value))
+                            handleReset()
+                            form.resetField('productClassifications')
                           }}
                         />
                       </FormControl>

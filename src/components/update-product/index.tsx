@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/useToast'
 import { getUserProfileApi } from '@/network/apis/user'
 import { getProductApi, updateProductApi } from '@/network/product'
 import { useStore } from '@/stores/store'
-import { ProductEnum } from '@/types/product'
+import { ICreateProduct, ProductEnum } from '@/types/product'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 import BasicInformation from '../create-product/BasicInformation'
@@ -68,7 +68,7 @@ const UpdateProduct = () => {
   const handleServerError = useHandleServerError()
 
   const handleReset = () => {
-    form.reset()
+    form.reset(defaultProductValues)
     setResetSignal((prev) => !prev)
   }
 
@@ -101,8 +101,21 @@ const UpdateProduct = () => {
     }
   }
   useEffect(() => {
-    if (productData?.data) {
-      form.reset(productData?.data)
+    if (!isGettingProduct && productData?.data) {
+      const formValue: ICreateProduct = {
+        id: productData?.data[0]?.id,
+        name: productData?.data[0].name,
+        brand: productData?.data[0]?.brand?.id,
+        category: productData?.data[0]?.category?.id,
+        images: productData?.data[0]?.images,
+        description: productData?.data[0]?.description,
+        detail: productData?.data[0]?.detail,
+        productClassifications: productData?.data[0]?.productClassifications,
+        status: productData?.data[0]?.status
+      }
+      console.log(productData)
+      console.log(formValue)
+      form.reset(formValue)
       setDefineFormSignal((prev) => !prev)
     }
   }, [productData?.data, form])

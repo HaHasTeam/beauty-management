@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/useToast'
 import { getUserProfileApi } from '@/network/apis/user'
 import { createProductApi } from '@/network/product'
 import { useStore } from '@/stores/store'
-import { ProductEnum } from '@/types/product'
+import { ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 import { Button } from '../ui/button'
@@ -82,8 +82,32 @@ const CreateProduct = () => {
       if (isAuthenticated && !isLoading && !isGettingUserProfile) {
         form.setValue('brand', (useProfileData?.data?.brand ?? [])[0] ?? '9efbce21-328e-4189-a433-6852dbf76a45')
       }
-      await createProductFn(values)
-      handleReset()
+      const transformedData = {
+        ...values,
+        images: values.images.map((image) => ({
+          fileUrl: image // Transform image strings to objects
+        })),
+        detail: JSON.stringify(values.detail), // Convert detail object to a string
+        productClassifications:
+          values.productClassifications?.length > 0
+            ? values.productClassifications
+            : [
+                {
+                  title: 'Default',
+                  image: 'default image',
+                  price: values.price ?? 1000, // Ensure fallback values
+                  quantity: values.quantity ?? 1,
+                  type: ProductClassificationTypeEnum.DEFAULT
+                }
+              ]
+      }
+
+      // Call mutation with the transformed data
+      await createProductFn(transformedData)
+
+      console.log('Original Values:', values)
+      console.log('Transformed Data:', transformedData)
+      // handleReset();
     } catch (error) {
       handleServerError({
         error,
@@ -99,7 +123,13 @@ const CreateProduct = () => {
           <BasicInformation form={form} resetSignal={resetSignal} />
           <DetailInformation form={form} resetSignal={resetSignal} />
           <SalesInformation form={form} resetSignal={resetSignal} />
-          <div className='w-full flex justify-end gap-3'>
+          <div className='w-full flex flex-row-reverse justify-start gap-3'>
+            <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
+              Submit and Show
+            </Button>
+            <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
+              Submit and Hide
+            </Button>
             <Button
               variant='outline'
               type='submit'
@@ -109,12 +139,6 @@ const CreateProduct = () => {
               }}
             >
               Hủy
-            </Button>
-            <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-              Submit and Hide
-            </Button>
-            <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-              Submit and Show
             </Button>
           </div>
         </form>

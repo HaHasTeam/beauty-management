@@ -25,6 +25,7 @@ interface FormSelectProps {
   maxMultiSelectItems?: number
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
+  defineFormSignal?: boolean
 }
 const FormSelect = ({
   fieldId,
@@ -36,7 +37,8 @@ const FormSelect = ({
   type = 'select',
   maxMultiSelectItems,
   form,
-  resetSignal
+  resetSignal,
+  defineFormSignal
 }: FormSelectProps) => {
   const [items, setItems] = useState(initialItems)
   const [hidden, setHidden] = useState(true)
@@ -48,6 +50,7 @@ const FormSelect = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowCommandDialog = () => {
+    console.log(form.getValues())
     setHidden((prev) => !prev)
   }
   const handleSelectItem = (item: IOption) => {
@@ -136,6 +139,18 @@ const FormSelect = ({
     setErrorText('')
     setSelectedItems([])
   }, [resetSignal, initialItems])
+
+  useEffect(() => {
+    if (defineFormSignal) {
+      const backendValues: string | string[] = form.getValues(`detail.${fieldId}`) || []
+
+      // Map backend values to corresponding items in the `items` list
+      const updatedSelectedItems = items.filter((item) => backendValues?.includes(item?.value))
+
+      // Update the selectedItems state
+      setSelectedItems(updatedSelectedItems)
+    }
+  }, [defineFormSignal, form, fieldId, items])
   return (
     <div className='relative' ref={dropdownRef}>
       <FormControl>

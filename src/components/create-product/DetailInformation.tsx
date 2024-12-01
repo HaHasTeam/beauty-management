@@ -11,8 +11,9 @@ import { Input } from '../ui/input'
 interface DetailInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
+  defineFormSignal?: boolean
 }
-export default function DetailInformation({ form, resetSignal }: DetailInformationProps) {
+export default function DetailInformation({ form, resetSignal, defineFormSignal }: DetailInformationProps) {
   const MAX_MULTI_SELECT_ITEMS = 5
 
   return (
@@ -52,6 +53,7 @@ export default function DetailInformation({ form, resetSignal }: DetailInformati
                       type='select'
                       form={form}
                       resetSignal={resetSignal}
+                      defineFormSignal={defineFormSignal}
                     />
                   )}
                   {formField.type === 'multiselect' && (
@@ -66,6 +68,7 @@ export default function DetailInformation({ form, resetSignal }: DetailInformati
                       maxMultiSelectItems={MAX_MULTI_SELECT_ITEMS}
                       form={form}
                       resetSignal={resetSignal}
+                      defineFormSignal={defineFormSignal}
                     />
                   )}
                   {formField.type === 'input' && (
