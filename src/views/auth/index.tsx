@@ -1,5 +1,5 @@
-import AuthUI from '@/components/auth/AuthUI'
-import DefaultAuthLayout from '@/components/auth/DefaultAuthLayout'
+import AuthUI from './AuthUI'
+import DefaultAuthLayout from './DefaultAuthLayout'
 
 const index = () => {
   return (

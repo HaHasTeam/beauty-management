@@ -33,8 +33,19 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
   const [isOpen, setIsOpen] = useState(false)
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
-
   const [progress, setProgress] = useState(0)
+
+  const dropZoneConfig = {
+    accept: {
+      'image/*': ['.jpg', '.jpeg', '.png'],
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc']
+    },
+    multiple: true,
+    maxFiles: 1,
+    maxSize: 1 * 1024 * 1024,
+    ...dropZoneConfigOptions
+  } satisfies DropzoneOptions
 
   const { mutateAsync: uploadFilesFn, isPending: isUploadingFiles } = useMutation({
     mutationKey: [uploadFilesApi.mutationKey],
@@ -60,7 +71,7 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
     fieldValue: string | string[]
   }>(() => {
     if (typeof field?.value === 'string') {
-      if (dropZoneConfigOptions?.maxFiles && dropZoneConfigOptions?.maxFiles > 1) {
+      if (dropZoneConfig?.maxFiles && dropZoneConfig?.maxFiles > 1) {
         throw new Error('Field value must be an array')
       }
 
@@ -75,20 +86,9 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
       }
     }
     throw new Error('Field value must be a string or an array')
-  }, [field?.value, dropZoneConfigOptions?.maxFiles])
+  }, [field?.value, dropZoneConfig?.maxFiles])
 
   const isDragActive = false
-  const dropZoneConfig = {
-    accept: {
-      'image/*': ['.jpg', '.jpeg', '.png'],
-      'application/pdf': ['.pdf'],
-      'application/msword': ['.doc']
-    },
-    multiple: true,
-    maxFiles: 2,
-    maxSize: 1 * 1024 * 1024,
-    ...dropZoneConfigOptions
-  } satisfies DropzoneOptions
 
   useEffect(() => {
     const transferData = async () => {
@@ -191,11 +191,11 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
   return (
     <Dialog open={isOpen || isUploadingFiles} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{Trigger}</DialogTrigger>
-      <DialogContent className='w-full bg-background border-border shadow-lg'>
+      <DialogContent className='sm:max-w-2xl bg-background border-border shadow-lg'>
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold text-foreground'>Upload Your File(s)</DialogTitle>
           <DialogDescription className='text-muted-foreground'>
-            Drag and drop your images here or click to select files
+            Drag and drop your file here or click to select files
           </DialogDescription>
         </DialogHeader>
         <div
