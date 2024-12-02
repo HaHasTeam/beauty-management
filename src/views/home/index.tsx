@@ -1,16 +1,96 @@
-import { defineStepper } from '@stepperize/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BadgePlus, Images, Info } from 'lucide-react'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import MockImage from '@/assets/SidebarBadge.png'
-import Steppers from '@/components/steppers'
+import BranchCreation from '@/components/branch/BranchCreation'
+import BranchDetails from '@/components/branch/BranchDetails'
+import Confirmation from '@/components/branch/Confirmation'
+// import DocumentDetails from '@/components/branch/DocumentDetails'
+import UplImagesUploader from '@/components/branch/UplImagesUploader'
+import Stepper from '@/components/steppers'
+import { Form } from '@/components/ui/form'
+import type { Steppers } from '@/hooks/useStepper'
+import useStepper from '@/hooks/useStepper'
+import { useToast } from '@/hooks/useToast'
+import { brandCreateSchema } from '@/schemas'
 
 function Home() {
-  const { useStepper, steps } = defineStepper(
-    { id: 'step-1', title: 'Step 1', description: 'Description for step 1' },
-    { id: 'step-2', title: 'Step 2', description: 'Description for step 2' },
-    { id: 'step-3', title: 'Step 3', description: 'Description for step 3' },
-    { id: 'step-4', title: 'Step 4', description: 'Description for step 4' }
-  )
-  const stepper = useStepper()
+  const { errorToast } = useToast()
+
+  const form = useForm<z.infer<typeof brandCreateSchema>>({
+    resolver: zodResolver(brandCreateSchema),
+    defaultValues: {
+      email: '',
+      phone: '',
+      address: '',
+      description: '',
+      document: '',
+      logo: '',
+      name: ''
+    }
+  })
+  const steppers: Steppers[] = [
+    {
+      icon: <BadgePlus />,
+      label: 'Branch Creation',
+      key: 'branch-creation'
+    },
+
+    {
+      icon: <Info />,
+      label: 'Branch details',
+      key: 'branch-details'
+    },
+    {
+      icon: <Images />,
+      label: 'Images',
+      key: 'images'
+    }
+    // {
+    //   icon: <ContactRoundIcon />,
+    //   label: 'Lisense details',
+    //   key: 'lisense-details'
+    // }
+  ]
+  const { activeStep, goBack, goNext } = useStepper({ steppers })
+  const Silde = useMemo(() => {
+    switch (steppers[activeStep]?.key) {
+      case 'branch-creation':
+        return <BranchCreation stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} />
+      case 'branch-details':
+        return (
+          <BranchDetails stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} form={form} />
+        )
+      case 'images':
+        return (
+          <UplImagesUploader
+            stepIndex={activeStep}
+            goNextFn={goNext}
+            goBackfn={goBack}
+            steppers={steppers}
+            form={form}
+          />
+        )
+      // case 'lisense-details':
+      //   return <DocumentDetails stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} />
+      default:
+        return <Confirmation stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} />
+    }
+  }, [activeStep])
+
+  function onSubmit(values: z.infer<typeof brandCreateSchema>) {
+    try {
+      console.log('valuse', values)
+    } catch (error) {
+      console.error('Form submission error', error)
+      errorToast({
+        message: 'Failed to submit the form. Please try again.'
+      })
+    }
+  }
   return (
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-secondary px-4 py-3 shadow-md'>
@@ -20,33 +100,21 @@ function Home() {
         </div>
       </header>
 
-      <main className='mx-auto max-w-3xl px-4 py-8'>
-        <div className='mb-8 flex justify-between'>
-          {/* {steps.map((step, index) => (
-            <div key={step.id} className='flex flex-1 items-center'>
-              <div className='flex flex-col items-center'>
-                <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                    step.id === stepper.current.id ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-500'
-                  }`}
-                >
-                  {index + 1}
-                </div>
-                <span
-                  className={`mt-2 text-sm ${step.id === stepper.current.id ? 'text-orange-500' : 'text-gray-500'}`}
-                >
-                  {step.title}
-                </span>
-              </div>
-              {index < steps.length - 1 && (
-                <div className={`h-[2px] flex-1 ${step.id < stepper.current.id ? 'bg-orange-500' : 'bg-gray-200'}`} />
-              )}
-            </div>
-          ))} */}
-          <Steppers steps={steps} stepperHook={stepper} />
-        </div>
+      <main className='m-auto max-w-3xl px-4 py-8 mt-10 bg-white rounded-lg backdrop-blur-3xl'>
+        <Stepper steppers={steppers} activeStep={activeStep} />
 
-        <div className='rounded-lg bg-white p-6 shadow-sm'>form here</div>
+        <div className='p-6'>
+          <Form {...form}>
+            <form
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='w-full grid gap-4 mb-8'
+              id={`form-create-branch`}
+            >
+              {Silde}
+            </form>
+          </Form>
+        </div>
       </main>
     </div>
   )

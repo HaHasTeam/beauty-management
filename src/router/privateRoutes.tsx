@@ -15,9 +15,9 @@ export const privateRoutes: RouteObject[] = [
   {
     path: '/dashboard',
     element: (
-      <AuthGuard>
-        <Layout />
-      </AuthGuard>
+      // <AuthGuard>
+      <Layout />
+      // </AuthGuard>
     ),
     children: [
       {

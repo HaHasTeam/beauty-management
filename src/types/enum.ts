@@ -1,0 +1,63 @@
+export enum RoleEnum {
+  CUSTOMER = 'CUSTOMER',
+  MANAGER = 'MANAGER',
+  CONSULTANT = 'CONSULTANT',
+  STAFF = 'STAFF',
+  KOL = 'KOL',
+  ADMIN = 'ADMIN',
+  OPERATOR = 'OPERATOR'
+}
+
+export enum GenderEnum {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER'
+}
+
+export enum StatusEnum {
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  BANNED = 'BANNED'
+}
+
+export enum AddressEnum {
+  HOME = 'HOME',
+  OFFICE = 'OFFICE',
+  OTHER = 'OTHER'
+}
+
+export enum ProductEnum {
+  PRE_ORDER = 'PRE_ORDER',
+  OFFICIAL = 'OFFICIAL',
+  OUT_OF_STOCK = 'OUT_OF_STOCK',
+  INACTIVE = 'INACTIVE'
+}
+
+export enum FileEnum {
+  CERTIFICATE = 'CERTIFICATE',
+  AVATAR = 'AVATAR',
+  PRODUCT_IMAGE = 'PRODUCT_IMAGE',
+  POPUP_IMAGE = 'POPUP_IMAGE',
+  BRAND_IMAGE = 'BRAND_IMAGE',
+  BRAND_LOGO = 'BRAND_LOGO',
+  BRAND_DOCUMENT = 'BRAND_DOCUMENT',
+  SERVICE_IMAGE = 'SERVICE_IMAGE'
+}
+
+export enum VoucherEnum {
+  GROUP_BUYING = 'GROUP_BUYING',
+  NORMAL = 'NORMAL'
+}
+
+export enum DiscountTypeEnum {
+  PERCENTAGE = 'PERCENTAGE',
+  AMOUNT = 'AMOUNT'
+}
+
+export enum OrderEnum {
+  PRE_ORDER = 'PRE_ORDER',
+  NORMAL = 'NORMAL',
+  GROUP_BUYING = 'GROUP_BUYING',
+  FLASH_SALE = 'FLASH_SALE'
+}

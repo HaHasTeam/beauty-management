@@ -12,15 +12,15 @@ function App() {
   return (
     <>
       <QueryProvider>
-        <AppProvider>
-          <ThemeProvider>
-            <TooltipProvider>
-              <RouterProvider />
-            </TooltipProvider>
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-            <Toaster closeButton position='top-center' richColors />
-          </ThemeProvider>
-        </AppProvider>
+        {/* <AppProvider> */}
+        <ThemeProvider>
+          <TooltipProvider>
+            <RouterProvider />
+          </TooltipProvider>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <Toaster closeButton position='top-center' richColors />
+        </ThemeProvider>
+        {/* </AppProvider> */}
       </QueryProvider>
     </>
   )
