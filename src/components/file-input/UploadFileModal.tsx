@@ -136,20 +136,19 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
   }
 
   const onFileDrop = async (newFiles: File[] | null) => {
-    setFiles(newFiles || [])
     const oldFiles = files
     try {
       // Check file is string or array
       // If string, convert to file and set to state
       if (fieldType === 'string') {
         // Value must be an array of files
-        if (!newFiles?.length) {
-          return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
+        if (!newFiles?.length && field.onChange) {
+          field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
         }
         if (newFiles?.length) {
           const fileUrls = await convertFileToUrl(newFiles)
 
-          return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
+          field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
 
@@ -158,33 +157,35 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
         if (!newFiles?.length) return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
         if (newFiles.length > oldFiles.length) {
           const diffedFiles = newFiles.filter((file) => {
-            return !oldFiles?.some((oldFile) => oldFile.name === file.name)
+            return !oldFiles?.some(
+              (oldFile) => oldFile.name === file.name && oldFile.lastModified === file.lastModified
+            )
           })
 
           const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
-          return field?.onChange?.([
+          field?.onChange?.([
             ...(field?.value as string[]),
             ...newDiffedFileUrls
           ] as unknown as React.ChangeEvent<HTMLInputElement>)
         } else {
-          const deletedFile = oldFiles.filter((file) => {
-            return !newFiles.some((newFile) => newFile.name === file.name)
+          const deletedIndex = oldFiles.findIndex((oldFile) => {
+            return !newFiles.some((file) => file.name === oldFile.name && file.lastModified === oldFile.lastModified)
           })
 
-          if (deletedFile.length > 0) {
-            const newAppendFilesUrl = (field?.value as string[]).filter((file) => {
-              return !deletedFile.some((deleted) => deleted.name === file)
-            })
-
-            field?.onChange?.(newAppendFilesUrl as unknown as React.ChangeEvent<HTMLInputElement>)
+          if (deletedIndex !== -1) {
+            ;(field?.value as string[]).splice(deletedIndex, 1)
+            field?.onChange?.(field.value as unknown as React.ChangeEvent<HTMLInputElement>)
           }
         }
       }
+      const markedFiles = newFiles?.map((file) => {
+        return new File([file], file.name, { type: file.type, lastModified: file.lastModified - 100 })
+      })
+      setFiles(markedFiles || [])
     } catch (error) {
       handleServerError({
         error
       })
-      setFiles(oldFiles)
     }
   }
 
@@ -246,20 +247,25 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
                           index={index}
                           className='flex items-center justify-between rounded-lg hover:bg-primary'
                         >
-                          <div key={file.name} className='flex items-center space-x-3'>
+                          <div key={file.name} className='flex items-center space-x-3 w-[95%]'>
                             <div className='rounded-md flex items-center justify-center'>
                               {file.type.includes('image') ? (
                                 <img
                                   src={URL.createObjectURL(file)}
                                   alt={file.name}
-                                  className='size-12 object-cover rounded-lg border-2'
+                                  className='size-12 object-contain rounded-lg border-2'
                                   onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
                                 />
                               ) : (
                                 <FilesIcon className='w-12 h-12 text-muted-foreground' />
                               )}
                             </div>
-                            <span className='text-sm font-medium truncate max-w-[200px]'>{file.name}</span>
+                            <span className='text-sm font-medium flex-1 flex overflow-hidden flex-col'>
+                              <span className='text-ellipsis overflow-hidden'>{file.name}</span>
+                              <span className='text-muted-foreground text-xs font-bold'>
+                                {Math.round(file.size / 1024)} KB
+                              </span>
+                            </span>
                           </div>
                         </FileUploaderItem>
                       ))}

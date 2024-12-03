@@ -12,6 +12,16 @@ export const requiredRegex = (min?: number, max?: number) => {
   }
 }
 
+export const requiredFileRegex = {
+  pattern: /^.+$/,
+  message: 'Please fill out this field'
+}
+
+export const numberRequiredRegex = {
+  pattern: /^\d+$/,
+  message: 'Please fill out this field'
+}
+
 export const passwordRegex = {
   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
   message:

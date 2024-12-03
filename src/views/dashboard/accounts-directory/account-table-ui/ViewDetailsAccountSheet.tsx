@@ -20,7 +20,7 @@ export function ViewDetailsAccountSheet({ account, ...props }: ViewDetailsAccoun
           description={`View ${account?.username}'s profile details and account information.`}
           rightComponent={
             <Avatar className='size-20 object-cover aspect-square p-0.5 rounded-full border bg-accent shadow-lg'>
-              <AvatarImage src={account?.avatar} />
+              <AvatarImage src={account?.avatar} className='rounded-full border shadow-lg' />
               <AvatarFallback>{account?.username[0].toUpperCase()}</AvatarFallback>
             </Avatar>
           }

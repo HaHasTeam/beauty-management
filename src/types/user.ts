@@ -27,5 +27,5 @@ export type TUser = TMetaData & {
   avatar?: string
   status: UserStatusEnum | string
   isEmailVerify: boolean
-  brand?: string
+  brands?: string[]
 }

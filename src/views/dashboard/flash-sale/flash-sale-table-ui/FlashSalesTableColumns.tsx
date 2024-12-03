@@ -14,19 +14,18 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn, formatDate } from '@/lib/utils'
-import { UserRoleEnum } from '@/types/role'
-import { TUser, UserStatusEnum } from '@/types/user'
+import { FlashSaleStatusEnum, TFlashSale } from '@/types/flash-sale'
 
-import { getRoleIcon, getStatusIcon } from './helper'
+import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
   type: 'ban' | 'view' | 'unbanned'
 }
 interface GetColumnsProps {
-  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TUser> | null>>
+  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TFlashSale> | null>>
 }
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[] {
+export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TFlashSale>[] {
   return [
     {
       id: 'select',
@@ -50,16 +49,16 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
       size: 100
     },
     {
-      id: 'displayName',
+      id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
       cell: ({ row }) => {
-        const displayName =
-          row.original.firstName || row.original.lastName ? `${row.original.firstName} ${row.original.lastName}` : ''
+        const displayName = row.original.product.name
+        const image = row.original.product.images[0]
         return (
           <div className='flex space-x-2 items-center'>
             <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
-              <AvatarImage src={row.original.avatar} className='rounded-full border shadow-lg' />
-              <AvatarFallback>{row.original.username[0].toUpperCase()}</AvatarFallback>
+              <AvatarImage src={image} />
+              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
@@ -67,75 +66,44 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
       }
     },
     {
-      accessorKey: 'username',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Username' />,
-      cell: ({ row }) => <div>{row.getValue('username')}</div>,
-      enableHiding: false
-    },
-    {
-      accessorKey: 'email',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Email' />,
-      cell: ({ row }) => {
-        return (
-          <div className='flex space-x-2'>
-            <span className='max-w-[31.25rem] truncate'>{row.getValue('email')}</span>
-          </div>
-        )
-      }
-    },
-    {
-      accessorKey: 'phone',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Phone' />,
-      cell: ({ row }) => {
-        return (
-          <div className='flex space-x-2'>
-            <span className='max-w-[31.25rem] truncate'>{row.getValue('phone')}</span>
-          </div>
-        )
-      }
-    },
-    {
-      accessorKey: 'dob',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Date Of Birth' />,
-      cell: ({ cell }) => <div>{formatDate(cell.getValue() as Date)}</div>,
+      accessorKey: 'startTime',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Start Time' />,
+      cell: ({ cell }) => (
+        <div>
+          {formatDate(cell.getValue() as Date, {
+            hour: 'numeric',
+            minute: 'numeric'
+          })}
+        </div>
+      ),
       size: 200
     },
     {
-      accessorKey: 'role',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Coworker Role' />,
-      cell: ({ row }) => {
-        const roleKey = Object.keys(UserRoleEnum).find((role) => {
-          const value = UserRoleEnum[role as keyof typeof UserRoleEnum]
-          return value === row.original.role
-        })
-
-        if (!roleKey) return null
-
-        const roleValue = UserRoleEnum[roleKey as keyof typeof UserRoleEnum]
-        const Icon = getRoleIcon(roleValue)
-        return (
-          <div className='flex items-center'>
-            <Icon.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />
-            <span className='capitalize'>{roleValue}</span>
-          </div>
-        )
-      },
-      filterFn: (row, id, value) => {
-        return Array.isArray(value) && value.includes(row.getValue(id))
-      }
+      accessorKey: 'endTime',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='End Time' />,
+      cell: ({ cell }) => (
+        <div>
+          {formatDate(cell.getValue() as Date, {
+            hour: 'numeric',
+            minute: 'numeric'
+          })}
+        </div>
+      ),
+      size: 200
     },
+
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
       cell: ({ row }) => {
-        const statusKey = Object.keys(UserStatusEnum).find((status) => {
-          const value = UserStatusEnum[status as keyof typeof UserStatusEnum]
+        const statusKey = Object.keys(FlashSaleStatusEnum).find((status) => {
+          const value = FlashSaleStatusEnum[status as keyof typeof FlashSaleStatusEnum]
           return value === row.original.status
         })
 
         if (!statusKey) return null
 
-        const statusValue = UserStatusEnum[statusKey as keyof typeof UserStatusEnum]
+        const statusValue = FlashSaleStatusEnum[statusKey as keyof typeof FlashSaleStatusEnum]
 
         const Icon = getStatusIcon(statusValue)
 
@@ -192,7 +160,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
                 </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {row.original.status !== UserStatusEnum.BANNED ? (
+              {row.original.status !== FlashSaleStatusEnum.BANNED ? (
                 <DropdownMenuItem
                   className='bg-red-500 text-white'
                   onClick={() => {
@@ -201,7 +169,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
                 >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
                     <XIcon />
-                    Ban User
+                    Unpublish PreOrder
                   </span>
                 </DropdownMenuItem>
               ) : (
@@ -213,7 +181,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
                 >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
                     <GrRevert />
-                    Unbanned User
+                    Publish PreOrder
                   </span>
                 </DropdownMenuItem>
               )}
