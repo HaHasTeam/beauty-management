@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { OpenContext } from '@/contexts/layout'
-import { useTheme } from '@/contexts/theme-provider'
+import { useTheme } from '@/contexts/ThemeProvider'
 
 export default function HeaderLinks() {
   const { open, setOpen } = useContext(OpenContext)
