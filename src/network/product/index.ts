@@ -1,4 +1,4 @@
-import { ICreateProduct, IProduct, IResponseProduct } from '@/types/product'
+import { ICreateProduct, IProduct, IResponseProduct, IServerCreateProduct } from '@/types/product'
 import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
@@ -13,7 +13,7 @@ export const getProductApi = toQueryFetcher<string, TServerResponse<IResponsePro
   }
 )
 
-export const createProductApi = toMutationFetcher<ICreateProduct, TServerResponse<ICreateProduct>>(
+export const createProductApi = toMutationFetcher<IServerCreateProduct, TServerResponse<IServerCreateProduct>>(
   'createProductApi',
   async (data) => {
     return privateRequest('/products', {
@@ -23,7 +23,7 @@ export const createProductApi = toMutationFetcher<ICreateProduct, TServerRespons
   }
 )
 
-export const updateProductApi = toMutationFetcher<ICreateProduct, TServerResponse<ICreateProduct>>(
+export const updateProductApi = toMutationFetcher<IServerCreateProduct, TServerResponse<IServerCreateProduct>>(
   'updateProductApi',
   async (productId, data) => {
     return privateRequest(`/products/get-by-id/${productId}`, {

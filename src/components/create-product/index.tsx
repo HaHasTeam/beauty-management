@@ -1,17 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import { useShallow } from 'zustand/react/shallow'
 
 import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getUserProfileApi } from '@/network/apis/user'
 import { createProductApi } from '@/network/product'
-import { useStore } from '@/stores/store'
 import { ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
@@ -22,19 +20,12 @@ import DetailInformation from './DetailInformation'
 import SalesInformation from './SalesInformation'
 
 const CreateProduct = () => {
-  const { isAuthenticated, isLoading } = useStore(
-    useShallow((state) => ({
-      isAuthenticated: state.isAuthenticated,
-      isLoading: state.isLoading,
-      authData: state.authData,
-      setAuthState: state.setAuthState
-    }))
-  )
-  const { data: useProfileData, isLoading: isGettingUserProfile } = useQuery({
+  const { data: useProfileData } = useQuery({
     queryKey: [getUserProfileApi.queryKey],
     queryFn: getUserProfileApi.fn
   })
   const [resetSignal, setResetSignal] = useState(false)
+  const [isValid, setIsValid] = useState(true)
 
   const id = useId()
   const { successToast } = useToast()
@@ -42,7 +33,7 @@ const CreateProduct = () => {
 
   const defaultProductValues = {
     name: '',
-    brand: '9efbce21-328e-4189-a433-6852dbf76a45',
+    brand: '',
     category: '',
     images: [],
     description: '',
@@ -79,35 +70,29 @@ const CreateProduct = () => {
 
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
-      if (isAuthenticated && !isLoading && !isGettingUserProfile) {
-        form.setValue('brand', (useProfileData?.data?.brand ?? [])[0] ?? '9efbce21-328e-4189-a433-6852dbf76a45')
+      if (isValid) {
+        const transformedData = {
+          ...values,
+          brand: (useProfileData?.data?.brands ?? [])[0]?.id ?? '',
+          images: values.images.map((image) => ({
+            fileUrl: image // Transform image strings to objects
+          })),
+          detail: JSON.stringify(values.detail), // Convert detail object to a string
+          productClassifications:
+            (values?.productClassifications ?? [])?.length > 0
+              ? values?.productClassifications
+              : [
+                  {
+                    title: 'Default',
+                    image: 'default image',
+                    price: values.price ?? 1000,
+                    quantity: values.quantity ?? 1,
+                    type: ProductClassificationTypeEnum.DEFAULT
+                  }
+                ]
+        }
+        await createProductFn(transformedData)
       }
-      const transformedData = {
-        ...values,
-        images: values.images.map((image) => ({
-          fileUrl: image // Transform image strings to objects
-        })),
-        detail: JSON.stringify(values.detail), // Convert detail object to a string
-        productClassifications:
-          values.productClassifications?.length > 0
-            ? values.productClassifications
-            : [
-                {
-                  title: 'Default',
-                  image: 'default image',
-                  price: values.price ?? 1000, // Ensure fallback values
-                  quantity: values.quantity ?? 1,
-                  type: ProductClassificationTypeEnum.DEFAULT
-                }
-              ]
-      }
-
-      // Call mutation with the transformed data
-      await createProductFn(transformedData)
-
-      console.log('Original Values:', values)
-      console.log('Transformed Data:', transformedData)
-      // handleReset();
     } catch (error) {
       handleServerError({
         error,
@@ -115,14 +100,18 @@ const CreateProduct = () => {
       })
     }
   }
-
+  useEffect(() => {
+    if (useProfileData?.data?.brands?.[0]?.id) {
+      form.setValue('brand', useProfileData.data.brands[0].id)
+    }
+  }, [useProfileData, form, resetSignal])
   return (
     <div>
       <Form {...form}>
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
           <BasicInformation form={form} resetSignal={resetSignal} />
           <DetailInformation form={form} resetSignal={resetSignal} />
-          <SalesInformation form={form} resetSignal={resetSignal} />
+          <SalesInformation form={form} resetSignal={resetSignal} setIsValid={setIsValid} />
           <div className='w-full flex flex-row-reverse justify-start gap-3'>
             <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
               Submit and Show

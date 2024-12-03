@@ -368,30 +368,6 @@ export const FormProductSchema = z
   .refine(
     (data) => {
       if (data.productClassifications && data.productClassifications.length > 0) {
-        // If productClassifications exist, ensure all items have title, price, and quantity
-        return data.productClassifications.every(
-          (item) =>
-            item.title &&
-            item.image &&
-            item.price !== undefined &&
-            item.quantity !== undefined &&
-            item.title.trim() !== '' &&
-            typeof item.price === 'number' &&
-            item.price > 0 &&
-            typeof item.quantity === 'number' &&
-            item.quantity > 0
-        )
-      }
-      return true
-    },
-    {
-      message: 'Please enter title, price, image and quantity for each product classifications',
-      path: ['productClassifications']
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.productClassifications && data.productClassifications.length > 0) {
         // If productClassifications exist, ensure price must be at least 1000đ
         return data.productClassifications.every((item) => item.price !== undefined && item.price >= 1000)
       }

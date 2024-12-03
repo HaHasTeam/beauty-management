@@ -1,3 +1,9 @@
+export enum StatusEnum {
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  BANNED = 'BANNED'
+}
 export type IBrand = {
   id: string
   createdAt: string
@@ -10,5 +16,5 @@ export type IBrand = {
   phone: string
   address: string
   star: number
-  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  status: StatusEnum
 }

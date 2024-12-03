@@ -6,16 +6,18 @@ import { z } from 'zod'
 import FormLabel from '@/components/form-label'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { ProductClassificationTypeEnum } from '@/types/product'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
-import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
+import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import UploadProductImages from './UploadProductImages'
 
-interface BasicInformationProps {
+interface SalesInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
   defineFormSignal?: boolean
+  setIsValid: React.Dispatch<boolean>
 }
 
 type IClassificationOption = { title: string; options: string[] }
@@ -24,35 +26,33 @@ type ICombination = {
   price?: number
   quantity?: number
   image?: string
+  type?: string
 }
 
-export default function SalesInformation({ form, resetSignal, defineFormSignal }: BasicInformationProps) {
+export default function SalesInformation({ form, resetSignal, defineFormSignal, setIsValid }: SalesInformationProps) {
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
   const [combinations, setCombinations] = useState<ICombination[]>([])
+  const [errorOption, setErrorOption] = useState<string>('')
+  const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
 
-  // const generateCombinations = () => {
-  //   if (classificationsOptions.length === 0) return
-
-  //   const [options1 = [''], options2 = ['']] = classificationsOptions.map((c) => c.options) // Ensure options2 defaults to ['']
-  //   const newCombinations: { title: string; price: number | ''; quantity: number | '' }[] = []
-
-  //   options1.forEach((o1) => {
-  //     options2.forEach((o2) => {
-  //       newCombinations.push({
-  //         title: o2 ? `${o1}-${o2}` : `${o1}`, // Avoid appending '-' if o2 is empty
-  //         price: '',
-  //         quantity: ''
-  //       })
-  //     })
-  //   })
-
-  //   setCombinations(newCombinations)
-  // }
-
+  const validateOptionTitles = (
+    classificationOptions: IClassificationOption[],
+    classificationIndex: number
+  ): number | null => {
+    const options = classificationOptions[classificationIndex].options
+    const optionSet = new Set()
+    for (let i = 0; i < options.length; i++) {
+      if (optionSet.has(options[i])) {
+        return i
+      }
+      optionSet.add(options[i])
+    }
+    return null
+  }
   const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
     const [options1 = [], options2 = ['']] = updatedOptions.map((c) => c.options)
-    const newCombinations: ICombination[] = []
+    const newCombinations: ICombination[] = form.getValues('productClassifications') ?? []
 
     options1.forEach((o1) => {
       options2.forEach((o2) => {
@@ -60,13 +60,16 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal }
 
         newCombinations.push({
           title: o2 ? `${o1}-${o2}` : `${o1}`,
-          price: existingCombination?.price ?? undefined,
-          quantity: existingCombination?.quantity ?? undefined
+          price: existingCombination?.price ?? 0,
+          quantity: existingCombination?.quantity ?? 1,
+          image: existingCombination?.image ?? '',
+          type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM
         })
       })
     })
 
     setCombinations(newCombinations)
+    form.setValue('productClassifications', newCombinations)
   }
   const regenerateUpdatedOptions = (newCombinations: ICombination[]): IClassificationOption[] => {
     const updatedOptions: IClassificationOption[] = []
@@ -106,7 +109,7 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal }
     const currentClassifications = form.getValues('productClassifications') || []
     form.setValue('productClassifications', [
       ...currentClassifications,
-      { title: '', image: '', type: '', price: 0, quantity: 1 }
+      { title: '', image: '', type: ProductClassificationTypeEnum?.CUSTOM, price: 0, quantity: 1 }
     ])
 
     form.resetField('price')
@@ -146,17 +149,17 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal }
     const updatedOptions = [...classificationsOptions]
     updatedOptions[classificationIndex].options[optionIndex] = value
     setClassificationsOptions(updatedOptions)
-    regenerateCombinations(updatedOptions)
-    const currentClassifications = form.getValues('productClassifications')
-    form.setValue(
-      'productClassifications',
-      currentClassifications.map((item, idx) => {
-        if (idx === classificationIndex) {
-          return { ...item, options: updatedOptions[classificationIndex].options }
-        }
-        return item
-      })
-    )
+    const duplicateIndex = validateOptionTitles(updatedOptions, classificationIndex)
+
+    setDuplicateOptionIndex(duplicateIndex)
+    if (duplicateIndex !== null) {
+      setIsValid(false)
+      setErrorOption('Each option in the same classification must have a unique name.')
+    } else {
+      setIsValid(true)
+      setErrorOption('')
+      regenerateCombinations(updatedOptions)
+    }
   }
 
   const handleRemoveOption = (classificationIndex: number, optionIndex: number) => {
@@ -194,193 +197,218 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal }
           <h2 className='font-bold text-xl'>Thông tin bán hàng</h2>
         </div>
         <div>
-          <FormField
-            control={form.control}
-            name='productClassifications'
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <div className='w-full flex'>
-                  <div className='w-[15%]'>
-                    <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
-                  </div>
-                  <div className='w-full space-y-1'>
-                    <div className='w-full space-y-3'>
-                      {classificationCount < 2 && (
-                        <Button
-                          variant='outline'
-                          size='sm'
-                          type='button'
-                          className='flex items-center gap-1'
-                          onClick={handleAddClassification}
-                          disabled={classificationCount >= 2}
-                        >
-                          <Plus className='w-4 h-4' />
-                          Thêm nhóm phân loại
-                        </Button>
-                      )}
-                      {(classificationsOptions ?? []).length > 0 && (
-                        <>
-                          {(classificationsOptions ?? []).map((classification, index) => (
-                            <div className='relative bg-primary/5 rounded-lg p-4' key={classification?.title || index}>
-                              <X
-                                onClick={() => handleRemoveClassification(index)}
-                                className='text-destructive hover:cursor-pointer hover:text-destructive/80 absolute right-4 top-4'
-                              />
-                              <FormControl>
-                                <div className='space-y-2'>
-                                  <div className='flex gap-2 items-center'>
-                                    <div className='w-[10%]'>
-                                      <FormLabel required={classificationCount > 0}>Phân loại {index + 1}</FormLabel>
-                                    </div>
-                                    <Button
-                                      type='button'
-                                      variant='outline'
-                                      size='sm'
-                                      className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
-                                      onClick={() => handleAddOption(index)}
-                                    >
-                                      Thêm Option
-                                    </Button>
-                                  </div>
-                                  <div className='grid grid-cols-2 gap-x-5 gap-y-3 lg:gap-x-10'>
-                                    {classification.options.map((option, optionIndex) => (
-                                      <div key={optionIndex} className='flex items-center gap-2'>
-                                        <Input
-                                          placeholder={`Option ${optionIndex + 1}`}
-                                          value={option}
-                                          onChange={(e) => handleUpdateOption(index, optionIndex, e.target.value)}
-                                          className='border-primary/40 w-full'
-                                        />
-                                        {option === '' ||
-                                          option === undefined ||
-                                          (option === null && (
-                                            <span className='font-semibold text-destructive text-xs'>
-                                              Vui lòng nhập tên phân loại
-                                            </span>
-                                          ))}
-                                        <Trash2
-                                          onClick={() => handleRemoveOption(index, optionIndex)}
-                                          className='text-destructive cursor-pointer hover:text-destructive/80'
-                                        />
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </FormControl>
+          <div className='w-full flex'>
+            <div className='w-[15%]'>
+              <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
+            </div>
+            <div className='w-full space-y-1'>
+              <div className='w-full space-y-3'>
+                {classificationCount < 2 && (
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    type='button'
+                    className='flex items-center gap-1'
+                    onClick={handleAddClassification}
+                    disabled={classificationCount >= 2}
+                  >
+                    <Plus className='w-4 h-4' />
+                    Thêm nhóm phân loại
+                  </Button>
+                )}
+                {(classificationsOptions ?? []).length > 0 && (
+                  <>
+                    {(classificationsOptions ?? []).map((classification, index) => (
+                      <div className='relative bg-primary/5 rounded-lg p-4' key={classification?.title || index}>
+                        <X
+                          onClick={() => handleRemoveClassification(index)}
+                          className='text-destructive hover:cursor-pointer hover:text-destructive/80 absolute right-4 top-4'
+                        />
+
+                        <div className='space-y-2'>
+                          <div className='flex gap-2 items-center'>
+                            <div>
+                              <FormLabel required={classificationCount > 0}>Phân loại {index + 1}</FormLabel>
                             </div>
-                          ))}
-                        </>
-                      )}
-                      {combinations.length > 0 && (
-                        <div className='mt-4 bg-primary/5 rounded-lg p-4 space-y-2'>
-                          <h3 className='text-md font-semibold'>Tùy chọn giá và số lượng</h3>
-                          <div>
-                            <Table className='hover:bg-transparent items-center'>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>
-                                    <FormLabel required styleParent='justify-center'>
-                                      Phân loại 1
-                                    </FormLabel>
-                                  </TableHead>
-                                  {classificationCount === 2 && (
-                                    <TableHead>
-                                      <FormLabel required styleParent='justify-center'>
-                                        Phân loại 2
-                                      </FormLabel>
-                                    </TableHead>
-                                  )}
-                                  <TableHead>
-                                    <FormLabel required styleParent='justify-center'>
-                                      Giá
-                                    </FormLabel>
-                                  </TableHead>
-                                  <TableHead>
-                                    <FormLabel required styleParent='justify-center'>
-                                      Kho hàng
-                                    </FormLabel>
-                                  </TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {combinations.map((combo, index) => (
-                                  <TableRow key={index}>
-                                    {/* <div key={index} className='flex items-center gap-4 mt-2'> */}
-                                    <TableCell className='space-y-2'>
-                                      <FormLabel styleParent='justify-center'>
-                                        {combo?.title?.split('-')[0]?.trim()}
-                                      </FormLabel>
-                                      <FormField
-                                        control={form.control}
-                                        name={`productClassifications.${index}.image`}
-                                        render={({ field }) => (
-                                          <FormItem className='w-full'>
-                                            <div className='flex w-full'>
-                                              <FormControl>
-                                                <div className='w-full space-y-1 flex justify-center'>
-                                                  <UploadProductImages field={field} maxFileInput={1} />
-                                                  <FormMessage />
-                                                </div>
-                                              </FormControl>
-                                            </div>
-                                          </FormItem>
+                            <Button
+                              type='button'
+                              variant='outline'
+                              size='sm'
+                              className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
+                              onClick={() => handleAddOption(index)}
+                            >
+                              Thêm Option
+                            </Button>
+                          </div>
+                          <div className='grid grid-cols-2 gap-x-5 gap-y-3 lg:gap-x-10'>
+                            {classification.options.map((option, optionIndex) => (
+                              <div key={optionIndex} className='flex flex-col gap-2'>
+                                <div className='flex items-center gap-2'>
+                                  <FormField
+                                    control={form.control}
+                                    name={`productClassifications.${index}.title`}
+                                    render={({ field, fieldState }) => (
+                                      <FormItem className='w-full'>
+                                        <FormControl>
+                                          <Input
+                                            placeholder={`Option ${optionIndex + 1}`}
+                                            {...field}
+                                            value={option}
+                                            onChange={(e) => {
+                                              handleUpdateOption(index, optionIndex, e.target.value)
+                                            }}
+                                            className='border-primary/40 w-full'
+                                          />
+                                        </FormControl>
+                                        <FormMessage>{fieldState.error?.message}</FormMessage>
+                                        {errorOption && optionIndex === duplicateOptionIndex && (
+                                          <div className='font-semibold text-destructive text-xs'>{errorOption}</div>
                                         )}
-                                      />
-                                    </TableCell>
-                                    {classificationCount === 2 && (
-                                      <TableCell>
-                                        <FormLabel styleParent='justify-center'>
-                                          {combo?.title?.split('-')[1]?.trim()}
-                                        </FormLabel>
-                                      </TableCell>
+                                      </FormItem>
                                     )}
-                                    <TableCell>
-                                      <Input
-                                        placeholder='Giá'
-                                        type='number'
-                                        {...field}
-                                        value={combo?.price ?? 0}
-                                        onChange={(e) => {
-                                          const updated = [...combinations]
-                                          updated[index].price = e.target.value ? parseFloat(e.target.value) : undefined
-                                          setCombinations(updated)
-                                          field.onChange(updated)
-                                        }}
-                                        className='border-primary/40 w-full'
-                                      />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Input
-                                        placeholder='Số lượng'
-                                        type='number'
-                                        {...field}
-                                        value={combo.quantity ?? 1}
-                                        onChange={(e) => {
-                                          const updated = [...combinations]
-                                          updated[index].quantity = e.target.value
-                                            ? parseFloat(e.target.value)
-                                            : undefined
-                                          setCombinations(updated)
-                                          field.onChange(updated)
-                                        }}
-                                        className='border-primary/40 w-full'
-                                      />
-                                    </TableCell>
-                                    {/* </div> */}
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
+                                  />
+                                  <Trash2
+                                    onClick={() => handleRemoveOption(index, optionIndex)}
+                                    className='text-destructive cursor-pointer hover:text-destructive/80'
+                                  />
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      )}
+                      </div>
+                    ))}
+                  </>
+                )}
+                {combinations.length > 0 && (
+                  <div className='mt-4 bg-primary/5 rounded-lg p-4 space-y-2'>
+                    <h3 className='text-md font-semibold'>Tùy chọn giá và số lượng</h3>
+                    <div>
+                      <Table className='hover:bg-transparent items-center'>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>
+                              <FormLabel required styleParent='justify-center'>
+                                Phân loại 1
+                              </FormLabel>
+                            </TableHead>
+                            {classificationCount === 2 && (
+                              <TableHead>
+                                <FormLabel required styleParent='justify-center text-center'>
+                                  Phân loại 2
+                                </FormLabel>
+                              </TableHead>
+                            )}
+                            <TableHead>
+                              <FormLabel required styleParent='justify-center'>
+                                Giá
+                              </FormLabel>
+                            </TableHead>
+                            <TableHead>
+                              <FormLabel required styleParent='justify-center'>
+                                Kho hàng
+                              </FormLabel>
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {combinations.map((combo, index) => (
+                            <TableRow key={index}>
+                              <TableCell className='space-y-2'>
+                                <FormLabel styleParent='justify-center'>
+                                  {combo?.title?.split('-')[0]?.trim()}
+                                </FormLabel>
+                                <FormField
+                                  control={form.control}
+                                  name={`productClassifications.${index}.image`}
+                                  render={({ field }) => (
+                                    <FormItem className='w-full'>
+                                      <div className='flex w-full'>
+                                        <FormControl>
+                                          <div className='w-full space-y-1 flex flex-col justify-center items-center'>
+                                            <UploadProductImages field={field} maxFileInput={1} />
+                                            <FormMessage />
+                                          </div>
+                                        </FormControl>
+                                      </div>
+                                    </FormItem>
+                                  )}
+                                />
+                              </TableCell>
+                              {classificationCount === 2 && (
+                                <TableCell>
+                                  <FormLabel styleParent='justify-center'>
+                                    {combo?.title?.split('-')[1]?.trim()}
+                                  </FormLabel>
+                                </TableCell>
+                              )}
+                              <TableCell className='align-middle'>
+                                <FormField
+                                  control={form.control}
+                                  name={`productClassifications.${index}.price`}
+                                  render={({ field, fieldState }) => (
+                                    <FormItem className='h-16'>
+                                      <FormControl>
+                                        <Input
+                                          placeholder='Nhập giá'
+                                          type='number'
+                                          {...field}
+                                          value={combo?.price ?? 0}
+                                          onChange={(e) => {
+                                            const updated = [...combinations]
+                                            updated[index].price = e.target.value
+                                              ? parseFloat(e.target.value)
+                                              : undefined
+                                            setCombinations(updated)
+                                            field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                                          }}
+                                          className='border-primary/40 w-full'
+                                        />
+                                      </FormControl>
+                                      <FormMessage>{fieldState.error?.message}</FormMessage>
+                                    </FormItem>
+                                  )}
+                                />
+                              </TableCell>
+                              <TableCell className='align-middle'>
+                                <FormField
+                                  control={form.control}
+                                  name={`productClassifications.${index}.quantity`}
+                                  render={({ field, fieldState }) => (
+                                    <FormItem className='h-16'>
+                                      <FormControl>
+                                        <Input
+                                          placeholder='Nhập số lượng'
+                                          type='number'
+                                          {...field}
+                                          value={combo.quantity ?? 1}
+                                          onChange={(e) => {
+                                            const updated = [...combinations]
+                                            updated[index].quantity = e.target.value
+                                              ? parseFloat(e.target.value)
+                                              : undefined
+                                            setCombinations(updated)
+                                            field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                                          }}
+                                          className='border-primary/40 w-full'
+                                        />
+                                      </FormControl>
+                                      <FormMessage>{fieldState.error?.message}</FormMessage>
+                                    </FormItem>
+                                  )}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
-                    <FormMessage />
                   </div>
-                </div>
-              </FormItem>
-            )}
-          />
+                )}
+              </div>
+              <FormMessage />
+            </div>
+          </div>
         </div>
         {classificationsOptions?.length === 0 && (
           <div className='space-y-3'>

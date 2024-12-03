@@ -18,7 +18,6 @@ type UploadProductImagesProps = {
 }
 
 const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: UploadProductImagesProps) => {
-  console.log(field)
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
@@ -127,9 +126,7 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: Upl
   const onFileDrop = async (newFiles: File[] | null) => {
     if (!newFiles) return
     setFiles(newFiles)
-    console.log('new', newFiles)
     const oldFiles = files
-    console.log('old', oldFiles)
     try {
       // Check file is string or array
       // If string, convert to file and set to state

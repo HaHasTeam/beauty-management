@@ -69,6 +69,26 @@ export type ICreateProduct = {
   price?: number
   quantity?: number
 }
+export type IServerCreateProduct = {
+  id?: string
+  name: string
+  brand?: string
+  category?: string
+  images: IProductImage[]
+  description: string
+  status: string
+  detail?: string
+  productClassifications?: {
+    id?: string
+    title?: string
+    price?: number
+    quantity?: number
+    image?: string | null
+    status?: string
+  }[]
+  price?: number
+  quantity?: number
+}
 export type IResponseProduct = {
   id: string
   name: string

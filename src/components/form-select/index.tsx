@@ -50,7 +50,6 @@ const FormSelect = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowCommandDialog = () => {
-    console.log(form.getValues())
     setHidden((prev) => !prev)
   }
   const handleSelectItem = (item: IOption) => {

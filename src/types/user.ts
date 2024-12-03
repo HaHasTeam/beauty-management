@@ -1,3 +1,4 @@
+import { IBrand } from './brand'
 import { UserRoleEnum } from './role'
 
 export enum UserGenderEnum {
@@ -26,5 +27,5 @@ export type TUser = {
   avatar?: string
   status: UserStatusEnum | string
   isEmailVerify: boolean
-  brand?: string
+  brands?: IBrand[]
 }
