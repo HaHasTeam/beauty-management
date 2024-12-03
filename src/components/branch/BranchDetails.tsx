@@ -134,6 +134,23 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name='document'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>document</FormLabel>
+              <FormControl>
+                <Input
+                  className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                  placeholder='document'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
       <div className='mt-10 w-full flex justify-between items-center'>
         <Button

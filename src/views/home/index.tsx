@@ -28,7 +28,7 @@ function Home() {
       address: '',
       description: '',
       document: '',
-      logo: '',
+      logo: [],
       name: ''
     }
   })
@@ -83,7 +83,7 @@ function Home() {
 
   function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
-      console.log('valuse', values)
+      console.log('valuse 86: ', values)
     } catch (error) {
       console.error('Form submission error', error)
       errorToast({

@@ -36,24 +36,24 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
 
   const [progress, setProgress] = useState(0)
 
-  // const { mutateAsync: uploadFilesFn, isPending: isUploadingFiles } = useMutation({
-  //   mutationKey: [uploadFilesApi.mutationKey],
-  //   mutationFn: uploadFilesApi.fn,
-  //   onSuccess: () => {
-  //     successToast({
-  //       message: 'Amazing! Your files have been uploaded!'
-  //     })
-  //     setProgress(100)
-  //     setTimeout(() => {
-  //       setProgress(0)
-  //     }, 500)
-  //   },
-  //   onError: () => {
-  //     setTimeout(() => {
-  //       setProgress(0)
-  //     }, 500)
-  //   }
-  // })
+  const { mutateAsync: uploadFilesFn, isPending: isUploadingFiles } = useMutation({
+    mutationKey: [uploadFilesApi.mutationKey],
+    mutationFn: uploadFilesApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Amazing! Your files have been uploaded!'
+      })
+      setProgress(100)
+      setTimeout(() => {
+        setProgress(0)
+      }, 500)
+    },
+    onError: () => {
+      setTimeout(() => {
+        setProgress(0)
+      }, 500)
+    }
+  })
 
   const { fieldType, fieldValue } = useMemo<{
     fieldType: 'string' | 'array'
@@ -147,10 +147,9 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
           return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
         }
         if (newFiles?.length) {
-          // const fileUrls = await convertFileToUrl(newFiles)
-          console.log('newFiles', newFiles)
+          const fileUrls = await convertFileToUrl(newFiles)
 
-          // return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
+          return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
 
@@ -162,13 +161,11 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
             return !oldFiles?.some((oldFile) => oldFile.name === file.name)
           })
 
-          // const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
-          console.log('newDiffedFileUrls', diffedFiles)
-
-          // return field?.onChange?.([
-          //   ...(field?.value as string[]),
-          //   ...newDiffedFileUrls
-          // ] as unknown as React.ChangeEvent<HTMLInputElement>)
+          const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
+          return field?.onChange?.([
+            ...(field?.value as string[]),
+            ...newDiffedFileUrls
+          ] as unknown as React.ChangeEvent<HTMLInputElement>)
         } else {
           const deletedFile = oldFiles.filter((file) => {
             return !newFiles.some((newFile) => newFile.name === file.name)
@@ -192,7 +189,7 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen || isUploadingFiles} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{Trigger}</DialogTrigger>
       <DialogContent className='w-full bg-background border-border shadow-lg'>
         <DialogHeader>
@@ -207,7 +204,7 @@ const UploadFileModal = ({ Trigger, dropZoneConfigOptions, field }: UploadFileMo
           }`}
         >
           <FileUploader value={files} onValueChange={onFileDrop} dropzoneOptions={dropZoneConfig}>
-            <FileInput>
+            <FileInput disabled={isUploadingFiles}>
               <div className='overflow-hidden flex flex-col items-center justify-center text-center w-full border-b border-dashed border-primary py-4 bg-primary/20 hover:bg-primary transition-all duration-500'>
                 <Upload className='w-12 h-12 mb-4 text-muted-foreground' />
                 {isDragActive ? (

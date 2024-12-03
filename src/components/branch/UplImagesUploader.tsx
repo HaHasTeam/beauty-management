@@ -2,12 +2,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { FaCameraRotate } from 'react-icons/fa6'
 import { MdPhoto } from 'react-icons/md'
+import { z } from 'zod'
 
 import type { Steppers } from '@/hooks/useStepper'
 import { brandCreateSchema } from '@/schemas'
 
 import Button from '../button'
-import UploadFileModal from '../file-input/UploadFileModal'
+import UploadFilePreview from '../file-input/UploadFilePreview'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Card } from '../ui/card'
 import { FormField, FormItem } from '../ui/form'
@@ -27,33 +28,15 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, steppers, form }: Pr
         name='logo'
         render={({ field }) => (
           <FormItem>
-            <Card className={'h-min flex items-center align-center max-w-full py-8 px-4 dark:border-zinc-800'}>
-              <div className='flex gap-4 items-center justify-between w-full flex-wrap'>
-                <div className='flex gap-4 items-center'>
-                  <Avatar className='min-h-[68px] min-w-[68px] relative'>
-                    <AvatarImage src={form.watch('logo') || ''} />
-                    <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>A</AvatarFallback>
-                    <UploadFileModal
-                      field={field}
-                      Trigger={
-                        <FaCameraRotate
-                          size={20}
-                          className='cursor-pointer absolute bottom-3 right-3 hover:scale-150 transition-all shadow-lg duration-500 text-foreground p-0.5 rounded-full bg-primary/80'
-                        />
-                      }
-                    />
-                  </Avatar>
-                  <div>
-                    <p className='text-xl font-extrabold  leading-[100%]  pl-4 md:text-3xl'>Allure Beauty</p>
-                    <p className='text-sm font-medium  md:mt-2 pl-4 md:text-base'>CEO and Founder</p>
-                  </div>
-                </div>
-                <Button loading={form.formState.isSubmitting}>
-                  <MdPhoto className='flex items-center gap-2' />
-                  Save Avatar
-                </Button>
-              </div>
-            </Card>
+            <UploadFilePreview
+              field={field}
+              Trigger={
+                <FaCameraRotate
+                  size={20}
+                  className='cursor-pointer absolute bottom-3 right-3 hover:scale-150 transition-all shadow-lg duration-500 text-foreground p-0.5 rounded-full bg-primary/80'
+                />
+              }
+            />
           </FormItem>
         )}
       />
@@ -72,10 +55,12 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, steppers, form }: Pr
         </Button>
         <Button
           className=' flex select-none items-center justify-center gap-2 px-4'
-          disabled={stepIndex === 0}
-          onClick={() => {
-            goNextFn()
-          }}
+          type='submit'
+          // disabled={stepIndex === 0}
+          // onClick={() => {
+          //   // goNextFn()
+          //   console.log('clicked', form.getValues())
+          // }}
         >
           <ChevronRight className=' -mr-1 h-6 w-6 ' />
           Next
