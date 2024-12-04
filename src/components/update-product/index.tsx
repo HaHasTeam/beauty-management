@@ -135,7 +135,7 @@ const UpdateProduct = () => {
     }
   }, [form, resetSignal, useCategoryData])
   useEffect(() => {
-    if (productData?.data) {
+    if (productData?.data && !isGettingCategory && !isGettingProduct) {
       const productClassifications = productData?.data[0]?.productClassifications ?? []
 
       // Check for type === CUSTOM
@@ -167,51 +167,54 @@ const UpdateProduct = () => {
       form.reset(formValue)
       setDefineFormSignal((prev) => !prev)
     }
-  }, [form, resetSignal, productData])
+  }, [form, resetSignal, productData, isGettingCategory, isGettingProduct])
 
   return (
     <div>
-      {isGettingProduct && isGettingCategory && isGettingProfile && <LoadingContentLayer />}
-      <Form {...form}>
-        <form
-          noValidate
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='w-full grid gap-4 mb-8'
-          id={`form-${formId}`}
-        >
-          <BasicInformation
-            form={form}
-            resetSignal={resetSignal}
-            defineFormSignal={defineFormSignal}
-            useCategoryData={categories}
-          />
-          <DetailInformation form={form} resetSignal={resetSignal} defineFormSignal={defineFormSignal} />
-          <SalesInformation
-            form={form}
-            resetSignal={resetSignal}
-            setIsValid={setIsValid}
-            defineFormSignal={defineFormSignal}
-          />
-          <div className='w-full flex flex-row-reverse justify-start gap-3'>
-            <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-              Submit and Show
-            </Button>
-            <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-              Submit and Hide
-            </Button>
-            <Button
-              variant='outline'
-              type='submit'
-              onClick={() => {
-                handleReset()
-                navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
-              }}
-            >
-              Hủy
-            </Button>
-          </div>
-        </form>
-      </Form>
+      {isGettingProduct && isGettingCategory && isGettingProfile ? (
+        <LoadingContentLayer />
+      ) : (
+        <Form {...form}>
+          <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='w-full grid gap-4 mb-8'
+            id={`form-${formId}`}
+          >
+            <BasicInformation
+              form={form}
+              resetSignal={resetSignal}
+              defineFormSignal={defineFormSignal}
+              useCategoryData={categories}
+            />
+            <DetailInformation form={form} resetSignal={resetSignal} defineFormSignal={defineFormSignal} />
+            <SalesInformation
+              form={form}
+              resetSignal={resetSignal}
+              setIsValid={setIsValid}
+              defineFormSignal={defineFormSignal}
+            />
+            <div className='w-full flex flex-row-reverse justify-start gap-3'>
+              <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
+                Submit and Show
+              </Button>
+              <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
+                Submit and Hide
+              </Button>
+              <Button
+                variant='outline'
+                type='submit'
+                onClick={() => {
+                  handleReset()
+                  navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
+                }}
+              >
+                Hủy
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
     </div>
   )
 }
