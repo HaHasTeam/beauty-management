@@ -32,7 +32,7 @@ import { TBrand } from '@/types/brand'
 interface BanBrandsDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   Brands: Row<TBrand>['original'][]
   showTrigger?: boolean
-  onSuccess?: () => void
+  onSuccess?: (Brands: Row<TBrand>['original'][]) => void
 }
 
 export function BanBrandsDialog({ Brands, showTrigger = true, onSuccess, ...props }: BanBrandsDialogProps) {
@@ -42,7 +42,7 @@ export function BanBrandsDialog({ Brands, showTrigger = true, onSuccess, ...prop
   async function onBan() {
     try {
       props.onOpenChange?.(false)
-      onSuccess?.()
+      onSuccess?.(Brands)
     } catch (error) {
       handleServerError({
         error
@@ -70,7 +70,9 @@ export function BanBrandsDialog({ Brands, showTrigger = true, onSuccess, ...prop
             <DialogDescription>
               You are about to <b className='uppercase'>ban</b>{' '}
               {Brands.map((Brand) => (
-                <Badge className='mr-1'>{Brand.name}</Badge>
+                <Badge className='mr-1' key={Brand.id}>
+                  {Brand.name}
+                </Badge>
               ))}
               . After banning, the Brand will be disabled. Please check the Brand before banning.
             </DialogDescription>

@@ -32,7 +32,7 @@ import { BrandStatusEnum, TBrand } from '@/types/brand'
 interface UpdateStatusBrandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   Brands: Row<TBrand>['original'][]
   showTrigger?: boolean
-  onSuccess?: () => void
+  onSuccess?: (brand: Row<TBrand>['original'][]) => void
   status: BrandStatusEnum
 }
 
@@ -49,7 +49,7 @@ export function UpdateStatusBrandDialog({
   async function onUpdate() {
     try {
       props.onOpenChange?.(false)
-      onSuccess?.()
+      onSuccess?.(Brands)
     } catch (error) {
       handleServerError({
         error

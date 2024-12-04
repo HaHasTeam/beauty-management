@@ -1,11 +1,14 @@
 'use client'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Row } from '@tanstack/react-table'
 import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
 import { BrandStatusEnum, TBrand } from '@/types/brand'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
@@ -24,6 +27,8 @@ interface BrandTableProps {
 }
 
 export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
+  const queryClient = useQueryClient()
+
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TBrand> | null>(null)
   const columns = React.useMemo(
     () =>
@@ -84,6 +89,46 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
     shallow: false,
     clearOnDefault: true
   })
+  const { mutateAsync: updateStatusBrandMutation } = useMutation({
+    mutationKey: [updateStatusBrandByIdApi.mutationKey],
+    mutationFn: updateStatusBrandByIdApi.fn
+  })
+  const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
+    console.log('brand', brand)
+
+    try {
+      // Map over the brand array and call the mutation for each brand
+      const updatePromises = brand.map((item) =>
+        updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED })
+      )
+
+      // Wait for all updates to complete
+      await Promise.all(updatePromises)
+      queryClient.invalidateQueries({
+        queryKey: [getAllBrandsApi.queryKey]
+      })
+    } catch (error) {
+      console.error('Failed to update some brands:', error)
+    }
+  }
+  const updateStatusBrand = async (brand: Row<TBrand>['original'][]) => {
+    console.log('brand', brand)
+
+    try {
+      // Map over the brand array and call the mutation for each brand
+      const updatePromises = brand.map((item) =>
+        updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.ACTIVE })
+      )
+
+      // Wait for all updates to complete
+      await Promise.all(updatePromises)
+      queryClient.invalidateQueries({
+        queryKey: [getAllBrandsApi.queryKey]
+      })
+    } catch (error) {
+      console.error('Failed to update some brands:', error)
+    }
+  }
 
   return (
     <>
@@ -97,7 +142,10 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={() => rowAction?.row.toggleSelected(false)}
+        onSuccess={(brand) => {
+          deleteBrand(brand)
+          rowAction?.row.toggleSelected(false)
+        }}
       />
       <UpdateStatusBrandDialog
         status={BrandStatusEnum.ACTIVE}
@@ -105,7 +153,10 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={() => rowAction?.row.toggleSelected(false)}
+        onSuccess={(brand) => {
+          updateStatusBrand(brand)
+          rowAction?.row.toggleSelected(false)
+        }}
       />
       <ViewDetailsBrandsSheet
         TBrand={rowAction?.row.original}
