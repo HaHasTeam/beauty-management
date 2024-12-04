@@ -1,14 +1,17 @@
+import 'react-quill-new/dist/quill.snow.css'
+
 import { UseFormReturn } from 'react-hook-form'
+import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
+import { modules } from '@/variables/textEditor'
 
 import FormCategorySelection from '../form-category-selection'
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
 import UploadProductImages from './UploadProductImages'
 
 interface BasicInformationProps {
@@ -114,7 +117,14 @@ const BasicInformation = ({ form, resetSignal, defineFormSignal, useCategoryData
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>
-                      <Textarea placeholder='Mô tả sản phẩm' className='border-primary/40' {...field} />
+                      <ReactQuill
+                        modules={modules}
+                        placeholder='Mô tả sản phẩm'
+                        style={{ borderRadius: 10, borderColor: '#FEE9DC' }}
+                        className='border-primary/40'
+                        theme='snow'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </div>
@@ -122,7 +132,6 @@ const BasicInformation = ({ form, resetSignal, defineFormSignal, useCategoryData
               </FormItem>
             )}
           />
-          <div className='text-sm text-muted-foreground text-right'>0/3000</div>
         </div>
       </div>
     </div>

@@ -297,10 +297,7 @@ export const FormProductSchema = z
         z.string()
       )
       .min(1, { message: 'Product images is required.' }),
-    description: z
-      .string()
-      .min(1, { message: 'Product description is required.' })
-      .max(3000, { message: 'Product description must be less than 3000 characters.' }),
+    description: z.string().min(1, { message: 'Product description is required.' }),
     status: z.string().min(1, { message: 'Status is required.' }),
     // detail information
     detail: z.object({
