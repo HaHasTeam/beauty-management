@@ -16,5 +16,5 @@ export type IBrand = {
   phone: string
   address: string
   star: number
-  status: StatusEnum
+  status: StatusEnum.ACTIVE | StatusEnum.BANNED | StatusEnum.INACTIVE | StatusEnum.PENDING
 }

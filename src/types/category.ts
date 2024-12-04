@@ -11,8 +11,8 @@ export interface ICategoryDetail {
 export interface ICategory {
   id: string
   name: string
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
   detail?: ICategoryDetail
   parentCategory?: ICategory | null
   subCategories?: ICategory[]

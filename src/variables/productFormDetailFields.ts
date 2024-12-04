@@ -328,6 +328,7 @@ export const FormProductSchema = z
     productClassifications: z
       .array(
         z.object({
+          id: z.string().min(0).optional(),
           title: z.string().min(1, { message: 'Title is required.' }).optional(),
           type: z.string().min(0).optional(),
           price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),

@@ -97,6 +97,7 @@ export default function FormCategorySelection({
 
       if (!lastSelectedCategory) {
         setSelectedCategories([])
+        setChosenCategories([])
         return
       }
 
@@ -123,6 +124,7 @@ export default function FormCategorySelection({
       // Build the path and set selected categories
       const categoryPath = buildCategoryPath(lastSelectedCategory)
       setSelectedCategories(categoryPath)
+      setChosenCategories(categoryPath)
     }
   }, [defineFormSignal, form, categories])
 

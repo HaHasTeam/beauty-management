@@ -2,7 +2,7 @@ import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
-import { categories } from '@/types/category'
+import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 import FormCategorySelection from '../form-category-selection'
@@ -15,8 +15,9 @@ interface BasicInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
   defineFormSignal?: boolean
+  useCategoryData: ICategory[]
 }
-const BasicInformation = ({ form, resetSignal, defineFormSignal }: BasicInformationProps) => {
+const BasicInformation = ({ form, resetSignal, defineFormSignal, useCategoryData }: BasicInformationProps) => {
   return (
     <div className='bg-white rounded-lg shadow-md p-4 lg:p-6 space-y-4'>
       <h3 className='font-bold text-xl'>Thông tin cơ bản</h3>
@@ -83,7 +84,7 @@ const BasicInformation = ({ form, resetSignal, defineFormSignal }: BasicInformat
                   <div className='w-full space-y-1'>
                     <FormControl>
                       <FormCategorySelection
-                        categories={categories}
+                        categories={useCategoryData}
                         onSelect={(selected: string) => {
                           field.onChange(selected)
                         }}

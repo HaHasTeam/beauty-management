@@ -2,12 +2,13 @@ import { PlusCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Routes, routesConfig } from '@/configs/routes'
-import { IProduct, IProductTable } from '@/types/product'
+import { StatusEnum } from '@/types/brand'
+import { IProductTable, IResponseProduct } from '@/types/product'
 
 import ProductTable from '../product-list/ProductTable'
 
 const index = () => {
-  const products: IProduct[] = [
+  const products: IResponseProduct[] = [
     {
       id: '10d64537-6eab-4491-8ea3-af0713ac78a0',
       name: 'Lemonade LipBalm',
@@ -34,7 +35,7 @@ const index = () => {
         phone: '0900123456',
         address: '123 Beauty Avenue, Beauty City',
         star: 0,
-        status: 'PENDING'
+        status: StatusEnum.PENDING
       },
       productClassifications: [
         {
@@ -73,8 +74,8 @@ const index = () => {
   const tableData: IProductTable[] = products.map((product) => ({
     id: product.id ?? '',
     name: product.name,
-    price: product.price,
-    quantity: product.quantity,
+    price: product.price ?? 0,
+    quantity: product.quantity ?? 0,
     description: product.description ?? '',
     detail: product.detail ?? '',
     brand: product.brand?.name ?? '',

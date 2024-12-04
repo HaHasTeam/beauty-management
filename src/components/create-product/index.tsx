@@ -8,9 +8,11 @@ import { z } from 'zod'
 import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
+import { getCategoryApi } from '@/network/apis/category'
 import { getUserProfileApi } from '@/network/apis/user'
 import { createProductApi } from '@/network/product'
-import { ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
+import { ICategory } from '@/types/category'
+import { IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
 import { Button } from '../ui/button'
@@ -20,16 +22,14 @@ import DetailInformation from './DetailInformation'
 import SalesInformation from './SalesInformation'
 
 const CreateProduct = () => {
-  const { data: useProfileData } = useQuery({
-    queryKey: [getUserProfileApi.queryKey],
-    queryFn: getUserProfileApi.fn
-  })
   const [resetSignal, setResetSignal] = useState(false)
   const [isValid, setIsValid] = useState(true)
+  const [categories, setCategories] = useState<ICategory[]>([])
 
   const id = useId()
   const { successToast } = useToast()
   const navigate = useNavigate()
+  const handleServerError = useHandleServerError()
 
   const defaultProductValues = {
     name: '',
@@ -47,7 +47,14 @@ const CreateProduct = () => {
     defaultValues: defaultProductValues
   })
 
-  const handleServerError = useHandleServerError()
+  const { data: useProfileData } = useQuery({
+    queryKey: [getUserProfileApi.queryKey],
+    queryFn: getUserProfileApi.fn
+  })
+  const { data: useCategoryData } = useQuery({
+    queryKey: [getCategoryApi.queryKey],
+    queryFn: getCategoryApi.fn
+  })
 
   const handleReset = () => {
     form.reset()
@@ -71,7 +78,7 @@ const CreateProduct = () => {
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
       if (isValid) {
-        const transformedData = {
+        const transformedData: IServerCreateProduct = {
           ...values,
           brand: (useProfileData?.data?.brands ?? [])[0]?.id ?? '',
           images: values.images.map((image) => ({
@@ -105,11 +112,16 @@ const CreateProduct = () => {
       form.setValue('brand', useProfileData.data.brands[0].id)
     }
   }, [useProfileData, form, resetSignal])
+  useEffect(() => {
+    if (useCategoryData?.data) {
+      setCategories(useCategoryData.data)
+    }
+  }, [form, resetSignal, useCategoryData])
   return (
     <div>
       <Form {...form}>
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
-          <BasicInformation form={form} resetSignal={resetSignal} />
+          <BasicInformation form={form} resetSignal={resetSignal} useCategoryData={categories} />
           <DetailInformation form={form} resetSignal={resetSignal} />
           <SalesInformation form={form} resetSignal={resetSignal} setIsValid={setIsValid} />
           <div className='w-full flex flex-row-reverse justify-start gap-3'>

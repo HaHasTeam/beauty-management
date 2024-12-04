@@ -52,7 +52,7 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
   }
   const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
     const [options1 = [], options2 = ['']] = updatedOptions.map((c) => c.options)
-    const newCombinations: ICombination[] = form.getValues('productClassifications') ?? []
+    const newCombinations: ICombination[] = []
 
     options1.forEach((o1) => {
       options2.forEach((o2) => {
@@ -67,7 +67,6 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
         })
       })
     })
-
     setCombinations(newCombinations)
     form.setValue('productClassifications', newCombinations)
   }
@@ -107,10 +106,17 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
     setClassificationsOptions((prev) => [...prev, { title: '', options: [] }])
 
     const currentClassifications = form.getValues('productClassifications') || []
-    form.setValue('productClassifications', [
-      ...currentClassifications,
-      { title: '', image: '', type: ProductClassificationTypeEnum?.CUSTOM, price: 0, quantity: 1 }
-    ])
+    const newClassification = {
+      title: '',
+      image: '',
+      type: ProductClassificationTypeEnum?.CUSTOM,
+      price: 0,
+      quantity: 1
+    }
+
+    const updatedClassifications = [...currentClassifications, newClassification]
+
+    form.setValue('productClassifications', updatedClassifications)
 
     form.resetField('price')
     form.resetField('quantity')
