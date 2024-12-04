@@ -47,11 +47,11 @@ const UpdateProduct = () => {
     status: ''
   }
 
-  const { data: useProfileData } = useQuery({
+  const { data: useProfileData, isFetching: isGettingProfile } = useQuery({
     queryKey: [getUserProfileApi.queryKey],
     queryFn: getUserProfileApi.fn
   })
-  const { data: useCategoryData } = useQuery({
+  const { data: useCategoryData, isFetching: isGettingCategory } = useQuery({
     queryKey: [getCategoryApi.queryKey],
     queryFn: getCategoryApi.fn
   })
@@ -171,7 +171,7 @@ const UpdateProduct = () => {
 
   return (
     <div>
-      {isGettingProduct && <LoadingContentLayer />}
+      {isGettingProduct && isGettingCategory && isGettingProfile && <LoadingContentLayer />}
       <Form {...form}>
         <form
           noValidate
