@@ -5,8 +5,13 @@ import { Routes, routesConfig } from '@/configs/routes'
 import DashboardHome from '@/views/dashboard'
 import AccountsDirectory from '@/views/dashboard/accounts-directory'
 import CreateProduct from '@/views/dashboard/create-product'
+import FlashSale from '@/views/dashboard/flash-sale'
+import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
 import MerchantsDirectory from '@/views/dashboard/merchants-directory'
 import { RedirectToMainDashboard } from '@/views/dashboard/others'
+import PreOrder from '@/views/dashboard/pre-order'
+import PreOrderDetailById from '@/views/dashboard/pre-order/[id]'
+import AddPreOrder from '@/views/dashboard/pre-order/AddPreOrder'
 import ProductList from '@/views/dashboard/product-list'
 import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
@@ -35,6 +40,62 @@ export const privateRoutes: RouteObject[] = [
       {
         path: routesConfig[Routes.REQUESTS_QUEUE].path.replace('/dashboard/', ''),
         element: <RequestsQueue />
+      },
+      {
+        path: 'pre-order',
+
+        children: [
+          {
+            index: true,
+            element: <PreOrder />
+          },
+          { path: 'add-pre-order', element: <AddPreOrder /> },
+          {
+            path: ':id',
+            element: <PreOrderDetailById />
+          }
+        ]
+      },
+      {
+        path: 'flash-sale',
+        children: [
+          {
+            index: true,
+            element: <FlashSale />
+          },
+          {
+            path: 'add-flash-sale',
+            element: <AddFlashSale />
+          }
+        ]
+      },
+      {
+        path: 'pre-order',
+
+        children: [
+          {
+            index: true,
+            element: <PreOrder />
+          },
+          { path: 'add-pre-order', element: <AddPreOrder /> },
+          {
+            path: ':id',
+            element: <PreOrderDetailById />
+          }
+        ]
+      },
+      {
+        path: 'flash-sale',
+        children: [
+          {
+            index: true,
+            element: <FlashSale />
+          },
+          {
+            path: 'add-flash-sale',
+            element: <AddFlashSale />
+          }
+        ]
       },
       {
         path: routesConfig[Routes.MERCHANTS_DIRECTORY].path.replace('/dashboard/', ''),

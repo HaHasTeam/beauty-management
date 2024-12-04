@@ -1,4 +1,5 @@
 import { IBrand } from './brand'
+import { TMetaData } from './request'
 import { UserRoleEnum } from './role'
 
 export enum UserGenderEnum {
@@ -14,7 +15,7 @@ export enum UserStatusEnum {
   BANNED = 'BANNED'
 }
 
-export type TUser = {
+export type TUser = TMetaData & {
   firstName?: string
   lastName?: string
   username: string

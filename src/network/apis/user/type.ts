@@ -1,4 +1,4 @@
-import { TUser } from '@/types/user'
+import { TUser, UserStatusEnum } from '@/types/user'
 
 export type TCreateUserRequestParams = Pick<TUser, 'username' | 'email' | 'password' | 'brand'> & {
   role: string
@@ -21,4 +21,16 @@ export type TInviteMultipleCoWorkersRequestParams = {
   role: string
   brand?: string
   redirectUrl?: string
+}
+
+export type TUserResponse = TUser
+
+export type TUpdateUserStatusRequestParams = {
+  id: string
+  status: UserStatusEnum
+}
+
+export type TUpdateUsersListStatusRequestParams = {
+  ids: string[]
+  status: UserStatusEnum
 }

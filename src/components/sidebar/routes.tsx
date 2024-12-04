@@ -1,7 +1,9 @@
 // Auth Imports
 import { CiSquareQuestion } from 'react-icons/ci'
 import { FaBox } from 'react-icons/fa6'
+import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
+import { IoIosFlash } from 'react-icons/io'
 import { PiCompassToolBold } from 'react-icons/pi'
 
 import { Routes, routesConfig } from '@/configs/routes'
@@ -12,6 +14,18 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.DASHBOARD_HOME].name,
     path: routesConfig[Routes.DASHBOARD_HOME].path,
     icon: <HiOutlineHome className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.PRE_ORDER].name,
+    path: routesConfig[Routes.PRE_ORDER].path,
+    icon: <GrSchedule className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.FLASH_SALE].name,
+    path: routesConfig[Routes.FLASH_SALE].path,
+    icon: <IoIosFlash className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

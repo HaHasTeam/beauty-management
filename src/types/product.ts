@@ -1,6 +1,23 @@
-import { IBrand } from './brand'
+import { IBrand, TBrand } from './brand'
 import { ICategory } from './category'
 import { IImage } from './productImage'
+import { TMetaData } from './request'
+
+export type TProduct = TMetaData & {
+  name: string
+  description: string
+  detail: string
+  brand: TBrand
+  images: string[]
+  status: ProductStatusEnum
+}
+export enum ProductStatusEnum {
+  FLASH_SALE = 'FLASH_SALE',
+  OFFICIAL = 'OFFICIAL',
+  OUT_OF_STOCK = 'OUT_OF_STOCK',
+  INACTIVE = 'INACTIVE',
+  BANNED = 'BANNED'
+}
 
 export type IProductDetail = {
   organizationName?: string[]
