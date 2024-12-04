@@ -79,11 +79,15 @@ const CreateProduct = () => {
     try {
       if (isValid) {
         const transformedData: IServerCreateProduct = {
-          ...values,
+          name: values?.name,
+          category: values?.category,
+          status: values?.status,
           brand: (useProfileData?.data?.brands ?? [])[0]?.id ?? '',
           images: values.images.map((image) => ({
             fileUrl: image // Transform image strings to objects
           })),
+          description: values?.description,
+          sku: values?.sku,
           detail: JSON.stringify(values.detail), // Convert detail object to a string
           productClassifications:
             (values?.productClassifications ?? [])?.length > 0
@@ -91,10 +95,11 @@ const CreateProduct = () => {
               : [
                   {
                     title: 'Default',
-                    image: 'default image',
+                    image: [],
                     price: values.price ?? 1000,
                     quantity: values.quantity ?? 1,
-                    type: ProductClassificationTypeEnum.DEFAULT
+                    type: ProductClassificationTypeEnum.DEFAULT,
+                    sku: values.sku
                   }
                 ]
         }
