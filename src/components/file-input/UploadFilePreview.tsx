@@ -1,32 +1,36 @@
-import { useMutation } from '@tanstack/react-query'
+// import { useMutation } from '@tanstack/react-query'
 import { FilesIcon, Upload } from 'lucide-react'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { TbWorldUpload } from 'react-icons/tb'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
-import { useToast } from '@/hooks/useToast'
+// import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
-import { uploadFilesApi } from '@/network/apis/file'
-import { createFiles } from '@/utils/files'
 
+// import { uploadFilesApi } from '@/network/apis/file'
+// import { createFiles } from '@/utils/files'
 import { Progress } from '../ui/progress'
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '.'
 
-type UploadFileModalProps = {
-  Trigger: ReactNode
+type UploadFileModalProps<T extends FieldValues> = {
+  header: ReactNode
   dropZoneConfigOptions?: DropzoneOptions
-  field: React.InputHTMLAttributes<HTMLInputElement>
+  field: ControllerRenderProps<T>
 }
 
-const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFileModalProps) => {
+const UploadFilePreview = <T extends FieldValues>({
+  dropZoneConfigOptions,
+  field,
+  header
+}: UploadFileModalProps<T>) => {
   const [files, setFiles] = useState<File[]>([])
-  const [isOpen, setIsOpen] = useState(false)
   const handleServerError = useHandleServerError()
-  const { successToast } = useToast()
+  // const { successToast } = useToast()
 
-  const [progress, setProgress] = useState(0)
+  const [progress] = useState(0)
 
   // const { mutateAsync: uploadFilesFn, isPending: isUploadingFiles } = useMutation({
   //   mutationKey: [uploadFilesApi.mutationKey],
@@ -51,8 +55,6 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
     fieldType: 'string' | 'array' | 'object'
     fieldValue: string | string[]
   }>(() => {
-    console.log('field?.value', Array.isArray(field?.value), field?.value)
-
     if (typeof field?.value === 'string') {
       if (dropZoneConfigOptions?.maxFiles && dropZoneConfigOptions?.maxFiles > 1) {
         throw new Error('Field value must be an array')
@@ -60,17 +62,17 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
 
       return {
         fieldType: 'string',
-        fieldValue: field?.value as string
+        fieldValue: field?.value
       }
     } else if (Array.isArray(field?.value)) {
       return {
         fieldType: 'array',
-        fieldValue: field?.value as string[]
+        fieldValue: field?.value
       }
     } else if (typeof field?.value === 'object') {
       return {
-        fieldType: 'string',
-        fieldValue: field?.value as string[]
+        fieldType: 'array',
+        fieldValue: field?.value
       }
     }
     throw new Error('Field value must be a string or an array')
@@ -92,26 +94,26 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
   useEffect(() => {
     const transferData = async () => {
       try {
-        const resultFiles: File[] = []
-        if (fieldType === 'string') {
-          if ((fieldValue == '' && files.length !== 1) || (fieldValue !== '' && files.length === 0)) {
-            if (fieldValue) {
-              const parsedFiles = await createFiles([fieldValue as string])
-              resultFiles.push(...parsedFiles)
-              return setFiles(resultFiles)
-            } else {
-              return setFiles([])
-            }
-          }
-        }
+        // const resultFiles: File[] = []
+        // if (fieldType === 'string') {
+        //   if ((fieldValue == '' && files.length !== 1) || (fieldValue !== '' && files.length === 0)) {
+        //     if (fieldValue) {
+        //       const parsedFiles = await createFiles([fieldValue as string])
+        //       resultFiles.push(...parsedFiles)
+        //       return setFiles(resultFiles)
+        //     } else {
+        //       return setFiles([])
+        //     }
+        //   }
+        // }
         if (Array.isArray(fieldValue)) {
           if (fieldValue.length === files.length) {
             return
           }
 
-          const parsedFiles = await createFiles(fieldValue as string[])
-          resultFiles.push(...parsedFiles)
-          return setFiles(resultFiles)
+          // const parsedFiles = await createFiles(fieldValue as string[])
+          // resultFiles.push(...parsedFiles)
+          return setFiles(field?.value)
         }
       } catch (error) {
         handleServerError({
@@ -119,7 +121,7 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
         })
       }
     }
-    // transferData()
+    transferData()
     // eslint-disable-next-line
   }, [fieldValue, fieldType, files.length])
 
@@ -135,67 +137,73 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
   // }
 
   const onFileDrop = async (newFiles: File[] | null) => {
-    setFiles(newFiles || [])
     const oldFiles = files
-
     try {
       // Check file is string or array
       // If string, convert to file and set to state
       if (fieldType === 'string') {
         // Value must be an array of files
-        if (!newFiles?.length) {
-          return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
+        if (!newFiles?.length && field.onChange) {
+          field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
         }
         if (newFiles?.length) {
-          console.log('newFiles string', newFiles)
-
           // const fileUrls = await convertFileToUrl(newFiles)
 
-          return field?.onChange?.(newFiles as unknown as React.ChangeEvent<HTMLInputElement>)
+          field?.onChange?.(newFiles[0] as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
 
       // If array, set to state
-      if (fieldType === 'array') {
-        if (!newFiles?.length) return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
+      if (fieldType === 'array' && field?.value) {
+        // console.log('!newFiles?.length', newFiles?.length)
+
+        if (!newFiles) return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
         if (newFiles.length > oldFiles.length) {
           const diffedFiles = newFiles.filter((file) => {
-            return !oldFiles?.some((oldFile) => oldFile.name === file.name)
+            return !oldFiles?.some(
+              (oldFile) => oldFile.name === file.name && oldFile.lastModified === file.lastModified
+            )
           })
-
+          const updateFiles = [...diffedFiles, ...field.value]
+          setFiles(updateFiles)
           // const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
-          return field?.onChange?.([
+          field?.onChange?.([
             ...(field?.value as string[]),
             ...diffedFiles
           ] as unknown as React.ChangeEvent<HTMLInputElement>)
         } else {
-          const deletedFile = oldFiles.filter((file) => {
-            return !newFiles.some((newFile) => newFile.name === file.name)
+          const deletedIndex = oldFiles.findIndex((oldFile) => {
+            return !newFiles.some((file) => file.name === oldFile.name && file.lastModified === oldFile.lastModified)
           })
 
-          if (deletedFile.length > 0) {
-            const newAppendFilesUrl = (field?.value as string[]).filter((file) => {
-              return !deletedFile.some((deleted) => deleted.name === file)
-            })
+          if (deletedIndex !== -1) {
+            const updatedFiles = [...field.value]
+            updatedFiles.splice(deletedIndex, 1)
 
-            field?.onChange?.(newAppendFilesUrl as unknown as React.ChangeEvent<HTMLInputElement>)
+            setFiles(updatedFiles)
+            field?.onChange?.(updatedFiles as unknown as React.ChangeEvent<HTMLInputElement>)
           }
         }
       }
+      // const markedFiles = newFiles?.map((file) => {
+      //   return new File([file], file.name, { type: file.type, lastModified: file.lastModified })
+      // })
+
+      // setFiles(markedFiles || [])
     } catch (error) {
       handleServerError({
         error
       })
-      setFiles(oldFiles)
     }
   }
-
+  const message = `You can upload up to ${dropZoneConfig.maxFiles} files. Accepted file formats are ${Object.values(
+    dropZoneConfig.accept
+  )
+    .flat()
+    .join(', ')}. Each file must be under ${dropZoneConfig.maxSize / (1024 * 1024)}MB.`
   return (
     <>
-      <div>
-        <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div>
-        <div className='text-muted-foreground'>Drag and drop your images here or click to select files</div>
-      </div>
+      {header}
       <div
         className={`overflow-hidden border border-dashed rounded-xl transition-all duration-300 ${
           isDragActive ? 'border-primary bg-primary/10 dark:bg-accent' : 'border-muted-foreground'
@@ -206,15 +214,13 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
             <div className='overflow-hidden flex flex-col items-center justify-center text-center w-full border-b border-dashed border-primary py-4 bg-primary/20 hover:bg-primary transition-all duration-500'>
               <Upload className='w-12 h-12 mb-4 text-muted-foreground' />
               {isDragActive ? (
-                <p className='text-lg font-medium text-foreground'>Drop your images here</p>
+                <p className='text-lg font-medium text-foreground'>Drop your file here</p>
               ) : (
                 <>
-                  <p className='text-lg font-medium text-foreground'>Drag & drop your images here</p>
+                  <p className='text-lg font-medium text-foreground'>Drag & drop your files here</p>
                   <p className='mt-2 text-sm text-muted-foreground'>or click to select files</p>
                   {files && files.length < dropZoneConfig.maxFiles ? (
-                    <span className='mt-2 text-sm text-muted-foreground px-8'>
-                      {`You can upload up to ${dropZoneConfig.maxFiles} files with a maximum size of ${dropZoneConfig.maxSize / (1024 * 1024)} MB each`}
-                    </span>
+                    <span className='mt-2 text-sm text-muted-foreground px-8'>{message} </span>
                   ) : (
                     <span className='mt-2 text-sm text-muted-foreground px-8'>
                       {`You have reached the maximum number of files allowed`}
@@ -236,7 +242,7 @@ const UploadFilePreview = ({ Trigger, dropZoneConfigOptions, field }: UploadFile
                 <p className='text-sm font-medium text-muted-foreground flex justify-center gap-2 items-center pb-2'>
                   <TbWorldUpload /> <span>{files.length} file(s) selected</span>
                 </p>
-                <ScrollArea className='h-[220px] w-full rounded-md shadow-2xl py-2 border-t-4 border-primary'>
+                <ScrollArea className='h-[120px] w-full rounded-md shadow-2xl py-2 border-t-4 border-primary'>
                   <div className='flex flex-col gap-2 px-4'>
                     {files.map((file, index) => (
                       <FileUploaderItem

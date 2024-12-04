@@ -1,3 +1,4 @@
+import { TMetaData } from './request'
 import { UserRoleEnum } from './role'
 
 export enum UserGenderEnum {
@@ -13,7 +14,7 @@ export enum UserStatusEnum {
   BANNED = 'BANNED'
 }
 
-export type TUser = {
+export type TUser = TMetaData & {
   firstName?: string
   lastName?: string
   username: string
@@ -26,5 +27,5 @@ export type TUser = {
   avatar?: string
   status: UserStatusEnum | string
   isEmailVerify: boolean
-  brand?: string
+  brands?: string[]
 }

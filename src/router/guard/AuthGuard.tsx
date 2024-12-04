@@ -40,12 +40,8 @@ const AuthGuard: FC<PropsWithChildren> = ({ children }) => {
 
   if (!isAuthenticated) return <Navigate to={routesConfig[Routes.AUTH_LOGIN].getPath()} replace />
 
-  return (
-    <>
-      {children}
-      {isLoading && <LoadingLayer />}
-    </>
-  )
+  if (isLoading) return <LoadingLayer />
+  return <>{children}</>
 }
 
 export default AuthGuard

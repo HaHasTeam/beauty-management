@@ -3,6 +3,12 @@ export type TServerResponse<T> = {
   data: T
 }
 
+export type TMetaData = {
+  id: string
+  createdAt: string
+  updatedAt: string
+}
+
 export type TServerError<TErrorResponse = unknown> = {
   message: string
   errors?: {

@@ -28,7 +28,7 @@ function BranchCreation({ stepIndex, goNextFn, steppers }: Props) {
       step: stepIndex,
       data: {}
     })
-  }, [])
+  }, [setBranchStep, stepIndex])
 
   return (
     <div className='relative flex size-full flex-col items-center justify-center  '>

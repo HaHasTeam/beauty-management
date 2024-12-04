@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { BadgePlus, Images, Info } from 'lucide-react'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 import MockImage from '@/assets/SidebarBadge.png'
@@ -12,13 +14,24 @@ import Confirmation from '@/components/branch/Confirmation'
 import UplImagesUploader from '@/components/branch/UplImagesUploader'
 import Stepper from '@/components/steppers'
 import { Form } from '@/components/ui/form'
+import { Routes, routesConfig } from '@/configs/routes'
 import type { Steppers } from '@/hooks/useStepper'
 import useStepper from '@/hooks/useStepper'
 import { useToast } from '@/hooks/useToast'
+import { requestCreateBrandApi } from '@/network/apis/brand'
+import { uploadFilesApi } from '@/network/apis/file'
 import { brandCreateSchema } from '@/schemas'
+import { useStore } from '@/stores/store'
+import { StatusEnum } from '@/types/enum'
 
 function Home() {
-  const { errorToast } = useToast()
+  const { errorToast, successToast } = useToast()
+  const queryParams = new URLSearchParams(window.location.search)
+  const navigate = useNavigate()
+  const accessToken = queryParams.get('accessToken')
+  const refreshToken = queryParams.get('refreshToken')
+
+  // const accountId = accessToken ? jwtDecode<TEmailDecoded>(accessToken).accountId : undefined
 
   const form = useForm<z.infer<typeof brandCreateSchema>>({
     resolver: zodResolver(brandCreateSchema),
@@ -27,21 +40,22 @@ function Home() {
       phone: '',
       address: '',
       description: '',
-      document: '',
+      document: [],
       logo: [],
       name: ''
     }
   })
+
   const steppers: Steppers[] = [
     {
       icon: <BadgePlus />,
-      label: 'Branch Creation',
+      label: 'Brand Creation',
       key: 'branch-creation'
     },
 
     {
       icon: <Info />,
-      label: 'Branch details',
+      label: 'Brand details',
       key: 'branch-details'
     },
     {
@@ -49,11 +63,6 @@ function Home() {
       label: 'Images',
       key: 'images'
     }
-    // {
-    //   icon: <ContactRoundIcon />,
-    //   label: 'Lisense details',
-    //   key: 'lisense-details'
-    // }
   ]
   const { activeStep, goBack, goNext } = useStepper({ steppers })
   const Silde = useMemo(() => {
@@ -74,23 +83,97 @@ function Home() {
             form={form}
           />
         )
-      // case 'lisense-details':
-      //   return <DocumentDetails stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} />
-      default:
-        return <Confirmation stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} />
-    }
-  }, [activeStep])
 
-  function onSubmit(values: z.infer<typeof brandCreateSchema>) {
+      default:
+        return (
+          <Confirmation stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} form={form} />
+        )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep])
+  const {
+    mutateAsync: uploadFilesFn,
+    isSuccess: isUploadSuccess,
+    data: fileUploaded
+  } = useMutation({
+    mutationKey: [uploadFilesApi.mutationKey],
+    mutationFn: uploadFilesApi.fn
+  })
+  const { mutateAsync: requestCreateBrandFn } = useMutation({
+    mutationKey: [requestCreateBrandApi.mutationKey],
+    mutationFn: requestCreateBrandApi.fn,
+    onSuccess: () => {
+      // console.log('data received', data)
+      form.reset()
+      navigate(routesConfig[Routes.DASHBOARD_HOME].getPath())
+      successToast({ message: 'Your request to create a brand has been successfully completed.' })
+    }
+  })
+  const convertFileToUrl = async (files: File[]) => {
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
+
+    const uploadedFilesResponse = await uploadFilesFn(formData)
+
+    return uploadedFilesResponse.data
+  }
+
+  async function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
-      console.log('valuse 86: ', values)
-    } catch (error) {
-      console.error('Form submission error', error)
+      if (values.logo && values.logo?.length > 0) {
+        await convertFileToUrl([...values.logo, ...values.document])
+        if (isUploadSuccess) {
+          const formatData = {
+            name: values.name,
+            document: fileUploaded.data[1],
+            address: values.address,
+            logo: fileUploaded.data[0],
+            email: values.email,
+            phone: values.phone,
+            description: values.description,
+            status: StatusEnum.PENDING
+          }
+          await requestCreateBrandFn(formatData)
+        }
+      } else {
+        await convertFileToUrl([...values.document])
+        if (isUploadSuccess) {
+          const formatData = {
+            name: values.name,
+            document: fileUploaded.data[0],
+            address: values.address,
+            email: values.email,
+            logo: '',
+            phone: values.phone,
+            description: values.description,
+            status: StatusEnum.PENDING
+          }
+          await requestCreateBrandFn(formatData)
+        }
+      }
+    } catch {
       errorToast({
         message: 'Failed to submit the form. Please try again.'
       })
     }
   }
+
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      useStore.getState().setAuthState({
+        isAuthenticated: true,
+        isLoading: false,
+        authData: {
+          accessToken: accessToken,
+          refreshToken: refreshToken
+        }
+      })
+    } else {
+      window.location.href = 'http://localhost:3001/'
+    }
+  }, [accessToken, navigate, refreshToken])
   return (
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-secondary px-4 py-3 shadow-md'>

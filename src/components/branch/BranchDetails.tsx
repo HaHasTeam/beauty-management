@@ -5,11 +5,13 @@ import type { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
+import { templateFileUrl } from '@/constants/infor'
 import type { Steppers } from '@/hooks/useStepper'
 import { brandCreateSchema } from '@/schemas'
 
 import { AddressPopup } from '../address-popup'
 import Button from '../button'
+import UploadFilePreview from '../file-input/UploadFilePreview'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 
@@ -102,7 +104,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           name='description'
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Description</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input
                   className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
@@ -122,7 +124,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           name='phone'
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Phone</FormLabel>
+              <FormLabel>Phone</FormLabel>
               <FormControl>
                 <Input
                   className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
@@ -134,7 +136,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name='document'
           render={({ field }) => (
@@ -147,6 +149,33 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+
+        <FormField
+          control={form.control}
+          name='document'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Document</FormLabel>
+              <UploadFilePreview
+                field={field}
+                dropZoneConfigOptions={{ maxFiles: 1 }}
+                header={
+                  <div>
+                    {/* <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div> */}
+                    <div className='text-muted-foreground'>
+                      You must upload at least 1 document for your lisense details. To help you, we’ve provided a
+                      template file. Please download it, fill in the necessary details, and upload it back:
+                    </div>
+                    <a href={templateFileUrl} download className='text-primary underline'>
+                      Download License Details Template
+                    </a>
+                  </div>
+                }
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -165,10 +194,15 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           Back
         </Button>
         <Button
+          type='button'
           className=' flex select-none items-center justify-center gap-2 px-4'
           disabled={stepIndex === 0}
           onClick={() => {
-            goNextFn()
+            if (form.formState.isValid) {
+              goNextFn()
+            } else {
+              form.trigger()
+            }
           }}
         >
           <ChevronRight className=' -mr-1 h-6 w-6 ' />

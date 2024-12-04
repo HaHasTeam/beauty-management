@@ -30,7 +30,7 @@ const AppProvider = (props: Props) => {
   const isLoading = isGettingRolesIdByEnum
 
   if (isLoading) {
-    return <LoadingLayer label='Loading . . .' />
+    return <LoadingLayer label='Initializing...' />
   }
 
   return <AppProviderContext.Provider value={{ rolesData }}>{props.children}</AppProviderContext.Provider>

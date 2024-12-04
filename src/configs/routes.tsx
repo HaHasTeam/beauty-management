@@ -11,7 +11,14 @@ export enum Routes {
   SERVICES_CATALOG = 'services-catalog',
   PROFILE_SETTINGS = 'profile-settings',
   ACCOUNTS_DIRECTORY = 'accounts-directory',
-  AUTH_SIGN_UP = 'auth-sign-up'
+  AUTH_SIGN_UP = 'auth-sign-up',
+  PRE_ORDER = 'pre-order',
+  BRAND = 'brand',
+  PRE_ORDER_DETAILS = 'pre-order-details',
+  ADD_PRE_ORDER = 'add-pre-order',
+  FLASH_SALE = 'flash-sale',
+  ADD_FLASH_SALE = 'add-flash-sale',
+  FLASH_SALE_DETAILS = 'flash-sale-details'
 }
 
 export const routesConfig: TRoutes = {
@@ -37,6 +44,55 @@ export const routesConfig: TRoutes = {
     getPath: (params) => {
       return `/auth/email-verification` + (params ? '?' + new URLSearchParams(params).toString() : '')
     }
+  },
+  [Routes.BRAND]: {
+    name: 'Brand Management',
+    title: 'Brand Management',
+    description: 'Brand Management',
+    path: '/dashboard/brand',
+    getPath: () => '/dashboard/brand'
+  },
+  [Routes.PRE_ORDER]: {
+    name: 'Pre Order',
+    title: 'Pre Order',
+    description: 'Pre Order',
+    path: '/dashboard/pre-order',
+    getPath: () => '/dashboard/pre-order'
+  },
+  [Routes.PRE_ORDER_DETAILS]: {
+    name: 'Pre Order Details',
+    title: 'Pre Order Details',
+    description: 'Pre Order Details',
+    path: '/dashboard/pre-order/[id]',
+    getPath: (params) => `/dashboard/pre-order/${params.id}`
+  },
+  [Routes.ADD_PRE_ORDER]: {
+    name: 'Add Pre Order',
+    title: 'Add Pre Order',
+    description: 'Add Pre Order',
+    path: '/dashboard/pre-order/add-pre-order',
+    getPath: () => '/dashboard/pre-order/add-pre-order'
+  },
+  [Routes.FLASH_SALE]: {
+    name: 'Flash Sale',
+    title: 'Flash Sale',
+    description: 'Flash Sale',
+    path: '/dashboard/flash-sale',
+    getPath: () => '/dashboard/flash-sale'
+  },
+  [Routes.FLASH_SALE_DETAILS]: {
+    name: 'Flash Sale Details',
+    title: 'Flash Sale Details',
+    description: 'Flash Sale Details',
+    path: '/dashboard/flash-sale/[id]',
+    getPath: (params) => `/dashboard/flash-sale/${params.id}`
+  },
+  [Routes.ADD_FLASH_SALE]: {
+    name: 'Add Flash Sale',
+    title: 'Add Flash Sale',
+    description: 'Add Flash Sale',
+    path: '/dashboard/flash-sale/add-flash-sale',
+    getPath: () => '/dashboard/flash-sale/add-flash-sale'
   },
   [Routes.DASHBOARD_HOME]: {
     name: 'Main Dashboard',
