@@ -49,5 +49,5 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
 export default CircularProgress
 
 export const LoadingCircle = ({ progress, size = 50, strokeWidth = 8 }: ILoadingProgress) => (
-  <CircularProgress progress={progress} size={size} strokeWidth={strokeWidth} progressColor='#F66B15' />
+  <CircularProgress progress={progress} size={size} strokeWidth={strokeWidth} progressColor='#F16F90' />
 )

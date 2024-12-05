@@ -80,11 +80,15 @@ const CreateProduct = () => {
       if (isValid) {
         // (useProfileData?.data?.brands ?? [])[0]?.id ??
         const transformedData: IServerCreateProduct = {
-          ...values,
-          brand: 'd84d8d78-d48d-41eb-ab19-dbacea083415',
+          name: values?.name,
+          category: values?.category,
+          status: values?.status,
+          brand: (useProfileData?.data?.brands ?? [])[0]?.id ?? '',
           images: values.images.map((image) => ({
             fileUrl: image // Transform image strings to objects
           })),
+          description: values?.description,
+          sku: values?.sku,
           detail: JSON.stringify(values.detail), // Convert detail object to a string
           productClassifications:
             (values?.productClassifications ?? [])?.length > 0
@@ -92,10 +96,11 @@ const CreateProduct = () => {
               : [
                   {
                     title: 'Default',
-                    image: 'default image',
+                    image: [],
                     price: values.price ?? 1000,
                     quantity: values.quantity ?? 1,
-                    type: ProductClassificationTypeEnum.DEFAULT
+                    type: ProductClassificationTypeEnum.DEFAULT,
+                    sku: values.sku
                   }
                 ]
         }

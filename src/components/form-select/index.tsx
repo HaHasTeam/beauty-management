@@ -21,7 +21,7 @@ interface FormSelectProps {
   buttonText: string
   emptyText: string
   items: IOption[]
-  type?: 'select' | 'multiselect'
+  type?: 'singleChoice' | 'multipleChoice'
   maxMultiSelectItems?: number
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
@@ -34,7 +34,7 @@ const FormSelect = ({
   emptyText,
   items: initialItems,
   buttonText,
-  type = 'select',
+  type = 'singleChoice',
   maxMultiSelectItems,
   form,
   resetSignal,
@@ -55,7 +55,7 @@ const FormSelect = ({
   const handleSelectItem = (item: IOption) => {
     let updatedSelectedItems: IOption[]
 
-    if (type === 'select') {
+    if (type === 'singleChoice') {
       updatedSelectedItems = [item]
       setHidden(true)
     } else {
@@ -101,7 +101,7 @@ const FormSelect = ({
         const newItem = { value: inputValue.trim(), label: inputValue.trim() }
         let updatedSelectedItems: IOption[]
         setItems((prevItems) => [...prevItems, newItem])
-        if (type === 'select') {
+        if (type === 'singleChoice') {
           updatedSelectedItems = [newItem]
         } else {
           updatedSelectedItems = [...selectedItems, newItem]
@@ -157,7 +157,7 @@ const FormSelect = ({
           onClick={handleShowCommandDialog}
           className={`${!hidden && 'outline-none ring-1 ring-ring'} border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
         >
-          {type === 'select' ? (
+          {type === 'singleChoice' ? (
             selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
               <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
             ) : (
@@ -225,7 +225,7 @@ const FormSelect = ({
                     >
                       <div className='w-full flex justify-between items-center'>
                         <span>{item?.label}</span>
-                        {type === 'select'
+                        {type === 'singleChoice'
                           ? selectedItems[0]?.value === item.value && (
                               <Check className='text-muted-foreground w-5 h-5' />
                             )

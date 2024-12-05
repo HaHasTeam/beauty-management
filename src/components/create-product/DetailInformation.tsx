@@ -34,7 +34,7 @@ export default function DetailInformation({ form, resetSignal, defineFormSignal 
                   <FormLabel>
                     <div className='flex gap-1 justify-between items-center'>
                       <label className='text-sm'>{formField.label}</label>
-                      {formField.type === 'multiselect' && (
+                      {formField.type === 'multipleChoice' && (
                         <span className='text-xs text-muted-foreground text-right'>
                           {field?.value?.length ?? 0}/{MAX_MULTI_SELECT_ITEMS}
                         </span>
@@ -42,7 +42,7 @@ export default function DetailInformation({ form, resetSignal, defineFormSignal 
                     </div>
                   </FormLabel>
 
-                  {formField.type === 'select' && (
+                  {formField.type === 'singleChoice' && (
                     <FormSelect
                       fieldId={formField?.id}
                       placeholder={'Vui lòng chọn'}
@@ -50,13 +50,13 @@ export default function DetailInformation({ form, resetSignal, defineFormSignal 
                       items={formField?.options ?? []}
                       inputPlaceholder={'Nhập vào'}
                       buttonText={'Thêm thuộc tính mới'}
-                      type='select'
+                      type='singleChoice'
                       form={form}
                       resetSignal={resetSignal}
                       defineFormSignal={defineFormSignal}
                     />
                   )}
-                  {formField.type === 'multiselect' && (
+                  {formField.type === 'multipleChoice' && (
                     <FormSelect
                       fieldId={formField?.id}
                       placeholder={'Vui lòng chọn'}
@@ -64,7 +64,7 @@ export default function DetailInformation({ form, resetSignal, defineFormSignal 
                       items={formField?.options ?? []}
                       inputPlaceholder={'Nhập vào'}
                       buttonText={'Thêm thuộc tính mới'}
-                      type='multiselect'
+                      type='multipleChoice'
                       maxMultiSelectItems={MAX_MULTI_SELECT_ITEMS}
                       form={form}
                       resetSignal={resetSignal}

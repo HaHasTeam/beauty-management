@@ -82,7 +82,7 @@ const BasicInformation = ({ form, resetSignal, defineFormSignal, useCategoryData
               <FormItem className='w-full'>
                 <div className='w-full flex'>
                   <div className='w-[15%]'>
-                    <FormLabel required>Ngành hàng</FormLabel>
+                    <FormLabel required>Danh mục</FormLabel>
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>

@@ -25,8 +25,9 @@ type ICombination = {
   title?: string
   price?: number
   quantity?: number
-  image?: string
+  image?: string[]
   type?: string
+  sku?: string
 }
 
 export default function SalesInformation({ form, resetSignal, defineFormSignal, setIsValid }: SalesInformationProps) {
@@ -60,10 +61,11 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
 
         newCombinations.push({
           title: o2 ? `${o1}-${o2}` : `${o1}`,
-          price: existingCombination?.price ?? 0,
-          quantity: existingCombination?.quantity ?? 1,
-          image: existingCombination?.image ?? '',
-          type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM
+          price: existingCombination?.price ?? undefined,
+          quantity: existingCombination?.quantity ?? undefined,
+          image: existingCombination?.image ?? [],
+          type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
+          sku: existingCombination?.sku ?? ''
         })
       })
     })
@@ -100,6 +102,21 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
     return updatedOptions
   }
 
+  const handleRemoveCombination = (index: number) => {
+    // Create a copy of the existing combinations
+    const updatedCombinations = [...combinations]
+
+    // Remove the combination at the specified index
+    updatedCombinations.splice(index, 1)
+
+    // Update the combinations state
+    setCombinations(updatedCombinations)
+
+    // Optionally, handle other side effects
+    // For example: Reset form values for this combination if using React Hook Form
+    form.setValue('productClassifications', updatedCombinations)
+  }
+
   const handleAddClassification = () => {
     if (classificationCount >= 2) return
     setClassificationCount((prev) => prev + 1)
@@ -108,10 +125,10 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
     const currentClassifications = form.getValues('productClassifications') || []
     const newClassification = {
       title: '',
-      image: '',
+      image: [],
       type: ProductClassificationTypeEnum?.CUSTOM,
-      price: 0,
-      quantity: 1
+      price: undefined,
+      quantity: undefined
     }
 
     const updatedClassifications = [...currentClassifications, newClassification]
@@ -200,9 +217,36 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
     <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
-          <h2 className='font-bold text-xl'>Thông tin bán hàng</h2>
+          <h2 className='font-bold text-xl'>Thông tin phân loại sản phẩm</h2>
         </div>
         <div>
+          <div className='w-full flex mb-3'>
+            <FormField
+              control={form.control}
+              name='sku'
+              render={({ field, fieldState }) => (
+                <FormItem className='w-full'>
+                  <div className='w-full flex'>
+                    <div className='w-[15%]'>
+                      <FormLabel required>SKU sản phẩm</FormLabel>
+                    </div>
+                    <div className='w-full space-y-1'>
+                      <FormControl>
+                        <Input
+                          type='string'
+                          placeholder='Nhập SKU sản phẩm'
+                          className='border-primary/40'
+                          {...field}
+                          value={field?.value ?? ''}
+                        />
+                      </FormControl>
+                      <FormMessage>{fieldState.error?.message}</FormMessage>
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
           <div className='w-full flex'>
             <div className='w-[15%]'>
               <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
@@ -255,27 +299,29 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                     name={`productClassifications.${index}.title`}
                                     render={({ field, fieldState }) => (
                                       <FormItem className='w-full'>
-                                        <FormControl>
-                                          <Input
-                                            placeholder={`Option ${optionIndex + 1}`}
-                                            {...field}
-                                            value={option}
-                                            onChange={(e) => {
-                                              handleUpdateOption(index, optionIndex, e.target.value)
-                                            }}
-                                            className='border-primary/40 w-full'
+                                        <div className='flex gap-2 items-center'>
+                                          <FormControl>
+                                            <Input
+                                              placeholder={`e.g. Red etc`}
+                                              {...field}
+                                              value={option}
+                                              onChange={(e) => {
+                                                handleUpdateOption(index, optionIndex, e.target.value)
+                                              }}
+                                              className='border-primary/40 w-full'
+                                            />
+                                          </FormControl>
+                                          <Trash2
+                                            onClick={() => handleRemoveOption(index, optionIndex)}
+                                            className='text-destructive cursor-pointer hover:text-destructive/80'
                                           />
-                                        </FormControl>
+                                        </div>
                                         <FormMessage>{fieldState.error?.message}</FormMessage>
                                         {errorOption && optionIndex === duplicateOptionIndex && (
                                           <div className='font-semibold text-destructive text-xs'>{errorOption}</div>
                                         )}
                                       </FormItem>
                                     )}
-                                  />
-                                  <Trash2
-                                    onClick={() => handleRemoveOption(index, optionIndex)}
-                                    className='text-destructive cursor-pointer hover:text-destructive/80'
                                   />
                                 </div>
                               </div>
@@ -312,8 +358,14 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                             </TableHead>
                             <TableHead>
                               <FormLabel required styleParent='justify-center'>
-                                Kho hàng
+                                Số lượng
                               </FormLabel>
+                            </TableHead>
+                            <TableHead>
+                              <FormLabel styleParent='justify-center'>SKU sản phẩm</FormLabel>
+                            </TableHead>
+                            <TableHead>
+                              <FormLabel styleParent='justify-center'>Thao tác</FormLabel>
                             </TableHead>
                           </TableRow>
                         </TableHeader>
@@ -332,7 +384,7 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                       <div className='flex w-full'>
                                         <FormControl>
                                           <div className='w-full space-y-1 flex flex-col justify-center items-center'>
-                                            <UploadProductImages field={field} maxFileInput={1} />
+                                            <UploadProductImages field={field} maxFileInput={4} />
                                             <FormMessage />
                                           </div>
                                         </FormControl>
@@ -342,10 +394,11 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                 />
                               </TableCell>
                               {classificationCount === 2 && (
-                                <TableCell>
-                                  <FormLabel styleParent='justify-center'>
+                                <TableCell className='align-middle'>
+                                  <FormLabel styleParent='justify-center h-9 align-middle'>
                                     {combo?.title?.split('-')[1]?.trim()}
                                   </FormLabel>
+                                  <div className='h-5'></div>
                                 </TableCell>
                               )}
                               <TableCell className='align-middle'>
@@ -353,13 +406,13 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                   control={form.control}
                                   name={`productClassifications.${index}.price`}
                                   render={({ field, fieldState }) => (
-                                    <FormItem className='h-16'>
+                                    <FormItem>
                                       <FormControl>
                                         <Input
                                           placeholder='Nhập giá'
                                           type='number'
                                           {...field}
-                                          value={combo?.price ?? 0}
+                                          value={combo?.price ?? ''}
                                           onChange={(e) => {
                                             const updated = [...combinations]
                                             updated[index].price = e.target.value
@@ -371,7 +424,9 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                           className='border-primary/40 w-full'
                                         />
                                       </FormControl>
-                                      <FormMessage>{fieldState.error?.message}</FormMessage>
+                                      <div className='h-5'>
+                                        <FormMessage>{fieldState.error?.message}</FormMessage>
+                                      </div>
                                     </FormItem>
                                   )}
                                 />
@@ -381,13 +436,13 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                   control={form.control}
                                   name={`productClassifications.${index}.quantity`}
                                   render={({ field, fieldState }) => (
-                                    <FormItem className='h-16'>
+                                    <FormItem>
                                       <FormControl>
                                         <Input
                                           placeholder='Nhập số lượng'
                                           type='number'
                                           {...field}
-                                          value={combo.quantity ?? 1}
+                                          value={combo.quantity ?? ''}
                                           onChange={(e) => {
                                             const updated = [...combinations]
                                             updated[index].quantity = e.target.value
@@ -399,10 +454,49 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                                           className='border-primary/40 w-full'
                                         />
                                       </FormControl>
-                                      <FormMessage>{fieldState.error?.message}</FormMessage>
+                                      <div className='h-5'>
+                                        <FormMessage>{fieldState.error?.message}</FormMessage>
+                                      </div>
                                     </FormItem>
                                   )}
                                 />
+                              </TableCell>
+                              <TableCell className='align-middle'>
+                                <FormField
+                                  control={form.control}
+                                  name={`productClassifications.${index}.sku`}
+                                  render={({ field, fieldState }) => (
+                                    <FormItem>
+                                      <FormControl>
+                                        <Input
+                                          placeholder='Nhập SKU sản phẩm'
+                                          type='string'
+                                          {...field}
+                                          value={combo.sku ?? 1}
+                                          onChange={(e) => {
+                                            const updated = [...combinations]
+                                            updated[index].sku = e.target.value
+                                            setCombinations(updated)
+                                            field.onChange(e.target.value)
+                                          }}
+                                          className='border-primary/40 w-full'
+                                        />
+                                      </FormControl>
+                                      <div className='h-5'>
+                                        <FormMessage>{fieldState.error?.message}</FormMessage>
+                                      </div>
+                                    </FormItem>
+                                  )}
+                                />
+                              </TableCell>
+                              <TableCell className='align-middle'>
+                                <div className='flex justify-center h-9 align-middle'>
+                                  <Trash2
+                                    onClick={() => handleRemoveCombination(index)}
+                                    className='text-destructive cursor-pointer hover:text-destructive/80'
+                                  />
+                                </div>
+                                <div className='h-5'></div>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -456,7 +550,7 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                 <FormItem className='w-full'>
                   <div className='w-full flex'>
                     <div className='w-[15%]'>
-                      <FormLabel required>Kho hàng</FormLabel>
+                      <FormLabel required>Số lượng</FormLabel>
                     </div>
                     <div className='w-full space-y-1'>
                       <FormControl>
