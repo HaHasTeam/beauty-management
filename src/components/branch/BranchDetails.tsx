@@ -198,10 +198,10 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           className=' flex select-none items-center justify-center gap-2 px-4'
           disabled={stepIndex === 0}
           onClick={() => {
-            if (form.formState.isValid) {
-              goNextFn()
-            } else {
+            if (!form.formState.isValid) {
               form.trigger()
+            } else {
+              goNextFn()
             }
           }}
         >

@@ -94,40 +94,28 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
     mutationFn: updateStatusBrandByIdApi.fn
   })
   const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
-    console.log('brand', brand)
+    // Map over the brand array and call the mutation for each brand
+    const updatePromises = brand.map((item) =>
+      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED })
+    )
 
-    try {
-      // Map over the brand array and call the mutation for each brand
-      const updatePromises = brand.map((item) =>
-        updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED })
-      )
-
-      // Wait for all updates to complete
-      await Promise.all(updatePromises)
-      queryClient.invalidateQueries({
-        queryKey: [getAllBrandsApi.queryKey]
-      })
-    } catch (error) {
-      console.error('Failed to update some brands:', error)
-    }
+    // Wait for all updates to complete
+    await Promise.all(updatePromises)
+    queryClient.invalidateQueries({
+      queryKey: [getAllBrandsApi.queryKey]
+    })
   }
   const updateStatusBrand = async (brand: Row<TBrand>['original'][]) => {
-    console.log('brand', brand)
+    // Map over the brand array and call the mutation for each brand
+    const updatePromises = brand.map((item) =>
+      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.ACTIVE })
+    )
 
-    try {
-      // Map over the brand array and call the mutation for each brand
-      const updatePromises = brand.map((item) =>
-        updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.ACTIVE })
-      )
-
-      // Wait for all updates to complete
-      await Promise.all(updatePromises)
-      queryClient.invalidateQueries({
-        queryKey: [getAllBrandsApi.queryKey]
-      })
-    } catch (error) {
-      console.error('Failed to update some brands:', error)
-    }
+    // Wait for all updates to complete
+    await Promise.all(updatePromises)
+    queryClient.invalidateQueries({
+      queryKey: [getAllBrandsApi.queryKey]
+    })
   }
 
   return (

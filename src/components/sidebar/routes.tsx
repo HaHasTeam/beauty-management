@@ -1,5 +1,6 @@
 // Auth Imports
 import { CiSquareQuestion } from 'react-icons/ci'
+import { FaBox } from 'react-icons/fa6'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
@@ -63,5 +64,17 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.PROFILE_SETTINGS].path,
     icon: <HiOutlineCog8Tooth className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
+  },
+  {
+    name: routesConfig[Routes.PRODUCT_LIST].name,
+    path: routesConfig[Routes.PRODUCT_LIST].path,
+    icon: <FaBox className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: true
+  },
+  {
+    name: routesConfig[Routes.CREATE_PRODUCT].name,
+    path: routesConfig[Routes.CREATE_PRODUCT].path,
+    icon: <FaBox className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: true
   }
 ]
