@@ -19,10 +19,11 @@ type Props<TFieldValues extends FieldValues> = {
   onlyFutureDates?: boolean
   onlyPastDates?: boolean
   showTime?: boolean
+  buttonClassName?: string
 }
 // eslint-disable-next-line
 const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
-  ({ field, onlyFutureDates, onlyPastDates, showTime = false }, ref) => {
+  ({ field, onlyFutureDates, onlyPastDates, showTime = false, buttonClassName }, ref) => {
     const [isOpen, setIsOpen] = useState(false)
     const [date, setDate] = useState<Date | undefined>(field.value ? new Date(field.value as string) : undefined)
     const [time, setTime] = useState<string>('05:00')
@@ -48,7 +49,10 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
               <Button
                 ref={ref}
                 variant={'outline'}
-                className={cn('w-full font-normal overflow-clip', !field.value && 'text-muted-foreground')}
+                className={cn(
+                  `w-full font-normal overflow-clip ${buttonClassName}`,
+                  !field.value && 'text-muted-foreground'
+                )}
               >
                 {date ? (
                   `${format(date, 'PPP')}, ${showTime ? time : ''}`

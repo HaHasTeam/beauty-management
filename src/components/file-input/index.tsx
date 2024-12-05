@@ -45,6 +45,7 @@ type FileUploaderProps = {
   onValueChange: (value: File[] | null) => void
   dropzoneOptions: DropzoneOptions
   orientation?: 'horizontal' | 'vertical'
+  customMaxFiles?: number
 }
 
 /**
@@ -53,7 +54,18 @@ type FileUploaderProps = {
 
 export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React.HTMLAttributes<HTMLDivElement>>(
   (
-    { className, dropzoneOptions, value, onValueChange, reSelect, orientation = 'vertical', children, dir, ...props },
+    {
+      className,
+      dropzoneOptions,
+      value,
+      onValueChange,
+      reSelect,
+      orientation = 'vertical',
+      customMaxFiles = 1,
+      children,
+      dir,
+      ...props
+    },
     ref
   ) => {
     const [isFileTooBig, setIsFileTooBig] = useState(false)
@@ -63,7 +75,7 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
       accept = {
         'image/*': ['.jpg', '.jpeg', '.png', '.gif']
       },
-      maxFiles = 1,
+      maxFiles = customMaxFiles,
       maxSize = 4 * 1024 * 1024,
       multiple = true
     } = dropzoneOptions
@@ -222,13 +234,13 @@ export const FileUploaderContent = forwardRef<HTMLDivElement, React.HTMLAttribut
     const containerRef = useRef<HTMLDivElement>(null)
 
     return (
-      <div className={cn('w-full px-1')} ref={containerRef} aria-description='content file holder'>
+      <div className={cn('w-full')} ref={containerRef} aria-description='content file holder'>
         <div
           {...props}
           ref={ref}
           className={cn(
             'flex rounded-xl gap-1',
-            orientation === 'horizontal' ? 'flex-raw flex-wrap' : 'flex-col',
+            orientation === 'horizontal' ? 'flex-row flex-wrap' : 'flex-col',
             className
           )}
         >
@@ -315,3 +327,35 @@ export const FileInput = forwardRef<
 })
 
 FileInput.displayName = 'FileInput'
+
+export const ProductFileUploaderItem = forwardRef<
+  HTMLDivElement,
+  { index: number } & React.HTMLAttributes<HTMLDivElement>
+>(({ className, index, children, ...props }, ref) => {
+  const { removeFileFromSet, activeIndex, direction } = useFileUpload()
+  const isSelected = index === activeIndex
+  return (
+    <div
+      ref={ref}
+      className={cn('cursor-pointer relative w-32 h-32 bg-black/5', className, isSelected ? 'bg-muted' : '')}
+      {...props}
+    >
+      <div className='absolute z-0 leading-none tracking-tight flex justify-center items-center gap-1.5 h-full w-full'>
+        {children}
+      </div>
+      <button
+        type='button'
+        className={cn(
+          'absolute z-20 bg-black/40 hover:bg-black/30 p-1 rounded-sm',
+          direction === 'rtl' ? 'top-2 left-2' : 'top-2 right-2'
+        )}
+        onClick={() => removeFileFromSet(index)}
+      >
+        <span className='sr-only'>remove item {index}</span>
+        <RemoveIcon className='w-4 h-4 text-white hover:text-white/70 duration-200 ease-in-out' />
+      </button>
+    </div>
+  )
+})
+
+ProductFileUploaderItem.displayName = 'ProductFileUploaderItem'

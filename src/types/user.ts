@@ -1,3 +1,4 @@
+import { IBrand } from './brand'
 import { TMetaData } from './request'
 import { UserRoleEnum } from './role'
 
@@ -27,5 +28,5 @@ export type TUser = TMetaData & {
   avatar?: string
   status: UserStatusEnum | string
   isEmailVerify: boolean
-  brands?: string[]
+  brands?: IBrand[]
 }
