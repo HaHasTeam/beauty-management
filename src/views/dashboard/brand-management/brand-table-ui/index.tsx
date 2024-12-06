@@ -13,6 +13,7 @@ import { BrandsTable } from './BrandsTable'
 export default function IndexPage() {
   const { data: brandListData, isLoading: isBrandListLoading } = useQuery({
     queryKey: [getAllBrandsApi.queryKey],
+
     queryFn: getAllBrandsApi.fn
   })
   const queryStates = useState<DataTableQueryState<TBrand>>({} as DataTableQueryState<TBrand>)

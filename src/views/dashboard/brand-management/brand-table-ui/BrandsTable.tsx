@@ -91,7 +91,13 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
   })
   const { mutateAsync: updateStatusBrandMutation } = useMutation({
     mutationKey: [updateStatusBrandByIdApi.mutationKey],
-    mutationFn: updateStatusBrandByIdApi.fn
+    mutationFn: updateStatusBrandByIdApi.fn,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [getAllBrandsApi.queryKey],
+        exact: true
+      })
+    }
   })
   const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
     // Map over the brand array and call the mutation for each brand
@@ -101,9 +107,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    queryClient.invalidateQueries({
-      queryKey: [getAllBrandsApi.queryKey]
-    })
   }
   const updateStatusBrand = async (brand: Row<TBrand>['original'][]) => {
     // Map over the brand array and call the mutation for each brand
@@ -113,9 +116,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    queryClient.invalidateQueries({
-      queryKey: [getAllBrandsApi.queryKey]
-    })
   }
 
   return (

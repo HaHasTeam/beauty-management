@@ -21,7 +21,8 @@ export enum Routes {
   FLASH_SALE_DETAILS = 'flash-sale-details',
   PRODUCT_LIST = 'product-list',
   CREATE_PRODUCT = 'create-product',
-  UPDATE_PRODUCT = 'update-product'
+  UPDATE_PRODUCT = 'update-product',
+  REGISTER_BRAND = 'register-brand'
 }
 
 export const routesConfig: TRoutes = {
@@ -31,6 +32,13 @@ export const routesConfig: TRoutes = {
     description: 'Login to your Allure account to access the dashboard',
     path: '/auth/signin/password-signin',
     getPath: (params) => '/auth/signin/password-signin' + (params ? '?' + new URLSearchParams(params).toString() : '')
+  },
+  [Routes.REGISTER_BRAND]: {
+    name: 'Register Brand',
+    title: 'Register Brand',
+    description: 'Register Brand',
+    path: '/register',
+    getPath: () => `/register`
   },
   [Routes.AUTH_SIGN_UP]: {
     name: 'Sign Up to Allure',

@@ -3,9 +3,10 @@ import { jwtDecode } from 'jwt-decode'
 import { CircleHelpIcon, LoaderCircle } from 'lucide-react'
 import { MdMarkEmailRead } from 'react-icons/md'
 import { SiMinutemailer } from 'react-icons/si'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
+import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 import { emailContact } from '@/constants/infor'
 import { activateAccountApi } from '@/network/apis/auth'
@@ -13,6 +14,7 @@ import { useStore } from '@/stores/store'
 import { TEmailDecoded } from '@/types/auth'
 
 const EmailVerification = () => {
+  const navigate = useNavigate()
   const queryParams = new URLSearchParams(window.location.search)
   const email = queryParams.get('email')
   const code = queryParams.get('code')
@@ -103,6 +105,24 @@ const EmailVerification = () => {
             </a>{' '}
             if you need help.
           </h2>
+        </div>
+        <div className='flex items-center gap-2 mt-5'>
+          <Button
+            variant={'outline'}
+            onClick={() => {
+              navigate(routesConfig[Routes.DASHBOARD_HOME].path)
+            }}
+          >
+            Go to dashboard
+          </Button>
+          <Button
+            variant={'default'}
+            onClick={() => {
+              navigate(routesConfig[Routes.REGISTER_BRAND].path)
+            }}
+          >
+            Continue register
+          </Button>
         </div>
       </div>
     )
