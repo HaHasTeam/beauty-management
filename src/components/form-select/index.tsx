@@ -16,6 +16,7 @@ import { Separator } from '../ui/separator'
 
 interface FormSelectProps {
   fieldId: IFormProductFieldId
+  fieldLabel: string
   placeholder: string
   inputPlaceholder: string
   buttonText: string
@@ -26,9 +27,12 @@ interface FormSelectProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
   defineFormSignal?: boolean
+  required?: boolean
+  setIsValid: React.Dispatch<boolean>
 }
 const FormSelect = ({
   fieldId,
+  fieldLabel,
   placeholder,
   inputPlaceholder,
   emptyText,
@@ -38,13 +42,16 @@ const FormSelect = ({
   maxMultiSelectItems,
   form,
   resetSignal,
-  defineFormSignal
+  defineFormSignal,
+  required,
+  setIsValid
 }: FormSelectProps) => {
   const [items, setItems] = useState(initialItems)
   const [hidden, setHidden] = useState(true)
   const [inputValue, setInputValue] = useState('')
   const [showInput, setShowInput] = useState(false)
   const [errorText, setErrorText] = useState('')
+  const [fieldErrorText, setFieldErrorText] = useState('')
   const [selectedItems, setSelectedItems] = useState<IOption[]>([])
 
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -141,57 +148,79 @@ const FormSelect = ({
 
   useEffect(() => {
     if (defineFormSignal) {
-      const backendValues: string | string[] = form.getValues(`detail.${fieldId}`) || []
+      const backendValues: string | number | string[] = form.getValues(`detail.${fieldId}`) || []
+      const backendValuesArray = Array.isArray(backendValues) ? backendValues : [backendValues]
 
       // Map backend values to corresponding items in the `items` list
-      const updatedSelectedItems = items.filter((item) => backendValues?.includes(item?.value))
+      const updatedSelectedItems = items.filter((item) => backendValuesArray?.includes(item?.value))
 
       // Update the selectedItems state
       setSelectedItems(updatedSelectedItems)
     }
   }, [defineFormSignal, form, fieldId, items])
+
+  useEffect(() => {
+    if (required) {
+      if (selectedItems === undefined || selectedItems?.length === 0) {
+        setIsValid(false)
+        setFieldErrorText(`Vui lòng chọn ${fieldLabel}`)
+        return
+      } else {
+        setIsValid(true)
+      }
+    } else {
+      setIsValid(true)
+    }
+  }, [form, required, setIsValid, fieldId, selectedItems, fieldLabel])
   return (
     <div className='relative' ref={dropdownRef}>
-      <FormControl>
-        <div
-          onClick={handleShowCommandDialog}
-          className={`${!hidden && 'outline-none ring-1 ring-ring'} border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
-        >
-          {type === 'singleChoice' ? (
-            selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
-              <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
-            ) : (
-              <div className='flex items-center justify-between gap-1 w-full'>
-                <span>{selectedItems[0]?.label}</span>
-                <XCircle
-                  className='cursor-pointer w-4 h-4 hover:text-primary/80 text-primary/70 bg-primary/10 hover:bg-primary/20 rounded-full'
-                  onClick={() => handleRemoveSelectedItem(selectedItems[0]?.value)}
-                />
-              </div>
-            )
-          ) : (
-            <div className='flex gap-1 flex-wrap'>
-              {selectedItems.length === 0 ? (
+      <div>
+        <FormControl>
+          <div
+            onClick={handleShowCommandDialog}
+            className={`${!hidden && 'outline-none ring-1 ring-ring'} border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
+          >
+            {type === 'singleChoice' ? (
+              selectedItems[0]?.value === '' || selectedItems.length === 0 ? (
                 <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
               ) : (
-                selectedItems.map((item) => (
-                  <div
-                    key={item.value}
-                    className='flex items-center bg-primary/10 text-primary rounded-full px-2 py-1 text-xs gap-1'
-                  >
-                    <span>{item.label}</span>
-                    <X
-                      className='cursor-pointer w-4 h-4 text-primary'
-                      onClick={() => handleRemoveSelectedItem(item.value)}
-                    />
-                  </div>
-                ))
-              )}
-            </div>
+                <div className='flex items-center justify-between gap-1 w-full'>
+                  <span>{selectedItems[0]?.label}</span>
+                  <XCircle
+                    className='cursor-pointer w-4 h-4 hover:text-primary/80 text-primary/70 bg-primary/10 hover:bg-primary/20 rounded-full'
+                    onClick={() => handleRemoveSelectedItem(selectedItems[0]?.value)}
+                  />
+                </div>
+              )
+            ) : (
+              <div className='flex gap-1 flex-wrap'>
+                {selectedItems.length === 0 ? (
+                  <span className='text-muted-foreground line-clamp-1'>{placeholder}</span>
+                ) : (
+                  selectedItems.map((item) => (
+                    <div
+                      key={item.value}
+                      className='flex items-center bg-primary/10 text-primary rounded-full px-2 py-1 text-xs gap-1'
+                    >
+                      <span>{item.label}</span>
+                      <X
+                        className='cursor-pointer w-4 h-4 text-primary'
+                        onClick={() => handleRemoveSelectedItem(item.value)}
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+            <ChevronDown className='w-5 h-5 text-muted-foreground' />
+          </div>
+        </FormControl>
+        <div>
+          {required && (selectedItems === undefined || selectedItems?.length === 0) && (
+            <span className='font-semibold text-destructive text-xs'>{fieldErrorText}</span>
           )}
-          <ChevronDown className='w-5 h-5 text-muted-foreground' />
         </div>
-      </FormControl>
+      </div>
       <div
         className={cn(
           'w-full absolute z-10 transition-all duration-300',

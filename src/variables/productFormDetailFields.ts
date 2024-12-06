@@ -9,8 +9,11 @@ export type IProductFormFields = {
   label: string
   type: 'multipleChoice' | 'singleChoice' | 'input' | 'date'
   options?: IOption[]
-  helperText?: string
-  placeholder?: string
+  required?: boolean
+  onlyFutureDates?: boolean
+  onlyPastDates?: boolean
+  showTime?: boolean
+  inputType?: string
 }
 
 export const productFormDetailFields: IProductFormFields[] = [
@@ -22,7 +25,7 @@ export const productFormDetailFields: IProductFormFields[] = [
       { value: 'org1', label: 'Organization 1' },
       { value: 'org2', label: 'Organization 2' }
     ],
-    helperText: '0/5'
+    required: true
   },
   {
     id: 'organizationAddress' as IFormProductFieldId,
@@ -32,7 +35,7 @@ export const productFormDetailFields: IProductFormFields[] = [
       { value: 'address1', label: 'Address 1' },
       { value: 'address2', label: 'Address 2' }
     ],
-    helperText: '0/5'
+    required: true
   },
   {
     id: 'origin' as IFormProductFieldId,
@@ -47,13 +50,13 @@ export const productFormDetailFields: IProductFormFields[] = [
     id: 'batchNumber' as IFormProductFieldId,
     label: 'Số lô sản xuất',
     type: 'input',
-    placeholder: 'Vui lòng điền vào'
+    inputType: 'text'
   },
   {
     id: 'ingredients' as IFormProductFieldId,
     label: 'Thành phần',
     type: 'input',
-    placeholder: 'Vui lòng điền vào'
+    inputType: 'text'
   },
   {
     id: 'activeIngredients' as IFormProductFieldId,
@@ -74,8 +77,7 @@ export const productFormDetailFields: IProductFormFields[] = [
       { value: 'vitamin_e', label: 'Vitamin E' },
       { value: 'alcohol_free', label: 'Alcohol Free' },
       { value: 'amino_acid', label: 'Amino Acid' }
-    ],
-    helperText: '0/5'
+    ]
   },
 
   {
@@ -125,7 +127,8 @@ export const productFormDetailFields: IProductFormFields[] = [
   {
     id: 'expiryDate' as IFormProductFieldId,
     label: 'Ngày hết hạn',
-    type: 'date'
+    type: 'date',
+    onlyFutureDates: true
   },
   {
     id: 'expiryPeriod' as IFormProductFieldId,
@@ -181,8 +184,7 @@ export const productFormDetailFields: IProductFormFields[] = [
       { value: 'acne', label: 'Da mụn trứng cá' },
       { value: 'sensitive', label: 'Da nhạy cảm' },
       { value: 'rough', label: 'Da sần' }
-    ],
-    helperText: '0/5'
+    ]
   },
   {
     id: 'productType' as IFormProductFieldId,
@@ -242,8 +244,7 @@ export const productFormDetailFields: IProductFormFields[] = [
       { value: 'hypoallergenic', label: 'Không gây dị ứng' },
       { value: 'alcohol-free', label: 'Không chứa cồn' },
       { value: 'organic', label: 'Hữu cơ' }
-    ],
-    helperText: '0/5'
+    ]
   },
   {
     id: 'packagingType' as IFormProductFieldId,
@@ -292,27 +293,16 @@ export const FormProductSchema = z
     description: z.string().min(1, { message: 'Product description is required.' }),
     status: z.string().min(1, { message: 'Status is required.' }),
     // detail information
-    detail: z.object({
-      organizationName: z.array(z.string()).min(0).max(5).optional(), // Multiplechoice
-      organizationAddress: z.array(z.string()).min(0).max(5).optional(), // Multiplechoice
-      ingredients: z.string().min(0).optional(), // Input field
-      expiryPeriod: z.array(z.string()).optional(), // SingleChoice field
-      volume: z.array(z.string()).optional(), // SingleChoice field
-      batchNumber: z.string().optional(), // Optional input
-      expiryDate: z.string().optional(), // Date
-      origin: z.array(z.string()).optional(), // SingleChoice field
-      weight: z.array(z.string()).optional(), // SingleChoice field
-      packagingType: z.array(z.string()).optional(), // SingleChoice field
-      formula: z.array(z.string()).optional(), // SingleChoice field
-      activeIngredients: z.array(z.string()).min(0).max(5).optional(), // Multiplechoice
-      skinType: z.array(z.string()).min(0).max(5).optional(), // Multiplechoice
-      productType: z.array(z.string()).optional(), // SingleChoice field
-      skinCare: z.array(z.string()).optional(), // SingleChoice field
-      specialFeatures: z.array(z.string()).min(0).max(5).optional(), // Multiplechoice
-      versionType: z.array(z.string()).optional(), // SingleChoice field
-      quantityPerPack: z.array(z.string()).optional(), // SingleChoice field
-      storageCondition: z.array(z.string()).optional() // SingleChoice field
-    }),
+    detail: z.record(
+      z
+        .union([
+          z.string(), // for type 'date'
+          z.array(z.string()), // for type 'singleChoice' or 'multipleChoice'
+          z.number(), // for type 'input' with number
+          z.string() // for type 'input' with string
+        ])
+        .optional()
+    ),
     //  sale information
     productClassifications: z
       .array(
@@ -383,24 +373,3 @@ export const FormProductSchema = z
       path: ['productClassifications']
     }
   )
-
-export const generateDefaultDetailValues = () => {
-  const detail: Record<string, IOption[] | string | null | undefined> = {}
-  productFormDetailFields.forEach((field) => {
-    switch (field.type) {
-      case 'multipleChoice':
-      case 'singleChoice':
-        detail[field.id] = [] // Array default for multipleChoice/singleChoice
-        break
-      case 'input':
-        detail[field.id] = '' // Empty string for inputs
-        break
-      case 'date':
-        detail[field.id] = '' // Empty string for date fields
-        break
-      default:
-        detail[field.id] = undefined
-    }
-  })
-  return detail
-}

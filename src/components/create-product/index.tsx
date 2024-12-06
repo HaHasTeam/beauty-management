@@ -13,8 +13,10 @@ import { getUserProfileApi } from '@/network/apis/user'
 import { createProductApi } from '@/network/product'
 import { ICategory } from '@/types/category'
 import { IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
+import { IStepper } from '@/types/stepper'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
+import StepTracking from '../step-tracking'
 import { Button } from '../ui/button'
 import { Form } from '../ui/form'
 import BasicInformation from './BasicInformation'
@@ -30,6 +32,35 @@ const CreateProduct = () => {
   const { successToast } = useToast()
   const navigate = useNavigate()
   const handleServerError = useHandleServerError()
+
+  const steps: IStepper[] = [
+    {
+      id: 1,
+      title: 'Thông Tin Chung',
+      isCompleted: true,
+      isActive: false
+    },
+    {
+      id: 2,
+      title: 'Mô Tả Sản Phẩm',
+      isCompleted: false,
+      isActive: true,
+      isExpanded: true,
+      content: 'Vui lòng nhập tên sản phẩm và chọn đúng danh mục để xem các thông tin'
+    },
+    {
+      id: 3,
+      title: 'Các Lựa Chọn & Vận Hành',
+      isCompleted: false,
+      isActive: false
+    },
+    {
+      id: 4,
+      title: 'Tài liệu yêu cầu',
+      isCompleted: false,
+      isActive: false
+    }
+  ]
 
   const defaultProductValues = {
     name: '',
@@ -77,6 +108,7 @@ const CreateProduct = () => {
 
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
+      console.log(isValid)
       if (isValid) {
         const transformedData: IServerCreateProduct = {
           name: values?.name,
@@ -104,6 +136,7 @@ const CreateProduct = () => {
                 ]
         }
         await createProductFn(transformedData)
+        console.log(transformedData)
       }
     } catch (error) {
       handleServerError({
@@ -122,12 +155,26 @@ const CreateProduct = () => {
       setCategories(useCategoryData.data)
     }
   }, [form, resetSignal, useCategoryData])
+
   return (
-    <div>
+    <div className='space-y-3'>
+      <div className='w-full'>
+        <StepTracking steps={steps} currentSteps={0} setCurrentSteps={() => {}} orientation={'horizontal'} />
+      </div>
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
+        <form
+          noValidate
+          onSubmit={form.handleSubmit(onSubmit, (e) => console.error(form.getValues(), e))}
+          className='w-full grid gap-4 mb-8'
+          id={`form-${id}`}
+        >
           <BasicInformation form={form} resetSignal={resetSignal} useCategoryData={categories} />
-          <DetailInformation form={form} resetSignal={resetSignal} />
+          <DetailInformation
+            form={form}
+            resetSignal={resetSignal}
+            useCategoryData={categories}
+            setIsValid={setIsValid}
+          />
           <SalesInformation form={form} resetSignal={resetSignal} setIsValid={setIsValid} />
           <div className='w-full flex flex-row-reverse justify-start gap-3'>
             <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
