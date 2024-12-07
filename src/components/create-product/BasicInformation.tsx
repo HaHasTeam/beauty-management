@@ -1,5 +1,6 @@
 import 'react-quill-new/dist/quill.snow.css'
 
+import { useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
@@ -20,13 +21,62 @@ interface BasicInformationProps {
   resetSignal?: boolean
   defineFormSignal?: boolean
   useCategoryData: ICategory[]
+  setActiveStep: React.Dispatch<number>
+  activeStep: number
+  setCompleteSteps: React.Dispatch<React.SetStateAction<number[]>>
 }
-const BasicInformation = ({ form, resetSignal, defineFormSignal, useCategoryData }: BasicInformationProps) => {
+const BasicInformation = ({
+  form,
+  resetSignal,
+  defineFormSignal,
+  useCategoryData,
+  activeStep,
+  setActiveStep,
+  setCompleteSteps
+}: BasicInformationProps) => {
+  const basicInfoRef = useRef<HTMLDivElement>(null)
+  const BASIC_INFORMATION_INDEX = 1
+  const productImages = form.watch('images')
+  const productName = form.watch('name')
+  const productDescription = form.watch('category')
+  const productCategory = form.watch('description')
+
+  // Scroll to the BasicInformation section when activeStep is 1
+  useEffect(() => {
+    if (activeStep === BASIC_INFORMATION_INDEX && basicInfoRef.current) {
+      basicInfoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [activeStep])
+  useEffect(() => {
+    setCompleteSteps((prevSteps) => {
+      if (
+        productImages?.length > 0 &&
+        productName?.length > 0 &&
+        productCategory?.length > 0 &&
+        productDescription?.length > 0
+      ) {
+        return prevSteps.includes(BASIC_INFORMATION_INDEX) ? prevSteps : [...prevSteps, BASIC_INFORMATION_INDEX]
+      } else {
+        return prevSteps.filter((index) => index !== BASIC_INFORMATION_INDEX)
+      }
+    })
+  }, [
+    form,
+    productCategory?.length,
+    productDescription?.length,
+    productImages?.length,
+    productName?.length,
+    setCompleteSteps
+  ])
   return (
-    <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+    <div
+      className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'
+      ref={basicInfoRef}
+      onClick={() => setActiveStep(BASIC_INFORMATION_INDEX)}
+    >
       <Accordion type='single' collapsible className='w-full' defaultValue='description'>
         <AccordionItem value='description'>
-          <AccordionTrigger className='text-left font-medium no-underline hover:no-underline'>
+          <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
             <h2 className='font-bold text-xl'>Thông tin cơ bản</h2>
           </AccordionTrigger>
           <AccordionContent>

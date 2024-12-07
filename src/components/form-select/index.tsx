@@ -173,7 +173,7 @@ const FormSelect = ({
     }
   }, [form, required, setIsValid, fieldId, selectedItems, fieldLabel])
   return (
-    <div className='relative' ref={dropdownRef}>
+    <div className='relative overflow-visible' ref={dropdownRef}>
       <div>
         <FormControl>
           <div
@@ -223,7 +223,7 @@ const FormSelect = ({
       </div>
       <div
         className={cn(
-          'w-full absolute z-10 transition-all duration-300',
+          'w-full absolute z-50 transition-all duration-300',
           hidden ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-screen'
         )}
       >

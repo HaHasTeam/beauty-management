@@ -1,13 +1,13 @@
 import { Plus, Trash2, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
-import { z } from 'zod'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import FormLabel from '@/components/form-label'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ProductClassificationTypeEnum } from '@/types/product'
-import { FormProductSchema } from '@/variables/productFormDetailFields'
+import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
+import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
+import { validateOptionTitles } from '@/utils/product-form/validatation'
 
 import AlertCustom from '../alert'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
@@ -15,45 +15,27 @@ import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import UploadProductImages from './UploadProductImages'
 
-interface SalesInformationProps {
-  form: UseFormReturn<z.infer<typeof FormProductSchema>>
-  resetSignal?: boolean
-  defineFormSignal?: boolean
-  setIsValid: React.Dispatch<boolean>
-}
-
-type IClassificationOption = { title: string; options: string[] }
-type ICombination = {
-  title?: string
-  price?: number
-  quantity?: number
-  image?: string[]
-  type?: string
-  sku?: string
-}
-
-export default function SalesInformation({ form, resetSignal, defineFormSignal, setIsValid }: SalesInformationProps) {
+export default function SalesInformation({
+  form,
+  resetSignal,
+  defineFormSignal,
+  setIsValid,
+  setCompleteSteps,
+  activeStep,
+  setActiveStep
+}: SalesInformationProps) {
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
   const [combinations, setCombinations] = useState<ICombination[]>([])
   const [errorOption, setErrorOption] = useState<string>('')
   const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
   const selectedCategory = form.watch('category')
+  const saleInfoRef = useRef<HTMLDivElement>(null)
+  const SALE_INFORMATION_INDEX = 3
+  const productClassifications = useMemo(() => form.watch('productClassifications') ?? [], [form])
+  const price = form.watch('price') ?? -1
+  const quantity = form.watch('quantity') ?? -1
 
-  const validateOptionTitles = (
-    classificationOptions: IClassificationOption[],
-    classificationIndex: number
-  ): number | null => {
-    const options = classificationOptions[classificationIndex].options
-    const optionSet = new Set()
-    for (let i = 0; i < options.length; i++) {
-      if (optionSet.has(options[i])) {
-        return i
-      }
-      optionSet.add(options[i])
-    }
-    return null
-  }
   const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
     const [options1 = [], options2 = ['']] = updatedOptions.map((c) => c.options)
     const newCombinations: ICombination[] = []
@@ -74,35 +56,6 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
     })
     setCombinations(newCombinations)
     form.setValue('productClassifications', newCombinations)
-  }
-  const regenerateUpdatedOptions = (newCombinations: ICombination[]): IClassificationOption[] => {
-    const updatedOptions: IClassificationOption[] = []
-
-    // Extract unique options from combinations
-    const optionsSet1 = new Set<string>()
-    const optionsSet2 = new Set<string>()
-
-    newCombinations.forEach((combo) => {
-      const parts = combo?.title?.split('-') ?? ''
-      optionsSet1.add(parts[0])
-      if (parts[1]) {
-        optionsSet2.add(parts[1])
-      }
-    })
-
-    // Construct updatedOptions from sets
-    const options1 = Array.from(optionsSet1)
-    const options2 = Array.from(optionsSet2)
-
-    if (options1.length) {
-      updatedOptions.push({ title: `Phân loại 1`, options: options1 })
-    }
-
-    if (options2.length) {
-      updatedOptions.push({ title: `Phân loại 2`, options: options2 })
-    }
-
-    return updatedOptions
   }
 
   const handleRemoveCombination = (index: number) => {
@@ -216,8 +169,28 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
     setCombinations(newCombinations)
   }, [defineFormSignal, form])
 
+  // Scroll to the BasicInformation section when activeStep is 1
+  useEffect(() => {
+    if (activeStep === SALE_INFORMATION_INDEX && saleInfoRef.current) {
+      saleInfoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [activeStep])
+  useEffect(() => {
+    setCompleteSteps((prevSteps) => {
+      if (productClassifications.length > 0 || (price > 0 && quantity > 0)) {
+        return prevSteps.includes(SALE_INFORMATION_INDEX) ? prevSteps : [...prevSteps, SALE_INFORMATION_INDEX]
+      } else {
+        return prevSteps.filter((index) => index !== SALE_INFORMATION_INDEX)
+      }
+    })
+  }, [form, price, productClassifications, quantity, setCompleteSteps])
+
   return (
-    <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+    <div
+      className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'
+      ref={saleInfoRef}
+      onClick={() => setActiveStep(SALE_INFORMATION_INDEX)}
+    >
       <Accordion
         type='single'
         collapsible
@@ -227,7 +200,7 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
         defaultValue='description'
       >
         <AccordionItem value='description'>
-          <AccordionTrigger className='text-left font-medium no-underline hover:no-underline'>
+          <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
             <h2 className='font-bold text-xl'>Thông tin phân loại sản phẩm</h2>
           </AccordionTrigger>
           <AccordionContent>
@@ -244,7 +217,7 @@ export default function SalesInformation({ form, resetSignal, defineFormSignal, 
                         <FormItem className='w-full'>
                           <div className='w-full flex'>
                             <div className='w-[15%]'>
-                              <FormLabel required>SKU sản phẩm</FormLabel>
+                              <FormLabel>SKU sản phẩm</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>

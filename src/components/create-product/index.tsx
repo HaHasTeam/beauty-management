@@ -16,7 +16,7 @@ import { IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from
 import { IStepper } from '@/types/stepper'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
-import StepTracking from '../step-tracking'
+import StepTracking, { StepTrackingVertical } from '../step-tracking'
 import { Button } from '../ui/button'
 import { Form } from '../ui/form'
 import BasicInformation from './BasicInformation'
@@ -26,6 +26,8 @@ import SalesInformation from './SalesInformation'
 const CreateProduct = () => {
   const [resetSignal, setResetSignal] = useState(false)
   const [isValid, setIsValid] = useState(true)
+  const [activeStep, setActiveStep] = useState(1)
+  const [completeSteps, setCompleteSteps] = useState<number[]>([])
   const [categories, setCategories] = useState<ICategory[]>([])
 
   const id = useId()
@@ -36,27 +38,19 @@ const CreateProduct = () => {
   const steps: IStepper[] = [
     {
       id: 1,
-      title: 'Thông Tin Chung',
+      title: 'Thông Tin Cơ bản',
       isCompleted: true,
       isActive: false
     },
     {
       id: 2,
-      title: 'Mô Tả Sản Phẩm',
+      title: 'Thông tin chi tiết',
       isCompleted: false,
-      isActive: true,
-      isExpanded: true,
-      content: 'Vui lòng nhập tên sản phẩm và chọn đúng danh mục để xem các thông tin'
+      isActive: true
     },
     {
       id: 3,
-      title: 'Các Lựa Chọn & Vận Hành',
-      isCompleted: false,
-      isActive: false
-    },
-    {
-      id: 4,
-      title: 'Tài liệu yêu cầu',
+      title: 'Thông tin phân loại sản phẩm',
       isCompleted: false,
       isActive: false
     }
@@ -90,6 +84,8 @@ const CreateProduct = () => {
   const handleReset = () => {
     form.reset()
     setResetSignal((prev) => !prev)
+    setActiveStep(1)
+    setCompleteSteps([])
   }
 
   const { mutateAsync: createProductFn } = useMutation({
@@ -155,47 +151,73 @@ const CreateProduct = () => {
       setCategories(useCategoryData.data)
     }
   }, [form, resetSignal, useCategoryData])
-
+  console.log(completeSteps)
   return (
-    <div className='space-y-3'>
-      <div className='w-full'>
-        <StepTracking steps={steps} currentSteps={0} setCurrentSteps={() => {}} orientation={'horizontal'} />
+    <div className='space-y-3 relative flex gap-3 justify-between'>
+      <div className='w-[75%]'>
+        <Form {...form}>
+          <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit, (e) => console.error(form.getValues(), e))}
+            className='w-full grid gap-4 mb-8'
+            id={`form-${id}`}
+          >
+            <BasicInformation
+              form={form}
+              resetSignal={resetSignal}
+              useCategoryData={categories}
+              setActiveStep={setActiveStep}
+              activeStep={activeStep}
+              setCompleteSteps={setCompleteSteps}
+            />
+            <DetailInformation
+              form={form}
+              resetSignal={resetSignal}
+              useCategoryData={categories}
+              setIsValid={setIsValid}
+              setActiveStep={setActiveStep}
+              activeStep={activeStep}
+              setCompleteSteps={setCompleteSteps}
+            />
+            <SalesInformation
+              form={form}
+              resetSignal={resetSignal}
+              setIsValid={setIsValid}
+              setActiveStep={setActiveStep}
+              activeStep={activeStep}
+              setCompleteSteps={setCompleteSteps}
+            />
+            <div className='w-full flex flex-row-reverse justify-start gap-3'>
+              <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
+                Submit and Show
+              </Button>
+              <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
+                Submit and Hide
+              </Button>
+              <Button
+                variant='outline'
+                type='submit'
+                onClick={() => {
+                  handleReset()
+                  navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
+                }}
+              >
+                Hủy
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
-      <Form {...form}>
-        <form
-          noValidate
-          onSubmit={form.handleSubmit(onSubmit, (e) => console.error(form.getValues(), e))}
-          className='w-full grid gap-4 mb-8'
-          id={`form-${id}`}
-        >
-          <BasicInformation form={form} resetSignal={resetSignal} useCategoryData={categories} />
-          <DetailInformation
-            form={form}
-            resetSignal={resetSignal}
-            useCategoryData={categories}
-            setIsValid={setIsValid}
+      <div className='w-[25%]'>
+        <div className='fixed right-8'>
+          <StepTrackingVertical
+            steps={steps}
+            setActiveStep={setActiveStep}
+            activeStep={activeStep}
+            completeSteps={completeSteps}
           />
-          <SalesInformation form={form} resetSignal={resetSignal} setIsValid={setIsValid} />
-          <div className='w-full flex flex-row-reverse justify-start gap-3'>
-            <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-              Submit and Show
-            </Button>
-            <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-              Submit and Hide
-            </Button>
-            <Button
-              variant='outline'
-              type='submit'
-              onClick={() => {
-                handleReset()
-                navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
-              }}
-            >
-              Hủy
-            </Button>
-          </div>
-        </form>
-      </Form>
+        </div>
+      </div>
     </div>
   )
 }

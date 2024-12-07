@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import './index.css'
+
+import { useEffect, useRef, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -18,17 +20,25 @@ interface DetailInformationProps {
   defineFormSignal?: boolean
   useCategoryData: ICategory[]
   setIsValid: React.Dispatch<boolean>
+  setActiveStep: React.Dispatch<number>
+  activeStep: number
+  setCompleteSteps: React.Dispatch<React.SetStateAction<number[]>>
 }
 export default function DetailInformation({
   form,
   resetSignal,
   defineFormSignal,
   useCategoryData,
-  setIsValid
+  setIsValid,
+  setActiveStep,
+  activeStep,
+  setCompleteSteps
 }: DetailInformationProps) {
   const [productDetailField, setProductDetailField] = useState<IProductFormFields[]>([])
   const MAX_MULTI_SELECT_ITEMS = 5
+  const DETAIL_INFORMATION_INDEX = 2
   const selectedCategory = form.watch('category')
+  const detailInfoRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const categoryDetails = useCategoryData.find((cat) => cat.id === selectedCategory)?.detail
@@ -43,28 +53,31 @@ export default function DetailInformation({
     }
   }, [selectedCategory, useCategoryData])
 
-  const handleValidateInput = (required: boolean | undefined, inputValue: string) => {
-    if (required && (inputValue === undefined || inputValue === '' || inputValue === null)) {
-      setIsValid(false)
-    } else {
-      setIsValid(true)
+  useEffect(() => {
+    if (activeStep === DETAIL_INFORMATION_INDEX && detailInfoRef.current) {
+      detailInfoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }
+  }, [activeStep])
+
   return (
-    <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+    <div
+      className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'
+      ref={detailInfoRef}
+      onClick={() => setActiveStep(DETAIL_INFORMATION_INDEX)}
+    >
       <Accordion
         type='single'
         collapsible
         disabled={selectedCategory === '' || selectedCategory === undefined}
         defaultChecked={selectedCategory === '' || selectedCategory === undefined}
-        className={`w-full ${(selectedCategory === '' || selectedCategory === undefined) && 'opacity-50'}`}
+        className={`w-full only:overflow-visible ${(selectedCategory === '' || selectedCategory === undefined) && 'opacity-50'}`}
         defaultValue='description'
       >
-        <AccordionItem value='description'>
-          <AccordionTrigger className='text-left font-medium no-underline hover:no-underline'>
+        <AccordionItem value='description' className='last:overflow-visible'>
+          <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline overflow-visible'>
             <h2 className='font-bold text-xl'>Thông tin chi tiết</h2>
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className='overflow-visible'>
             {!productDetailField || productDetailField?.length === 0 ? (
               <AlertCustom message='Vui lòng chọn danh mục để xem các thông tin' />
             ) : (
@@ -139,7 +152,6 @@ export default function DetailInformation({
                                   {...field}
                                   value={field?.value ?? ''}
                                   required={formField?.required}
-                                  onChange={(e) => handleValidateInput(formField?.required, e.target.value)}
                                 />
                               </FormControl>
                             )}
@@ -159,19 +171,18 @@ export default function DetailInformation({
                                     required={formField?.required}
                                   />
                                 </FormControl>
-                                <div>
-                                  {formField?.required &&
-                                    (form.getValues(`detail.${formField.id}`) === '' ||
-                                      form.getValues(`detail.${formField.id}`) === undefined) && (
-                                      <span className='font-semibold text-destructive text-xs'>
-                                        Vui lòng chọn {formField?.label}
-                                      </span>
-                                    )}
-                                </div>
                               </>
                             )}
 
                             <FormMessage />
+                            {formField?.required &&
+                            (field?.value === undefined || field?.value === '') &&
+                            formField?.type !== 'multipleChoice' &&
+                            formField?.type !== 'singleChoice' ? (
+                              <span className='text-xs text-destructive font-semibold'>
+                                Vui lòng {formField?.type === 'date' ? 'chọn' : 'nhập'} {formField?.label}
+                              </span>
+                            ) : null}
                           </FormItem>
                         )}
                       />
