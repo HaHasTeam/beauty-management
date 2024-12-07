@@ -31,7 +31,10 @@ export const privateRequest = async <R>(url: string, options?: AxiosRequestConfi
 
 export const publicRequest = async <R>(url: string, options?: AxiosRequestConfig): Promise<R> => {
   return axiosRequest({
+    url,
     ...options,
-    url
+    headers: {
+      ...options?.headers
+    }
   })
 }

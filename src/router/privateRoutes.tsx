@@ -5,6 +5,7 @@ import { Routes, routesConfig } from '@/configs/routes'
 import DashboardHome from '@/views/dashboard'
 import AccountsDirectory from '@/views/dashboard/accounts-directory'
 import Brands from '@/views/dashboard/brand-management'
+import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
 import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
@@ -18,6 +19,7 @@ import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
 import UpdateProduct from '@/views/dashboard/update-product'
+import Vouchers from '@/views/dashboard/voucher-management'
 
 // import Brands from '@/views/dashboard/brand-management'
 // import Brands from '@/views/dashboard/brand-management'
@@ -50,12 +52,22 @@ export const privateRoutes: RouteObject[] = [
           {
             index: true,
             element: <Brands />
-          }
-          // { path: 'create-Brand', element: <AddPreOrder /> },
+          },
+          { path: 'create-Brand', element: <ViewBrandForm /> }
           // {
           //   path: ':id',
           //   element: <PreOrderDetailById />
           // }
+        ]
+      },
+      {
+        path: 'voucher',
+
+        children: [
+          {
+            index: true,
+            element: <Vouchers />
+          }
         ]
       },
       {

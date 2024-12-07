@@ -1,4 +1,3 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { NuqsAdapter } from 'nuqs/adapters/react'
 import { Toaster } from 'sonner'
 
@@ -20,7 +19,9 @@ function App() {
               <TooltipProvider>
                 <RouterProvider />
               </TooltipProvider>
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools initialIsOpen={true} buttonPosition='bottom-left' /> */}
+              {/* The rest of your application */}
+
               <Toaster closeButton position='top-center' richColors />
             </ThemeProvider>
           </NuqsAdapter>

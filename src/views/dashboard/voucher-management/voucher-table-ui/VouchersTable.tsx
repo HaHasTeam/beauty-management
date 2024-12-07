@@ -1,7 +1,4 @@
-'use client'
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { Row } from '@tanstack/react-table'
 import * as React from 'react'
 
@@ -9,28 +6,30 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
-import { getAllBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
-import { BrandStatusEnum, TBrand } from '@/types/brand'
+import { getAllVouchersApi, updateStatusVoucherByIdApi } from '@/network/apis/voucher'
+import { BrandStatusEnum } from '@/types/brand'
+import { StatusEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
+import { TVoucher } from '@/types/voucher'
 
-import { BanBrandsDialog } from './BanBrandsDialog'
-import { DataTableRowAction, getColumns } from './BrandsTableColumns'
-import { BrandsTableFloatingBar } from './BrandsTableFloatingBar'
-import { BrandsTableToolbarActions } from './BrandsTableToolbarActions'
+import { BanVouchersDialog } from './BanVouchersDialog'
 import { getStatusIcon } from './helper'
 import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
-import { ViewDetailsBrandsSheet } from './ViewDetailsBrandsSheet'
+import { ViewDetailsVouchersSheet } from './ViewDetailsVouchersSheet'
+import { DataTableRowAction, getColumns } from './VouchersTableColumns'
+import { VouchersTableFloatingBar } from './VouchersTableFloatingBar'
+import { VouchersTableToolbarActions } from './VouchersTableToolbarActions'
 
-interface BrandTableProps {
-  data: TBrand[]
+interface VoucherTableProps {
+  data: TVoucher[]
   pageCount: number
-  queryStates?: [DataTableQueryState<TBrand>, React.Dispatch<React.SetStateAction<DataTableQueryState<TBrand>>>]
+  queryStates?: [DataTableQueryState<TVoucher>, React.Dispatch<React.SetStateAction<DataTableQueryState<TVoucher>>>]
 }
 
-export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
+export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProps) {
   const queryClient = useQueryClient()
 
-  const [rowAction, setRowAction] = React.useState<DataTableRowAction<TBrand> | null>(null)
+  const [rowAction, setRowAction] = React.useState<DataTableRowAction<TVoucher> | null>(null)
   const columns = React.useMemo(
     () =>
       getColumns({
@@ -50,12 +49,12 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<TBrand>[] = [
+  const filterFields: DataTableFilterField<TVoucher>[] = [
     {
       id: 'status',
       label: 'Status',
-      options: Object.keys(BrandStatusEnum).map((status) => {
-        const value = BrandStatusEnum[status as keyof typeof BrandStatusEnum]
+      options: Object.keys(StatusEnum).map((status) => {
+        const value = StatusEnum[status as keyof typeof StatusEnum]
         return {
           label: toSentenceCase(value),
           value: value,
@@ -75,7 +74,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
    * 3. Used with DataTableAdvancedToolbar: Enables a more sophisticated filtering UI.
    * 4. Date and boolean types: Adds support for filtering by date ranges and boolean values.
    */
-  const [isOpen, setIsOpen] = React.useState(true)
 
   const { table } = useDataTable({
     queryStates,
@@ -91,53 +89,48 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
     shallow: false,
     clearOnDefault: true
   })
-  const { mutateAsync: updateStatusBrandMutation } = useMutation({
-    mutationKey: [updateStatusBrandByIdApi.mutationKey],
-    mutationFn: updateStatusBrandByIdApi.fn,
-    onSettled: async () => {
-      return await queryClient.invalidateQueries({ queryKey: [getAllBrandsApi.queryKey] })
-    }
+  const { mutateAsync: updateStatusVoucherMutation } = useMutation({
+    // mutationKey: [updateStatusBrandByIdApi.mutationKey],
+    mutationFn: updateStatusVoucherByIdApi.fn
   })
-  const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
+  const deleteBrand = async (brand: Row<TVoucher>['original'][]) => {
     // Map over the brand array and call the mutation for each brand
     const updatePromises = brand.map((item) =>
-      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED })
+      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.BANNED })
     )
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    // await queryClient.invalidateQueries({
-    //   queryKey: ['getAllBrands', 'updateStatusBrandById']
-    //   // exact: true
-    // })
+    await queryClient.invalidateQueries({
+      queryKey: [getAllVouchersApi.queryKey],
+      exact: true
+    })
   }
-  const updateStatusBrand = async (brand: Row<TBrand>['original'][]) => {
+  const updateStatusBrand = async (brand: Row<TVoucher>['original'][]) => {
     // Map over the brand array and call the mutation for each brand
     const updatePromises = brand.map((item) =>
-      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.ACTIVE })
+      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.ACTIVE })
     )
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    // await queryClient.invalidateQueries({ queryKey: ['getAllBrands', 'updateStatusBrandById'] })
+    await queryClient.invalidateQueries({ queryKey: [getAllVouchersApi.queryKey] })
   }
 
   return (
     <>
-      <button onClick={() => setIsOpen(!isOpen)}>{`${isOpen ? 'Close' : 'Open'} the devtools panel`}</button>
-      {isOpen && <ReactQueryDevtoolsPanel onClose={() => setIsOpen(false)} />}
-      <DataTable table={table} floatingBar={<BrandsTableFloatingBar table={table} />}>
+      <DataTable table={table} floatingBar={<VouchersTableFloatingBar table={table} />}>
         <DataTableToolbar table={table} filterFields={filterFields}>
-          <BrandsTableToolbarActions table={table} />
+          <VouchersTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-      <BanBrandsDialog
+      <BanVouchersDialog
         open={rowAction?.type === 'ban'}
         onOpenChange={() => setRowAction(null)}
-        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
+        Vouchers={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={(brand) => {
-          deleteBrand(brand)
+        onSuccess={(voucher) => {
+          deleteBrand(voucher)
           rowAction?.row.toggleSelected(false)
         }}
       />
@@ -145,15 +138,15 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         status={BrandStatusEnum.ACTIVE}
         open={rowAction?.type === 'update-status'}
         onOpenChange={() => setRowAction(null)}
-        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
+        Vouchers={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={(brand) => {
-          updateStatusBrand(brand)
+        onSuccess={(voucher) => {
+          updateStatusBrand(voucher)
           rowAction?.row.toggleSelected(false)
         }}
       />
-      <ViewDetailsBrandsSheet
-        TBrand={rowAction?.row.original}
+      <ViewDetailsVouchersSheet
+        Voucher={rowAction?.row.original}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
       />

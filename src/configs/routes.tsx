@@ -22,7 +22,8 @@ export enum Routes {
   PRODUCT_LIST = 'product-list',
   CREATE_PRODUCT = 'create-product',
   UPDATE_PRODUCT = 'update-product',
-  REGISTER_BRAND = 'register-brand'
+  REGISTER_BRAND = 'register-brand',
+  ADD_BRAND = 'add-brand'
 }
 
 export const routesConfig: TRoutes = {
@@ -62,6 +63,13 @@ export const routesConfig: TRoutes = {
     description: 'Brand Management',
     path: '/dashboard/brand',
     getPath: () => '/dashboard/brand'
+  },
+  [Routes.ADD_BRAND]: {
+    name: 'Add Brand',
+    title: 'Add Brand',
+    description: 'Add Brand',
+    path: '/dashboard/brand/create-Brand',
+    getPath: () => '/dashboard/brand/create-Brand'
   },
   [Routes.PRE_ORDER]: {
     name: 'Pre Order',

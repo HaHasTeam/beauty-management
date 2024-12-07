@@ -18,9 +18,9 @@ export enum StatusEnum {
   PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED'
+  BANNED = 'BANNED',
+  DENIED = 'DENIED'
 }
-
 export enum AddressEnum {
   HOME = 'HOME',
   OFFICE = 'OFFICE',

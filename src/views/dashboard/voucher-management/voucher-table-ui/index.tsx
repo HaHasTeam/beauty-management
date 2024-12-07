@@ -1,29 +1,31 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllBrandsApi } from '@/network/apis/brand'
-import { TBrand } from '@/types/brand'
+import { getAllVouchersApi } from '@/network/apis/voucher'
 import { DataTableQueryState } from '@/types/table'
+import { TVoucher } from '@/types/voucher'
 
-import { BrandsTable } from './BrandsTable'
+import { VouchersTable } from './VouchersTable'
 
 export default function IndexPage() {
-  const queryClient = useQueryClient()
-  const { data: brandListData, isLoading: isBrandListLoading } = useQuery({
-    queryKey: [getAllBrandsApi.queryKey],
-    queryFn: getAllBrandsApi.fn,
-    refetchOnWindowFocus: false
+  const {
+    data: voucherListData,
+    isLoading: isVoucherListLoading,
+    isRefetching
+  } = useQuery({
+    queryKey: [getAllVouchersApi.queryKey],
+    queryFn: getAllVouchersApi.fn
   })
-  const queryStates = useState<DataTableQueryState<TBrand>>({} as DataTableQueryState<TBrand>)
+  const queryStates = useState<DataTableQueryState<TVoucher>>({} as DataTableQueryState<TVoucher>)
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
       <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
         <div className='w-full flex items-center gap-4'>
           <Shell className='gap-2'>
-            {isBrandListLoading ? (
+            {isVoucherListLoading || isRefetching ? (
               <DataTableSkeleton
                 columnCount={1}
                 searchableColumnCount={1}
@@ -32,20 +34,11 @@ export default function IndexPage() {
                 shrinkZero
               />
             ) : (
-              <BrandsTable data={brandListData?.data ?? []} pageCount={1} queryStates={queryStates} />
+              <VouchersTable data={voucherListData?.data ?? []} pageCount={1} queryStates={queryStates} />
             )}
           </Shell>
         </div>
       </div>
-      <button
-        onClick={() => {
-          queryClient.invalidateQueries({
-            queryKey: [getAllBrandsApi.queryKey]
-          })
-        }}
-      >
-        Test
-      </button>
     </Card>
   )
 }

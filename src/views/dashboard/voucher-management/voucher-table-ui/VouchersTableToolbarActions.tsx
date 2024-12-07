@@ -6,15 +6,15 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
-import { TBrand } from '@/types/brand'
+import { TVoucher } from '@/types/voucher'
 
-import { BanBrandsDialog } from './BanBrandsDialog'
+import { BanVouchersDialog } from './BanVouchersDialog'
 
-interface BrandsTableToolbarActionsProps {
-  table: Table<TBrand>
+interface VouchersTableToolbarActionsProps {
+  table: Table<TVoucher>
 }
 
-export function BrandsTableToolbarActions({ table }: BrandsTableToolbarActionsProps) {
+export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActionsProps) {
   const navigate = useNavigate()
   const handleAddBrand = () => {
     navigate(routesConfig[Routes.ADD_BRAND].getPath())
@@ -23,14 +23,14 @@ export function BrandsTableToolbarActions({ table }: BrandsTableToolbarActionsPr
   return (
     <div className='flex items-center gap-2'>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-        <BanBrandsDialog
-          Brands={table.getFilteredSelectedRowModel().rows.map((row) => row.original)}
+        <BanVouchersDialog
+          Vouchers={table.getFilteredSelectedRowModel().rows.map((row) => row.original)}
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
       <Button size={'sm'} onClick={handleAddBrand}>
         <IoIosAddCircleOutline />
-        Add Brands
+        Add Vouchers
       </Button>
       <Button
         variant='outline'
