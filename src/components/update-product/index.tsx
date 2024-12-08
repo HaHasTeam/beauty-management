@@ -7,6 +7,7 @@ import { z } from 'zod'
 
 import { Routes, routesConfig } from '@/configs/routes'
 import { steps } from '@/constants/helper'
+import { productFormMessage } from '@/constants/message'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getCategoryApi } from '@/network/apis/category'
@@ -85,8 +86,8 @@ const UpdateProduct = () => {
       successToast({
         message:
           form.getValues('status') === ProductEnum.OFFICIAL
-            ? 'Product updated successfully! It is active and visible on the website after moderator approval.'
-            : 'Product updated successfully! It is currently inactive and will not be visible until activated.'
+            ? productFormMessage.successUpdateOfficialMessage
+            : productFormMessage.successUpdateInactiveMessage
       })
       queryClient.invalidateQueries({
         queryKey: [getProductApi.queryKey, productId as string]

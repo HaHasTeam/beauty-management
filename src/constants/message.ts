@@ -13,5 +13,12 @@ export const productFormMessage = {
   imagesRequired: 'Vui lòng chọn ít nhất một ảnh.',
   descriptionRequired: 'Vui lòng nhập mô tả.',
   statusRequired: 'Vui lòng điền trạng thái.',
-  classificationTitleRequired: 'Classification title is required.'
+  classificationTitleRequired: 'Classification title is required.',
+  successCreateOfficialMessage: '',
+  successUpdateOfficialMessage:
+    'Product updated successfully! It is active and visible on the website after moderator approval.',
+  successCreateInactiveMessage: '',
+  successUpdateInactiveMessage:
+    'Product updated successfully! It is currently inactive and will not be visible until activated.',
+  successStatusMessage: 'Update product status successfully!'
 }
