@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import './index.css'
 
 import { useEffect, useRef, useState } from 'react'
@@ -17,6 +18,7 @@ import { Input } from '../ui/input'
 interface DetailInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
+  isValid?: boolean
   defineFormSignal?: boolean
   useCategoryData: ICategory[]
   setIsValid: React.Dispatch<boolean>
@@ -32,17 +34,18 @@ export default function DetailInformation({
   setIsValid,
   setActiveStep,
   activeStep,
+  isValid,
   setCompleteSteps
 }: DetailInformationProps) {
   const [productDetailField, setProductDetailField] = useState<IProductFormFields[]>([])
   const MAX_MULTI_SELECT_ITEMS = 5
   const DETAIL_INFORMATION_INDEX = 2
   const selectedCategory = form.watch('category')
+  const detailValue = form.watch('detail')
   const detailInfoRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const categoryDetails = useCategoryData.find((cat) => cat.id === selectedCategory)?.detail
-
     if (categoryDetails) {
       const convertedArray = Object.entries(categoryDetails ?? {}).map(([key, value]) => {
         return { id: key, ...value }
@@ -58,6 +61,34 @@ export default function DetailInformation({
       detailInfoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [activeStep])
+
+  useEffect(() => {
+    // Get all required fields
+    const requiredFields = productDetailField.filter((field) => field.required).map((field) => field.id)
+
+    // Check if all required fields are filled
+    const allRequiredFieldsFilled = requiredFields.every((fieldId) => {
+      const fieldValue = form.getValues(`detail.${fieldId}`)
+
+      // Handle different input types
+      if (fieldValue === undefined || fieldValue === '') return false
+      if (Array.isArray(fieldValue) && fieldValue.length === 0) return false
+
+      return true
+    })
+
+    // Update form validity
+    setIsValid(allRequiredFieldsFilled)
+    setCompleteSteps((prevSteps) => {
+      const newSteps = new Set(prevSteps)
+      if (allRequiredFieldsFilled && selectedCategory !== '') {
+        newSteps.add(DETAIL_INFORMATION_INDEX)
+      } else {
+        newSteps.delete(DETAIL_INFORMATION_INDEX)
+      }
+      return Array.from(newSteps)
+    })
+  }, [productDetailField, setIsValid, setCompleteSteps, form, isValid, selectedCategory])
 
   return (
     <div
@@ -83,7 +114,18 @@ export default function DetailInformation({
             ) : (
               <div>
                 <div className='flex items-center justify-end'>
-                  <span className='text-sm text-muted-foreground'>Hoàn thành: 0 / {productDetailField.length}</span>
+                  <span className='text-sm text-muted-foreground'>
+                    Hoàn thành:{' '}
+                    {
+                      Object.entries(detailValue ?? {}).filter(([_, value]) => {
+                        if (Array.isArray(value)) {
+                          return value.length > 0
+                        }
+                        return value !== undefined && value !== ''
+                      }).length
+                    }
+                    /{productDetailField.length}
+                  </span>
                 </div>
 
                 <div className='grid grid-cols-2 gap-6'>
@@ -152,6 +194,13 @@ export default function DetailInformation({
                                   {...field}
                                   value={field?.value ?? ''}
                                   required={formField?.required}
+                                  onChange={(e) => {
+                                    if (e.target.value !== '') {
+                                      setIsValid(true)
+                                    } else {
+                                      setIsValid(false)
+                                    }
+                                  }}
                                 />
                               </FormControl>
                             )}

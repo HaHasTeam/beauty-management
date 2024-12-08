@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { productFormMessage } from '@/constants/message'
 import { IOption } from '@/types/option'
 
 export type IFormProductFieldId = keyof z.infer<typeof FormProductSchema>['detail']
@@ -285,13 +286,13 @@ export const FormProductSchema = z
     // basic information
     name: z
       .string()
-      .min(1, { message: 'Product name is required.' })
-      .max(120, { message: 'Product name must be less than 120 characters.' }),
-    brand: z.string().min(1, { message: 'Brand is required.' }),
-    category: z.string().min(1, { message: 'Category is required.' }),
-    images: z.array(z.string()).min(1, { message: 'Product images is required.' }),
-    description: z.string().min(1, { message: 'Product description is required.' }),
-    status: z.string().min(1, { message: 'Status is required.' }),
+      .min(1, { message: productFormMessage.productNameRequired })
+      .max(120, { message: productFormMessage.productNameLengthRequired }),
+    brand: z.string().min(1, { message: productFormMessage.brandRequired }),
+    category: z.string().min(1, { message: productFormMessage.categoryRequired }),
+    images: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }),
+    description: z.string().min(1, { message: productFormMessage.descriptionRequired }),
+    status: z.string().min(1, { message: productFormMessage.statusRequired }),
     // detail information
     detail: z.record(
       z
@@ -308,29 +309,29 @@ export const FormProductSchema = z
       .array(
         z.object({
           id: z.string().min(0).optional(),
-          title: z.string().min(1, { message: 'Title is required.' }).optional(),
+          title: z.string().min(1, { message: productFormMessage.classificationTitleRequired }).optional(),
           sku: z.string().optional(),
           type: z.string().min(0).optional(),
-          price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),
-          quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional(),
-          image: z.array(z.string()).min(1, { message: 'Image URL is required.' }).optional()
+          price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
+          quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
+          image: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }).optional()
         })
       )
       .optional(),
-    price: z.number().min(1000, { message: 'Price must be at least 1000đ.' }).optional(),
-    quantity: z.number().min(1, { message: 'Quantity must be at least 1.' }).optional(),
+    price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
+    quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
     sku: z.string().optional()
   })
   .refine(
     (data) => {
       if (!data.productClassifications || data.productClassifications.length === 0) {
         // If no productClassifications, require product price
-        return data.price !== undefined
+        return data.price !== undefined || data.price !== ''
       }
       return true
     },
     {
-      message: 'Price is required when no product classifications are provided.',
+      message: productFormMessage.priceRequired,
       path: ['price']
     }
   )
@@ -338,12 +339,12 @@ export const FormProductSchema = z
     (data) => {
       if (!data.productClassifications || data.productClassifications.length === 0) {
         // If no productClassifications, require product quantity
-        return data.quantity !== undefined
+        return data.quantity !== undefined || data.quantity !== ''
       }
       return true
     },
     {
-      message: 'Quantity is required when no product classifications are provided.',
+      message: productFormMessage.quantityRequired,
       path: ['quantity']
     }
   )
@@ -356,7 +357,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: 'Price must be at least 1000đ.',
+      message: productFormMessage.priceValidate,
       path: ['productClassifications']
     }
   )
@@ -369,7 +370,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: 'Quantity must be at least 1.',
+      message: productFormMessage.quantityValidate,
       path: ['productClassifications']
     }
   )

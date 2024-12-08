@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Check, ChevronDown, ChevronRight, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -29,6 +30,7 @@ export default function FormCategorySelection({
   const [chosenCategories, setChosenCategories] = useState<ICategory[]>([])
   const [open, setOpen] = useState(false)
   const [categoryError, setCategoryError] = useState<string>('')
+  const currentSelectedCategory = form.watch('category')
 
   // Get root level categories (those with no parent)
   const rootCategories = categories.filter((cat) => !cat.parentCategory)
@@ -92,41 +94,39 @@ export default function FormCategorySelection({
     setCategoryError('')
   }, [resetSignal])
   useEffect(() => {
-    if (defineFormSignal) {
-      const lastSelectedCategory = form.getValues('category')
-
-      if (!lastSelectedCategory) {
-        setSelectedCategories([])
-        setChosenCategories([])
-        return
-      }
-
-      // Helper to find the category object by ID
-      const findCategoryById = (id: string): ICategory | undefined => {
-        return categories.find((cat) => cat.id === id)
-      }
-
-      // Function to build the path from leaf to root
-      const buildCategoryPath = (categoryId: string): ICategory[] => {
-        const path: ICategory[] = []
-        let currentCategory = findCategoryById(categoryId)
-
-        while (currentCategory) {
-          path.unshift(currentCategory)
-          currentCategory = currentCategory.parentCategory
-            ? findCategoryById(currentCategory.parentCategory.id)
-            : undefined
-        }
-
-        return path
-      }
-
-      // Build the path and set selected categories
-      const categoryPath = buildCategoryPath(lastSelectedCategory)
-      setSelectedCategories(categoryPath)
-      setChosenCategories(categoryPath)
+    // Helper to find the category object by ID
+    const findCategoryById = (id: string): ICategory | undefined => {
+      return categories.find((cat) => cat.id === id)
     }
-  }, [defineFormSignal, form, categories])
+
+    // Function to build the path from leaf to root
+    const buildCategoryPath = (categoryId: string): ICategory[] => {
+      const path: ICategory[] = []
+      let currentCategory = findCategoryById(categoryId)
+
+      while (currentCategory) {
+        path.unshift(currentCategory)
+        currentCategory = currentCategory.parentCategory
+          ? findCategoryById(currentCategory.parentCategory.id)
+          : undefined
+      }
+
+      return path
+    }
+    if (currentSelectedCategory) {
+      const categoryPath = buildCategoryPath(currentSelectedCategory)
+      if (
+        categoryPath.length !== selectedCategories.length ||
+        categoryPath.some((cat, index) => cat.id !== selectedCategories[index]?.id)
+      ) {
+        setSelectedCategories(categoryPath)
+        setChosenCategories(categoryPath)
+      }
+    } else {
+      setSelectedCategories([])
+      setChosenCategories([])
+    }
+  }, [defineFormSignal, form, categories, currentSelectedCategory])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

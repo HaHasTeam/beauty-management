@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Routes, routesConfig } from '@/configs/routes'
+import { steps } from '@/constants/helper'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getCategoryApi } from '@/network/apis/category'
@@ -19,6 +20,7 @@ import BasicInformation from '../create-product/BasicInformation'
 import DetailInformation from '../create-product/DetailInformation'
 import SalesInformation from '../create-product/SalesInformation'
 import LoadingContentLayer from '../loading-icon/LoadingContentLayer'
+import { StepTrackingVertical } from '../step-tracking'
 import { Button } from '../ui/button'
 import { Form } from '../ui/form'
 
@@ -31,6 +33,8 @@ const UpdateProduct = () => {
   const [isValid, setIsValid] = useState(true)
   const [defineFormSignal, setDefineFormSignal] = useState(false)
   const [categories, setCategories] = useState<ICategory[]>([])
+  const [activeStep, setActiveStep] = useState(1)
+  const [completeSteps, setCompleteSteps] = useState<number[]>([])
 
   const { successToast } = useToast()
   const navigate = useNavigate()
@@ -70,6 +74,8 @@ const UpdateProduct = () => {
   const handleReset = () => {
     form.reset()
     setResetSignal((prev) => !prev)
+    setActiveStep(1)
+    setCompleteSteps([])
   }
 
   const { mutateAsync: updateProductFn } = useMutation({
@@ -176,46 +182,76 @@ const UpdateProduct = () => {
       {isGettingProduct && isGettingCategory && isGettingProfile ? (
         <LoadingContentLayer />
       ) : (
-        <Form {...form}>
-          <form
-            noValidate
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='w-full grid gap-4 mb-8'
-            id={`form-${formId}`}
-          >
-            <BasicInformation
-              form={form}
-              resetSignal={resetSignal}
-              defineFormSignal={defineFormSignal}
-              useCategoryData={categories}
-            />
-            <DetailInformation form={form} resetSignal={resetSignal} defineFormSignal={defineFormSignal} />
-            <SalesInformation
-              form={form}
-              resetSignal={resetSignal}
-              setIsValid={setIsValid}
-              defineFormSignal={defineFormSignal}
-            />
-            <div className='w-full flex flex-row-reverse justify-start gap-3'>
-              <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                Submit and Show
-              </Button>
-              <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-                Submit and Hide
-              </Button>
-              <Button
-                variant='outline'
-                type='submit'
-                onClick={() => {
-                  handleReset()
-                  navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
-                }}
+        <div className='space-y-3 relative flex sm:gap-3 gap-0 justify-between'>
+          <div className='lg:w-[72%] md:w-[70%] sm:w-[85%] w-full'>
+            <Form {...form}>
+              <form
+                noValidate
+                onSubmit={form.handleSubmit(onSubmit)}
+                className='w-full grid gap-4 mb-8'
+                id={`form-${formId}`}
               >
-                Hủy
-              </Button>
+                <BasicInformation
+                  form={form}
+                  resetSignal={resetSignal}
+                  defineFormSignal={defineFormSignal}
+                  useCategoryData={categories}
+                  setActiveStep={setActiveStep}
+                  activeStep={activeStep}
+                  setCompleteSteps={setCompleteSteps}
+                />
+                <DetailInformation
+                  form={form}
+                  resetSignal={resetSignal}
+                  useCategoryData={categories}
+                  defineFormSignal={defineFormSignal}
+                  setIsValid={setIsValid}
+                  setActiveStep={setActiveStep}
+                  activeStep={activeStep}
+                  setCompleteSteps={setCompleteSteps}
+                  isValid={isValid}
+                />
+                <SalesInformation
+                  form={form}
+                  resetSignal={resetSignal}
+                  defineFormSignal={defineFormSignal}
+                  setIsValid={setIsValid}
+                  setActiveStep={setActiveStep}
+                  activeStep={activeStep}
+                  setCompleteSteps={setCompleteSteps}
+                />
+                <div className='w-full flex flex-row-reverse justify-start gap-3'>
+                  <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
+                    Submit and Show
+                  </Button>
+                  <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
+                    Submit and Hide
+                  </Button>
+                  <Button
+                    variant='outline'
+                    type='submit'
+                    onClick={() => {
+                      handleReset()
+                      navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
+                    }}
+                  >
+                    Hủy
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+          <div className='lg:w-[28%] md:w-[30%] sm:w-[15%] w-0 sm:block hidden'>
+            <div className='fixed right-8'>
+              <StepTrackingVertical
+                steps={steps}
+                setActiveStep={setActiveStep}
+                activeStep={activeStep}
+                completeSteps={completeSteps}
+              />
             </div>
-          </form>
-        </Form>
+          </div>
+        </div>
       )}
     </div>
   )

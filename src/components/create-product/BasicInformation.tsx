@@ -86,7 +86,7 @@ const BasicInformation = ({
                 name='images'
                 render={({ field }) => (
                   <FormItem className='w-full'>
-                    <div className='flex w-full'>
+                    <div className='flex w-full gap-2'>
                       <div className='w-[15%] space-y-1'>
                         <FormLabel required>Hình ảnh sản phẩm</FormLabel>
                         <FormDescription>Support only .jpg, .jpeg, .png & max 1MB file</FormDescription>
@@ -108,8 +108,8 @@ const BasicInformation = ({
                     name='name'
                     render={({ field }) => (
                       <FormItem className='w-full'>
-                        <div className='w-full flex'>
-                          <div className='w-[15%]'>
+                        <div className='w-full flex gap-2'>
+                          <div className='w-[15%] flex items-center'>
                             <FormLabel required>Tên sản phẩm</FormLabel>
                           </div>
                           <div className='w-full space-y-1'>
@@ -137,8 +137,8 @@ const BasicInformation = ({
                     name='category'
                     render={({ field }) => (
                       <FormItem className='w-full'>
-                        <div className='w-full flex'>
-                          <div className='w-[15%]'>
+                        <div className='w-full flex gap-2'>
+                          <div className='w-[15%] flex items-center'>
                             <FormLabel required>Danh mục</FormLabel>
                           </div>
                           <div className='w-full space-y-1'>
@@ -168,7 +168,7 @@ const BasicInformation = ({
                     name='description'
                     render={({ field }) => (
                       <FormItem className='w-full'>
-                        <div className='flex w-full'>
+                        <div className='flex w-full gap-2'>
                           <div className='w-[15%]'>
                             <FormLabel required>Mô tả sản phẩm</FormLabel>
                           </div>

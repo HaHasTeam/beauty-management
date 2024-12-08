@@ -147,16 +147,14 @@ const FormSelect = ({
   }, [resetSignal, initialItems])
 
   useEffect(() => {
-    if (defineFormSignal) {
-      const backendValues: string | number | string[] = form.getValues(`detail.${fieldId}`) || []
-      const backendValuesArray = Array.isArray(backendValues) ? backendValues : [backendValues]
+    const backendValues: string | number | string[] = form.getValues(`detail.${fieldId}`) || []
+    const backendValuesArray = Array.isArray(backendValues) ? backendValues : [backendValues]
 
-      // Map backend values to corresponding items in the `items` list
-      const updatedSelectedItems = items.filter((item) => backendValuesArray?.includes(item?.value))
+    // Map backend values to corresponding items in the `items` list
+    const updatedSelectedItems = items.filter((item) => backendValuesArray?.includes(item?.value))
 
-      // Update the selectedItems state
-      setSelectedItems(updatedSelectedItems)
-    }
+    // Update the selectedItems state
+    setSelectedItems(updatedSelectedItems)
   }, [defineFormSignal, form, fieldId, items])
 
   useEffect(() => {
@@ -277,7 +275,7 @@ const FormSelect = ({
                     value={inputValue}
                     onChange={(e) => handleInputValueChange(e.target.value)}
                   />
-                  {errorText && <span className='text-destructive text-sm'>{errorText}</span>}
+                  {errorText && <span className='text-destructive text-xs font-semibold mt-1'>{errorText}</span>}
                 </div>
                 <Button
                   type='button'

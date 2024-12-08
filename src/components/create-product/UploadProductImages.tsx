@@ -15,9 +15,10 @@ type UploadProductImagesProps = {
   dropZoneConfigOptions?: DropzoneOptions
   field: React.InputHTMLAttributes<HTMLInputElement>
   maxFileInput: number
+  onChange?: (value: string[]) => void
 }
 
-const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: UploadProductImagesProps) => {
+const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput, onChange }: UploadProductImagesProps) => {
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
@@ -133,28 +134,31 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: Upl
       if (fieldType === 'string') {
         // Value must be an array of files
         if (!newFiles?.length) {
+          onChange?.([])
           return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
         }
         if (newFiles?.length) {
           const fileUrls = await convertFileToUrl(newFiles)
-
+          onChange?.([fileUrls[0]])
           return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
 
       // If array, set to state
       if (fieldType === 'array') {
-        if (!newFiles?.length) return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
+        if (!newFiles?.length) {
+          onChange?.([])
+          return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
+        }
         if (newFiles.length > oldFiles.length) {
           const diffedFiles = newFiles.filter((file) => {
             return !oldFiles?.some((oldFile) => oldFile.name === file.name)
           })
 
           const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
-          return field?.onChange?.([
-            ...(field?.value as string[]),
-            ...newDiffedFileUrls
-          ] as unknown as React.ChangeEvent<HTMLInputElement>)
+          const updatedUrls = [...(field?.value as string[]), ...newDiffedFileUrls]
+          onChange?.(updatedUrls)
+          return field?.onChange?.(updatedUrls as unknown as React.ChangeEvent<HTMLInputElement>)
         } else {
           const deletedFile = oldFiles.filter((file) => {
             return !newFiles.some((newFile) => newFile.name === file.name)
@@ -164,7 +168,7 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: Upl
             const newAppendFilesUrl = (field?.value as string[]).filter((file) => {
               return !deletedFile.some((deleted) => deleted.name === file)
             })
-
+            onChange?.(newAppendFilesUrl)
             field?.onChange?.(newAppendFilesUrl as unknown as React.ChangeEvent<HTMLInputElement>)
           }
         }

@@ -1,13 +1,14 @@
 import { Plus, Trash2, X } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import FormLabel from '@/components/form-label'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ProductClassificationTypeEnum } from '@/types/product'
+import { productFormMessage } from '@/constants/message'
+import { IProductClassification, ProductClassificationTypeEnum } from '@/types/product'
 import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
 import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
-import { validateOptionTitles } from '@/utils/product-form/validatation'
+import { validateOptionTitles, validateSKUs } from '@/utils/product-form/validatation'
 
 import AlertCustom from '../alert'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
@@ -28,11 +29,14 @@ export default function SalesInformation({
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
   const [combinations, setCombinations] = useState<ICombination[]>([])
   const [errorOption, setErrorOption] = useState<string>('')
+  const [errorSKUMessage, setErrorSKUMessage] = useState<string>('')
   const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
+  const [duplicatedSKUIndex, setDuplicatedSKUIndex] = useState<number[]>([])
   const selectedCategory = form.watch('category')
   const saleInfoRef = useRef<HTMLDivElement>(null)
   const SALE_INFORMATION_INDEX = 3
-  const productClassifications = useMemo(() => form.watch('productClassifications') ?? [], [form])
+  const productClassificationsForm = form.watch('productClassifications')
+
   const price = form.watch('price') ?? -1
   const quantity = form.watch('quantity') ?? -1
 
@@ -175,16 +179,44 @@ export default function SalesInformation({
       saleInfoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [activeStep])
+
   useEffect(() => {
+    const handleClassificationValidate = (classifications: IProductClassification[]) => {
+      return classifications?.every(
+        (item) =>
+          !!item?.title &&
+          !!item?.image?.length &&
+          item?.quantity !== undefined &&
+          item?.quantity > 0 &&
+          item?.price !== undefined &&
+          item?.price >= 1000
+      )
+    }
+
     setCompleteSteps((prevSteps) => {
-      if (productClassifications.length > 0 || (price > 0 && quantity > 0)) {
-        return prevSteps.includes(SALE_INFORMATION_INDEX) ? prevSteps : [...prevSteps, SALE_INFORMATION_INDEX]
-      } else {
+      // Ensure a number[] is always returned
+      if (productClassificationsForm && productClassificationsForm?.length > 0) {
+        if (handleClassificationValidate(productClassificationsForm ?? [])) {
+          return prevSteps?.includes(SALE_INFORMATION_INDEX) ? prevSteps : [...prevSteps, SALE_INFORMATION_INDEX]
+        }
+        // If validation fails, remove the step
         return prevSteps.filter((index) => index !== SALE_INFORMATION_INDEX)
+      } else {
+        if (price > 0 && quantity > 0) {
+          return prevSteps?.includes(SALE_INFORMATION_INDEX) ? prevSteps : [...prevSteps, SALE_INFORMATION_INDEX]
+        } else {
+          return prevSteps.filter((index) => index !== SALE_INFORMATION_INDEX)
+        }
       }
     })
-  }, [form, price, productClassifications, quantity, setCompleteSteps])
+  }, [form, price, productClassificationsForm, combinations, quantity, setCompleteSteps])
 
+  useEffect(() => {
+    const { isUnique, errorMessage, duplicatedIndices } = validateSKUs(combinations)
+    setIsValid(isUnique)
+    setErrorSKUMessage(errorMessage)
+    setDuplicatedSKUIndex(duplicatedIndices)
+  }, [combinations, setIsValid])
   return (
     <div
       className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'
@@ -215,8 +247,8 @@ export default function SalesInformation({
                       name='sku'
                       render={({ field, fieldState }) => (
                         <FormItem className='w-full'>
-                          <div className='w-full flex'>
-                            <div className='w-[15%]'>
+                          <div className='w-full flex gap-2'>
+                            <div className='w-[15%] flex items-center'>
                               <FormLabel>SKU sản phẩm</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
@@ -236,8 +268,8 @@ export default function SalesInformation({
                       )}
                     />
                   </div>
-                  <div className='w-full flex'>
-                    <div className='w-[15%]'>
+                  <div className='w-full flex gap-2'>
+                    <div className={`w-[15%] ${classificationCount <= 0 ? 'flex items-center' : 'items-start'}`}>
                       <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
                     </div>
                     <div className='w-full space-y-1'>
@@ -378,7 +410,16 @@ export default function SalesInformation({
                                               <div className='flex w-full'>
                                                 <FormControl>
                                                   <div className='w-full space-y-1 flex flex-col justify-center items-center'>
-                                                    <UploadProductImages field={field} maxFileInput={4} />
+                                                    <UploadProductImages
+                                                      field={field}
+                                                      maxFileInput={4}
+                                                      onChange={(value) => {
+                                                        // Update the combinations state when images are uploaded
+                                                        const updated = [...combinations]
+                                                        updated[index].image = value
+                                                        setCombinations(updated)
+                                                      }}
+                                                    />
                                                     <FormMessage />
                                                   </div>
                                                 </FormControl>
@@ -422,6 +463,11 @@ export default function SalesInformation({
                                               </FormControl>
                                               <div className='h-5'>
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
+                                                {field?.value === undefined && (
+                                                  <span className='text-destructive text-xs font-semibold'>
+                                                    {productFormMessage.quantityClassificationRequired}
+                                                  </span>
+                                                )}
                                               </div>
                                             </FormItem>
                                           )}
@@ -454,6 +500,11 @@ export default function SalesInformation({
                                               </FormControl>
                                               <div className='h-5'>
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
+                                                {field?.value === undefined && (
+                                                  <span className='text-destructive text-xs font-semibold'>
+                                                    {productFormMessage.quantityClassificationRequired}
+                                                  </span>
+                                                )}
                                               </div>
                                             </FormItem>
                                           )}
@@ -482,6 +533,11 @@ export default function SalesInformation({
                                               </FormControl>
                                               <div className='h-5'>
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
+                                                {errorSKUMessage !== '' && duplicatedSKUIndex?.includes(index) && (
+                                                  <span className='text-xs text-destructive font-semibold'>
+                                                    {errorSKUMessage}
+                                                  </span>
+                                                )}
                                               </div>
                                             </FormItem>
                                           )}
@@ -515,8 +571,8 @@ export default function SalesInformation({
                       name='price'
                       render={({ field, fieldState }) => (
                         <FormItem className='w-full'>
-                          <div className='w-full flex'>
-                            <div className='w-[15%]'>
+                          <div className='w-full flex gap-2'>
+                            <div className='w-[15%] flex items-center'>
                               <FormLabel required>Giá</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
@@ -546,8 +602,8 @@ export default function SalesInformation({
                       name='quantity'
                       render={({ field }) => (
                         <FormItem className='w-full'>
-                          <div className='w-full flex'>
-                            <div className='w-[15%]'>
+                          <div className='w-full flex gap-2'>
+                            <div className='w-[15%] flex items-center'>
                               <FormLabel required>Số lượng</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
