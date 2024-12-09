@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllFlashSaleListByBrandIdApi } from '@/network/apis/flash-sale'
+import { getAllFlashSaleApi } from '@/network/apis/flash-sale'
 import { useStore } from '@/stores/store'
 import { TFlashSale } from '@/types/flash-sale'
 import { DataTableQueryState } from '@/types/table'
@@ -23,12 +23,12 @@ export default function IndexPage() {
 
   const { data: FlashSaleListData, isLoading: isFlashSaleListLoading } = useQuery({
     queryKey: [
-      getAllFlashSaleListByBrandIdApi.queryKey,
-      {
-        brandId: userData?.brands?.length ? userData?.brands[0] : ''
-      }
+      getAllFlashSaleApi.queryKey
+      // {
+      //   brandId: userData?.brands?.length ? userData?.brands[0].id : ''
+      // }
     ],
-    queryFn: getAllFlashSaleListByBrandIdApi.fn,
+    queryFn: getAllFlashSaleApi.fn,
     enabled: !!userData?.brands?.length
   })
 

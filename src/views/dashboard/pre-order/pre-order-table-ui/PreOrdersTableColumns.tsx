@@ -2,7 +2,6 @@ import { type ColumnDef, Row } from '@tanstack/react-table'
 import { Ellipsis, EyeIcon, SettingsIcon, XIcon } from 'lucide-react'
 import { GrRevert } from 'react-icons/gr'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -20,7 +19,7 @@ import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
-  type: 'ban' | 'view' | 'unbanned'
+  type: 'ban' | 'view' | 'publish'
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TPreOrder> | null>>
@@ -48,23 +47,23 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
       enableHiding: false,
       size: 100
     },
-    {
-      id: 'product',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
-      cell: ({ row }) => {
-        const displayName = row.original.product.name
-        const image = row.original.product.images[0]
-        return (
-          <div className='flex space-x-2 items-center'>
-            <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
-              <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <span className='max-w-[31.25rem] truncate'>{displayName}</span>
-          </div>
-        )
-      }
-    },
+    // {
+    //   id: 'product',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
+    //   cell: ({ row }) => {
+    //     const displayName = row.original.product.name
+    //     const image = row.original.product.images[0]
+    //     return (
+    //       <div className='flex space-x-2 items-center'>
+    //         <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
+    //           <AvatarImage src={image} />
+    //           <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
+    //         </Avatar>
+    //         <span className='max-w-[31.25rem] truncate'>{displayName}</span>
+    //       </div>
+    //     )
+    //   }
+    // },
     {
       accessorKey: 'startTime',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Start Time' />,
@@ -160,7 +159,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
                 </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {row.original.status !== PreOrderStatusEnum.BANNED ? (
+              {row.original.status !== PreOrderStatusEnum.INACTIVE ? (
                 <DropdownMenuItem
                   className='bg-red-500 text-white'
                   onClick={() => {
@@ -176,7 +175,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
                 <DropdownMenuItem
                   className='bg-green-500 text-white'
                   onClick={() => {
-                    setRowAction({ row: row, type: 'unbanned' })
+                    setRowAction({ row: row, type: 'publish' })
                   }}
                 >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
