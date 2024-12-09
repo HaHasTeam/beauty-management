@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
-import { XIcon } from 'lucide-react'
+import { CheckCheckIcon, XIcon } from 'lucide-react'
 import * as React from 'react'
-import { FaBan } from 'react-icons/fa'
 
 import Button from '@/components/button'
 import { Badge } from '@/components/ui/badge'
@@ -31,25 +30,30 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { getAllPreOrderListApi, updatePreOrderApi } from '@/network/apis/pre-order'
 import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 
-interface BanPreOrdersDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
+interface PublishPreOrdersDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   PreOrders: Row<TPreOrder>['original'][]
   showTrigger?: boolean
   onSuccess?: () => void
 }
 
-export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, ...props }: BanPreOrdersDialogProps) {
+export function PublishPreOrdersDialog({
+  PreOrders,
+  showTrigger = true,
+  onSuccess,
+  ...props
+}: PublishPreOrdersDialogProps) {
   const handleServerError = useHandleServerError()
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const queryClient = useQueryClient()
-  const { mutateAsync: unPublishPreOrderFn, isPending: isUnPublishingPreOrder } = useMutation({
+  const { mutateAsync: publishPreOrderFn, isPending: isPublishingPreOrder } = useMutation({
     mutationKey: [updatePreOrderApi.mutationKey],
     mutationFn: updatePreOrderApi.fn
   })
-  async function onUnPublish() {
+  async function onPublish() {
     try {
-      await unPublishPreOrderFn({
+      await publishPreOrderFn({
         id: PreOrders[0].id,
-        status: PreOrderStatusEnum.INACTIVE
+        status: PreOrderStatusEnum.ACTIVE
       })
       queryClient.invalidateQueries({
         queryKey: [getAllPreOrderListApi.queryKey]
@@ -70,22 +74,22 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
           <DialogTrigger asChild>
             <Button variant='destructive' size='sm' className='text-white'>
               <XIcon className='size-4' aria-hidden='true' />
-              Ban {PreOrders.length} Selected {PreOrders.length > 1 ? 'Users' : 'User'}
+              Publish {PreOrders.length} Selected {PreOrders.length > 1 ? 'Users' : 'User'}
             </Button>
           </DialogTrigger>
         ) : null}
         <DialogContent className='sm:max-w-2xl'>
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
-              <FaBan className='size-6' aria-hidden='true' />
-              Are you sure to Unpublish {PreOrders.length >= 2 ? 'these PreOrders' : 'this PreOrder'}?
+              <CheckCheckIcon className='size-6' aria-hidden='true' />
+              Are you sure to Publish {PreOrders.length >= 2 ? 'these PreOrders' : 'this PreOrder'}?
             </DialogTitle>
             <DialogDescription>
-              You are about to <b className='uppercase'>ban</b>{' '}
+              You are about to <b className='uppercase'>Publish</b>{' '}
               {PreOrders.map((PreOrder) => (
                 <Badge className='mr-1'>{PreOrder.id}</Badge>
               ))}
-              . After inactive, the PreOrders will be disabled. Please check the PreOrders before inactivating.
+              . After publish, the preOrder will be visible to the users. Please check the PreOrders before publishing.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className='gap-2 sm:space-x-0'>
@@ -93,13 +97,13 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
               <Button variant='outline'>Cancel</Button>
             </DialogClose>
             <Button
-              aria-label='Ban Selected rows'
-              variant='destructive'
-              className='text-white'
-              onClick={onUnPublish}
-              loading={isUnPublishingPreOrder}
+              aria-label='Publish Selected rows'
+              variant='default'
+              className='text-white bg-green-500'
+              onClick={onPublish}
+              loading={isPublishingPreOrder}
             >
-              Unpublish
+              Publish
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -113,7 +117,7 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
         <DrawerTrigger asChild>
           <Button variant='destructive' size='sm' className='text-white'>
             <XIcon className='size-4' aria-hidden='true' />
-            Ban {PreOrders.length} Selected {PreOrders.length > 1 ? 'Users' : 'User'}
+            Publish {PreOrders.length} Selected {PreOrders.length > 1 ? 'Users' : 'User'}
           </Button>
         </DrawerTrigger>
       ) : null}
@@ -121,11 +125,11 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
         <DrawerHeader>
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
-            You are about to <b className='uppercase'>ban</b>{' '}
+            You are about to <b className='uppercase'>Publish</b>{' '}
             {PreOrders.map((PreOrder) => (
               <Badge className='mr-1'>{PreOrder.product.name}</Badge>
             ))}
-            . After banning, the PreOrders will be disabled. Please check the PreOrders before banning.
+            . After Publishning, the PreOrders will be disabled. Please check the PreOrders before Publishning.
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className='gap-2 sm:space-x-0'>
@@ -133,13 +137,12 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
             <Button variant='outline'>Cancel</Button>
           </DrawerClose>
           <Button
-            aria-label='Ban Selected rows'
-            className='text-white'
-            variant='destructive'
-            onClick={onUnPublish}
-            loading={isUnPublishingPreOrder}
+            aria-label='Publish Selected rows'
+            className='text-white bg-green-500'
+            variant={'default'}
+            onClick={onPublish}
           >
-            Ban User{PreOrders.length > 1 ? 's' : ''}
+            Publish
           </Button>
         </DrawerFooter>
       </DrawerContent>

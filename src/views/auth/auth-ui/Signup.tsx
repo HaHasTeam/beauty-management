@@ -56,7 +56,7 @@ export default function SignUp({ allowEmail }: SignUpProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: prefillData?.email || '',
       password: ''
     }
   })
@@ -103,10 +103,10 @@ export default function SignUp({ allowEmail }: SignUpProps) {
         password: values.password,
         username: values.email,
         role: prefillData ? prefillData.role : rolesData[UserRoleEnum.MANAGER].id,
-        brand: prefillData ? prefillData.brand : undefined
+        brands: prefillData ? [prefillData.brand] : undefined
       })
       await handleLogin(values.email, values.password)
-      navigate(routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath({ email: values.email }))
+      navigate(routesConfig[Routes.DASHBOARD_HOME].getPath({ email: values.email }))
     } catch (error) {
       handleServerError({
         error,
