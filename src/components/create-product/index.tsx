@@ -37,7 +37,7 @@ const CreateProduct = () => {
 
   const defaultProductValues = {
     name: '',
-    brand: '',
+    brand: 'd84d8d78-d48d-41eb-ab19-dbacea083415',
     category: '',
     images: [],
     description: '',
@@ -84,6 +84,7 @@ const CreateProduct = () => {
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
       if (isValid) {
+        // (useProfileData?.data?.brands ?? [])[0]?.id ??
         const transformedData: IServerCreateProduct = {
           name: values?.name,
           category: values?.category,

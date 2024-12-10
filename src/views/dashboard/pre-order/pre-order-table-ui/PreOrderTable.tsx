@@ -14,6 +14,7 @@ import { getStatusIcon } from './helper'
 import { DataTableRowAction, getColumns } from './PreOrdersTableColumns'
 import { PreOrdersTableFloatingBar } from './PreOrdersTableFloatingBar'
 import { PreOrderTableToolbarActions } from './PreOrdersTableToolbarActions'
+import { PublishPreOrdersDialog } from './PublishPreOrdersDialog'
 import { ViewDetailsPreOrderSheet } from './ViewDetailsPreOrderSheet'
 
 interface PreOrderTableProps {
@@ -93,6 +94,13 @@ export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTablePro
       </DataTable>
       <BanPreOrdersDialog
         open={rowAction?.type === 'ban'}
+        onOpenChange={() => setRowAction(null)}
+        PreOrders={rowAction?.row.original ? [rowAction?.row.original] : []}
+        showTrigger={false}
+        onSuccess={() => rowAction?.row.toggleSelected(false)}
+      />
+      <PublishPreOrdersDialog
+        open={rowAction?.type === 'publish'}
         onOpenChange={() => setRowAction(null)}
         PreOrders={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}

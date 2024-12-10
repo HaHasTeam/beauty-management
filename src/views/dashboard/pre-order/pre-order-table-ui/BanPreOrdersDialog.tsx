@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
 import { XIcon } from 'lucide-react'
 import * as React from 'react'
@@ -27,7 +28,8 @@ import {
 } from '@/components/ui/drawer'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { TPreOrder } from '@/types/pre-order'
+import { getAllPreOrderListApi, updatePreOrderApi } from '@/network/apis/pre-order'
+import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 
 interface BanPreOrdersDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   PreOrders: Row<TPreOrder>['original'][]
@@ -38,9 +40,20 @@ interface BanPreOrdersDialogProps extends React.ComponentPropsWithoutRef<typeof 
 export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, ...props }: BanPreOrdersDialogProps) {
   const handleServerError = useHandleServerError()
   const isDesktop = useMediaQuery('(min-width: 640px)')
-
-  async function onBan() {
+  const queryClient = useQueryClient()
+  const { mutateAsync: unPublishPreOrderFn, isPending: isUnPublishingPreOrder } = useMutation({
+    mutationKey: [updatePreOrderApi.mutationKey],
+    mutationFn: updatePreOrderApi.fn
+  })
+  async function onUnPublish() {
     try {
+      await unPublishPreOrderFn({
+        id: PreOrders[0].id,
+        status: PreOrderStatusEnum.INACTIVE
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getAllPreOrderListApi.queryKey]
+      })
       props.onOpenChange?.(false)
       onSuccess?.()
     } catch (error) {
@@ -65,22 +78,28 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
               <FaBan className='size-6' aria-hidden='true' />
-              Are you sure to ban {PreOrders.length >= 2 ? 'these PreOrders' : 'this PreOrder'}?
+              Are you sure to Unpublish {PreOrders.length >= 2 ? 'these PreOrders' : 'this PreOrder'}?
             </DialogTitle>
             <DialogDescription>
               You are about to <b className='uppercase'>ban</b>{' '}
               {PreOrders.map((PreOrder) => (
-                <Badge className='mr-1'>{PreOrder.product.name}</Badge>
+                <Badge className='mr-1'>{PreOrder.id}</Badge>
               ))}
-              . After banning, the PreOrders will be disabled. Please check the PreOrders before banning.
+              . After inactive, the PreOrders will be disabled. Please check the PreOrders before inactivating.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className='gap-2 sm:space-x-0'>
             <DialogClose asChild>
               <Button variant='outline'>Cancel</Button>
             </DialogClose>
-            <Button aria-label='Ban Selected rows' variant='destructive' className='text-white' onClick={onBan}>
-              Ban User{PreOrders.length > 1 ? 's' : ''}
+            <Button
+              aria-label='Ban Selected rows'
+              variant='destructive'
+              className='text-white'
+              onClick={onUnPublish}
+              loading={isUnPublishingPreOrder}
+            >
+              Unpublish
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -113,7 +132,13 @@ export function BanPreOrdersDialog({ PreOrders, showTrigger = true, onSuccess, .
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>
           </DrawerClose>
-          <Button aria-label='Ban Selected rows' className='text-white' variant='destructive' onClick={onBan}>
+          <Button
+            aria-label='Ban Selected rows'
+            className='text-white'
+            variant='destructive'
+            onClick={onUnPublish}
+            loading={isUnPublishingPreOrder}
+          >
             Ban User{PreOrders.length > 1 ? 's' : ''}
           </Button>
         </DrawerFooter>

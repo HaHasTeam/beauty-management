@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* @layer base {
   :root {
     --background: 345 60% 98%;
     --foreground: 345 57% 0%;
@@ -47,8 +47,53 @@
     --destructive-foreground: 0 0% 100%;
     --ring: 345 82% 69%;
   }
-}
+} */
+@layer base {
+  :root {
+    --background: 345 60% 98%;
+    --foreground: 345 57% 0%;
+    --muted: 345 24% 91%;
+    --muted-foreground: 345 9% 29%;
+    --popover: 345 60% 98%;
+    --popover-foreground: 345 57% 0%;
+    --card: 345 60% 98%;
+    --card-foreground: 345 57% 0%;
+    --border: 345 9% 89%;
+    --input: 345 9% 89%;
+    --primary: 345 82% 69%;
+    --primary-foreground: 345 82% 9%;
+    --secondary: 345 18% 90%;
+    --secondary-foreground: 345 18% 30%;
+    --accent: 345 26% 81%;
+    --accent-foreground: 345 26% 21%;
+    --destructive: 0 90% 22%;
+    --destructive-foreground: 0 90% 82%;
+    --ring: 345 82% 69%;
+    --radius: 0.5rem;
+  }
 
+  .dark {
+    --background: 345 40% 2%;
+    --foreground: 345 24% 98%;
+    --muted: 345 24% 9%;
+    --muted-foreground: 345 9% 71%;
+    --popover: 345 40% 2%;
+    --popover-foreground: 345 24% 98%;
+    --card: 345 40% 2%;
+    --card-foreground: 345 24% 98%;
+    --border: 345 9% 13%;
+    --input: 345 9% 13%;
+    --primary: 345 82% 69%;
+    --primary-foreground: 345 82% 9%;
+    --secondary: 345 15% 17%;
+    --secondary-foreground: 345 15% 77%;
+    --accent: 345 22% 23%;
+    --accent-foreground: 345 22% 83%;
+    --destructive: 0 90% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 345 82% 69%;
+  }
+}
 @layer base {
   * {
     @apply border-border;

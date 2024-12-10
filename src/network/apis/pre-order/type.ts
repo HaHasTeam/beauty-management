@@ -9,3 +9,7 @@ export type TAddPreOderRequestParams = Pick<TPreOrder, 'startTime' | 'endTime' |
 export type TGetPreOrderByIdRequestParams = {
   id: string
 }
+
+export type TUpdatePreOrderRequestParams = Partial<TPreOrder> & {
+  id: string
+}

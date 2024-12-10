@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { PiMicrosoftExcelLogoBold } from 'react-icons/pi'
 import { z } from 'zod'
+import { useShallow } from 'zustand/react/shallow'
 
 import FormLabel from '@/components/form-label'
 import { TagsInput } from '@/components/tags-input'
-import Tooltip from '@/components/tooltip'
+import Tooltip from '@/components/Tooltip'
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ import useAvailableGrantRoles from '@/hooks/useAvailableGrantRoles'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { inviteMultipleCoWorkersApi } from '@/network/apis/user'
+import { useStore } from '@/stores/store'
 
 import Button from '../../../components/button'
 
@@ -39,16 +41,26 @@ const formSchema = z.object({
         message: emailRegex.message
       }
     ),
-  role: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+  role: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  brand: z.string().optional()
 })
 const InviteCoWorker = () => {
+  const { userData } = useStore(
+    useShallow((state) => {
+      return {
+        userData: state.user
+      }
+    })
+  )
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       emails: [],
-      role: ''
+      role: '',
+      brand: userData?.brands?.length ? userData?.brands[0].id : ''
     }
   })
+
   const [isOpened, setIsOpened] = useState(false)
   const { successToast } = useToast()
   const grantableRoles = useAvailableGrantRoles()

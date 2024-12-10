@@ -18,6 +18,10 @@ const useAvailableGrantRoles = () => {
       const rolesToGrant = [UserRoleEnum.OPERATOR, UserRoleEnum.CONSULTANT]
       return rolesToGrant.map((key) => rolesData[key]).filter(Boolean)
     }
+    if (currentUserRole === UserRoleEnum.MANAGER) {
+      const rolesToGrant = [UserRoleEnum.STAFF]
+      return rolesToGrant.map((key) => rolesData[key]).filter(Boolean)
+    }
     return []
   }, [currentUserRole, rolesData])
 

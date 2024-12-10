@@ -53,7 +53,8 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TFlashS
       header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
       cell: ({ row }) => {
         const displayName = row.original.product.name
-        const image = row.original.product.images[0]
+        const image =
+          'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg'
         return (
           <div className='flex space-x-2 items-center'>
             <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>

@@ -47,6 +47,7 @@ const formSchema = z.object({
           })
           .positive({ message: 'Please enter a valid price' }),
         image: z.string(),
+        type: z.string().default('DEFAULT'),
         quantity: z.coerce
           .number({
             message: numberRequiredRegex.message
@@ -84,7 +85,7 @@ const PreOrderDetails = () => {
     queryKey: [
       getProductByBrandIdApi.queryKey,
       {
-        brandId: userData?.brands?.length ? userData.brands[0] : ''
+        brandId: userData?.brands?.length ? userData.brands[0].id : ''
       }
     ],
     queryFn: getProductByBrandIdApi.fn,
@@ -106,8 +107,11 @@ const PreOrderDetails = () => {
     if (productList?.data) {
       return productList.data.map((product) => ({
         label: (
-          <div className='flex items-center'>
-            <img src={product.images[0]} alt={product.name} className='w-8 h-8 rounded-full object-cover' />
+          <div className='flex gap-2'>
+            <Avatar className='size-5 relative'>
+              <AvatarImage src={product.images[0] || ''} />
+              <AvatarFallback className='font-bold dark:bg-accent/20'>{product.name[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
             <span className='ml-2'>{product.name}</span>
           </div>
         ),
@@ -124,6 +128,7 @@ const PreOrderDetails = () => {
 
   const handleAddClassification = () => {
     prepend({
+      type: 'DEFAULT',
       title: '',
       price: 0,
       quantity: 0,
@@ -140,8 +145,8 @@ const PreOrderDetails = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const preOrderItems = await addPreOrderFn(values)
-      navigate(routesConfig[Routes.PRE_ORDER_DETAILS].getPath({ id: preOrderItems.data.id }))
+      await addPreOrderFn(values)
+      navigate(routesConfig[Routes.PRE_ORDER].getPath())
     } catch (error) {
       handleServerError({
         error,
@@ -198,7 +203,7 @@ const PreOrderDetails = () => {
                           >
                             {field.value
                               ? productListOptions.find((product) => product.value === field.value)?.label
-                              : 'Select pre-order product'}
+                              : 'Select product'}
                             <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
@@ -212,9 +217,9 @@ const PreOrderDetails = () => {
                         }}
                       >
                         <Command>
-                          <CommandInput placeholder='Search for pre-order product' />
+                          <CommandInput placeholder='Search for product' />
                           <CommandList>
-                            <CommandEmpty>No pre-order product found. Try another search term.</CommandEmpty>
+                            <CommandEmpty>No product found. Try another search term.</CommandEmpty>
                             <CommandGroup>
                               {productListOptions.map((product) => (
                                 <CommandItem

@@ -44,3 +44,9 @@ export interface IRoute {
   rightElement?: boolean
   invisible?: boolean
 }
+
+export interface IStepper {
+  id: string
+  title: string
+  description: string
+}

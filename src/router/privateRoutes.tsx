@@ -4,6 +4,8 @@ import Layout from '@/components/layout'
 import { Routes, routesConfig } from '@/configs/routes'
 import DashboardHome from '@/views/dashboard'
 import AccountsDirectory from '@/views/dashboard/accounts-directory'
+import Brands from '@/views/dashboard/brand-management'
+import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
 import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
@@ -17,16 +19,18 @@ import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
 import UpdateProduct from '@/views/dashboard/update-product'
+import Vouchers from '@/views/dashboard/voucher-management'
 
-import AuthGuard from './guard/AuthGuard'
+// import Brands from '@/views/dashboard/brand-management'
+// import Brands from '@/views/dashboard/brand-management'
 
 export const privateRoutes: RouteObject[] = [
   {
     path: '/dashboard',
     element: (
-      <AuthGuard>
-        <Layout />
-      </AuthGuard>
+      // <AuthGuard>
+      <Layout />
+      // </AuthGuard>
     ),
     children: [
       {
@@ -42,6 +46,31 @@ export const privateRoutes: RouteObject[] = [
         element: <RequestsQueue />
       },
       {
+        path: routesConfig[Routes.BRAND].path.replace('/dashboard/', ''),
+
+        children: [
+          {
+            index: true,
+            element: <Brands />
+          },
+          { path: routesConfig[Routes.ADD_BRAND].path, element: <ViewBrandForm /> },
+          {
+            path: 'update/:id',
+            element: <ViewBrandForm />
+          }
+        ]
+      },
+      {
+        path: 'voucher',
+
+        children: [
+          {
+            index: true,
+            element: <Vouchers />
+          }
+        ]
+      },
+      {
         path: 'pre-order',
 
         children: [
@@ -70,35 +99,7 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
-        path: 'pre-order',
-
-        children: [
-          {
-            index: true,
-            element: <PreOrder />
-          },
-          { path: 'add-pre-order', element: <AddPreOrder /> },
-          {
-            path: ':id',
-            element: <PreOrderDetailById />
-          }
-        ]
-      },
-      {
-        path: 'flash-sale',
-        children: [
-          {
-            index: true,
-            element: <FlashSale />
-          },
-          {
-            path: 'add-flash-sale',
-            element: <AddFlashSale />
-          }
-        ]
-      },
-      {
-        path: routesConfig[Routes.MERCHANTS_DIRECTORY].path.replace('/dashboard/', ''),
+        path: 'merchants-directory',
         element: <MerchantsDirectory />
       },
       {
