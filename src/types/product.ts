@@ -40,7 +40,7 @@ export type IProductClassification = {
   title?: string
   price?: number
   quantity?: number
-  image?: string[]
+  images?: string[]
   status?: string
   type?: string
   sku?: string

@@ -93,7 +93,7 @@ const CreateProduct = () => {
             fileUrl: image // Transform image strings to objects
           })),
           description: values?.description,
-          sku: values?.sku,
+          sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
           productClassifications:
             (values?.productClassifications ?? [])?.length > 0
@@ -101,11 +101,11 @@ const CreateProduct = () => {
               : [
                   {
                     title: 'Default',
-                    image: [],
+                    images: [],
                     price: values.price ?? 1000,
                     quantity: values.quantity ?? 1,
                     type: ProductClassificationTypeEnum.DEFAULT,
-                    sku: values.sku
+                    sku: values.sku ?? ''
                   }
                 ]
         }

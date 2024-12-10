@@ -45,7 +45,21 @@ export default function DetailInformation({
   const detailInfoRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const categoryDetails = useCategoryData.find((cat) => cat.id === selectedCategory)?.detail
+    const findCategoryById = (categories: ICategory[], id: string): ICategory | undefined => {
+      for (const category of categories) {
+        // Check current category
+        if (category.id === id) return category
+
+        // Recursively search subcategories
+        if (category.subCategories && category.subCategories.length > 0) {
+          const foundInSubcategories = findCategoryById(category.subCategories, id)
+          if (foundInSubcategories) return foundInSubcategories
+        }
+      }
+      return undefined
+    }
+
+    const categoryDetails = findCategoryById(useCategoryData, selectedCategory)?.detail
     if (categoryDetails) {
       const convertedArray = Object.entries(categoryDetails ?? {}).map(([key, value]) => {
         return { id: key, ...value }
@@ -197,7 +211,9 @@ export default function DetailInformation({
                                   onChange={(e) => {
                                     if (e.target.value !== '') {
                                       setIsValid(true)
+                                      field.onChange(e.target.value)
                                     } else {
+                                      field.onChange(e.target.value)
                                       setIsValid(false)
                                     }
                                   }}

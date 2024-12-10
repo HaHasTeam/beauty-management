@@ -82,7 +82,7 @@ const StepTracking = ({
           <div
             onClick={() => setActiveStep(step.id)}
             className={cn(
-              `cursor-pointer font-medium hidden sm:block`,
+              `cursor-pointer font-medium hidden sm:flex`,
               orientation === 'vertical' ? 'h-[50px] flex items-center' : 'flex-row items-center justify-between'
             )}
           >

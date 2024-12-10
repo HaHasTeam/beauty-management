@@ -38,8 +38,8 @@ const BasicInformation = ({
   const BASIC_INFORMATION_INDEX = 1
   const productImages = form.watch('images')
   const productName = form.watch('name')
-  const productDescription = form.watch('category')
-  const productCategory = form.watch('description')
+  const productDescription = form.watch('description')
+  const productCategory = form.watch('category')
 
   // Scroll to the BasicInformation section when activeStep is 1
   useEffect(() => {
@@ -175,12 +175,32 @@ const BasicInformation = ({
                           <div className='w-full space-y-1'>
                             <FormControl>
                               <ReactQuill
-                                modules={modules}
+                                modules={{
+                                  ...modules,
+                                  clipboard: {
+                                    ...modules.clipboard,
+                                    matchVisual: false
+                                  }
+                                }}
                                 placeholder='Mô tả sản phẩm'
                                 style={{ borderRadius: 10, borderColor: '#FEE9DC' }}
                                 className='border-primary/40'
                                 theme='snow'
                                 {...field}
+                                onChange={(content, _delta, _source, editor) => {
+                                  // Get plain text and trim
+                                  const text = editor.getText().trim()
+
+                                  // Truncate if exceeds limit
+                                  if (text.length > 5000) {
+                                    // Create a new Quill instance to manipulate content
+                                    const truncatedContent = content.split(' ').slice(0, 5000).join(' ')
+
+                                    field.onChange(truncatedContent)
+                                  } else {
+                                    field.onChange(content)
+                                  }
+                                }}
                               />
                             </FormControl>
                             <FormMessage />

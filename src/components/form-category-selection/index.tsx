@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
+import { productFormMessage } from '@/constants/message'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
@@ -33,7 +34,7 @@ export default function FormCategorySelection({
   const currentSelectedCategory = form.watch('category')
 
   // Get root level categories (those with no parent)
-  const rootCategories = categories.filter((cat) => !cat.parentCategory)
+  const rootCategories = categories
 
   // Handle selection at a specific level
   const handleSelect = (category: ICategory | null, level: number) => {
@@ -50,8 +51,8 @@ export default function FormCategorySelection({
   }
 
   // Helper function to fetch subcategories of the current category
-  const getSubCategories = (parentId: string): ICategory[] => {
-    return categories.filter((cat) => cat.parentCategory?.id === parentId)
+  const getSubCategories = (category: ICategory): ICategory[] => {
+    return category.subCategories || []
   }
   const handleShowCategorySelect = () => {
     setOpen((prev) => !prev)
@@ -69,13 +70,11 @@ export default function FormCategorySelection({
     const lastSelectedCategory = selectedCategories[selectedCategories.length - 1]
 
     // Check if the last selected category has subcategories
-    const hasSubCategories = lastSelectedCategory
-      ? categories.some((cat) => cat.parentCategory?.id === lastSelectedCategory.id)
-      : false
+    const hasSubCategories = lastSelectedCategory ? (lastSelectedCategory.subCategories?.length || 0) > 0 : false
 
     if (hasSubCategories) {
       // If the last selected category has children, show an error or notification
-      setCategoryError('Please select the last-level category.')
+      setCategoryError(productFormMessage.categoryLastLevel)
       return
     }
 
@@ -96,7 +95,17 @@ export default function FormCategorySelection({
   useEffect(() => {
     // Helper to find the category object by ID
     const findCategoryById = (id: string): ICategory | undefined => {
-      return categories.find((cat) => cat.id === id)
+      const findInCategories = (cats: ICategory[]): ICategory | undefined => {
+        for (const cat of cats) {
+          if (cat?.id === id) return cat
+          if (cat?.subCategories) {
+            const found = findInCategories(cat?.subCategories)
+            if (found) return found
+          }
+        }
+        return undefined
+      }
+      return findInCategories(categories)
     }
 
     // Function to build the path from leaf to root
@@ -186,7 +195,7 @@ export default function FormCategorySelection({
               </div>
               {/* Render subsequent levels */}
               {selectedCategories.map((category, index) => {
-                const subCategories = getSubCategories(category.id)
+                const subCategories = getSubCategories(category)
                 if (subCategories.length === 0) return null
 
                 return (

@@ -12,6 +12,7 @@ export const productFormMessage = {
   categoryRequired: 'Vui lòng chọn danh mục.',
   imagesRequired: 'Vui lòng chọn ít nhất một ảnh.',
   descriptionRequired: 'Vui lòng nhập mô tả.',
+  descriptionTooLong: 'Description too long',
   statusRequired: 'Vui lòng điền trạng thái.',
   classificationTitleRequired: 'Classification title is required.',
   successCreateOfficialMessage: '',
@@ -20,5 +21,6 @@ export const productFormMessage = {
   successCreateInactiveMessage: '',
   successUpdateInactiveMessage:
     'Product updated successfully! It is currently inactive and will not be visible until activated.',
-  successStatusMessage: 'Update product status successfully!'
+  successStatusMessage: 'Update product status successfully!',
+  categoryLastLevel: 'Please select the last-level category.'
 }

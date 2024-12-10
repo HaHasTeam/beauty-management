@@ -185,7 +185,7 @@ export default function SalesInformation({
       return classifications?.every(
         (item) =>
           !!item?.title &&
-          !!item?.image?.length &&
+          !!item?.images?.length &&
           item?.quantity !== undefined &&
           item?.quantity > 0 &&
           item?.price !== undefined &&
@@ -404,7 +404,7 @@ export default function SalesInformation({
                                         </FormLabel>
                                         <FormField
                                           control={form.control}
-                                          name={`productClassifications.${index}.image`}
+                                          name={`productClassifications.${index}.images`}
                                           render={({ field }) => (
                                             <FormItem className='w-full'>
                                               <div className='flex w-full'>

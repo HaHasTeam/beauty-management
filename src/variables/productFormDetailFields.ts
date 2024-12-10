@@ -291,7 +291,13 @@ export const FormProductSchema = z
     brand: z.string().min(1, { message: productFormMessage.brandRequired }),
     category: z.string().min(1, { message: productFormMessage.categoryRequired }),
     images: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }),
-    description: z.string().min(1, { message: productFormMessage.descriptionRequired }),
+    description: z
+      .string()
+      .transform((val) => val.replace(/<[^>]*>/g, '').trim())
+      .refine((val) => val.length > 0, { message: productFormMessage.descriptionRequired })
+      .refine((val) => val.length <= 5000, { message: productFormMessage.descriptionTooLong })
+      // Convert back to original format for form submission
+      .transform((val) => `<p>${val}</p>`),
     status: z.string().min(1, { message: productFormMessage.statusRequired }),
     // detail information
     detail: z.record(
@@ -314,7 +320,7 @@ export const FormProductSchema = z
           type: z.string().min(0).optional(),
           price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
           quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-          image: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }).optional()
+          images: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }).optional()
         })
       )
       .optional(),
