@@ -16,9 +16,11 @@ import UploadFileModal from '@/components/file-input/UploadFileModal'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Routes, routesConfig } from '@/configs/routes'
 import { defaultRequiredRegex, requiredFileRegex } from '@/constants/regex'
@@ -35,7 +37,14 @@ const formSchema = z.object({
   endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
   images: z.array(z.string()).nonempty({
     message: requiredFileRegex.message
-  })
+  }),
+  discount: z.coerce
+    .number({
+      message: defaultRequiredRegex.message
+    })
+    .positive({
+      message: defaultRequiredRegex.message
+    })
 })
 
 const FlashSaleDetails = () => {
@@ -61,7 +70,7 @@ const FlashSaleDetails = () => {
     queryKey: [
       getProductByBrandIdApi.queryKey,
       {
-        brandId: userData?.brands?.length ? userData.brands[0] : ''
+        brandId: userData?.brands?.length ? userData.brands[0].id : ''
       }
     ],
     queryFn: getProductByBrandIdApi.fn,
@@ -83,8 +92,11 @@ const FlashSaleDetails = () => {
     if (productList?.data) {
       return productList.data.map((product) => ({
         label: (
-          <div className='flex items-center'>
-            <img src={product.images[0]} alt={product.name} className='w-8 h-8 rounded-full object-cover' />
+          <div className='flex gap-2'>
+            <Avatar className='size-5 relative'>
+              <AvatarImage src={product.images[0] || ''} />
+              <AvatarFallback className='font-bold dark:bg-accent/20'>{product.name[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
             <span className='ml-2'>{product.name}</span>
           </div>
         ),
@@ -99,8 +111,8 @@ const FlashSaleDetails = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const FlashSaleItems = await addFlashSaleFn(values)
-      navigate(routesConfig[Routes.PRE_ORDER_DETAILS].getPath({ id: FlashSaleItems.data.id }))
+      await addFlashSaleFn(values)
+      navigate(routesConfig[Routes.FLASH_SALE].getPath())
     } catch (error) {
       handleServerError({
         error,
@@ -145,7 +157,7 @@ const FlashSaleDetails = () => {
                 control={form.control}
                 name='product'
                 render={({ field }) => (
-                  <FormItem className='flex flex-col col-span-1 sm:col-span-2'>
+                  <FormItem>
                     <FormLabel required>Flash Sale Product</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -199,6 +211,28 @@ const FlashSaleDetails = () => {
                     </Popover>
                     <FormDescription>
                       This is the flash sale product that will be displayed on dashboard
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`discount`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Discount Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='
+                          e.g. 100.00 
+                         '
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is the classification price that will be displayed on your pre-order details.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

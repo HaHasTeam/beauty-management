@@ -24,3 +24,12 @@ export const getAllFlashSaleListByBrandIdApi = toQueryFetcher<
     params
   })
 })
+
+export const getAllFlashSaleApi = toQueryFetcher<void, TServerResponse<TFlashSale[]>>(
+  'getAllFlashSaleApi',
+  async () => {
+    return privateRequest('/product-discount', {
+      method: 'GET'
+    })
+  }
+)

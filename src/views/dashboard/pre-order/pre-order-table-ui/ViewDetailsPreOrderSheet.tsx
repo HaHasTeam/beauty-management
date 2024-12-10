@@ -14,12 +14,12 @@ export function ViewDetailsPreOrderSheet({ PreOrder, ...props }: ViewDetailsPreO
     <Sheet {...props}>
       <SheetContent className='flex flex-col gap-6 sm:max-w-xl max-sm:w-full'>
         <CardSection
-          title={PreOrder?.product.name + "'s Profile"}
-          description={`View ${PreOrder?.product.name}'s profile details and PreOrder information.`}
+          title={"PreOrder's Details"}
+          description={`View ${PreOrder?.id}'s profile details and PreOrder information.`}
           rightComponent={
             <Avatar className='size-20 object-cover aspect-square p-0.5 rounded-full border bg-accent shadow-lg'>
               <AvatarImage src={PreOrder?.images?.length ? PreOrder?.images[0] : ''} />
-              <AvatarFallback>{PreOrder?.product.name}</AvatarFallback>
+              <AvatarFallback>{PreOrder?.id[0]}</AvatarFallback>
             </Avatar>
           }
         >
