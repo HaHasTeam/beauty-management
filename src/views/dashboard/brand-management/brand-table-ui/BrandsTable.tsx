@@ -111,11 +111,9 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
     //   // exact: true
     // })
   }
-  const updateStatusBrand = async (brand: Row<TBrand>['original'][]) => {
+  const updateStatusBrand = async (brand: Row<TBrand>['original'][], status: BrandStatusEnum) => {
     // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) =>
-      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.ACTIVE })
-    )
+    const updatePromises = brand.map((item) => updateStatusBrandMutation({ brandId: item.id, status: status }))
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
@@ -143,12 +141,36 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
       />
       <UpdateStatusBrandDialog
         status={BrandStatusEnum.ACTIVE}
-        open={rowAction?.type === 'update-status'}
+        open={rowAction?.type === 'update-status-active'}
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={(brand) => {
-          updateStatusBrand(brand)
+          updateStatusBrand(brand, BrandStatusEnum.ACTIVE)
+          rowAction?.row.toggleSelected(false)
+        }}
+      />
+
+      <UpdateStatusBrandDialog
+        status={BrandStatusEnum.INACTIVE}
+        open={rowAction?.type === 'update-status-inactive'}
+        onOpenChange={() => setRowAction(null)}
+        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
+        showTrigger={false}
+        onSuccess={(brand) => {
+          updateStatusBrand(brand, BrandStatusEnum.INACTIVE)
+          rowAction?.row.toggleSelected(false)
+        }}
+      />
+
+      <UpdateStatusBrandDialog
+        status={BrandStatusEnum.DENIED}
+        open={rowAction?.type === 'deny'}
+        onOpenChange={() => setRowAction(null)}
+        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
+        showTrigger={false}
+        onSuccess={(brand) => {
+          updateStatusBrand(brand, BrandStatusEnum.DENIED)
           rowAction?.row.toggleSelected(false)
         }}
       />

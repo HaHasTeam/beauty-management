@@ -161,6 +161,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             <FormItem>
               <FormLabel required>Document</FormLabel>
               <UploadFilePreview
+                vertical
                 field={field}
                 dropZoneConfigOptions={{ maxFiles: 1 }}
                 header={
@@ -197,10 +198,9 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           type='button'
           className=' flex select-none items-center justify-center gap-2 px-4'
           disabled={stepIndex === 0}
-          onClick={() => {
-            if (!form.formState.isValid) {
-              form.trigger()
-            } else {
+          onClick={async () => {
+            const value = await form.trigger()
+            if (value) {
               goNextFn()
             }
           }}

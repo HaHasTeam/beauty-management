@@ -1,6 +1,7 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, EyeIcon, SettingsIcon, XIcon } from 'lucide-react'
+import { Ellipsis, EyeIcon, Pen, SettingsIcon, X, XIcon } from 'lucide-react'
 import { GrRevert } from 'react-icons/gr'
+import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { BrandStatusEnum, TBrand } from '@/types/brand'
 
@@ -20,7 +22,7 @@ import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
-  type: 'ban' | 'view' | 'unbanned' | 'update-status'
+  type: 'ban' | 'view' | 'unbanned' | 'update-status-active' | 'update-status-inactive' | 'deny'
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TBrand> | null>>
@@ -46,6 +48,14 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
       ),
       enableSorting: false,
       enableHiding: false,
+      size: 1
+    },
+    {
+      id: 'index',
+      accessorKey: 'STT',
+      cell: ({ row }) => {
+        return <span className='text-center'>{row.index}</span>
+      },
       size: 1
     },
     {
@@ -132,7 +142,8 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
         formatDate(cell.getValue() as Date, {
           hour: 'numeric',
           minute: 'numeric'
-        })
+        }),
+      size: 200
     },
     {
       id: 'actions',
@@ -156,10 +167,18 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
                   View Details
                 </span>
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={routesConfig[Routes.UPDATE_BRAND].getPath(row.original.id)}>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <Pen />
+                    Update
+                  </span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {row.original.status !== BrandStatusEnum.BANNED ? (
+              {row.original.status !== BrandStatusEnum.BANNED && row.original.status !== BrandStatusEnum.PENDING && (
                 <DropdownMenuItem
-                  className='bg-red-500 text-white mb-1'
+                  className='bg-red-500 text-white mb-2'
                   onClick={() => {
                     setRowAction({ row: row, type: 'ban' })
                   }}
@@ -169,30 +188,62 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
                     ban
                   </span>
                 </DropdownMenuItem>
-              ) : (
+              )}
+
+              {row.original.status == BrandStatusEnum.PENDING && (
+                <>
+                  <DropdownMenuItem
+                    className='bg-green-500 text-white mb-2'
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'update-status-active' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <GrRevert />
+                      Approve
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className='bg-red-500/30 text-red-500/90 '
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'deny' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <X />
+                      Deny
+                    </span>
+                  </DropdownMenuItem>
+                </>
+              )}
+
+              {row.original.status == BrandStatusEnum.ACTIVE && (
                 <DropdownMenuItem
-                  className='bg-green-500 text-white'
+                  className='bg-red-500/30 text-white '
                   onClick={() => {
-                    setRowAction({ row: row, type: 'unbanned' })
+                    setRowAction({ row: row, type: 'update-status-inactive' })
                   }}
                 >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
                     <GrRevert />
-                    unBan
+                    Inactive
                   </span>
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem
-                className='bg-green-500 text-white'
-                onClick={() => {
-                  setRowAction({ row: row, type: 'update-status' })
-                }}
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <GrRevert />
-                  update status
-                </span>
-              </DropdownMenuItem>
+
+              {row.original.status == BrandStatusEnum.INACTIVE && (
+                <DropdownMenuItem
+                  className='bg-green-500/10 text-white mb-2'
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'update-status-active' })
+                  }}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <GrRevert />
+                    Active
+                  </span>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )

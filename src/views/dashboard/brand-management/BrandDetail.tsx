@@ -1,7 +1,7 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { FilesIcon, ImagePlus } from 'lucide-react'
 import { useId } from 'react'
-import { useForm } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 import { LuSaveAll } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
@@ -13,17 +13,25 @@ import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Routes, routesConfig } from '@/configs/routes'
 import { templateFileUrl } from '@/constants/infor'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { requestCreateBrandApi } from '@/network/apis/brand'
+import { getAllBrandsApi, getBrandByIdApi, requestCreateBrandApi, updateBrandByIdApi } from '@/network/apis/brand'
 import { uploadFilesApi } from '@/network/apis/file'
 import { brandCreateSchema } from '@/schemas'
-// import { useStore } from '@/stores/store'
+import { IBranch } from '@/types/Branch'
 import { StatusEnum } from '@/types/brand'
 
-const BrandDetail = () => {
+const BrandDetail = ({
+  form,
+  brandData
+}: {
+  form: UseFormReturn<z.infer<typeof brandCreateSchema>>
+  brandData?: IBranch
+}) => {
+  const queryClient = useQueryClient()
   const id = useId()
   const navigate = useNavigate()
   // const { userData } = useStore(
@@ -32,26 +40,9 @@ const BrandDetail = () => {
   //   }))
   // )
 
-  const form = useForm<z.infer<typeof brandCreateSchema>>({
-    resolver: zodResolver(brandCreateSchema),
-    defaultValues: {
-      email: '',
-      phone: '',
-      address: '',
-      description: '',
-      document: [],
-      logo: [],
-      name: ''
-    }
-  })
-
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
-  const {
-    mutateAsync: uploadFilesFn,
-    isSuccess: isUploadSuccess,
-    data: fileUploaded
-  } = useMutation({
+  const { mutateAsync: uploadFilesFn } = useMutation({
     mutationKey: [uploadFilesApi.mutationKey],
     mutationFn: uploadFilesApi.fn
   })
@@ -59,10 +50,22 @@ const BrandDetail = () => {
     mutationKey: [requestCreateBrandApi.mutationKey],
     mutationFn: requestCreateBrandApi.fn,
     onSuccess: () => {
-      // console.log('data received', data)
       form.reset()
-      navigate(routesConfig[Routes.DASHBOARD_HOME].getPath())
+      queryClient.invalidateQueries({ queryKey: [getAllBrandsApi.queryKey] })
+
+      navigate(routesConfig[Routes.BRAND].getPath())
+
       successToast({ message: 'Your request to create a brand has been successfully completed.' })
+    }
+  })
+
+  const { mutateAsync: updateBrandFn } = useMutation({
+    mutationKey: [updateBrandByIdApi.mutationKey, brandData?.id],
+    mutationFn: updateBrandByIdApi.fn,
+    onSuccess: () => {
+      navigate(routesConfig[Routes.BRAND].getPath())
+      queryClient.invalidateQueries({ queryKey: [getBrandByIdApi.queryKey, brandData?.id] })
+      successToast({ message: ' Update successfully.' })
     }
   })
   const convertFileToUrl = async (files: File[]) => {
@@ -79,26 +82,34 @@ const BrandDetail = () => {
   async function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
       if (values.logo && values.logo?.length > 0) {
-        await convertFileToUrl([...values.logo, ...values.document])
-        if (isUploadSuccess) {
+        const imgUrls = await convertFileToUrl([...values.logo, ...values.document])
+
+        if (imgUrls && imgUrls.length > 0) {
           const formatData = {
             name: values.name,
-            document: fileUploaded.data[1],
+            document: imgUrls[1],
             address: values.address,
-            logo: fileUploaded.data[0],
+            logo: imgUrls[0],
             email: values.email,
             phone: values.phone,
             description: values.description,
             status: StatusEnum.PENDING
           }
-          await requestCreateBrandFn(formatData)
+          if (brandData && brandData?.id) {
+            await updateBrandFn({
+              brandId: brandData?.id,
+              ...formatData
+            })
+          } else {
+            await requestCreateBrandFn(formatData)
+          }
         }
       } else {
-        await convertFileToUrl([...values.document])
-        if (isUploadSuccess) {
+        const imgUrls = await convertFileToUrl([...values.document])
+        if (imgUrls && imgUrls.length > 0) {
           const formatData = {
             name: values.name,
-            document: fileUploaded.data[0],
+            document: imgUrls[0],
             address: values.address,
             email: values.email,
             logo: '',
@@ -106,7 +117,14 @@ const BrandDetail = () => {
             description: values.description,
             status: StatusEnum.PENDING
           }
-          await requestCreateBrandFn(formatData)
+          if (brandData && brandData?.id) {
+            await updateBrandFn({
+              brandId: brandData?.id,
+              ...formatData
+            })
+          } else {
+            await requestCreateBrandFn(formatData)
+          }
         }
       }
     } catch (error) {
@@ -128,7 +146,7 @@ const BrandDetail = () => {
           id={`form-${id}`}
         >
           <CardSection
-            title='Create Brand Information'
+            title={brandData ? 'Update Brand Information' : 'Create Brand Information'}
             description='Please fill all information'
             rightComponent={
               <Button
@@ -138,47 +156,92 @@ const BrandDetail = () => {
                 loading={form.formState.isSubmitting}
               >
                 <LuSaveAll />
-                <span>Create Brand</span>
+                <span>{brandData ? 'Update Brand' : 'Create Brand'}</span>
               </Button>
             }
           >
             <div className='flex flex-col gap-4'>
               <div className='grid gap-4 grid-cols-2'>
-                <FormField
-                  control={form.control}
-                  name='name'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                          placeholder='
+                <div className='grid gap-4 grid-cols-1'>
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                            placeholder='
                 please enter your brand name
                     '
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='email'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                          placeholder='
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='email'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                            placeholder='
                      e.g. allure@gmail.com
                     '
-                          {...field}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name='logo'
+                  render={({ field }) => (
+                    <FormItem className=''>
+                      <FormLabel>Logo thương hiệu</FormLabel>
+                      <div className=''>
+                        <UploadFilePreview
+                          field={field}
+                          vertical={false}
+                          dropZoneConfigOptions={{ maxFiles: 1 }}
+                          renderFileItemUI={(file) => {
+                            return (
+                              <div key={file.name} className=' rounded-lg max-h-32 '>
+                                {file.type.includes('image') ? (
+                                  <img
+                                    src={URL.createObjectURL(file)}
+                                    alt={file.name}
+                                    className='object-cover rounded-lg max-h-32 '
+                                    onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
+                                  />
+                                ) : (
+                                  <FilesIcon className='w-12 h-12 text-muted-foreground' />
+                                )}
+                              </div>
+                            )
+                          }}
+                          renderInputUI={(_isDragActive, files, maxFiles) => {
+                            return (
+                              <div className='hover:bg-primary/15 p-4 w-40 h-40 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                <ImagePlus className='w-12 h-12 text-primary' />
+
+                                <p className='text-sm text-primary'>
+                                  Drag & drop or browse file ({files?.length ?? 0}/{maxFiles})
+                                </p>
+                              </div>
+                            )
+                          }}
                         />
-                      </FormControl>
-                      <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
@@ -201,27 +264,6 @@ const BrandDetail = () => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name='description'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                        placeholder='
-                 description
-                    '
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name='phone'
@@ -239,6 +281,27 @@ const BrandDetail = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name='description'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder='description' className='resize-none' {...field} />
+                      {/* <Input
+                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                        placeholder='
+                 description
+                    '
+                        {...field}
+                      /> */}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* <FormField
           control={form.control}
           name='document'
@@ -265,6 +328,7 @@ const BrandDetail = () => {
                     <FormLabel required>Document</FormLabel>
                     <UploadFilePreview
                       field={field}
+                      vertical
                       dropZoneConfigOptions={{ maxFiles: 1 }}
                       header={
                         <div>

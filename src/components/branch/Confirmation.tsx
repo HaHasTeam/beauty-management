@@ -102,6 +102,7 @@ function Confirmation({ stepIndex, goBackfn, form }: Props) {
         <Button
           className=' flex select-none items-center justify-center gap-2 px-4'
           type='submit'
+          loading={form.formState.isSubmitting}
           // disabled={stepIndex === 3}
           // onClick={() => {
           //   console.log('submitted')

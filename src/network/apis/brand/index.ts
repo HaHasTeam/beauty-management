@@ -4,7 +4,7 @@ import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
-import { TGetBrandByIdRequestParams, TRequestCreateBrandParams, TUpdateStatusBrandRequestParams } from './type'
+import { TRequestCreateBrandParams, TUpdateBrandRequestParams, TUpdateStatusBrandRequestParams } from './type'
 
 export const requestCreateBrandApi = toMutationFetcher<TRequestCreateBrandParams, TServerResponse<IBranch>>(
   'requestCreateBrand',
@@ -24,15 +24,21 @@ export const updateStatusBrandByIdApi = toMutationFetcher<TUpdateStatusBrandRequ
     })
   }
 )
-export const getBrandByIdApi = toQueryFetcher<TGetBrandByIdRequestParams, TServerResponse<IBranch>>(
-  'getBrandById',
+
+export const updateBrandByIdApi = toMutationFetcher<TUpdateBrandRequestParams, TServerResponse<IBranch>>(
+  'updateBrandById',
   async (params) => {
-    return publicRequest(`/brands/get-by-id/${params?.brandId}`, {
-      method: 'GET',
-      params
+    return publicRequest(`/brands/update-detail/${params?.brandId}`, {
+      method: 'PUT',
+      data: params
     })
   }
 )
+export const getBrandByIdApi = toQueryFetcher<string, TServerResponse<IBranch>>('getBrandById', async (brandId) => {
+  return publicRequest(`/brands/get-by-id/${brandId}`, {
+    method: 'GET'
+  })
+})
 export const getAllBrandsApi = toQueryFetcher<void, TServerResponse<TBrand[]>>('getAllBrands', async () => {
   return publicRequest(`/brands/`, {
     method: 'GET'

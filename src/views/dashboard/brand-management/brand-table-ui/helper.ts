@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, CircleIcon, CircleX, WifiOff } from 'lucide-react'
+import { CheckCircle2, CircleDashed, CircleIcon, CircleX, WifiOff, X } from 'lucide-react'
 
 import { BrandStatusEnum } from '@/types/brand'
 
@@ -26,6 +26,12 @@ export function getStatusIcon(status: BrandStatusEnum) {
       icon: CircleX,
       iconColor: 'text-red-500',
       textColor: 'text-red-500',
+      bgColor: 'bg-red-100'
+    },
+    [BrandStatusEnum.DENIED]: {
+      icon: X,
+      iconColor: 'text-red-400',
+      textColor: 'text-red-400',
       bgColor: 'bg-red-100'
     }
   }

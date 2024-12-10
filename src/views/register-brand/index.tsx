@@ -15,6 +15,7 @@ import UplImagesUploader from '@/components/branch/UplImagesUploader'
 import Stepper from '@/components/steppers'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
+import useHandleServerError from '@/hooks/useHandleServerError'
 import type { Steppers } from '@/hooks/useStepper'
 import useStepper from '@/hooks/useStepper'
 import { useToast } from '@/hooks/useToast'
@@ -24,7 +25,7 @@ import { brandCreateSchema } from '@/schemas'
 import { StatusEnum } from '@/types/enum'
 
 function RegisterBrand() {
-  const { errorToast, successToast } = useToast()
+  const { successToast } = useToast()
   const navigate = useNavigate()
 
   // const accountId = accessToken ? jwtDecode<TEmailDecoded>(accessToken).accountId : undefined
@@ -41,6 +42,7 @@ function RegisterBrand() {
       name: ''
     }
   })
+  const handleServerError = useHandleServerError()
 
   const steppers: Steppers[] = [
     {
@@ -87,11 +89,7 @@ function RegisterBrand() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep])
-  const {
-    mutateAsync: uploadFilesFn,
-    isSuccess: isUploadSuccess,
-    data: fileUploaded
-  } = useMutation({
+  const { mutateAsync: uploadFilesFn } = useMutation({
     mutationKey: [uploadFilesApi.mutationKey],
     mutationFn: uploadFilesApi.fn
   })
@@ -119,13 +117,13 @@ function RegisterBrand() {
   async function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
       if (values.logo && values.logo?.length > 0) {
-        await convertFileToUrl([...values.logo, ...values.document])
-        if (isUploadSuccess) {
+        const imgUrls = await convertFileToUrl([...values.logo, ...values.document])
+        if (imgUrls && imgUrls.length > 0) {
           const formatData = {
             name: values.name,
-            document: fileUploaded.data[1],
+            document: imgUrls[1],
             address: values.address,
-            logo: fileUploaded.data[0],
+            logo: imgUrls[0],
             email: values.email,
             phone: values.phone,
             description: values.description,
@@ -134,11 +132,12 @@ function RegisterBrand() {
           await requestCreateBrandFn(formatData)
         }
       } else {
-        await convertFileToUrl([...values.document])
-        if (isUploadSuccess) {
+        const imgUrls = await convertFileToUrl([...values.document])
+
+        if (imgUrls && imgUrls.length > 0) {
           const formatData = {
             name: values.name,
-            document: fileUploaded.data[0],
+            document: imgUrls[0],
             address: values.address,
             email: values.email,
             logo: '',
@@ -149,9 +148,10 @@ function RegisterBrand() {
           await requestCreateBrandFn(formatData)
         }
       }
-    } catch {
-      errorToast({
-        message: 'Failed to submit the form. Please try again.'
+    } catch (error) {
+      handleServerError({
+        error,
+        form
       })
     }
   }

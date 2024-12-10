@@ -46,18 +46,18 @@ export const privateRoutes: RouteObject[] = [
         element: <RequestsQueue />
       },
       {
-        path: 'brand',
+        path: routesConfig[Routes.BRAND].path.replace('/dashboard/', ''),
 
         children: [
           {
             index: true,
             element: <Brands />
           },
-          { path: 'create-Brand', element: <ViewBrandForm /> }
-          // {
-          //   path: ':id',
-          //   element: <PreOrderDetailById />
-          // }
+          { path: routesConfig[Routes.ADD_BRAND].path, element: <ViewBrandForm /> },
+          {
+            path: 'update/:id',
+            element: <ViewBrandForm />
+          }
         ]
       },
       {

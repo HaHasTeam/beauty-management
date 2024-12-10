@@ -16,13 +16,15 @@ export enum BrandStatusEnum {
   PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED'
+  BANNED = 'BANNED',
+  DENIED = 'DENIED'
 }
 export enum StatusEnum {
   PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED'
+  BANNED = 'BANNED',
+  DENIED = 'DENIED'
 }
 export type IBrand = {
   id: string
@@ -36,5 +38,10 @@ export type IBrand = {
   phone: string
   address: string
   star: number
-  status: BrandStatusEnum.ACTIVE | BrandStatusEnum.BANNED | BrandStatusEnum.INACTIVE | BrandStatusEnum.PENDING
+  status:
+    | BrandStatusEnum.ACTIVE
+    | BrandStatusEnum.BANNED
+    | BrandStatusEnum.INACTIVE
+    | BrandStatusEnum.PENDING
+    | BrandStatusEnum.DENIED
 }

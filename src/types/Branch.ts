@@ -1,6 +1,7 @@
 import { StatusEnum } from './enum'
 
 export type IBranch = {
+  id?: string
   name: string
   logo?: string
   document: string

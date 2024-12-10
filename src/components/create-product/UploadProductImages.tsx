@@ -211,7 +211,7 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput }: Upl
               files.length > 0 &&
               files.map((file, index) => (
                 <ProductFileUploaderItem key={index} index={index}>
-                  <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300'>
+                  <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300 p-0'>
                     <img
                       src={URL.createObjectURL(file)}
                       alt={file.name}

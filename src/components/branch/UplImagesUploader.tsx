@@ -36,6 +36,7 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
               <FormLabel>Logo</FormLabel>
               <UploadFilePreview
                 field={field}
+                vertical
                 dropZoneConfigOptions={{ maxFiles: 1 }}
                 header={
                   <div>
