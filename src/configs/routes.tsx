@@ -13,6 +13,7 @@ export enum Routes {
   ACCOUNTS_DIRECTORY = 'accounts-directory',
   AUTH_SIGN_UP = 'auth-sign-up',
   PRE_ORDER = 'pre-order',
+  BRAND = 'brand',
   PRE_ORDER_DETAILS = 'pre-order-details',
   ADD_PRE_ORDER = 'add-pre-order',
   FLASH_SALE = 'flash-sale',
@@ -20,7 +21,10 @@ export enum Routes {
   FLASH_SALE_DETAILS = 'flash-sale-details',
   PRODUCT_LIST = 'product-list',
   CREATE_PRODUCT = 'create-product',
-  UPDATE_PRODUCT = 'update-product'
+  UPDATE_PRODUCT = 'update-product',
+  REGISTER_BRAND = 'register-brand',
+  ADD_BRAND = 'add-brand',
+  UPDATE_BRAND = 'update-brand'
 }
 
 export const routesConfig: TRoutes = {
@@ -30,6 +34,13 @@ export const routesConfig: TRoutes = {
     description: 'Login to your Allure account to access the dashboard',
     path: '/auth/signin/password-signin',
     getPath: (params) => '/auth/signin/password-signin' + (params ? '?' + new URLSearchParams(params).toString() : '')
+  },
+  [Routes.REGISTER_BRAND]: {
+    name: 'Register Brand',
+    title: 'Register Brand',
+    description: 'Register Brand',
+    path: '/register',
+    getPath: () => `/register`
   },
   [Routes.AUTH_SIGN_UP]: {
     name: 'Sign Up to Allure',
@@ -46,6 +57,27 @@ export const routesConfig: TRoutes = {
     getPath: (params) => {
       return `/auth/email-verification` + (params ? '?' + new URLSearchParams(params).toString() : '')
     }
+  },
+  [Routes.BRAND]: {
+    name: 'Brand Management',
+    title: 'Brand Management',
+    description: 'Brand Management',
+    path: '/dashboard/brand',
+    getPath: () => '/dashboard/brand'
+  },
+  [Routes.ADD_BRAND]: {
+    name: 'Add Brand',
+    title: 'Add Brand',
+    description: 'Add Brand',
+    path: '/dashboard/brand/create-Brand',
+    getPath: () => '/dashboard/brand/create-Brand'
+  },
+  [Routes.UPDATE_BRAND]: {
+    name: 'Update Brand',
+    title: 'Update Brand',
+    description: 'Update Brand',
+    path: '/dashboard/brand/update/[id]',
+    getPath: (id) => `/dashboard/brand/update/${id}`
   },
   [Routes.PRE_ORDER]: {
     name: 'Pre Order',

@@ -5,6 +5,7 @@ import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
 import { PiCompassToolBold } from 'react-icons/pi'
+import { TbBrandAmigo } from 'react-icons/tb'
 
 import { Routes, routesConfig } from '@/configs/routes'
 import { IRoute } from '@/types/types'
@@ -14,6 +15,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.DASHBOARD_HOME].name,
     path: routesConfig[Routes.DASHBOARD_HOME].path,
     icon: <HiOutlineHome className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.BRAND].name,
+    path: routesConfig[Routes.BRAND].path,
+    icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

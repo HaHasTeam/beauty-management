@@ -1,10 +1,11 @@
 import { TUser, UserStatusEnum } from '@/types/user'
 
-export type TCreateUserRequestParams = Pick<TUser, 'username' | 'email' | 'password'> & {
+export type TCreateUserRequestParams = Pick<TUser, 'username' | 'email' | 'password' | 'phone'> & {
   brands?: string[]
   role: string
 } & Partial<Omit<TUser, 'role' | 'brands'>> & {
     redirectUrl?: string
+    brands?: string[]
   }
 
 export type TLoginUserRequestParams = Pick<TUser, 'email' | 'password'>

@@ -51,6 +51,7 @@ const PhoneInputWithCountries = (() => {
         field.onChange?.('' as unknown as React.ChangeEvent<HTMLInputElement>)
         return
       }
+
       setPhoneNumber(value)
 
       field.onChange?.(value as unknown as React.ChangeEvent<HTMLInputElement>)

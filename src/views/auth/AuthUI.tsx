@@ -57,10 +57,10 @@ export default function AuthUI() {
   }
 
   return (
-    <div className='my-auto mb-auto mt-8 flex flex-col md:mt-[70px] md:max-w-full lg:mt-[130px] lg:max-w-[420px]'>
+    <div className='my-auto mb-auto  flex flex-col md:max-w-full  lg:max-w-[420px]'>
       <p className='text-[32px] font-bold text-zinc-950 dark:text-white'>
         {props.viewProp === 'signup'
-          ? 'Sign Up'
+          ? 'Đăng ký'
           : props.viewProp === 'forgot-password'
             ? 'Forgot Password'
             : props.viewProp === 'update-password'
@@ -71,7 +71,7 @@ export default function AuthUI() {
       </p>
       <p className='mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400'>
         {props.viewProp === 'signup'
-          ? 'Enter your email and password to sign up!'
+          ? 'Đăng ký bán hàng cùng Allure'
           : props.viewProp === 'forgot-password'
             ? 'Enter your email to get a password reset link!'
             : props.viewProp === 'update-password'
@@ -94,7 +94,7 @@ export default function AuthUI() {
         <ForgotPassword allowEmail={props.allowEmail} disableButton={props.disableButton} />
       )}
       {props.viewProp === 'update-password' && <UpdatePassword />}
-      {props.viewProp === 'signup' && <SignUp allowEmail={props.allowEmail} />}
+      {props.viewProp === 'signup' && <SignUp />}
     </div>
   )
 }
