@@ -1,6 +1,6 @@
 import { TVoucher } from '@/types/voucher'
 
-export type TRequestCreateVoucherParams = TVoucher
+export type TRequestCreateVoucherParams = Omit<TVoucher, 'id' | 'updatedAt' | 'createdAt' | 'brand'>
 
 export type TGetVoucherByIdRequestParams = {
   voucherId: string

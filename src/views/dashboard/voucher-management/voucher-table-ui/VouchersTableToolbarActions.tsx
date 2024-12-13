@@ -16,8 +16,8 @@ interface VouchersTableToolbarActionsProps {
 
 export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActionsProps) {
   const navigate = useNavigate()
-  const handleAddBrand = () => {
-    navigate(routesConfig[Routes.ADD_BRAND].getPath())
+  const handleAddVoucher = () => {
+    navigate(routesConfig[Routes.ADD_VOUCHER].getPath())
   }
 
   return (
@@ -28,7 +28,7 @@ export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActio
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
-      <Button size={'sm'} onClick={handleAddBrand}>
+      <Button size={'sm'} onClick={handleAddVoucher}>
         <IoIosAddCircleOutline />
         Add Vouchers
       </Button>

@@ -20,9 +20,10 @@ import RequestsQueue from '@/views/dashboard/requests-queue'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
 import UpdateProduct from '@/views/dashboard/update-product'
 import Vouchers from '@/views/dashboard/voucher-management'
+import ViewVoucherDetail from '@/views/dashboard/voucher-management/ViewVoucherDetail'
 
 // import Brands from '@/views/dashboard/brand-management'
-// import Brands from '@/views/dashboard/brand-management'
+// import Brands from '@/views/dashboard/brand-management'\
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -47,7 +48,6 @@ export const privateRoutes: RouteObject[] = [
       },
       {
         path: routesConfig[Routes.BRAND].path.replace('/dashboard/', ''),
-
         children: [
           {
             index: true,
@@ -61,13 +61,14 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
-        path: 'voucher',
+        path: routesConfig[Routes.VOUCHER].path.replace('/dashboard/', ''),
 
         children: [
           {
             index: true,
             element: <Vouchers />
-          }
+          },
+          { path: routesConfig[Routes.ADD_VOUCHER].path, element: <ViewVoucherDetail /> }
         ]
       },
       {

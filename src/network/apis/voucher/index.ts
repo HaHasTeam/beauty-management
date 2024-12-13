@@ -5,7 +5,7 @@ import { privateRequest, publicRequest } from '@/utils/request'
 
 import { TGetVoucherByIdRequestParams, TRequestCreateVoucherParams, TUpdateStatusVoucherRequestParams } from './type'
 
-export const requestCreateVoucherApi = toMutationFetcher<TRequestCreateVoucherParams, TServerResponse<TVoucher>>(
+export const createVoucherApi = toMutationFetcher<TRequestCreateVoucherParams, TServerResponse<TVoucher>>(
   'createVoucher',
   async (params) => {
     return privateRequest('/vouchers/create', {

@@ -24,7 +24,10 @@ export enum Routes {
   UPDATE_PRODUCT = 'update-product',
   REGISTER_BRAND = 'register-brand',
   ADD_BRAND = 'add-brand',
-  UPDATE_BRAND = 'update-brand'
+  UPDATE_BRAND = 'update-brand',
+  VOUCHER = 'voucher',
+  ADD_VOUCHER = 'add-voucher',
+  UPDATE_VOUCHER = 'update-voucher'
 }
 
 export const routesConfig: TRoutes = {
@@ -78,6 +81,27 @@ export const routesConfig: TRoutes = {
     description: 'Update Brand',
     path: '/dashboard/brand/update/[id]',
     getPath: (id) => `/dashboard/brand/update/${id}`
+  },
+  [Routes.VOUCHER]: {
+    name: 'Voucher Management',
+    title: 'Voucher Management',
+    description: 'Voucher Management',
+    path: '/dashboard/voucher',
+    getPath: () => '/dashboard/voucher'
+  },
+  [Routes.ADD_VOUCHER]: {
+    name: 'Add Voucher',
+    title: 'Add Voucher',
+    description: 'Add Voucher',
+    path: '/dashboard/voucher/create-voucher',
+    getPath: () => '/dashboard/voucher/create-voucher'
+  },
+  [Routes.UPDATE_VOUCHER]: {
+    name: 'Update Voucher',
+    title: 'Update Voucher',
+    description: 'Update Voucher',
+    path: '/dashboard/voucher/update/[id]',
+    getPath: (id) => `/dashboard/voucher/update/${id}`
   },
   [Routes.PRE_ORDER]: {
     name: 'Pre Order',

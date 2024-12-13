@@ -60,6 +60,12 @@ export const routes: IRoute[] = [
     collapse: false
   },
   {
+    name: routesConfig[Routes.VOUCHER].name,
+    path: routesConfig[Routes.VOUCHER].path,
+    icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
     name: routesConfig[Routes.PROFILE_SETTINGS].name,
     path: routesConfig[Routes.PROFILE_SETTINGS].path,
     icon: <HiOutlineCog8Tooth className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
