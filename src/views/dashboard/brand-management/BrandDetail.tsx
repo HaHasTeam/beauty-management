@@ -212,7 +212,7 @@ const BrandDetail = ({
                         <UploadFilePreview
                           field={field}
                           vertical={false}
-                          dropZoneConfigOptions={{ maxFiles: 1 }}
+                          dropZoneConfigOptions={{ maxFiles: 7 }}
                           renderFileItemUI={(file) => {
                             return (
                               <div key={file.name} className=' rounded-lg max-h-32 '>

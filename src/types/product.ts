@@ -40,7 +40,17 @@ export type IProductClassification = {
   title?: string
   price?: number
   quantity?: number
-  images?: string[]
+  images?: File[]
+  status?: string
+  type?: string
+  sku?: string
+}
+export type IServerProductClassification = {
+  id?: string
+  title?: string
+  price?: number
+  quantity?: number
+  images?: IImage[]
   status?: string
   type?: string
   sku?: string
@@ -51,7 +61,7 @@ export type ICreateProduct = {
   name: string
   brand?: string
   category?: string
-  images: string[]
+  images: File[]
   description: string
   status: string
   detail?: IProductDetail
@@ -69,7 +79,7 @@ export type IServerCreateProduct = {
   description?: string
   status?: string
   detail?: string
-  productClassifications?: IProductClassification[]
+  productClassifications?: IServerProductClassification[]
   price?: number
   quantity?: number
   sku?: string
@@ -83,7 +93,7 @@ export type IResponseProduct = {
   description: string
   status?: string
   detail?: string
-  productClassifications?: IProductClassification[]
+  productClassifications?: IServerProductClassification[]
   price?: number
   quantity?: number
   sku?: string

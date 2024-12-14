@@ -15,7 +15,7 @@ export type ICombination = {
   title?: string
   price?: number
   quantity?: number
-  image?: string[]
+  images?: File[]
   type?: string
   sku?: string
 }

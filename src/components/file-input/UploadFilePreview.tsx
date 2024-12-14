@@ -257,7 +257,7 @@ const UploadFilePreview = <T extends FieldValues>({
                       >
                         <PreviewDialog
                           content={
-                            file.type.includes('image') ? (
+                            file?.type?.includes('image') ? (
                               URL.createObjectURL(file)
                             ) : (
                               <div className='flex items-center justify-center'>
@@ -272,7 +272,7 @@ const UploadFilePreview = <T extends FieldValues>({
                             ) : (
                               <div key={file.name} className='flex items-center space-x-3'>
                                 <div className='rounded-md flex items-center justify-center'>
-                                  {file.type.includes('image') ? (
+                                  {file?.type?.includes('image') ? (
                                     <img
                                       src={URL.createObjectURL(file)}
                                       alt={file.name}
@@ -287,7 +287,7 @@ const UploadFilePreview = <T extends FieldValues>({
                               </div>
                             )
                           }
-                          contentType={file.type.includes('image') ? 'image' : undefined}
+                          contentType={file?.type?.includes('image') ? 'image' : undefined}
                         />
                       </FileUploaderItem>
                     ))}

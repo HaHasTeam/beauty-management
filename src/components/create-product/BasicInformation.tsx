@@ -1,5 +1,6 @@
 import 'react-quill-new/dist/quill.snow.css'
 
+import { ImagePlus } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import ReactQuill from 'react-quill-new'
@@ -93,7 +94,37 @@ const BasicInformation = ({
                       </div>
                       <FormControl>
                         <div className='w-full space-y-1'>
-                          <UploadProductImages field={field} maxFileInput={7} />
+                          <UploadProductImages
+                            field={field}
+                            vertical={false}
+                            dropZoneConfigOptions={{ maxFiles: 7 }}
+                            renderFileItemUI={(file) => {
+                              return (
+                                <div
+                                  key={file?.name}
+                                  className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
+                                >
+                                  <img
+                                    src={URL?.createObjectURL(file)}
+                                    alt={file?.name}
+                                    className='object-contain w-full h-full rounded-lg'
+                                    onLoad={() => URL?.revokeObjectURL(URL?.createObjectURL(file))}
+                                  />
+                                </div>
+                              )
+                            }}
+                            renderInputUI={(_isDragActive, files, maxFiles) => {
+                              return (
+                                <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                  <ImagePlus className='w-12 h-12 text-primary' />
+
+                                  <p className='text-sm text-primary'>
+                                    Drag & drop or browse file ({files?.length ?? 0}/{maxFiles})
+                                  </p>
+                                </div>
+                              )
+                            }}
+                          />
                           <FormMessage />
                         </div>
                       </FormControl>

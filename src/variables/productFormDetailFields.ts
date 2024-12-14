@@ -281,6 +281,7 @@ export const productFormDetailFields: IProductFormFields[] = [
   }
 ]
 
+const fileArray = z.array(z.instanceof(File))
 export const FormProductSchema = z
   .object({
     // basic information
@@ -290,7 +291,7 @@ export const FormProductSchema = z
       .max(120, { message: productFormMessage.productNameLengthRequired }),
     brand: z.string().min(1, { message: productFormMessage.brandRequired }),
     category: z.string().min(1, { message: productFormMessage.categoryRequired }),
-    images: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }),
+    images: fileArray.min(1, { message: productFormMessage.imagesRequired }),
     description: z
       .string()
       .transform((val) => val.replace(/<[^>]*>/g, '').trim())
@@ -320,7 +321,7 @@ export const FormProductSchema = z
           type: z.string().min(0).optional(),
           price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
           quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-          images: z.array(z.string()).min(1, { message: productFormMessage.imagesRequired }).optional()
+          images: fileArray.min(1, { message: productFormMessage.imagesRequired }).optional()
         })
       )
       .optional(),

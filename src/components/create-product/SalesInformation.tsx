@@ -1,4 +1,4 @@
-import { Plus, Trash2, X } from 'lucide-react'
+import { ImagePlus, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import FormLabel from '@/components/form-label'
@@ -52,12 +52,13 @@ export default function SalesInformation({
           title: o2 ? `${o1}-${o2}` : `${o1}`,
           price: existingCombination?.price ?? undefined,
           quantity: existingCombination?.quantity ?? undefined,
-          image: existingCombination?.image ?? [],
+          images: existingCombination?.images ?? [],
           type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
           sku: existingCombination?.sku ?? ''
         })
       })
     })
+
     setCombinations(newCombinations)
     form.setValue('productClassifications', newCombinations)
   }
@@ -85,7 +86,7 @@ export default function SalesInformation({
     const currentClassifications = form.getValues('productClassifications') || []
     const newClassification = {
       title: '',
-      image: [],
+      images: [],
       type: ProductClassificationTypeEnum?.CUSTOM,
       price: undefined,
       quantity: undefined
@@ -186,6 +187,7 @@ export default function SalesInformation({
         (item) =>
           !!item?.title &&
           !!item?.images?.length &&
+          item?.images?.length > 0 &&
           item?.quantity !== undefined &&
           item?.quantity > 0 &&
           item?.price !== undefined &&
@@ -412,12 +414,53 @@ export default function SalesInformation({
                                                   <div className='w-full space-y-1 flex flex-col justify-center items-center'>
                                                     <UploadProductImages
                                                       field={field}
-                                                      maxFileInput={4}
-                                                      onChange={(value) => {
+                                                      vertical={false}
+                                                      onChange={() => {
                                                         // Update the combinations state when images are uploaded
-                                                        const updated = [...combinations]
-                                                        updated[index].image = value
+                                                        const updated = combinations.map(
+                                                          (combination, combinationIndex) =>
+                                                            combinationIndex === index
+                                                              ? {
+                                                                  ...combination,
+                                                                  images:
+                                                                    form.getValues(
+                                                                      `productClassifications.${index}.images`
+                                                                    ) ?? []
+                                                                }
+                                                              : combination
+                                                        )
                                                         setCombinations(updated)
+                                                      }}
+                                                      centerItem
+                                                      dropZoneConfigOptions={{ maxFiles: 4 }}
+                                                      renderFileItemUI={(file) => {
+                                                        return (
+                                                          <div
+                                                            key={file?.name}
+                                                            className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
+                                                          >
+                                                            <img
+                                                              src={URL?.createObjectURL(file)}
+                                                              alt={file?.name}
+                                                              className='object-contain w-full h-full rounded-lg'
+                                                              onLoad={() =>
+                                                                URL?.revokeObjectURL(URL?.createObjectURL(file))
+                                                              }
+                                                            />
+                                                          </div>
+                                                        )
+                                                      }}
+                                                      renderInputUI={(_isDragActive, files, maxFiles) => {
+                                                        return (
+                                                          <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                                            <ImagePlus className='w-12 h-12 text-primary' />
+
+                                                            <p className='text-sm text-primary'>
+                                                              Drag & drop or browse file ({files?.length ?? 0}/
+                                                              {maxFiles})
+                                                            </p>
+                                                          </div>
+                                                        )
                                                       }}
                                                     />
                                                     <FormMessage />
@@ -465,7 +508,7 @@ export default function SalesInformation({
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
                                                 {field?.value === undefined && (
                                                   <span className='text-destructive text-xs font-semibold'>
-                                                    {productFormMessage.quantityClassificationRequired}
+                                                    {productFormMessage.priceClassificationRequired}
                                                   </span>
                                                 )}
                                               </div>

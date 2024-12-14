@@ -1,51 +1,44 @@
-import { useMutation } from '@tanstack/react-query'
-import { ImagePlus } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+// import { useMutation } from '@tanstack/react-query'
+import { FilesIcon, Upload } from 'lucide-react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
+import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
-import { useToast } from '@/hooks/useToast'
-import { uploadFilesApi } from '@/network/apis/file'
-import { createFiles } from '@/utils/files'
 
 import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '../file-input'
-import { LoadingCircle } from '../progress/CircleProgress'
+import { PreviewDialog } from '../file-input/PreviewImageDialog'
+// import { useToast } from '@/hooks/useToast'
+// import { uploadFilesApi } from '@/network/apis/file'
+// import { createFiles } from '@/utils/files'
 
-type UploadProductImagesProps = {
+type UploadFileModalProps<T extends FieldValues> = {
+  header?: ReactNode
   dropZoneConfigOptions?: DropzoneOptions
-  field: React.InputHTMLAttributes<HTMLInputElement>
-  maxFileInput: number
-  onChange?: (value: string[]) => void
+  field: ControllerRenderProps<T>
+  renderInputUI?: (isDragActive: boolean, files: File[], maxFiles: number, message?: string) => ReactNode
+  renderFileItemUI?: (files: File) => ReactNode
+  vertical: boolean
+  onChange?: (value: File[] | File | [] | string | (string | File)[]) => void
+  centerItem?: boolean
 }
 
-const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput, onChange }: UploadProductImagesProps) => {
+const UploadProductImages = <T extends FieldValues>({
+  dropZoneConfigOptions,
+  field,
+  header,
+  renderInputUI,
+  renderFileItemUI,
+  vertical = true,
+  onChange,
+  centerItem = false
+}: UploadFileModalProps<T>) => {
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
-  const { successToast } = useToast()
-
-  const [progress, setProgress] = useState(0)
-
-  const { mutateAsync: uploadFilesFn, isPending: isUploadingFiles } = useMutation({
-    mutationKey: [uploadFilesApi.mutationKey],
-    mutationFn: uploadFilesApi.fn,
-    onSuccess: () => {
-      successToast({
-        message: 'Amazing! Your files have been uploaded!'
-      })
-      setProgress(100)
-      setTimeout(() => {
-        setProgress(0)
-      }, 500)
-    },
-    onError: () => {
-      setTimeout(() => {
-        setProgress(0)
-      }, 500)
-    }
-  })
 
   const { fieldType, fieldValue } = useMemo<{
-    fieldType: 'string' | 'array'
+    fieldType: 'string' | 'array' | 'object'
     fieldValue: string | string[]
   }>(() => {
     if (typeof field?.value === 'string') {
@@ -55,12 +48,17 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput, onCha
 
       return {
         fieldType: 'string',
-        fieldValue: field?.value as string
+        fieldValue: field?.value
       }
     } else if (Array.isArray(field?.value)) {
       return {
         fieldType: 'array',
-        fieldValue: field?.value as string[]
+        fieldValue: field?.value
+      }
+    } else if (typeof field?.value === 'object') {
+      return {
+        fieldType: 'array',
+        fieldValue: field?.value
       }
     }
     throw new Error('Field value must be a string or an array')
@@ -69,12 +67,12 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput, onCha
   const isDragActive = false
   const dropZoneConfig = {
     accept: {
-      'image/*': ['.jpg', '.jpeg', '.png'],
-      'application/pdf': ['.pdf'],
-      'application/msword': ['.doc']
+      'image/*': ['.jpg', '.jpeg', '.png']
+      // 'application/pdf': ['.pdf'],
+      // 'application/msword': ['.doc']
     },
     multiple: true,
-    maxFiles: maxFileInput,
+    maxFiles: 10,
     maxSize: 1 * 1024 * 1024,
     ...dropZoneConfigOptions
   } satisfies DropzoneOptions
@@ -82,26 +80,12 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput, onCha
   useEffect(() => {
     const transferData = async () => {
       try {
-        const resultFiles: File[] = []
-        if (fieldType === 'string') {
-          if ((fieldValue == '' && files.length !== 1) || (fieldValue !== '' && files.length === 0)) {
-            if (fieldValue) {
-              const parsedFiles = await createFiles([fieldValue as string])
-              resultFiles.push(...parsedFiles)
-              return setFiles(resultFiles)
-            } else {
-              return setFiles([])
-            }
-          }
-        }
         if (Array.isArray(fieldValue)) {
           if (fieldValue.length === files.length) {
             return
           }
 
-          const parsedFiles = await createFiles(fieldValue as string[])
-          resultFiles.push(...parsedFiles)
-          return setFiles(resultFiles)
+          return setFiles(field?.value)
         }
       } catch (error) {
         handleServerError({
@@ -113,122 +97,220 @@ const UploadProductImages = ({ dropZoneConfigOptions, field, maxFileInput, onCha
     // eslint-disable-next-line
   }, [fieldValue, fieldType, files.length])
 
-  const convertFileToUrl = async (files: File[]) => {
-    const formData = new FormData()
-    files.forEach((file) => {
-      formData.append('files', file)
-    })
-    setProgress(50)
-    const uploadedFilesResponse = await uploadFilesFn(formData)
-
-    return uploadedFilesResponse.data
-  }
-
   const onFileDrop = async (newFiles: File[] | null) => {
-    if (!newFiles) return
-    setFiles(newFiles)
     const oldFiles = files
     try {
       // Check file is string or array
       // If string, convert to file and set to state
       if (fieldType === 'string') {
         // Value must be an array of files
-        if (!newFiles?.length) {
-          onChange?.([])
-          return field.onChange && field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
+        if (!newFiles?.length && field.onChange) {
+          field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
+          onChange?.('')
         }
         if (newFiles?.length) {
-          const fileUrls = await convertFileToUrl(newFiles)
-          onChange?.([fileUrls[0]])
-          return field?.onChange?.(fileUrls[0] as unknown as React.ChangeEvent<HTMLInputElement>)
+          // const fileUrls = await convertFileToUrl(newFiles)
+
+          field?.onChange?.(newFiles[0] as unknown as React.ChangeEvent<HTMLInputElement>)
+          onChange?.(newFiles[0])
         }
       }
 
       // If array, set to state
-      if (fieldType === 'array') {
-        if (!newFiles?.length) {
-          onChange?.([])
+      if (fieldType === 'array' && field?.value) {
+        // console.log('!newFiles?.length', newFiles?.length)
+
+        if (!newFiles) {
           return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
+          onChange?.([])
         }
         if (newFiles.length > oldFiles.length) {
           const diffedFiles = newFiles.filter((file) => {
-            return !oldFiles?.some((oldFile) => oldFile.name === file.name)
+            return !oldFiles?.some(
+              (oldFile) => oldFile.name === file.name && oldFile.lastModified === file.lastModified
+            )
           })
-
-          const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
-          const updatedUrls = [...(field?.value as string[]), ...newDiffedFileUrls]
-          onChange?.(updatedUrls)
-          return field?.onChange?.(updatedUrls as unknown as React.ChangeEvent<HTMLInputElement>)
+          const updateFiles = [...diffedFiles, ...field.value]
+          setFiles(updateFiles)
+          // const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
+          field?.onChange?.([
+            ...(field?.value as string[]),
+            ...diffedFiles
+          ] as unknown as React.ChangeEvent<HTMLInputElement>)
+          onChange?.([...(field?.value as string[]), ...diffedFiles])
         } else {
-          const deletedFile = oldFiles.filter((file) => {
-            return !newFiles.some((newFile) => newFile.name === file.name)
+          const deletedIndex = oldFiles.findIndex((oldFile) => {
+            return !newFiles.some((file) => file.name === oldFile.name && file.lastModified === oldFile.lastModified)
           })
 
-          if (deletedFile.length > 0) {
-            const newAppendFilesUrl = (field?.value as string[]).filter((file) => {
-              return !deletedFile.some((deleted) => deleted.name === file)
-            })
-            onChange?.(newAppendFilesUrl)
-            field?.onChange?.(newAppendFilesUrl as unknown as React.ChangeEvent<HTMLInputElement>)
+          if (deletedIndex !== -1) {
+            const updatedFiles = [...field.value]
+            updatedFiles.splice(deletedIndex, 1)
+
+            setFiles(updatedFiles)
+            field?.onChange?.(updatedFiles as unknown as React.ChangeEvent<HTMLInputElement>)
+            onChange?.(updatedFiles)
           }
         }
       }
+      // const markedFiles = newFiles?.map((file) => {
+      //   return new File([file], file.name, { type: file.type, lastModified: file.lastModified })
+      // })
+
+      // setFiles(markedFiles || [])
     } catch (error) {
       handleServerError({
         error
       })
-      setFiles(oldFiles)
     }
   }
-
+  const message = `You can upload up to ${dropZoneConfig.maxFiles} files. Accepted file formats are ${Object.values(
+    dropZoneConfig.accept
+  )
+    .flat()
+    .join(', ')}. Each file must be under ${dropZoneConfig.maxSize / (1024 * 1024)}MB.`
   return (
-    <div
-      className={`flex transition-all duration-300 ${isDragActive ? 'border-primary bg-primary/10' : 'border-primary'}`}
-    >
-      <FileUploader
-        value={files}
-        onValueChange={onFileDrop}
-        dropzoneOptions={dropZoneConfig}
-        className='flex'
-        orientation='horizontal'
-        customMaxFiles={dropZoneConfig.maxFiles}
+    <>
+      {header}
+      <div
+        className={`flex transition-all duration-300 ${isDragActive ? 'border-primary bg-primary/10 dark:bg-accent' : 'border-muted-foreground'}`}
       >
-        <div>
-          <FileUploaderContent className='flex'>
-            {files && files.length < dropZoneConfig.maxFiles && (
-              <div>
-                <FileInput disabled={isUploadingFiles}>
-                  <div className='hover:bg-primary/15 p-4 w-32 h-32 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
-                    <ImagePlus className='w-12 h-12 text-primary' />
-                    {progress > 0 ? (
-                      <LoadingCircle progress={progress} size={35} strokeWidth={6} />
+        <FileUploader
+          value={files}
+          onValueChange={onFileDrop}
+          dropzoneOptions={dropZoneConfig}
+          className={`${vertical ? '' : 'flex '}`}
+          orientation='horizontal'
+        >
+          <div className='flex w-full flex-wrap'>
+            <FileUploaderContent className={centerItem ? 'justify-center' : 'justify-start'}>
+              {files && files.length < dropZoneConfig.maxFiles && (
+                <div>
+                  <FileInput>
+                    {renderInputUI ? (
+                      <div>{renderInputUI(isDragActive, files, dropZoneConfig.maxFiles, message)}</div>
                     ) : (
-                      <p className='text-sm text-primary'>
-                        Drag & drop or browse file ({files?.length ?? 0}/{dropZoneConfig.maxFiles})
-                      </p>
+                      <div className='w-32 h-32 overflow-hidden hover:bg-primary/15 flex flex-col items-center justify-center text-center border border-dashed rounded-xl border-primary py-4 text-primary transition-all duration-500'>
+                        <Upload className='w-12 h-12 mb-4 text-muted-foreground' />
+                        {isDragActive ? (
+                          <p className='text-lg font-medium text-foreground'>Drop your file here</p>
+                        ) : (
+                          <>
+                            <p className='text-lg font-medium text-primary'>Drag & drop your files here</p>
+                            <p className='mt-2 text-sm text-muted-foreground'>or click to select files</p>
+                            {files && files.length < dropZoneConfig.maxFiles ? (
+                              <span className='mt-2 text-sm text-primary px-8'>{message} </span>
+                            ) : (
+                              <span className='mt-2 text-sm text-primary px-8'>
+                                {`You have reached the maximum number of files allowed`}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </div>
                     )}
-                  </div>
-                </FileInput>
-              </div>
-            )}
-            {files &&
-              files.length > 0 &&
-              files.map((file, index) => (
-                <ProductFileUploaderItem key={index} index={index}>
-                  <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300 p-0'>
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      className='object-contain w-full h-full rounded-lg'
-                      onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
-                    />
-                  </div>
-                </ProductFileUploaderItem>
-              ))}
-          </FileUploaderContent>
-        </div>
-      </FileUploader>
-    </div>
+                  </FileInput>
+                </div>
+              )}
+              {files &&
+                files.length > 0 &&
+                (vertical ? (
+                  <ScrollArea className='h-40 w-full rounded-md py-2 border-t-4 border-primary'>
+                    <div className='flex gap-2 px-4'>
+                      {files.map((file, index) => (
+                        <ProductFileUploaderItem
+                          key={index}
+                          index={index}
+                          className='p-0 flex items-center justify-between rounded-lg hover:border-primary'
+                        >
+                          <div className='w-full h-full'>
+                            <PreviewDialog
+                              className='lg:max-w-xl md:max-w-md sm:max-w-sm max-w-xs xl:max-w-xl'
+                              content={
+                                file.type.includes('image') ? (
+                                  URL.createObjectURL(file)
+                                ) : (
+                                  <div className='flex items-center justify-center'>
+                                    <FilesIcon className='w-12 h-12 text-muted-foreground' />
+                                    <span className='text-sm font-medium truncate max-w-[200px]'>{file.name}</span>
+                                  </div>
+                                )
+                              }
+                              trigger={
+                                renderFileItemUI ? (
+                                  renderFileItemUI(file)
+                                ) : (
+                                  <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300 p-0'>
+                                    {file.type.includes('image') ? (
+                                      <img
+                                        src={URL.createObjectURL(file)}
+                                        alt={file.name}
+                                        className='object-contain w-full h-full rounded-lg'
+                                        onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
+                                      />
+                                    ) : (
+                                      <FilesIcon className='w-12 h-12 text-muted-foreground' />
+                                    )}
+                                  </div>
+                                )
+                              }
+                              contentType={file.type.includes('image') ? 'image' : undefined}
+                            />
+                          </div>
+                        </ProductFileUploaderItem>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                ) : (
+                  // <ScrollArea className='h-[120px] w-full rounded-md shadow-2xl py-2 border-t-4 border-primary'>
+                  <>
+                    {files.map((file, index) => (
+                      <ProductFileUploaderItem
+                        key={index}
+                        index={index}
+                        className='p-0 flex items-center justify-between rounded-lg hover:border-primary'
+                      >
+                        <PreviewDialog
+                          content={
+                            file?.type?.includes('image') ? (
+                              URL.createObjectURL(file)
+                            ) : (
+                              <div className='flex items-center justify-center'>
+                                <FilesIcon className='w-12 h-12 text-muted-foreground' />
+                                <span className='text-sm font-medium truncate max-w-[200px]'>{file.name}</span>
+                              </div>
+                            )
+                          }
+                          trigger={
+                            renderFileItemUI ? (
+                              renderFileItemUI(file)
+                            ) : (
+                              <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300 p-0'>
+                                {file?.type?.includes('image') ? (
+                                  <img
+                                    src={URL.createObjectURL(file)}
+                                    alt={file.name}
+                                    className='object-contain w-full h-full rounded-lg'
+                                    onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
+                                  />
+                                ) : (
+                                  <FilesIcon className='w-12 h-12 text-muted-foreground' />
+                                )}
+                              </div>
+                            )
+                          }
+                          contentType={file?.type?.includes('image') ? 'image' : undefined}
+                        />
+                      </ProductFileUploaderItem>
+                    ))}
+                  </>
+                  //</ScrollArea>
+                ))}
+            </FileUploaderContent>
+          </div>
+        </FileUploader>
+      </div>
+    </>
   )
 }
 
