@@ -1,6 +1,6 @@
 // import { useMutation } from '@tanstack/react-query'
 import { FilesIcon, Upload } from 'lucide-react'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
@@ -20,8 +20,8 @@ type UploadFileModalProps<T extends FieldValues> = {
   renderInputUI?: (isDragActive: boolean, files: File[], maxFiles: number, message?: string) => ReactNode
   renderFileItemUI?: (files: File) => ReactNode
   vertical: boolean
-  onChange?: (value: File[] | File | [] | string | (string | File)[]) => void
   centerItem?: boolean
+  setIsImagesUpload?: React.Dispatch<SetStateAction<boolean>>
 }
 
 const UploadProductImages = <T extends FieldValues>({
@@ -31,8 +31,8 @@ const UploadProductImages = <T extends FieldValues>({
   renderInputUI,
   renderFileItemUI,
   vertical = true,
-  onChange,
-  centerItem = false
+  centerItem = false,
+  setIsImagesUpload
 }: UploadFileModalProps<T>) => {
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
@@ -100,19 +100,20 @@ const UploadProductImages = <T extends FieldValues>({
   const onFileDrop = async (newFiles: File[] | null) => {
     const oldFiles = files
     try {
+      if (setIsImagesUpload) {
+        setIsImagesUpload(true)
+      }
       // Check file is string or array
       // If string, convert to file and set to state
       if (fieldType === 'string') {
         // Value must be an array of files
         if (!newFiles?.length && field.onChange) {
           field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
-          onChange?.('')
         }
         if (newFiles?.length) {
           // const fileUrls = await convertFileToUrl(newFiles)
 
           field?.onChange?.(newFiles[0] as unknown as React.ChangeEvent<HTMLInputElement>)
-          onChange?.(newFiles[0])
         }
       }
 
@@ -122,7 +123,6 @@ const UploadProductImages = <T extends FieldValues>({
 
         if (!newFiles) {
           return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
-          onChange?.([])
         }
         if (newFiles.length > oldFiles.length) {
           const diffedFiles = newFiles.filter((file) => {
@@ -137,7 +137,6 @@ const UploadProductImages = <T extends FieldValues>({
             ...(field?.value as string[]),
             ...diffedFiles
           ] as unknown as React.ChangeEvent<HTMLInputElement>)
-          onChange?.([...(field?.value as string[]), ...diffedFiles])
         } else {
           const deletedIndex = oldFiles.findIndex((oldFile) => {
             return !newFiles.some((file) => file.name === oldFile.name && file.lastModified === oldFile.lastModified)
@@ -149,7 +148,6 @@ const UploadProductImages = <T extends FieldValues>({
 
             setFiles(updatedFiles)
             field?.onChange?.(updatedFiles as unknown as React.ChangeEvent<HTMLInputElement>)
-            onChange?.(updatedFiles)
           }
         }
       }
