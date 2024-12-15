@@ -13,19 +13,19 @@ export type TVoucher = TMetaData & {
 
   discountValue: number
 
-  maxDiscount: number
+  maxDiscount?: number
 
-  minOrderValue: number
+  minOrderValue?: number
 
-  description: string
+  description?: string
 
   status: StatusEnum
 
-  amount: number
+  amount?: number
 
-  startTime: Date
+  startTime: string
 
-  endTime: Date
+  endTime: string
 
-  brand: TBrand | string
+  brand?: TBrand | string
 }

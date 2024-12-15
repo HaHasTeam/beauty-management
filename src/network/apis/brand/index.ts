@@ -18,9 +18,13 @@ export const requestCreateBrandApi = toMutationFetcher<TRequestCreateBrandParams
 export const updateStatusBrandByIdApi = toMutationFetcher<TUpdateStatusBrandRequestParams, TServerResponse<IBranch>>(
   'updateStatusBrandById',
   async (params) => {
-    return publicRequest(`/brands/update-status/${params?.brandId}`, {
+    return privateRequest(`/brands/update-status/`, {
       method: 'PUT',
-      data: params
+      data: {
+        reason: 'fdsaf',
+        brandId: params?.brandId,
+        status: params.status
+      }
     })
   }
 )
@@ -28,7 +32,7 @@ export const updateStatusBrandByIdApi = toMutationFetcher<TUpdateStatusBrandRequ
 export const updateBrandByIdApi = toMutationFetcher<TUpdateBrandRequestParams, TServerResponse<IBranch>>(
   'updateBrandById',
   async (params) => {
-    return publicRequest(`/brands/update-detail/${params?.brandId}`, {
+    return privateRequest(`/brands/update-detail/${params?.brandId}`, {
       method: 'PUT',
       data: params
     })

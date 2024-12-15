@@ -65,7 +65,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Email</FormLabel>
+                <FormLabel required>Email Brand</FormLabel>
                 <FormControl>
                   <Input
                     className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'

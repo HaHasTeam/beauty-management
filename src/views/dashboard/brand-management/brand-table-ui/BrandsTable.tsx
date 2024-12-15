@@ -1,7 +1,4 @@
-'use client'
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { Row } from '@tanstack/react-table'
 import * as React from 'react'
 
@@ -75,7 +72,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
    * 3. Used with DataTableAdvancedToolbar: Enables a more sophisticated filtering UI.
    * 4. Date and boolean types: Adds support for filtering by date ranges and boolean values.
    */
-  const [isOpen, setIsOpen] = React.useState(true)
 
   const { table } = useDataTable({
     queryStates,
@@ -101,7 +97,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
   const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
     // Map over the brand array and call the mutation for each brand
     const updatePromises = brand.map((item) =>
-      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED })
+      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED, reason: 'ban' })
     )
 
     // Wait for all updates to complete
@@ -111,19 +107,9 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
     //   // exact: true
     // })
   }
-  const updateStatusBrand = async (brand: Row<TBrand>['original'][], status: BrandStatusEnum) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) => updateStatusBrandMutation({ brandId: item.id, status: status }))
-
-    // Wait for all updates to complete
-    await Promise.all(updatePromises)
-    // await queryClient.invalidateQueries({ queryKey: ['getAllBrands', 'updateStatusBrandById'] })
-  }
 
   return (
     <>
-      <button onClick={() => setIsOpen(!isOpen)}>{`${isOpen ? 'Close' : 'Open'} the devtools panel`}</button>
-      {isOpen && <ReactQueryDevtoolsPanel onClose={() => setIsOpen(false)} />}
       <DataTable table={table} floatingBar={<BrandsTableFloatingBar table={table} />}>
         <DataTableToolbar table={table} filterFields={filterFields}>
           <BrandsTableToolbarActions table={table} />
@@ -145,10 +131,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={(brand) => {
-          updateStatusBrand(brand, BrandStatusEnum.ACTIVE)
-          rowAction?.row.toggleSelected(false)
-        }}
       />
 
       <UpdateStatusBrandDialog
@@ -157,10 +139,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={(brand) => {
-          updateStatusBrand(brand, BrandStatusEnum.INACTIVE)
-          rowAction?.row.toggleSelected(false)
-        }}
       />
 
       <UpdateStatusBrandDialog
@@ -169,10 +147,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
-        onSuccess={(brand) => {
-          updateStatusBrand(brand, BrandStatusEnum.DENIED)
-          rowAction?.row.toggleSelected(false)
-        }}
       />
       <ViewDetailsBrandsSheet
         TBrand={rowAction?.row.original}

@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import { Card } from '@/components/ui/card'
@@ -11,11 +11,9 @@ import { DataTableQueryState } from '@/types/table'
 import { BrandsTable } from './BrandsTable'
 
 export default function IndexPage() {
-  const queryClient = useQueryClient()
   const { data: brandListData, isLoading: isBrandListLoading } = useQuery({
     queryKey: [getAllBrandsApi.queryKey],
-    queryFn: getAllBrandsApi.fn,
-    refetchOnWindowFocus: false
+    queryFn: getAllBrandsApi.fn
   })
   const queryStates = useState<DataTableQueryState<TBrand>>({} as DataTableQueryState<TBrand>)
   return (
@@ -37,15 +35,6 @@ export default function IndexPage() {
           </Shell>
         </div>
       </div>
-      <button
-        onClick={() => {
-          queryClient.invalidateQueries({
-            queryKey: [getAllBrandsApi.queryKey]
-          })
-        }}
-      >
-        Test
-      </button>
     </Card>
   )
 }
