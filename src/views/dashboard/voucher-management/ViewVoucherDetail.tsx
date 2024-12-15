@@ -1,17 +1,31 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { Info } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { formatDate } from '@/lib/utils'
+import { getVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
-import { DiscountTypeEnum, VoucherEnum } from '@/types/enum'
+import { DiscountTypeEnum, StatusEnum, VoucherEnum } from '@/types/enum'
 
 import VoucherForm from './VoucherForm'
 
 function ViewVoucherDetail() {
+  const { id } = useParams()
+  const voucherId = id ?? ''
+
+  const { data: voucherData } = useQuery({
+    queryKey: [getVoucherByIdApi.queryKey, voucherId as string],
+    queryFn: getVoucherByIdApi.fn,
+    enabled: !!voucherId,
+    select: (data) => data.data
+  })
   const form = useForm<z.infer<typeof voucherCreateSchema>>({
     resolver: zodResolver(voucherCreateSchema),
     defaultValues: {
@@ -27,9 +41,42 @@ function ViewVoucherDetail() {
       // startTime: new Date(),
       // endTime: new Date()
       startTime: '',
-      endTime: ''
+      endTime: '',
+      status: false
     }
   })
+  const amountVoucher = form.watch('amount') || 0
+  const discountValue = form.watch('discountValue') || 0
+
+  const minOrderValue = form.watch('minOrderValue') || 0
+  const startTime = form.watch('startTime') || new Date()
+  const endTime = form.watch('endTime') || new Date()
+
+  useEffect(() => {
+    async function convertVoucherData() {
+      if (voucherData && voucherId) {
+        const formatData = {
+          id: voucherId,
+          name: voucherData.name,
+          code: voucherData.code,
+          type: voucherData.type == VoucherEnum.GROUP_BUYING ? VoucherEnum.GROUP_BUYING : VoucherEnum.NORMAL,
+          discountType:
+            voucherData.discountType == DiscountTypeEnum.AMOUNT ? DiscountTypeEnum.AMOUNT : DiscountTypeEnum.PERCENTAGE,
+          discountValue: voucherData.discountValue,
+          maxDiscount: voucherData.maxDiscount,
+          minOrderValue: voucherData.minOrderValue,
+          description: voucherData.description,
+          status: voucherData.status === StatusEnum.ACTIVE ? true : false,
+          amount: voucherData.amount,
+          startTime: voucherData.startTime,
+          endTime: voucherData.endTime,
+          brand: voucherData.brand
+        }
+        form.reset(formatData)
+      }
+    }
+    convertVoucherData()
+  }, [form, voucherData, voucherId])
 
   return (
     <div className='relative flex w-full flex-col md:pt-[unset]'>
@@ -43,24 +90,38 @@ function ViewVoucherDetail() {
 
             <Card className='p-4 bg-primary/10 border-primary space-y-2'>
               <div className='space-y-2 text-sm'>
-                <p>• Giảm --% - Không giới hạn số tiền tối đa</p>
+                <p>
+                  • Giảm {discountValue}
+                  {form.watch('discountType') == DiscountTypeEnum.AMOUNT ? '--đ' : '--%'}
+                </p>
                 <p>• Hiện mã giảm giá trong [Trang Chi Tiết Sản Phẩm]</p>
-                <p>• Thời gian hiệu lực: 13/12/2024 - 15:30 → --</p>
-                <p>• Giá trị đơn hàng tối thiểu: -- đ</p>
                 <p>
+                  • Thời gian hiệu lực:{' '}
+                  {formatDate(startTime, {
+                    hour: 'numeric',
+                    minute: 'numeric'
+                  })}{' '}
+                  →{' '}
+                  {formatDate(endTime, {
+                    hour: 'numeric',
+                    minute: 'numeric'
+                  })}
+                </p>
+                <p>• Giá trị đơn hàng tối thiểu: {minOrderValue > 0 ? minOrderValue : '--'} đ</p>
+                {/* <p>
                   • Nhóm khách hàng áp dụng: <span className='text-primary'>Tất cả khách hàng</span>
-                </p>
-                <p>• Tổng số lượng mã giảm giá: --</p>
-                <p>• Không giới hạn số lần sử dụng mỗi khách hàng</p>
-                <p>
+                </p> */}
+                <p>• Tổng số lượng mã giảm giá: {amountVoucher > 0 ? amountVoucher : '--'}</p>
+                {/* <p>• Không giới hạn số lần sử dụng mỗi khách hàng</p> */}
+                {/* <p>
                   • Áp dụng cho: <span className='text-primary'>Tất cả sản phẩm</span>
-                </p>
+                </p> */}
               </div>
             </Card>
           </div>
 
           <div className='space-y-4'>
-            <h3 className='text-lg font-medium'>Hiển thị mẫu trên ứng dụng Tiki</h3>
+            <h3 className='text-lg font-medium'>Hiển thị mẫu </h3>
 
             <Tabs defaultValue='product' className='w-full'>
               <TabsList className='grid w-full grid-cols-2 h-auto p-1'>
@@ -97,7 +158,7 @@ function ViewVoucherDetail() {
                     </div>
                     <div className='flex-1'>
                       <div className='flex items-center gap-2'>
-                        <span>Giảm --%</span>
+                        <span>Giảm {form.watch('discountType') == DiscountTypeEnum.AMOUNT ? '--đ' : '--%'}</span>
                         <Info className='w-4 h-4 text-primary' />
                       </div>
                       <div className='text-sm text-gray-500'>Đơn từ 0K</div>

@@ -68,7 +68,11 @@ export const privateRoutes: RouteObject[] = [
             index: true,
             element: <Vouchers />
           },
-          { path: routesConfig[Routes.ADD_VOUCHER].path, element: <ViewVoucherDetail /> }
+          { path: routesConfig[Routes.ADD_VOUCHER].path, element: <ViewVoucherDetail /> },
+          {
+            path: 'update/:id',
+            element: <ViewVoucherDetail />
+          }
         ]
       },
       {

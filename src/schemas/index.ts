@@ -4,7 +4,9 @@ import { defaultRequiredRegex, numberRequiredRegex } from '@/constants/regex'
 import { DiscountTypeEnum, StatusEnum, VoucherEnum } from '@/types/enum'
 
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
-
+export const reasonSchema = z.object({
+  reason: z.string().min(1, 'Reason is required').max(200, 'Name cannot exceed 200 characters')
+})
 // Now add this object into an array
 const fileArray = z.array(z.instanceof(File))
 export const brandCreateSchema = z.object({
@@ -28,6 +30,7 @@ export const voucherCreateSchema = z.object({
     .number({
       message: numberRequiredRegex.message
     })
+
     .nonnegative('Discount Value must be non-negative'),
   maxDiscount: z.coerce
     .number({
@@ -65,5 +68,6 @@ export const voucherCreateSchema = z.object({
   //   }),
   startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
   endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE)
+  // status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE)
+  status: z.boolean().default(false).optional()
 })

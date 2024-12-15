@@ -23,9 +23,9 @@ export type TVoucher = TMetaData & {
 
   amount?: number
 
-  startTime: Date
+  startTime: string
 
-  endTime: Date
+  endTime: string
 
   brand?: TBrand | string
 }

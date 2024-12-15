@@ -1,8 +1,8 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, EyeIcon, SettingsIcon, XIcon } from 'lucide-react'
+import { Ellipsis, EyeIcon, Pen, SettingsIcon, XIcon } from 'lucide-react'
 import { GrRevert } from 'react-icons/gr'
+import { Link } from 'react-router-dom'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -13,9 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { StatusEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
+import { formatPriceVND } from '@/utils'
 
 import { getStatusIcon } from './helper'
 
@@ -50,46 +52,42 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
       size: 1
     },
     {
-      id: 'brand',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Brand Name' />,
+      id: 'voucher',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Chương trình giảm giá' />,
       cell: ({ row }) => {
         const displayName = row.original.name
-        const image = row.original.code
         return (
           <div className='flex space-x-2 items-center'>
-            <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
-              <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
-            </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
         )
       }
     },
     {
-      accessorKey: 'email',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Email' />,
+      accessorKey: 'code',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Mã giảm giá' />,
       cell: ({ cell }) => <div>{cell.row.original.code}</div>,
       size: 100,
       enableSorting: false,
       enableHiding: false
     },
     {
-      accessorKey: 'phone',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Phone' />,
-      cell: ({ cell }) => <div>{cell.row.original.code}</div>,
+      accessorKey: 'discountValue',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Số tiền giảm' />,
+      cell: ({ cell }) => <div>{formatPriceVND(cell.row.original.discountValue)}</div>,
       size: 10,
       enableSorting: false,
       enableHiding: false
     },
     {
-      accessorKey: 'address',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Address' />,
-      cell: ({ cell }) => <div>{cell.row.original.description}</div>,
+      accessorKey: 'amount',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng mã' />,
+      cell: ({ cell }) => <div>{cell.row.original.amount}</div>,
       size: 10,
       enableSorting: false,
       enableHiding: false
     },
+
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
@@ -127,8 +125,27 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
       }
     },
     {
+      accessorKey: 'startTime',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Thời gian bắt đầu' />,
+      cell: ({ cell }) =>
+        formatDate(cell.getValue() as Date, {
+          hour: 'numeric',
+          minute: 'numeric'
+        })
+    },
+
+    {
+      accessorKey: 'endTime',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Thời gian kết thúc' />,
+      cell: ({ cell }) =>
+        formatDate(cell.getValue() as Date, {
+          hour: 'numeric',
+          minute: 'numeric'
+        })
+    },
+    {
       accessorKey: 'createdAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Created At' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Ngày tạo' />,
       cell: ({ cell }) =>
         formatDate(cell.getValue() as Date, {
           hour: 'numeric',
@@ -156,6 +173,14 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
                   <EyeIcon />
                   View Details
                 </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={routesConfig[Routes.UPDATE_VOUCHER].getPath(row.original.id)}>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <Pen />
+                    Update
+                  </span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {row.original.status !== StatusEnum.BANNED ? (
