@@ -52,9 +52,7 @@ export default function EmailSignIn({ allowPassword }: EmailSignInProps) {
                   <FormControl>
                     <Input
                       className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='
-                     e.g. allure@gmail.com
-                    '
+                      placeholder='e.g. allure@gmail.com'
                       {...field}
                     />
                   </FormControl>

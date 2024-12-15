@@ -20,5 +20,9 @@ const toolbarOptions = [
 ]
 
 export const modules = {
-  toolbar: toolbarOptions
+  toolbar: toolbarOptions,
+  clipboard: {
+    matchVisual: false, // Prevents adding extra line breaks when pasting
+    suppressLoadFalsePositive: true // Helps prevent unexpected load warnings
+  }
 }

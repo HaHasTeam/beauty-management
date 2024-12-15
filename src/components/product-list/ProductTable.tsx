@@ -15,11 +15,12 @@ import {
 import { useMemo, useState } from 'react'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
-import CardMenu from '@/components/card/CardMenu'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { IProductTable } from '@/types/product'
+
+import TableMoreDropDown from './TableMoreDropdown'
 
 function ProductTable(props: { tableData: IProductTable[] }) {
   const { tableData } = props
@@ -36,11 +37,11 @@ function ProductTable(props: { tableData: IProductTable[] }) {
     return arrPageCount
   }
   const columns = [
-    columnHelper.accessor('id', {
-      id: 'id',
-      header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>ID</p>,
-      cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
-    }),
+    // columnHelper.accessor('id', {
+    //   id: 'id',
+    //   header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>ID</p>,
+    //   cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
+    // }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>NAME</p>,
@@ -50,20 +51,7 @@ function ProductTable(props: { tableData: IProductTable[] }) {
         </div>
       )
     }),
-    columnHelper.accessor('price', {
-      id: 'price',
-      header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>PRICE</p>,
-      cell: (info) => (
-        <div className='flex w-full items-center gap-[14px]'>
-          <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
-        </div>
-      )
-    }),
-    columnHelper.accessor('quantity', {
-      id: 'quantity',
-      header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>QUANTITY</p>,
-      cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
-    }),
+
     columnHelper.accessor('description', {
       id: 'description',
       header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>DESCRIPTION</p>,
@@ -77,17 +65,31 @@ function ProductTable(props: { tableData: IProductTable[] }) {
     columnHelper.accessor('brand', {
       id: 'brand',
       header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>BRAND</p>,
-      cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
+      cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()?.name}</p>
     }),
     columnHelper.accessor('category', {
       id: 'category',
       header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>CATEGORY</p>,
+      cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()?.name}</p>
+    }),
+    columnHelper.accessor('status', {
+      id: 'status',
+      header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>STATUS</p>,
       cell: (info) => <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
     }),
-    columnHelper.accessor('menu', {
+    columnHelper.accessor('updatedAt', {
+      id: 'updatedAt',
+      header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>LAST MODIFIED</p>,
+      cell: (info) => (
+        <div className='flex w-full items-center gap-[14px]'>
+          <p className='text-sm font-medium text-zinc-950 dark:text-white'>{info.getValue()}</p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('id', {
       id: 'menu',
       header: () => <p className='text-xs font-semibold text-zinc-500 dark:text-zinc-400'>ACTION</p>,
-      cell: () => <CardMenu vertical={true} />
+      cell: (info) => <TableMoreDropDown vertical={true} id={info.getValue() ?? ''} currentStatus={'INACTIVE'} />
     })
   ] // eslint-disable-next-line
   const [data, setData] = useState(() => [...defaultData])
