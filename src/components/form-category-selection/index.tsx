@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Check, ChevronDown, ChevronRight, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
+import { productFormMessage } from '@/constants/message'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
@@ -29,9 +31,10 @@ export default function FormCategorySelection({
   const [chosenCategories, setChosenCategories] = useState<ICategory[]>([])
   const [open, setOpen] = useState(false)
   const [categoryError, setCategoryError] = useState<string>('')
+  const currentSelectedCategory = form.watch('category')
 
   // Get root level categories (those with no parent)
-  const rootCategories = categories.filter((cat) => !cat.parentCategory)
+  const rootCategories = categories
 
   // Handle selection at a specific level
   const handleSelect = (category: ICategory | null, level: number) => {
@@ -48,8 +51,8 @@ export default function FormCategorySelection({
   }
 
   // Helper function to fetch subcategories of the current category
-  const getSubCategories = (parentId: string): ICategory[] => {
-    return categories.filter((cat) => cat.parentCategory?.id === parentId)
+  const getSubCategories = (category: ICategory): ICategory[] => {
+    return category.subCategories || []
   }
   const handleShowCategorySelect = () => {
     setOpen((prev) => !prev)
@@ -67,13 +70,11 @@ export default function FormCategorySelection({
     const lastSelectedCategory = selectedCategories[selectedCategories.length - 1]
 
     // Check if the last selected category has subcategories
-    const hasSubCategories = lastSelectedCategory
-      ? categories.some((cat) => cat.parentCategory?.id === lastSelectedCategory.id)
-      : false
+    const hasSubCategories = lastSelectedCategory ? (lastSelectedCategory.subCategories?.length || 0) > 0 : false
 
     if (hasSubCategories) {
       // If the last selected category has children, show an error or notification
-      setCategoryError('Please select the last-level category.')
+      setCategoryError(productFormMessage.categoryLastLevel)
       return
     }
 
@@ -92,41 +93,49 @@ export default function FormCategorySelection({
     setCategoryError('')
   }, [resetSignal])
   useEffect(() => {
-    if (defineFormSignal) {
-      const lastSelectedCategory = form.getValues('category')
-
-      if (!lastSelectedCategory) {
-        setSelectedCategories([])
-        setChosenCategories([])
-        return
-      }
-
-      // Helper to find the category object by ID
-      const findCategoryById = (id: string): ICategory | undefined => {
-        return categories.find((cat) => cat.id === id)
-      }
-
-      // Function to build the path from leaf to root
-      const buildCategoryPath = (categoryId: string): ICategory[] => {
-        const path: ICategory[] = []
-        let currentCategory = findCategoryById(categoryId)
-
-        while (currentCategory) {
-          path.unshift(currentCategory)
-          currentCategory = currentCategory.parentCategory
-            ? findCategoryById(currentCategory.parentCategory.id)
-            : undefined
+    // Helper to find the category object by ID
+    const findCategoryById = (id: string): ICategory | undefined => {
+      const findInCategories = (cats: ICategory[]): ICategory | undefined => {
+        for (const cat of cats) {
+          if (cat?.id === id) return cat
+          if (cat?.subCategories) {
+            const found = findInCategories(cat?.subCategories)
+            if (found) return found
+          }
         }
+        return undefined
+      }
+      return findInCategories(categories)
+    }
 
-        return path
+    // Function to build the path from leaf to root
+    const buildCategoryPath = (categoryId: string): ICategory[] => {
+      const path: ICategory[] = []
+      let currentCategory = findCategoryById(categoryId)
+
+      while (currentCategory) {
+        path.unshift(currentCategory)
+        currentCategory = currentCategory.parentCategory
+          ? findCategoryById(currentCategory.parentCategory.id)
+          : undefined
       }
 
-      // Build the path and set selected categories
-      const categoryPath = buildCategoryPath(lastSelectedCategory)
-      setSelectedCategories(categoryPath)
-      setChosenCategories(categoryPath)
+      return path
     }
-  }, [defineFormSignal, form, categories])
+    if (currentSelectedCategory) {
+      const categoryPath = buildCategoryPath(currentSelectedCategory)
+      if (
+        categoryPath.length !== selectedCategories.length ||
+        categoryPath.some((cat, index) => cat.id !== selectedCategories[index]?.id)
+      ) {
+        setSelectedCategories(categoryPath)
+        setChosenCategories(categoryPath)
+      }
+    } else {
+      setSelectedCategories([])
+      setChosenCategories([])
+    }
+  }, [defineFormSignal, form, categories, currentSelectedCategory])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -138,10 +147,10 @@ export default function FormCategorySelection({
               className={`${!open && 'outline-none ring-1 ring-ring'} relative border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
             >
               {!chosenCategories || chosenCategories?.length === 0 ? (
-                <span className='text-muted-foreground line-clamp-1'>Vui lòng chọn ngành hàng</span>
+                <span className='text-muted-foreground line-clamp-1'>Vui lòng chọn danh mục</span>
               ) : (
                 <div className='flex items-center justify-between gap-1 w-full'>
-                  <span>{chosenCategories.map((cat) => cat.name).join(' > ') || 'Vui lòng chọn ngành hàng'}</span>
+                  <span>{chosenCategories.map((cat) => cat.name).join(' > ') || 'Vui lòng chọn danh mục'}</span>
                 </div>
               )}
               <ChevronDown className='w-5 h-5 text-muted-foreground' />
@@ -150,7 +159,7 @@ export default function FormCategorySelection({
         </PopoverTrigger>
         <PopoverContent className='w-[100%] p-0' align='start'>
           <div className='w-full flex flex-col bg-white p-3 rounded-lg shadow-md'>
-            <div className='flex text-sm p-2 bg-primary/10 items-center gap-2 rounded-md'>
+            <div className='flex text-sm p-2 bg-yellow-50 items-center gap-2 rounded-md'>
               <Info className='w-4 h-4' /> Vui lòng chọn danh mục cuối cấp được in đậm.
             </div>
             <div className='w-full h-full flex'>
@@ -186,7 +195,7 @@ export default function FormCategorySelection({
               </div>
               {/* Render subsequent levels */}
               {selectedCategories.map((category, index) => {
-                const subCategories = getSubCategories(category.id)
+                const subCategories = getSubCategories(category)
                 if (subCategories.length === 0) return null
 
                 return (
@@ -227,7 +236,7 @@ export default function FormCategorySelection({
               <span className='text-sm font-semibold'>Đang chọn: </span>
               {selectedCategories && selectedCategories?.length > 0 && (
                 <span className='text-blue-500'>
-                  {selectedCategories.map((cat) => cat.name).join(' > ') || 'Vui lòng chọn ngành hàng'}
+                  {selectedCategories.map((cat) => cat.name).join(' > ') || 'Vui lòng chọn danh mục'}
                 </span>
               )}
               {categoryError && categoryError.length > 0 && (

@@ -3,7 +3,7 @@ import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-export const getAllProductApi = toQueryFetcher<void, TServerResponse<IServerCreateProduct[]>>(
+export const getAllProductApi = toQueryFetcher<void, TServerResponse<IResponseProduct[]>>(
   'getAllProductApi',
   async () => {
     return privateRequest('/products')

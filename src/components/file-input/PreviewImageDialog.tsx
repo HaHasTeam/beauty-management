@@ -14,7 +14,7 @@ export function PreviewDialog({ trigger, content, contentType, className }: Prev
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className={cn('max-w-3xl p-5 flex items-center  flex-col', className)}>
+      <DialogContent className={cn('xl:max-w-3xl p-5 flex items-center flex-col', className)}>
         <DialogTitle>Preview Image</DialogTitle>
         {contentType === 'image' && typeof content === 'string' ? (
           <div className='aspect-auto rounded-xl overflow-hidden shadow-md border flex items-center justify-center object-contain'>
