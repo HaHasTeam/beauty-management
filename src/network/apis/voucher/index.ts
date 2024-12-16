@@ -3,7 +3,7 @@ import { TVoucher } from '@/types/voucher'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
-import { TRequestCreateVoucherParams, TUpdateStatusVoucherRequestParams } from './type'
+import { TRequestCreateVoucherParams, TUpdateStatusVoucherRequestParams, TUpdateVoucherRequestParams } from './type'
 
 export const createVoucherApi = toMutationFetcher<TRequestCreateVoucherParams, TServerResponse<TVoucher>>(
   'createVoucher',
@@ -23,6 +23,17 @@ export const updateStatusVoucherByIdApi = toMutationFetcher<
     data: params
   })
 })
+
+export const updateVoucherByIdApi = toMutationFetcher<TUpdateVoucherRequestParams, TServerResponse<TVoucher>>(
+  'updateVoucherById',
+  async (params) => {
+    return privateRequest(`/vouchers/update-detail/${params?.id}`, {
+      method: 'PUT',
+      data: params
+    })
+  }
+)
+
 export const getVoucherByIdApi = toQueryFetcher<string, TServerResponse<TVoucher>>('getVoucherById', async (params) => {
   return publicRequest(`/vouchers/get-by-id/${params}`, {
     method: 'GET'
