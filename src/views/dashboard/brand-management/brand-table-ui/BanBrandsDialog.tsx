@@ -69,8 +69,8 @@ export function BanBrandsDialog({ Brands, showTrigger = true, onSuccess, ...prop
             </DialogTitle>
             <DialogDescription>
               You are about to <b className='uppercase'>ban</b>{' '}
-              {Brands.map((Brand) => (
-                <Badge className='mr-1' key={Brand.id}>
+              {Brands.map((Brand, index) => (
+                <Badge className='mr-1' key={index}>
                   {Brand.name}
                 </Badge>
               ))}
@@ -105,8 +105,10 @@ export function BanBrandsDialog({ Brands, showTrigger = true, onSuccess, ...prop
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
             You are about to <b className='uppercase'>ban</b>{' '}
-            {Brands.map((Brand) => (
-              <Badge className='mr-1'>{Brand.name}</Badge>
+            {Brands.map((Brand, index) => (
+              <div className='' key={index}>
+                <Badge className='mr-1'>{Brand.name}</Badge>
+              </div>
             ))}
             . After banning, the Brads will be disabled. Please check the Brads before banning.
           </DrawerDescription>

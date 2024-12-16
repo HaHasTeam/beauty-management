@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { BadgePlus, Images, Info } from 'lucide-react'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -27,7 +28,7 @@ import { StatusEnum } from '@/types/enum'
 function RegisterBrand() {
   const { successToast } = useToast()
   const navigate = useNavigate()
-
+  const { t } = useTranslation()
   // const accountId = accessToken ? jwtDecode<TEmailDecoded>(accessToken).accountId : undefined
 
   const form = useForm<z.infer<typeof brandCreateSchema>>({
@@ -175,7 +176,7 @@ function RegisterBrand() {
       <header className='border-b bg-secondary px-4 py-3 shadow-md'>
         <div className='flex items-center gap-2'>
           <img src={MockImage} alt='Shopee Logo' width={32} height={32} className='h-8 w-8' />
-          <span className='text-lg'>Đăng ký trở thành Người bán hàng</span>
+          <span className='text-lg'>{t('header.registerBrand')}</span>
         </div>
       </header>
 

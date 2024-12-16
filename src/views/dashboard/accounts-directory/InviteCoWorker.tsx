@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import FormLabel from '@/components/form-label'
 import { TagsInput } from '@/components/tags-input'
-import Tooltip from '@/components/tooltip'
+import Tooltip from '@/components/Tooltip'
 import {
   Dialog,
   DialogContent,
