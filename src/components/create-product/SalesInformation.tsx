@@ -32,6 +32,7 @@ export default function SalesInformation({
   const [errorSKUMessage, setErrorSKUMessage] = useState<string>('')
   const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
   const [duplicatedSKUIndex, setDuplicatedSKUIndex] = useState<number[]>([])
+  const [isImagesUpload, setIsImagesUpload] = useState<boolean>(false)
   const selectedCategory = form.watch('category')
   const saleInfoRef = useRef<HTMLDivElement>(null)
   const SALE_INFORMATION_INDEX = 3
@@ -145,13 +146,13 @@ export default function SalesInformation({
       regenerateCombinations(updatedOptions)
     }
   }
-
   const handleRemoveOption = (classificationIndex: number, optionIndex: number) => {
     const updatedOptions = [...classificationsOptions]
     updatedOptions[classificationIndex].options.splice(optionIndex, 1)
     setClassificationsOptions(updatedOptions)
     regenerateCombinations(updatedOptions)
   }
+
   const handleReset = () => {
     setClassificationCount(0)
     setClassificationsOptions([])
@@ -219,6 +220,17 @@ export default function SalesInformation({
     setErrorSKUMessage(errorMessage)
     setDuplicatedSKUIndex(duplicatedIndices)
   }, [combinations, setIsValid])
+
+  useEffect(() => {
+    if (isImagesUpload) {
+      const updatedCombinations = [...combinations]
+      updatedCombinations.forEach((_combo, index) => {
+        updatedCombinations[index].images = form.getValues(`productClassifications.${index}.images`)
+      })
+      setCombinations(updatedCombinations)
+      setIsImagesUpload(false)
+    }
+  }, [combinations, form, isImagesUpload])
   return (
     <div
       className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'
@@ -415,23 +427,8 @@ export default function SalesInformation({
                                                     <UploadProductImages
                                                       field={field}
                                                       vertical={false}
-                                                      onChange={() => {
-                                                        // Update the combinations state when images are uploaded
-                                                        const updated = combinations.map(
-                                                          (combination, combinationIndex) =>
-                                                            combinationIndex === index
-                                                              ? {
-                                                                  ...combination,
-                                                                  images:
-                                                                    form.getValues(
-                                                                      `productClassifications.${index}.images`
-                                                                    ) ?? []
-                                                                }
-                                                              : combination
-                                                        )
-                                                        setCombinations(updated)
-                                                      }}
                                                       centerItem
+                                                      setIsImagesUpload={setIsImagesUpload}
                                                       dropZoneConfigOptions={{ maxFiles: 4 }}
                                                       renderFileItemUI={(file) => {
                                                         return (
