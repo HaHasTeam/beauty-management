@@ -8,3 +8,4 @@ export type TGetVoucherByIdRequestParams = {
 export type TUpdateStatusVoucherRequestParams = TGetVoucherByIdRequestParams & {
   status: string
 }
+export type TUpdateVoucherRequestParams = Omit<TVoucher, 'updatedAt' | 'createdAt' | 'brand'>
