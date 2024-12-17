@@ -57,7 +57,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
           row.original.firstName || row.original.lastName ? `${row.original.firstName} ${row.original.lastName}` : ''
         return (
           <div className='flex space-x-2 items-center'>
-            <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
+            <Avatar>
               <AvatarImage src={row.original.avatar} className='rounded-full border shadow-lg' />
               <AvatarFallback>{row.original.username[0].toUpperCase()}</AvatarFallback>
             </Avatar>
@@ -102,7 +102,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
     },
     {
       accessorKey: 'role',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Coworker Role' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Member Role' />,
       cell: ({ row }) => {
         const roleKey = Object.keys(UserRoleEnum).find((role) => {
           const value = UserRoleEnum[role as keyof typeof UserRoleEnum]

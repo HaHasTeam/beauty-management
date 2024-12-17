@@ -10,8 +10,8 @@ import { steps } from '@/constants/helper'
 import { productFormMessage, productPageMessage } from '@/constants/message'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getCategoryApi } from '@/network/apis/category'
 import { uploadFilesApi } from '@/network/apis/file'
+import { getAllCategoryApi } from '@/network/apis/category'
 import { getUserProfileApi } from '@/network/apis/user'
 import { getProductApi, updateProductApi } from '@/network/product'
 import { ICategory } from '@/types/category'
@@ -62,8 +62,8 @@ const UpdateProduct = () => {
     queryFn: getUserProfileApi.fn
   })
   const { data: useCategoryData, isFetching: isGettingCategory } = useQuery({
-    queryKey: [getCategoryApi.queryKey],
-    queryFn: getCategoryApi.fn
+    queryKey: [getAllCategoryApi.queryKey],
+    queryFn: getAllCategoryApi.fn
   })
 
   const { data: productData, isFetching: isGettingProduct } = useQuery({
