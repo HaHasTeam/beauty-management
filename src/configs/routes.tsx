@@ -21,6 +21,9 @@ export enum Routes {
   FLASH_SALE_DETAILS = 'flash-sale-details',
   PRODUCT_LIST = 'product-list',
   CREATE_PRODUCT = 'create-product',
+  CATEGORY = 'category',
+  ADD_CATEGORY = 'add-category',
+  CATEGORY_DETAILS = 'category-details',
   UPDATE_PRODUCT = 'update-product',
   REGISTER_BRAND = 'register-brand',
   ADD_BRAND = 'add-brand',
@@ -152,6 +155,27 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/home',
     getPath: () => '/dashboard/home'
   },
+  [Routes.CATEGORY]: {
+    name: 'Category',
+    title: 'Category',
+    description: 'Manage your product categories',
+    path: '/dashboard/category',
+    getPath: () => '/dashboard/category'
+  },
+  [Routes.ADD_CATEGORY]: {
+    name: 'Add Category',
+    title: 'Add Category',
+    description: 'Add a new product category',
+    path: '/dashboard/category/add',
+    getPath: () => '/dashboard/category/add'
+  },
+  [Routes.CATEGORY_DETAILS]: {
+    name: 'Category Details',
+    title: 'Category Details',
+    description: 'View and manage category details',
+    path: '/dashboard/category/[id]',
+    getPath: (params) => `/dashboard/category/${params.id}`
+  },
   [Routes.REQUESTS_QUEUE]: {
     name: 'Requests Queue',
     title: 'Requests Queue',
@@ -167,11 +191,11 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/merchants-directory'
   },
   [Routes.ACCOUNTS_DIRECTORY]: {
-    name: 'Accounts Directory ',
-    title: 'Accounts Directory',
-    description: 'Browse the accounts directory',
-    path: '/dashboard/accounts-directory',
-    getPath: () => '/dashboard/accounts-directory'
+    name: 'Accounts ',
+    title: 'Accounts',
+    description: 'Browse the accounts',
+    path: '/dashboard/accounts',
+    getPath: () => '/dashboard/accounts'
   },
   [Routes.SERVICES_CATALOG]: {
     name: 'Services Catalog',

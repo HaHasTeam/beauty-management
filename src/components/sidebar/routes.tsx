@@ -1,4 +1,5 @@
 // Auth Imports
+import { Layers2Icon } from 'lucide-react'
 import { CiSquareQuestion } from 'react-icons/ci'
 import { FaBox } from 'react-icons/fa6'
 import { GrSchedule } from 'react-icons/gr'
@@ -22,6 +23,11 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.BRAND].path,
     icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
+  },
+  {
+    name: routesConfig[Routes.CATEGORY].name,
+    path: routesConfig[Routes.CATEGORY].path,
+    icon: <Layers2Icon className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />
   },
   {
     name: routesConfig[Routes.PRE_ORDER].name,

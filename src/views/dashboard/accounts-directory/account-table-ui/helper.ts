@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, CircleIcon, CircleX, WifiOff } from 'lucide-react'
+import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, CircleX } from 'lucide-react'
 import { FcManager } from 'react-icons/fc'
 import { GiHumanPyramid } from 'react-icons/gi'
 import { GrUserManager } from 'react-icons/gr'
@@ -25,7 +25,7 @@ export function getStatusIcon(status: UserStatusEnum) {
       bgColor: 'bg-yellow-100'
     },
     [UserStatusEnum.INACTIVE]: {
-      icon: WifiOff,
+      icon: CircleMinus,
       iconColor: 'text-gray-500',
       textColor: 'text-gray-500',
       bgColor: 'bg-gray-100'
