@@ -22,6 +22,7 @@ export const brandCreateSchema = z.object({
 })
 
 export const voucherCreateSchema = z.object({
+  orderValueType: z.enum(['noLimit', 'limited']),
   name: z.string().min(1, 'Name is required').max(100, 'Name cannot exceed 100 characters'),
   code: z.string().min(1, 'Code is required').max(50, 'Code cannot exceed 50 characters'),
   type: z.nativeEnum(VoucherEnum).default(VoucherEnum.NORMAL),
@@ -30,7 +31,6 @@ export const voucherCreateSchema = z.object({
     .number({
       message: numberRequiredRegex.message
     })
-
     .nonnegative('Discount Value must be non-negative'),
   maxDiscount: z.coerce
     .number({
@@ -68,6 +68,6 @@ export const voucherCreateSchema = z.object({
   //   }),
   startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
   endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  // status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE)
-  status: z.boolean().default(false).optional()
+  status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE),
+  visibility: z.boolean().default(false).optional()
 })

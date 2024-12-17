@@ -21,3 +21,19 @@ export function formatPriceVND(amount: number): string {
 
   return formatter.format(amount)
 }
+
+/**
+ * Utility function to convert an enum to an array of objects
+ * @param enumObj - The enum to convert
+ * @returns An array of objects with id, value, and label
+ */
+export const enumToArray = (enumObj: object): Array<{ id: number; value: string; label: string }> => {
+  return Object.keys(enumObj).map((key, index) => ({
+    id: index + 1,
+    value: enumObj[key as keyof typeof enumObj],
+    label: key
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/^\w/, (c) => c.toUpperCase()) // Format key for label
+  }))
+}

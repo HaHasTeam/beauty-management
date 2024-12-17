@@ -14,9 +14,12 @@ import FormLabel from '@/components/form-label'
 import { buttonVariants } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
@@ -24,9 +27,11 @@ import { cn } from '@/lib/utils'
 import { createVoucherApi, getAllVouchersApi, getVoucherByIdApi, updateVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
 import { useStore } from '@/stores/store'
-import { DiscountTypeEnum, StatusEnum } from '@/types/enum'
+import { DiscountTypeEnum, discountTypeEnumArray, StatusEnum, voucherEnumArray } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
 import { generateCouponCode } from '@/utils'
+
+import VoucherProductsCard from './VoucherProductsSection'
 
 function VoucherForm({
   voucherData,
@@ -40,6 +45,10 @@ function VoucherForm({
       userData: state.user
     }))
   )
+  function formatCurrency(value: string) {
+    const number = value.replace(/\D/g, '')
+    return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  }
 
   const { successToast } = useToast()
   const navigate = useNavigate()
@@ -100,7 +109,7 @@ function VoucherForm({
       })
     }
   }
-
+  const orderValueType = form.watch('orderValueType')
   return (
     <>
       <Form {...form}>
@@ -133,20 +142,13 @@ function VoucherForm({
                   <FormItem>
                     <FormLabel required>Loại voucher</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'>
+                      <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder='Select voucher type' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {[
-                          { id: 1, value: 'GROUP_BUYING', label: 'Group buying' },
-                          {
-                            id: 2,
-                            value: 'NORMAL',
-                            label: 'Normal'
-                          }
-                        ].map((item) => (
+                        {voucherEnumArray.map((item) => (
                           <SelectItem key={item.id} value={item.value}>
                             {item.label}
                           </SelectItem>
@@ -166,13 +168,7 @@ function VoucherForm({
                   <FormItem>
                     <FormLabel required>Tên chương trình giảm giá</FormLabel>
                     <FormControl>
-                      <Input
-                        className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                        placeholder='
-            Điền tên mã giảm giá
-                    '
-                        {...field}
-                      />
+                      <Input placeholder='Điền tên mã giảm giá' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -197,11 +193,7 @@ function VoucherForm({
                       </button>
                     </div>
                     <FormControl>
-                      <Input
-                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                        placeholder='Code'
-                        {...field}
-                      />
+                      <Input placeholder='Code' {...field} />
                     </FormControl>
                     <FormMessage />
                     <FormDescription>Chỉ bao gồm từ 5 - 10 ký tự thường và chữ số.</FormDescription>
@@ -260,9 +252,9 @@ function VoucherForm({
                   }}
                 />
               </div>
-              <FormField
+              {/* <FormField
                 control={form.control}
-                name='status'
+                name='visibility'
                 render={({ field }) => (
                   <FormItem className='flex gap-2 items-center'>
                     <FormLabel>Chế độ hiển thị</FormLabel>
@@ -279,6 +271,23 @@ function VoucherForm({
                     </div>
                   </FormItem>
                 )}
+              /> */}
+              <FormField
+                control={form.control}
+                name='visibility'
+                render={({ field }) => (
+                  <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                    <div className='space-y-0.5'>
+                      <FormLabel>Chế độ hiển thị</FormLabel>
+                      <FormDescription>
+                        Mã giảm giá được hiện trong trang chi tiết sản phẩm và cho tất cả các khách hàng.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
             </div>
           </CardSection>
@@ -289,28 +298,25 @@ function VoucherForm({
                 name='discountType'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Loại giảm giá</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'>
-                        <SelectTrigger>
-                          <SelectValue placeholder='Select discount type' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {[
-                          { id: 1, value: 'PERCENTAGE' },
-                          {
-                            id: 2,
-                            value: 'AMOUNT'
-                          }
-                        ].map((item) => (
-                          <SelectItem key={item.id} value={item.value}>
-                            {item.value}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
+                    <FormLabel>Loại giảm giá</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 sm:space-x-4'
+                      >
+                        {discountTypeEnumArray.map((item) => {
+                          return (
+                            <FormItem className='flex items-center space-x-3 space-y-0'>
+                              <FormControl>
+                                <RadioGroupItem value={item.value} />
+                              </FormControl>
+                              <FormLabel>{item.label}</FormLabel>
+                            </FormItem>
+                          )
+                        })}
+                      </RadioGroup>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -321,12 +327,19 @@ function VoucherForm({
                 name='discountValue'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Số tiền giảm giá</FormLabel>
+                    <FormLabel required>Giá trị giảm giá</FormLabel>
+                    <FormDescription className='flex items-center gap-2'>
+                      <Info className='h-4 w-4 text-primary' />
+                      <span className='text-sm'>Mức đề xuất: 10.000 đ</span>
+                      <span className='text-sm text-primary'>Áp dụng</span>
+                    </FormDescription>
                     <FormControl>
                       <Input
-                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                        placeholder='Discount Value'
+                        type='number'
                         {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        placeholder='Điền số tiền'
+                        // className='max-w-md'
                       />
                     </FormControl>
                     <FormMessage />
@@ -342,7 +355,7 @@ function VoucherForm({
                       <FormLabel>Số tiền giảm giá tối đa</FormLabel>
                       <FormControl>
                         <Input
-                          className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                          // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                           placeholder='Max Discount'
                           {...field}
                         />
@@ -353,7 +366,7 @@ function VoucherForm({
                 />
               )}
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name='minOrderValue'
                 render={({ field }) => (
@@ -369,18 +382,90 @@ function VoucherForm({
                     <FormMessage />
                   </FormItem>
                 )}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name='orderValueType'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Giá trị đơn hàng tối thiểu</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 sm:space-x-4'
+                      >
+                        <div className='flex items-center space-x-2'>
+                          <RadioGroupItem value='noLimit' id='noLimit' />
+                          <Label htmlFor='noLimit'>Không ràng buộc</Label>
+                        </div>
+                        <div className='flex items-center space-x-2'>
+                          <RadioGroupItem value='limited' id='limited' />
+                          <Label htmlFor='limited'>Có ràng buộc</Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                  </FormItem>
+                )}
               />
+              {orderValueType === 'limited' && (
+                <FormField
+                  control={form.control}
+                  name='minOrderValue'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Giá trị tối thiểu</FormLabel>
+                      <FormControl>
+                        <div className='relative'>
+                          <Input
+                            {...field}
+                            className='pr-8'
+                            onChange={(e) => {
+                              const formatted = formatCurrency(e.target.value)
+                              field.onChange(formatted)
+                            }}
+                            placeholder='Điền số tiền'
+                          />
+                          <span className='absolute right-3 top-1/2 -translate-y-1/2'>đ</span>
+                        </div>
+                      </FormControl>
+                      <FormDescription className='flex items-center gap-1.5 text-xs'>
+                        <Info className='h-3 w-3' />
+                        Mức đề xuất: 100.000 đ
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger
+                              className='text-primary underline'
+                              onClick={() => form.setValue('minOrderValue', 100000)}
+                            >
+                              Áp dụng
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Click to apply suggested value</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <FormField
                 control={form.control}
                 name='amount'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Số lượng mã</FormLabel>
+                    <FormLabel>Số lượng mã giảm giá</FormLabel>
                     <FormControl>
                       <Input
-                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                        placeholder='Amount'
+                        type='number'
                         {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        placeholder='Điền số lượng'
+                        // className='max-w-md'
                       />
                     </FormControl>
                     <FormMessage />
@@ -393,9 +478,9 @@ function VoucherForm({
                 name='description'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Mô Tả</FormLabel>
                     <FormControl>
-                      <Textarea rows={3} placeholder='description' className='resize-none' {...field} />
+                      <Textarea rows={3} placeholder='Điền mô tả' className='resize-none' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -403,6 +488,7 @@ function VoucherForm({
               />
             </div>
           </CardSection>
+          <VoucherProductsCard />
         </form>
       </Form>
     </>

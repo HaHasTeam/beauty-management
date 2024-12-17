@@ -1,3 +1,5 @@
+import { enumToArray } from '@/utils'
+
 export enum RoleEnum {
   CUSTOMER = 'CUSTOMER',
   MANAGER = 'MANAGER',
@@ -61,3 +63,6 @@ export enum OrderEnum {
   GROUP_BUYING = 'GROUP_BUYING',
   FLASH_SALE = 'FLASH_SALE'
 }
+
+export const voucherEnumArray = enumToArray(VoucherEnum)
+export const discountTypeEnumArray = enumToArray(DiscountTypeEnum)
