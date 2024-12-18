@@ -4,6 +4,7 @@ import { AiOutlineShop, AiOutlineUser } from 'react-icons/ai'
 import { BsThreeDots } from 'react-icons/bs'
 import { TiLightbulb } from 'react-icons/ti'
 
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +17,6 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllProductApi, updateProductApi } from '@/network/product'
 import { IServerCreateProduct, ProductEnum } from '@/types/product'
-
-import { Button } from '../ui/button'
 
 function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; id: string; currentStatus: string }) {
   const { transparent, vertical, id, currentStatus } = props

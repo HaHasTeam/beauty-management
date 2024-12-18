@@ -6,15 +6,15 @@ import { UseFormReturn } from 'react-hook-form'
 import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
 
+import FormCategorySelection from '@/components/form-category-selection'
 import FormLabel from '@/components/form-label'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 import { modules } from '@/variables/textEditor'
 
-import FormCategorySelection from '../form-category-selection'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
-import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
 import UploadProductImages from './UploadProductImages'
 
 interface BasicInformationProps {

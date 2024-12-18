@@ -4,11 +4,10 @@ import { ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
+import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '@/components/file-input'
+import { PreviewDialog } from '@/components/file-input/PreviewImageDialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
-
-import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '../file-input'
-import { PreviewDialog } from '../file-input/PreviewImageDialog'
 // import { useToast } from '@/hooks/useToast'
 // import { uploadFilesApi } from '@/network/apis/file'
 // import { createFiles } from '@/utils/files'
