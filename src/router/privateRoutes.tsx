@@ -6,6 +6,9 @@ import DashboardHome from '@/views/dashboard'
 import AccountsDirectory from '@/views/dashboard/accounts-directory'
 import Brands from '@/views/dashboard/brand-management'
 import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
+import Category from '@/views/dashboard/category'
+import CategoryDetailById from '@/views/dashboard/category/[id]'
+import AddCategory from '@/views/dashboard/category/AddCategory'
 import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
@@ -100,6 +103,20 @@ export const privateRoutes: RouteObject[] = [
           {
             path: 'add-flash-sale',
             element: <AddFlashSale />
+          }
+        ]
+      },
+      {
+        path: 'category',
+        children: [
+          {
+            index: true,
+            element: <Category />
+          },
+          { path: 'add-category', element: <AddCategory /> },
+          {
+            path: ':id',
+            element: <CategoryDetailById />
           }
         ]
       },

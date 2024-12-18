@@ -21,7 +21,7 @@ import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
-import { createVoucherApi, getAllVouchersApi } from '@/network/apis/voucher'
+import { createVoucherApi, getAllVouchersApi, getVoucherByIdApi, updateVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
 import { useStore } from '@/stores/store'
 import { DiscountTypeEnum, StatusEnum } from '@/types/enum'
@@ -45,6 +45,16 @@ function VoucherForm({
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const id = useId()
+
+  const { mutateAsync: updateVoucherMutation } = useMutation({
+    mutationKey: [updateVoucherByIdApi.mutationKey, voucherData?.id],
+    mutationFn: updateVoucherByIdApi.fn,
+    onSuccess: () => {
+      navigate(routesConfig[Routes.VOUCHER].getPath())
+      queryClient.invalidateQueries({ queryKey: [getVoucherByIdApi.queryKey, voucherData?.id] })
+      successToast({ message: ' Update successfully.' })
+    }
+  })
   const { mutateAsync: createVoucherMutation } = useMutation({
     mutationKey: [createVoucherApi.mutationKey],
     mutationFn: createVoucherApi.fn,
@@ -75,7 +85,14 @@ function VoucherForm({
         endTime: values.endTime,
         brandId: userData?.brands?.length ? userData.brands[0].id : ''
       }
-      await createVoucherMutation(formatData)
+      if (voucherData) {
+        await updateVoucherMutation({
+          id: voucherData.id,
+          ...formatData
+        })
+      } else {
+        await createVoucherMutation(formatData)
+      }
     } catch (error) {
       handleServerError({
         error,

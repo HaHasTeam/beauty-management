@@ -5,26 +5,23 @@ import * as React from 'react'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
-import { toSentenceCase } from '@/lib/utils'
-import { UserRoleEnum } from '@/types/role'
+import { ICategory } from '@/types/category'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
-import { TUser, UserStatusEnum } from '@/types/user'
 
-import { DataTableRowAction, getColumns } from './AccountsTableColumns'
-import { AccountsTableFloatingBar } from './AccountsTableFloatingBar'
-import { AccountTableToolbarActions } from './AccountsTableToolbarActions'
-import { BanAccountsDialog } from './BanAccountsDialog'
-import { getRoleIcon, getStatusIcon } from './helper'
-import { ViewDetailsAccountSheet } from './ViewDetailsAccountSheet'
+import { BanCategoriesDialog } from './BanCategoryDialog'
+import { DataTableRowAction, getColumns } from './CategoryTableColumns'
+import { CategoryTableFloatingBar } from './CategoryTableFloatingBar'
+import { CategoryTableToolbarActions } from './CategoryTableToolbarActions'
+import { ViewDetailsCategorySheet } from './ViewDetailsCategorySheet'
 
-interface AccountTableProps {
-  data: TUser[]
+interface CategoryTableProps {
+  data: ICategory[]
   pageCount: number
-  queryStates?: [DataTableQueryState<TUser>, React.Dispatch<React.SetStateAction<DataTableQueryState<TUser>>>]
+  queryStates?: [DataTableQueryState<ICategory>, React.Dispatch<React.SetStateAction<DataTableQueryState<ICategory>>>]
 }
 
-export function AccountTable({ data, pageCount, queryStates }: AccountTableProps) {
-  const [rowAction, setRowAction] = React.useState<DataTableRowAction<TUser> | null>(null)
+export function CategoryTable({ data, pageCount, queryStates }: CategoryTableProps) {
+  const [rowAction, setRowAction] = React.useState<DataTableRowAction<ICategory> | null>(null)
   const columns = React.useMemo(
     () =>
       getColumns({
@@ -44,37 +41,7 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<TUser>[] = [
-    {
-      id: 'username',
-      label: 'Username',
-      placeholder: 'Filter usernames...'
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      options: Object.keys(UserStatusEnum).map((status) => {
-        const value = UserStatusEnum[status as keyof typeof UserStatusEnum]
-        return {
-          label: toSentenceCase(value),
-          value: value,
-          icon: getStatusIcon(value).icon
-        }
-      })
-    },
-    {
-      id: 'role',
-      label: 'Member Role',
-      options: Object.keys(UserRoleEnum).map((priority) => {
-        const value = UserRoleEnum[priority as keyof typeof UserRoleEnum]
-        return {
-          label: toSentenceCase(value),
-          value: value,
-          icon: getRoleIcon(value).icon
-        }
-      })
-    }
-  ]
+  const filterFields: DataTableFilterField<ICategory>[] = []
 
   /**
    * Advanced filter fields for the data table.
@@ -104,20 +71,20 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
 
   return (
     <>
-      <DataTable table={table} floatingBar={<AccountsTableFloatingBar table={table} />}>
+      <DataTable table={table} floatingBar={<CategoryTableFloatingBar table={table} />}>
         <DataTableToolbar table={table} filterFields={filterFields}>
-          <AccountTableToolbarActions table={table} />
+          <CategoryTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-      <BanAccountsDialog
+      <BanCategoriesDialog
         open={rowAction?.type === 'ban'}
         onOpenChange={() => setRowAction(null)}
-        accounts={rowAction?.row.original ? [rowAction?.row.original] : []}
+        Categories={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={() => rowAction?.row.toggleSelected(false)}
       />
-      <ViewDetailsAccountSheet
-        account={rowAction?.row.original}
+      <ViewDetailsCategorySheet
+        Category={rowAction?.row.original}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
       />

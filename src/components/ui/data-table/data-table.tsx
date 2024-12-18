@@ -39,7 +39,7 @@ export function DataTable<TData>({ table, floatingBar = null, children, classNam
                       style={{
                         ...getCommonPinningStyles({ column: header.column })
                       }}
-                      className='bg-primary/50 border-r-2 border-double border-collapse pl-4'
+                      className='bg-primary/50 border-r-2 pl-4'
                     >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
@@ -58,12 +58,7 @@ export function DataTable<TData>({ table, floatingBar = null, children, classNam
                       style={{
                         ...getCommonPinningStyles({ column: cell.column })
                       }}
-                      className={cn(
-                        'bg-background/5',
-                        row.getIsSelected() && 'bg-background',
-                        'pr-2 border-r-2 border-dashed border-collapse',
-                        cell.column.getIsPinned() && 'bg-background'
-                      )}
+                      className={cn('pr-2 border border-collapse', row.getIsSelected() && 'border-background')}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

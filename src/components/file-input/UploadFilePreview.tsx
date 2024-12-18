@@ -1,4 +1,3 @@
-// import { useMutation } from '@tanstack/react-query'
 import { FilesIcon, Upload } from 'lucide-react'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
@@ -7,9 +6,6 @@ import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
 
-// import { useToast } from '@/hooks/useToast'
-// import { uploadFilesApi } from '@/network/apis/file'
-// import { createFiles } from '@/utils/files'
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '.'
 import { PreviewDialog } from './PreviewImageDialog'
 
@@ -65,7 +61,7 @@ const UploadFilePreview = <T extends FieldValues>({
     accept: {
       'image/*': ['.jpg', '.jpeg', '.png'],
       'application/pdf': ['.pdf'],
-      'application/msword': ['.doc']
+      'application/msword': ['.doc', '.docx']
     },
     multiple: true,
     maxFiles: 10,

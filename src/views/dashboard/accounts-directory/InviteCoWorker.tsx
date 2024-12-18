@@ -70,7 +70,7 @@ const InviteCoWorker = () => {
     mutationFn: inviteMultipleCoWorkersApi.fn,
     onSuccess: () => {
       successToast({
-        message: 'Amazing! Email invitation sent to your co-workers.'
+        message: 'Amazing! Email invitation sent to your members.'
       })
     }
   })
@@ -94,13 +94,13 @@ const InviteCoWorker = () => {
       <DialogTrigger asChild>
         <Button variant={'outline'} size={'sm'}>
           <UserPlus />
-          <span>Invite Co-Worker</span>
+          <span>Invite Members</span>
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>Invite Co-Worker</DialogTitle>
-          <DialogDescription>Send request to your co-worker email to join your team.</DialogDescription>
+          <DialogTitle>Invite Members</DialogTitle>
+          <DialogDescription>Send request to your members email to join your team.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full gap-4'>
@@ -109,13 +109,13 @@ const InviteCoWorker = () => {
               name='emails'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Co-worker emails</FormLabel>
+                  <FormLabel required>Member emails</FormLabel>
                   <FormControl>
                     <div className='flex items-center gap-2 w-full'>
                       <TagsInput
                         value={field.value}
                         onValueChange={field.onChange}
-                        placeholder='Enter your co-worker email'
+                        placeholder='Enter your member email'
                         className='flex-1'
                       />
                       <Tooltip
@@ -124,7 +124,7 @@ const InviteCoWorker = () => {
                             <UploadIcon />
                           </Button>
                         }
-                        content='Upload a CSV file with a list of emails to invite multiple co-workers.'
+                        content='Upload a CSV file with a list of emails to invite multiple members.'
                       />
                       <Tooltip
                         trigger={
@@ -132,13 +132,11 @@ const InviteCoWorker = () => {
                             <PiMicrosoftExcelLogoBold />
                           </Button>
                         }
-                        content='Download a CSV template to fill in the list of emails to invite multiple co-workers.'
+                        content='Download a CSV template to fill in the list of emails to invite multiple members.'
                       />
                     </div>
                   </FormControl>
-                  <FormDescription>
-                    You can invite multiple co-workers by entering their email addresses.
-                  </FormDescription>
+                  <FormDescription>You can invite multiple members by entering their email addresses.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -148,11 +146,11 @@ const InviteCoWorker = () => {
               name='role'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Co-workers role</FormLabel>
+                  <FormLabel required>members role</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select co-workers role' />
+                        <SelectValue placeholder='Select members role' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -169,14 +167,14 @@ const InviteCoWorker = () => {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    You can assign a role to your co-workers to manage their permissions. .
+                    You can assign a role to your members to manage their permissions. .
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type='submit' loading={form.formState.isSubmitting}>
-              Send Invitation to Co-Workers
+              Send Invitation To Members
             </Button>
           </form>
         </Form>
