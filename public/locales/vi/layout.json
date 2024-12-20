@@ -4,13 +4,11 @@
     "login": "Đăng nhập",
     "logout": "Đăng xuất",
     "profile": "Hồ sơ của tôi",
-    "registerBrand": "Đăng ký trở thành người bán",
-
     "allCategories": "Tất cả danh mục",
     "loginGoogle": "Đăng nhập với Google",
-    "loginOrRegister": "Login/Register",
-    "shoppingCart": "Shopping Cart",
-    "notification": "Notifications"
+    "loginOrRegister": "Đăng nhập/Đăng ký",
+    "shoppingCart": "Giỏ hàng",
+    "notification": "Thông báo"
   },
   "profile": {},
   "home": {
@@ -36,22 +34,25 @@
     "newArrival": "Hàng mới về",
     "hotDeal": "Ưu đãi hấp dẫn",
     "flashSale": "Flash sale",
-    "liveStream": "Live Stream",
-    "preOrder": "Pre Order",
-    "groupBuying": "Group Buying"
+    "liveStream": "Livestream",
+    "preOrder": "Đặt trước",
+    "groupBuying": "Mua nhóm"
+  },
+  "statusTag": {
+    "default": "Mặc định"
   },
   "flashSale": {
     "title": "Flash Sale"
   },
   "footer": {
-    "contactTitle": "Discover nature's beauty with our natural care products."
+    "contactTitle": "Khám phá vẻ đẹp thiên nhiên với các sản phẩm chăm sóc tự nhiên của chúng tôi."
   },
   "error": {
     "loginError": "Đăng nhập không thành công",
     "logoutError": "Đăng xuất không thành công",
     "noToken": "Bạn chưa đăng nhập",
     "errorLoading": "Đã xảy ra lỗi. Vui lòng thử lại sau",
-    "errorSubmit": "Nộp không thành công"
+    "errorSubmit": "Gửi không thành công"
   },
   "errorNotification": "Rất tiếc, có sự cố xảy ra, vui lòng chờ một chút!",
   "loginRcm": "Đăng nhập để cập nhật kỹ năng của bạn!",
@@ -63,34 +64,34 @@
     "addToCard": "Thêm vào giỏ",
     "seeAll": "Xem tất cả",
     "viewAll": "Xem tất cả",
-    "cancel": "Cancel",
-    "ok": "OK",
-    "save": "Save",
-    "submit": "Submit"
+    "cancel": "Hủy",
+    "ok": "Đồng ý",
+    "save": "Lưu",
+    "submit": "Gửi"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
-    "action": "Sell now"
+    "action": "Bán ngay"
   },
   "professional": {
-    "action": "Become Beauty Professional"
+    "action": "Trở thành Chuyên gia Làm đẹp"
   },
   "helpCenter": {
-    "name": "Help",
-    "title": "Help Center"
+    "name": "Trợ giúp",
+    "title": "Trung tâm trợ giúp"
   },
   "language": {
-    "title": "Language",
+    "title": "Ngôn ngữ",
     "english": "EN",
     "vietnamese": "VN"
   },
   "search": {
-    "result": "Search results for {{keyword}}: {{total}} data"
+    "result": "Kết quả tìm kiếm cho từ khóa {{keyword}}: {{total}} dữ liệu"
   },
   "filter": {
-    "title": "Filter",
-    "reset": "Reset",
-    "apply": "Apply",
+    "title": "Lọc",
+    "reset": "Đặt lại",
+    "apply": "Áp dụng",
     "currency": "đ",
     "filterBy": "Lọc theo",
     "newest": "Mới nhất",
@@ -98,84 +99,94 @@
     "numberOfStar": "{{count}} sao"
   },
   "sort": {
-    "title": "Sort by",
-    "related": "Related",
-    "lasted": "Lasted",
-    "trend": "Trend",
-    "price": "Price",
-    "lowToHigh": "Low to High",
-    "highToLow": "High to Low"
+    "title": "Sắp xếp theo",
+    "related": "Liên quan",
+    "lasted": "Mới nhất",
+    "trend": "Xu hướng",
+    "price": "Giá",
+    "lowToHigh": "Từ thấp đến cao",
+    "highToLow": "Từ cao đến thấp"
   },
   "empty": {
     "search": {
-      "title": "No results found",
-      "description": "Try adjusting your search to find what you are looking for",
-      "button": "Search again"
+      "title": "Không tìm thấy kết quả",
+      "description": "Hãy thử điều chỉnh tìm kiếm của bạn để tìm những gì bạn đang tìm.",
+      "button": "Tìm lại"
     },
     "image": {
-      "title": "No images",
-      "description": "Start uploading images",
-      "button": "Upload now"
+      "title": "Không có hình ảnh",
+      "description": "Bắt đầu tải lên hình ảnh.",
+      "button": "Tải lên ngay"
     },
     "document": {
-      "title": "No documents",
-      "description": "Start creating your documents",
-      "button": "Create a new document"
+      "title": "Không có tài liệu",
+      "description": "Bắt đầu tạo tài liệu của bạn.",
+      "button": "Tạo tài liệu mới"
     },
     "GPS": {
-      "title": "No GPS connection",
-      "description": "Please check for location permission",
-      "button": "Go to GPS settings"
+      "title": "Không có kết nối GPS",
+      "description": "Vui lòng kiểm tra quyền truy cập vị trí.",
+      "button": "Đi đến cài đặt GPS"
     },
     "setupCompleted": {
-      "title": "Setup completed",
-      "description": "Congratulations! You are all set up!",
-      "button": "OK"
+      "title": "Cài đặt hoàn tất",
+      "description": "Chúc mừng! Bạn đã cài đặt xong!",
+      "button": "Đồng ý"
     },
     "inbox": {
-      "title": "Your inbox is empty",
-      "description": "All incoming requests will be listed in this folder",
-      "button": "OK"
+      "title": "Hộp thư của bạn trống",
+      "description": "Tất cả yêu cầu đến sẽ được liệt kê trong thư mục này.",
+      "button": "Đồng ý"
     },
     "message": {
-      "title": "No messages",
-      "description": "You have no active chats",
-      "button": "Start a new chat"
+      "title": "Không có tin nhắn",
+      "description": "Bạn không có cuộc trò chuyện nào.",
+      "button": "Bắt đầu trò chuyện mới"
     },
     "creditCard": {
-      "title": "No credit cards",
-      "description": "Please add some credit card to your account",
-      "button": "Add a credit card"
+      "title": "Không có thẻ tín dụng",
+      "description": "Vui lòng thêm thẻ tín dụng vào tài khoản của bạn.",
+      "button": "Thêm thẻ tín dụng"
     },
     "cart": {
-      "title": "Your cart is empty",
-      "description": "Check out what's trending",
-      "button": "Discover Products"
+      "title": "Giỏ hàng của bạn trống",
+      "description": "Khám phá những sản phẩm đang thịnh hành.",
+      "button": "Khám phá sản phẩm"
+    },
+    "address": {
+      "title": "Không có địa chỉ nào được tìm thấy",
+      "description": "Có vẻ như bạn chưa thêm bất kỳ địa chỉ nào. Hãy thêm một địa chỉ ngay để trải nghiệm mua sắm thuận tiện hơn!",
+      "button": "Thêm Địa Chỉ"
     },
     "favorite": {
-      "title": "Favorites",
-      "description": "No favorites saved yet",
-      "button": "Discover Products"
+      "title": "Danh sách yêu thích trống",
+      "description": "Chưa có sản phẩm yêu thích nào.",
+      "button": "Khám phá sản phẩm"
     },
     "notification": {
-      "title": "No Notifications",
-      "description": "No notifications enabled",
-      "button": "OK"
+      "title": "Không có thông báo",
+      "description": "Chưa bật thông báo.",
+      "button": "Đồng ý"
     },
     "schedule": {
-      "title": "Your schedule is empty",
-      "description": "There are no appointments scheduled",
-      "button": "Book an appointment"
+      "title": "Lịch của bạn trống",
+      "description": "Chưa có cuộc hẹn nào được lên lịch.",
+      "button": "Đặt lịch hẹn"
     },
     "wallet": {
-      "title": "Wallet",
-      "description": "Your wallet is empty. Please add payment methods first.",
-      "button": "Add payment method"
+      "title": "Ví rỗng",
+      "description": "Ví của bạn trống. Vui lòng thêm phương thức thanh toán trước.",
+      "button": "Thêm phương thức thanh toán"
     },
     "caughtUp": {
-      "title": "You're all caught up!",
-      "description": "Check back later for new tasks",
-      "button": "OK"
+      "title": "Bạn đã hoàn tất tất cả!",
+      "description": "Hãy quay lại sau để xem các nhiệm vụ mới.",
+      "button": "Đồng ý"
+    },
+    "classification": {
+      "title": "Phân loại sản phẩm trống",
+      "description": "Phân loại sản phẩm hiện tại không khả dụng!",
+      "button": "Đồng ý"
     }
   },
   "productDetail": {
@@ -186,58 +197,59 @@
     "priceDetail": "Chi tiết giá",
     "descriptionTitle": "Mô tả thêm",
     "breadcrumbProductName": "{{name}}",
-    "brandDeal": "Brand Deal",
-    "classification": "Classifications",
-    "selectOption": "Select Option"
+    "brandDeal": "Deal của thương hiệu",
+    "classification": "Phân loại",
+    "selectOption": "Chọn tùy chọn",
+    "selectClassification": "Chọn phân loại"
   },
   "event": {
     "finishIn": "Kết thúc trong"
   },
   "reviews": {
-    "title": "Reviews",
-    "writeReview": "Write a Review",
-    "rating": "Rating",
-    "yourRating": "Your Rating",
-    "addReview": "Add Review",
-    "averageRating": "Average Rating",
-    "viewAllReviews": "View All Reviews",
-    "reviewTitle": "Review Title",
-    "reviewContent": "Review Content",
-    "reviewBy": "Review By",
-    "reviewDate": "Review Date",
+    "title": "Đánh giá",
+    "writeReview": "Viết đánh giá",
+    "rating": "Đánh giá",
+    "yourRating": "Đánh giá của bạn",
+    "addReview": "Thêm đánh giá",
+    "averageRating": "Đánh giá trung bình",
+    "viewAllReviews": "Xem tất cả đánh giá",
+    "reviewTitle": "Tiêu đề đánh giá",
+    "reviewContent": "Nội dung đánh giá",
+    "reviewBy": "Đánh giá bởi",
+    "reviewDate": "Ngày đánh giá",
     "customerReview": "Khách hàng đánh giá",
     "overall": "Tổng quan",
-    "reviewCount": "{{amount}} reviews"
+    "reviewCount": "{{amount}} đánh giá"
   },
   "brand": {
     "title": "HANGY",
-    "lastOnline": "Online {{time}} Ago",
+    "lastOnline": "Hoạt động {{time}} trước",
     "reviews": {
-      "title": "Reviews",
+      "title": "Đánh giá",
       "count": "{{count}}k"
     },
     "responseRate": {
-      "title": "Response Rate",
+      "title": "Tỉ lệ phản hồi",
       "value": "{{rate}}%"
     },
     "responseTime": {
-      "title": "Response Time",
+      "title": "Thời gian phản hồi",
       "value": "within {{time}}"
     },
     "joined": {
-      "title": "Joined",
-      "value": "{{time}} ago"
+      "title": "Tham gia vào",
+      "value": "{{time}} trước"
     },
     "products": {
-      "title": "Products",
+      "title": "Sản phẩm",
       "count": "{{count}}"
     },
     "followers": {
-      "title": "Followers",
+      "title": "Người theo dõi",
       "count": "{{count}}k"
     },
-    "chatNow": "Chat Now",
-    "viewShop": "View Shop"
+    "chatNow": "Nhắn tin ngay",
+    "viewShop": "Xem thương hiệu"
   },
   "breadcrumb": {
     "home": "Trang chủ"
@@ -252,102 +264,131 @@
     "viewNotification": "Xem thông báo"
   },
   "cart": {
-    "title": "Cart",
-    "total": "Total",
-    "remove": "Remove",
-    "checkout": "Checkout",
-    "continueShopping": "Continue Shopping",
-    "emptyCart": "Your cart is empty",
-    "product": "Product",
-    "price": "Price",
-    "quantity": "Quantity",
-    "totalPrice": "Total Price",
-    "viewMoreVoucher": "View More Voucher",
-    "deleteAll": "Delete All",
-    "products": "products",
-    "Products": "Products",
-    "saved": "Saved",
-    "selectAll": "Select All",
+    "title": "Giỏ hàng",
+    "total": "Tổng",
+    "remove": "Xóa",
+    "checkout": "Thanh toán",
+    "continueShopping": "Tiếp tục mua sắm",
+    "emptyCart": "Giỏ hàng của bạn trống",
+    "product": "Sản phẩm",
+    "price": "Giá",
+    "quantity": "Số lượng",
+    "totalPrice": "Tổng",
+    "viewMoreVoucher": "Xem thêm voucher",
+    "deleteAll": "Xóa tất cả",
+    "products": "sản phẩm",
+    "Products": "Sản phẩm",
+    "saved": "Đã tiết kiệm",
+    "selectAll": "Chọn tất cả",
     "voucher": "Voucher",
-    "selectVoucher": "Select or Enter Voucher",
-    "buy": "Buy",
-    "action": "Action",
-    "terms": "Our Terms and Conditions",
+    "selectVoucher": "Chọn hoặc nhập voucher",
+    "buy": "Mua hàng",
+    "action": "Hành động",
+    "terms": "Điều khoản và Điều kiện của chúng tôi",
     "checkoutDescription": "(Giá này đã bao gồm thuế GTGT, nhưng chưa bao gồm phí vận chuyển)",
-    "acceptCondition": "Nhấn \"Đặt hàng\" đồng nghĩa với việc bạn đồng ý tuân theo",
-    "savings": "Savings",
-    "totalCost": "Total Cost of Products",
-    "totalDiscount": "Total Discount from Vouchers",
-    "totalPayment": "Total Payment"
+    "acceptCondition": "Nhấn \"Đặt hàng\" đồng nghĩa với việc bạn đồng ý tuân theo ",
+    "savings": "Tiết kiệm",
+    "totalCost": "Tổng chi phí sản phẩm",
+    "totalDiscount": "Tổng giảm giá từ voucher",
+    "totalPayment": "Tổng thanh toán"
   },
   "address": {
-    "title": "Address",
-    "add": "Add Address",
+    "title": "Địa chỉ",
+    "add": "Thêm địa chỉ",
     "edit": "Thay đổi",
-    "default": "Default",
-    "delete": "Delete Address",
-    "setDefault": "Set as Default",
-    "address": "Address",
-    "street": "Street",
-    "city": "City",
-    "state": "State",
-    "country": "Country",
-    "postalCode": "Postal Code",
-    "phoneNumber": "Phone Number",
-    "save": "Save",
-    "cancel": "Cancel",
-    "addressBook": "Address Book",
-    "noAddress": "No Address Found",
-    "addNewAddress": "Add New Address",
-    "deliveryTo": "Giao tới"
+    "default": "Mặc định",
+    "delete": "Xóa địa chỉ",
+    "setDefault": "Đặt làm mặc định",
+    "address": "Địa chỉ",
+    "street": "Đường",
+    "city": "Thành phố",
+    "state": "Tỉnh/Thành phố",
+    "country": "Quốc gia",
+    "postalCode": "Mã bưu điện",
+    "phoneNumber": "Số điện thoại",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "addressBook": "Sổ địa chỉ",
+    "noAddress": "Không tìm thấy địa chỉ",
+    "addNewAddress": "Thêm địa chỉ mới",
+    "deliveryTo": "Giao tới",
+    "chooseAddress": "Chọn địa chỉ",
+    "editAddress": "Thay đổi địa chỉ",
+    "chooseOne": "Chọn 1 địa chỉ",
+    "update": "Cập nhật",
+    "updateAddress": "Cập nhật địa chỉ",
+    "fullName": "Họ và tên",
+    "enterFullName": "Nhập họ và tên của bạn",
+    "phone": "Số điện thoại",
+    "enterPhone": "Nhập số điện thoại của bạn",
+    "provinceOrCity": "Tỉnh/Thành phố",
+    "chooseProvinceOrCity": "Chọn Tỉnh/Thành phố",
+    "district": "Quận/Huyện",
+    "chooseDistrict": "Chọn Quận/Huyện",
+    "ward": "Phường/Xã",
+    "chooseWard": "Chọn Phường/Xã",
+    "detailAddress": "Địa chỉ chi tiết",
+    "enterDetailAddress": "Nhập địa chỉ chi tiết của bạn",
+    "addressType": "Loại địa chỉ",
+    "addressTypeValueHome": "Nhà Riêng",
+    "addressTypeValueOffice": "Văn Phòng",
+    "addressTypeValueOther": "Khác",
+    "setAsDefault": "Đặt làm địa chỉ mặc định",
+    "addSuccess": "Thêm địa chỉ mới thành công!",
+    "updateSuccess": "Địa chỉ của bạn đã được cập nhật thành công.",
+    "alertMessage": "Please add new address before {{action}}!"
   },
   "voucher": {
     "title": "Voucher",
-    "apply": "Apply",
-    "code": "Code",
-    "invalid": "Invalid code",
-    "applied": "Applied",
-    "used": "Used",
-    "expired": "Expired",
-    "codePlaceholder": "Enter your voucher code here",
-    "input": "Enter your voucher code here",
-    "condition": "Condition",
+    "apply": "Áp dụng",
+    "code": "Mã",
+    "invalid": "Mã không hợp lệ",
+    "applied": "Đã áp dụng",
+    "used": "Đã sử dụng",
+    "expired": "Hết hạn",
+    "codePlaceholder": "Nhập mã voucher của bạn vào đây",
+    "input": "Nhập mã voucher của bạn vào đây",
+    "condition": "Điều kiện",
     "chooseProductBrandAlert": "Vui lòng chọn sản phẩm từ Brand để áp dụng Voucher này",
     "chooseProductAppAlert": "Vui lòng chọn sản phẩm để sử dụng ưu đãi.",
-    "description": "Enter or choose 1 voucher",
-    "help": "Help",
-    "chooseVoucher": "Choose voucher"
+    "description": "Nhập hoặc chọn 1 voucher",
+    "help": "Trợ giúp",
+    "chooseVoucher": "Chọn voucher",
+    "howToUse": "Cách Sử Dụng Voucher",
+    "howToFind": "Cách Tìm Voucher",
+    "howToUseDescription": "Để có thể áp dụng mã Allure Voucher, bạn hãy chọn nút \"Lưu\" để lấy voucher và mục ví voucher của bạn nhé.",
+    "howToFindDescription": "Bạn có thể tìm thấy Allure Voucher xuyên suốt trang web và ứng dụng. Mẹo riêng cho bạn nè, hãy bắt đầu với những trang chương trình khuyến mãi và trang chủ của thương hiệu nhé!"
   },
   "dialog": {
-    "cancel": "Cancel",
-    "ok": "OK",
-    "confirmDelete": "Are you sure you want to delete this item?",
-    "confirm": "Confirm",
-    "prompt": "Prompt",
-    "inputPlaceholder": "Enter your input here"
+    "cancel": "Hủy",
+    "ok": "Đồng ý",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa mục này không?",
+    "confirm": "Xác nhận",
+    "prompt": "Nhắc nhở",
+    "inputPlaceholder": "Nhập thông tin của bạn vào đây"
   },
   "input": {
-    "message": "Message"
+    "message": "Tin nhắn"
   },
   "wallet": {
     "title": "Ví",
     "ATM": "Thẻ tín dụng/ghi nợ",
     "COD": "Thanh toán khi nhận hàng",
-    "balance": "Balance",
-    "addPayment": "Add Payment Method",
-    "paymentMethod": "Payment Method",
-    "bankAccount": "Bank Account",
-    "cardNumber": "Card Number",
-    "expiryDate": "Expiry Date",
+    "balance": "Số dư",
+    "addPayment": "Thêm phương thức thanh toán",
+    "paymentMethod": "Phương thức thanh toán",
+    "bankAccount": "Tài khoản ngân hàng",
+    "cardNumber": "Số thẻ",
+    "expiryDate": "Ngày hết hạn",
     "cvv": "CVV",
-    "add": "Add",
-    "delete": "Delete",
-    "default": "Default",
-    "noPayment": "No Payment Method Found",
-    "addNewCard": "Add New Card",
-    "addOtherCard": "Add Other Card",
-    "addNewBankAccount": "Add New Bank Account",
-    "choosePaymentMethod": "Choose Payment Method",
+    "add": "Thêm",
+    "delete": "Xóa",
+    "default": "Mặc định",
+    "noPayment": "Không tìm thấy phương thức thanh toán",
+    "addNewCard": "Thêm thẻ mới",
+    "addOtherCard": "Thêm thẻ khác",
+    "addNewBankAccount": "Thêm tài khoản ngân hàng mới",
+    "choosePaymentMethod": "Chọn phương thức thanh toán",
     "saveCard": "Chúng tôi hợp tác với các đơn vị cung cấp dịch vụ thanh toán uy tín để đảm bảo thông tin thẻ của bạn được an toàn và bảo mật tuyệt đối. Allure sẽ không có quyền truy cập vào thông tin thẻ của bạn.",
     "addCard": "Thêm Thẻ Tín Dụng/ Ghi Nợ",
     "securityChecked": "Thông tin thẻ của bạn được bảo vệ.",
@@ -356,5 +397,15 @@
     "bankAccountEx": "VD: NGUYEN VAN A",
     "cardNumberEx": "VD: 4123 4567 8901 2345",
     "cvvEx": "VD: 123"
+  },
+  "order": {
+    "success": "Đặt hàng thành công!",
+    "failed": "Đặt hàng thất bại!",
+    "loading": "Đang tải đơn hàng..."
+  },
+  "toast": {
+    "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
+    "error": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn, vui lòng thử lại sau. Nếu vấn đề vẫn tiếp diễn, vui lòng liên hệ với đội ngũ hỗ trợ.",
+    "info": "Đây là một thông báo để cung cấp thêm thông tin quan trọng liên quan đến công việc của bạn."
   }
 }

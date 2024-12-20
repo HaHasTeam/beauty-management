@@ -4,7 +4,6 @@
     "login": "Login",
     "logout": "Logout",
     "profile": "My Profile",
-    "registerBrand": "Register Brand",
     "allCategories": "All Categories",
     "loginGoogle": "Login with Google",
     "loginOrRegister": "Login/Register",
@@ -39,6 +38,9 @@
     "preOrder": "Pre Order",
     "groupBuying": "Group Buying"
   },
+  "statusTag": {
+    "default": "Default"
+  },
   "flashSale": {
     "title": "Flash Sale"
   },
@@ -63,7 +65,7 @@
     "seeAll": "See All",
     "viewAll": "View All",
     "cancel": "Cancel",
-    "ok": "OK",
+    "ok": "Confirm",
     "save": "Save",
     "submit": "Submit"
   },
@@ -129,12 +131,12 @@
     "setupCompleted": {
       "title": "Setup completed",
       "description": "Congratulations! You are all set up!",
-      "button": "OK"
+      "button": "Confirm"
     },
     "inbox": {
       "title": "Your inbox is empty",
       "description": "All incoming requests will be listed in this folder",
-      "button": "OK"
+      "button": "Confirm"
     },
     "message": {
       "title": "No messages",
@@ -151,6 +153,11 @@
       "description": "Check out what's trending",
       "button": "Discover Products"
     },
+    "address": {
+      "title": "No Address Found",
+      "description": "It looks like you haven’t added any addresses yet. Add one now to make your shopping experience seamless!",
+      "button": "Add Address"
+    },
     "favorite": {
       "title": "Favorites",
       "description": "No favorites saved yet",
@@ -159,7 +166,7 @@
     "notification": {
       "title": "No Notifications",
       "description": "No notifications enabled",
-      "button": "OK"
+      "button": "Confirm"
     },
     "schedule": {
       "title": "Your schedule is empty",
@@ -174,7 +181,12 @@
     "caughtUp": {
       "title": "You're all caught up!",
       "description": "Check back later for new tasks",
-      "button": "OK"
+      "button": "Confirm"
+    },
+    "classification": {
+      "title": "No product classifications",
+      "description": "Product classifications are no longer available!",
+      "button": "Confirm"
     }
   },
   "productDetail": {
@@ -187,7 +199,8 @@
     "breadcrumbProductName": "{{name}}",
     "brandDeal": "Brand Deal",
     "classification": "Classifications",
-    "selectOption": "Select Option"
+    "selectOption": "Select Option",
+    "selectClassification": "Select Classification"
   },
   "event": {
     "finishIn": "Finish In"
@@ -272,8 +285,8 @@
     "buy": "Buy",
     "action": "Action",
     "terms": "Our Terms and Conditions",
-    "checkoutDescription": "(Giá này đã bao gồm thuế GTGT, nhưng chưa bao gồm phí vận chuyển)",
-    "acceptCondition": "Nhấn \"Đặt hàng\" đồng nghĩa với việc bạn đồng ý tuân theo",
+    "checkoutDescription": "(This price includes VAT, but does not include shipping fees)",
+    "acceptCondition": "By clicking \"Place Order\", you agree to comply with the ",
     "savings": "Savings",
     "totalCost": "Total Cost of Products",
     "totalDiscount": "Total Discount from Vouchers",
@@ -298,7 +311,32 @@
     "addressBook": "Address Book",
     "noAddress": "No Address Found",
     "addNewAddress": "Add New Address",
-    "deliveryTo": "Delivery to"
+    "deliveryTo": "Delivery to",
+    "chooseAddress": "Choose Address",
+    "editAddress": "Edit Address",
+    "chooseOne": "Choose One Address",
+    "update": "Update",
+    "updateAddress": "Update Address",
+    "fullName": "Full Name",
+    "enterFullName": "Enter your full name",
+    "phone": "Phone Number",
+    "enterPhone": "Enter your phone number",
+    "provinceOrCity": "Province/City",
+    "chooseProvinceOrCity": "Choose a province or city",
+    "district": "District",
+    "chooseDistrict": "Choose a district",
+    "ward": "Ward",
+    "chooseWard": "Choose a ward",
+    "detailAddress": "Detail Address",
+    "enterDetailAddress": "Enter your detailed address",
+    "addressType": "Address Type",
+    "addressTypeValueHome": "Home",
+    "addressTypeValueOffice": "Office",
+    "addressTypeValueOther": "Other",
+    "setAsDefault": "Set as Default Address",
+    "addSuccess": "Add new address successfully!",
+    "updateSuccess": "Your address has been successfully updated!",
+    "alertMessage": "Please add new address before {{action}}!"
   },
   "voucher": {
     "title": "Voucher",
@@ -311,15 +349,19 @@
     "codePlaceholder": "Enter your voucher code here",
     "input": "Enter your voucher code here",
     "condition": "Condition",
-    "chooseProductBrandAlert": "Vui lòng chọn sản phẩm từ Brand để áp dụng Voucher này",
-    "chooseProductAppAlert": "Vui lòng chọn sản phẩm để sử dụng ưu đãi.",
+    "chooseProductBrandAlert": "Please choose a product from the brand to apply this voucher.",
+    "chooseProductAppAlert": "Please choose a product to use this offer.",
     "description": "Enter or choose 1 voucher",
     "help": "Help",
-    "chooseVoucher": "Choose voucher"
+    "chooseVoucher": "Choose voucher",
+    "howToUse": "How To Use Voucher",
+    "howToFind": "How To Find Voucher",
+    "howToUseDescription": "To apply an Allure Voucher code, click the \"Save\" button to claim the voucher and check it in your voucher wallet.",
+    "howToFindDescription": "You can find Allure Vouchers throughout the website and app. Here's a tip: start with the promotion pages and the brand's homepage!"
   },
   "dialog": {
     "cancel": "Cancel",
-    "ok": "OK",
+    "ok": "Confirm",
     "confirmDelete": "Are you sure you want to delete this item?",
     "confirm": "Confirm",
     "prompt": "Prompt",
@@ -347,13 +389,23 @@
     "addOtherCard": "Add Other Card",
     "addNewBankAccount": "Add New Bank Account",
     "choosePaymentMethod": "Choose Payment Method",
-    "saveCard": "Chúng tôi hợp tác với các đơn vị cung cấp dịch vụ thanh toán uy tín để đảm bảo thông tin thẻ của bạn được an toàn và bảo mật tuyệt đối. Allure sẽ không có quyền truy cập vào thông tin thẻ của bạn.",
+    "saveCard": "We partner with reputable payment service providers to ensure that your card information is safe and secure. Allure will not have access to your card details.",
     "addCard": "Add Credit/Debit Card",
-    "securityChecked": "Thông tin thẻ của bạn được bảo vệ.",
-    "cvvDescription": "CVV là mã xác thực gồm 3 chữ số được in trên mặt sau thẻ tín dụng.",
+    "securityChecked": "Your card information is protected.",
+    "cvvDescription": "CVV is a 3-digit verification code printed on the back of your credit card.",
     "cvvFull": "Card Verification Value",
     "bankAccountEx": "EG: JOHN SMITH",
     "cardNumberEx": "EG: 4123 4567 8901 2345",
     "cvvEx": "EG: 123"
+  },
+  "order": {
+    "success": "Create order successfully!",
+    "failed": "Create order failed!",
+    "loading": "Loading order..."
+  },
+  "toast": {
+    "success": "Your request has been successfully processed, continue with your work.",
+    "error": "An error occurred while processing your request, please try again later. If the problem persists, please contact the support team.",
+    "info": "This is a message to provide important additional information related to your work."
   }
 }
