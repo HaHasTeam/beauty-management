@@ -2,6 +2,7 @@ import { Box, Plus, Store } from 'lucide-react'
 import { useState } from 'react'
 
 import CardSection from '@/components/card-section'
+import ProductListDialog from '@/components/dialog/ProductListDialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -9,12 +10,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 function VoucherProductsCard() {
   const [selectedType, setSelectedType] = useState<'all' | 'specific'>('all')
   const [productCount] = useState(0)
+  const [open, setOpen] = useState(false)
 
+  const handleProductSelection = () => {
+    // console.log('Selected products:', selectedProducts)
+    // Handle the selected products
+  }
   const handleTypeChange = (value: string) => {
     setSelectedType(value)
   }
   return (
     <>
+      <ProductListDialog open={open} onOpenChange={setOpen} onDone={handleProductSelection} />
       <CardSection title={'Sản phẩm áp dụng'}>
         <div className='space-y-4'>
           <h3 className='text-lg font-medium'>3. Sản phẩm áp dụng</h3>
@@ -41,7 +48,7 @@ function VoucherProductsCard() {
                   <Badge variant='secondary'>{productCount}</Badge>
                   <span className='text-sm text-muted-foreground'>sản phẩm được chọn</span>
                 </div>
-                <Button size='sm' className='flex items-center'>
+                <Button type='button' size='sm' className='flex items-center' onClick={() => setOpen(true)}>
                   <Plus className='h-4 w-4 mr-1' />
                   Chọn sản phẩm
                 </Button>

@@ -11,6 +11,7 @@ import { productFormMessage } from '@/constants/message'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllCategoryApi } from '@/network/apis/category'
+import { uploadFilesApi } from '@/network/apis/file'
 import { getUserProfileApi } from '@/network/apis/user'
 import { createProductApi } from '@/network/product'
 import { ICategory } from '@/types/category'
@@ -112,6 +113,7 @@ const CreateProduct = () => {
             return []
           })
         )
+
         // (useProfileData?.data?.brands ?? [])[0]?.id ??
         const transformedData: IServerCreateProduct = {
           name: values?.name,
