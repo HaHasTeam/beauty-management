@@ -24,12 +24,12 @@ export function SidebarLinks(props: SidebarLinksProps) {
     },
     [pathname]
   )
-  const activeLayout = useCallback(
-    (routeName: string) => {
-      return pathname?.includes('/ai')
-    },
-    [pathname]
-  )
+  // const activeLayout = useCallback(
+  //   (routeName: string) => {
+  //     return pathname?.includes('/ai')
+  //   },
+  //   [pathname]
+  // )
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes: IRoute[]) => {

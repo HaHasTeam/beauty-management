@@ -98,7 +98,7 @@ function CheckTable(props: { tableData: RowObj[] }) {
       cell: () => <CardMenu vertical={true} />
     })
   ] // eslint-disable-next-line
-  const [data, setData] = useState(() => [...defaultData])
+  const [data] = useState(() => [...defaultData])
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 11

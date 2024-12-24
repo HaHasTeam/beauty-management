@@ -92,7 +92,7 @@ function ProductTable(props: { tableData: IProductTable[] }) {
       cell: (info) => <TableMoreDropDown vertical={true} id={info.getValue() ?? ''} currentStatus={'INACTIVE'} />
     })
   ] // eslint-disable-next-line
-  const [data, setData] = useState(() => [...defaultData])
+  const [data] = useState(() => [...defaultData])
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 11
@@ -195,7 +195,7 @@ function ProductTable(props: { tableData: IProductTable[] }) {
             {createPages(table.getPageCount()).map((pageNumber, index) => {
               return (
                 <Button
-                  className={`font-mediumflex p-0 items-center justify-center rounded-lg p-2 text-sm transition duration-200 ${
+                  className={`font-medium flex items-center justify-center rounded-lg p-2 text-sm transition duration-200 ${
                     pageNumber === pageIndex + 1
                       ? ''
                       : 'border border-zinc-200 bg-[transparent] dark:border-zinc-800 dark:text-white'

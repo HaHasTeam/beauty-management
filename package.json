@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build --mode production",
+    "dev": "tsc && vite",
+    "build": "tsc && vite build --mode develop",
     "build:docker": "tsc && vite build --mode docker",
     "lint": "eslint . --max-warnings=0 --fix",
     "format": "prettier . --write",
@@ -96,7 +96,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
-    "@eslint/js": "^9.11.1",
+    "@eslint/js": "^9.17.0",
     "@faker-js/faker": "^9.0.3",
     "@tanstack/eslint-plugin-query": "^5.59.7",
     "@types/lodash": "^4.17.13",
@@ -109,7 +109,7 @@
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "caniuse-lite": "^1.0.30001687",
-    "eslint": "^8.38.0",
+    "eslint": "^8.57.1",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -121,9 +121,10 @@
     "postcss": "^8.4.49",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.16",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.7.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1",
     "vite": "^5.4.8",
+    "vite-plugin-checker": "latest",
     "zod": "^3.24.1"
   }
 }
