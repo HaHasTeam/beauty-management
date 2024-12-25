@@ -1,4 +1,4 @@
-import { TProduct } from '@/types/product'
+import { IResponseProduct, TProduct } from '@/types/product'
 import { TServerResponse } from '@/types/request'
 import { toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
@@ -11,12 +11,12 @@ export const getProductByBrandIdApi = toQueryFetcher<TGetProductByBrandIdRequest
     return privateRequest(`/products/get-by-brand/${params?.brandId}`)
   }
 )
-export const getProductFilterApi = toQueryFetcher<TGetProductFilterRequestParams, TServerResponse<TProduct[]>>(
-  'getProductFilterApi',
-  async (params) => {
-    return publicRequest(`/products/filter-product`, {
-      method: 'GET',
-      data: params
-    })
-  }
-)
+export const getProductFilterApi = toQueryFetcher<
+  TGetProductFilterRequestParams,
+  TServerResponse<{ total: string }, IResponseProduct[]>
+>('getProductFilterApi', async (params) => {
+  return publicRequest(`/products/filter-product`, {
+    method: 'GET',
+    params: params
+  })
+})

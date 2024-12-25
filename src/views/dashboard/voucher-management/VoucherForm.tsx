@@ -307,7 +307,7 @@ function VoucherForm({
                       >
                         {discountTypeEnumArray.map((item) => {
                           return (
-                            <FormItem className='flex items-center space-x-3 space-y-0'>
+                            <FormItem className='flex items-center space-x-3 space-y-0' key={item.id}>
                               <FormControl>
                                 <RadioGroupItem value={item.value} />
                               </FormControl>
@@ -488,7 +488,7 @@ function VoucherForm({
               />
             </div>
           </CardSection>
-          <VoucherProductsCard />
+          <VoucherProductsCard form={form} />
         </form>
       </Form>
     </>

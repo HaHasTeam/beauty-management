@@ -63,6 +63,20 @@ export enum OrderEnum {
   GROUP_BUYING = 'GROUP_BUYING',
   FLASH_SALE = 'FLASH_SALE'
 }
+export enum VoucherApplyTypeEnum {
+  ALL = 'ALL',
+  SPECIFIC = 'SPECIFIC'
+}
+
+export enum VoucherVisibilityEnum {
+  WALLET = 'WALLET',
+  PUBLIC = 'PUBLIC'
+}
+
+export enum VoucherWalletStatus {
+  USED = 'USED',
+  NOT_USED = 'NOT_USED'
+}
 
 export const voucherEnumArray = enumToArray(VoucherEnum)
 export const discountTypeEnumArray = enumToArray(DiscountTypeEnum)

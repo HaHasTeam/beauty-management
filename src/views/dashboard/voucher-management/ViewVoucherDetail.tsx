@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/lib/utils'
 import { getVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
-import { DiscountTypeEnum, StatusEnum, VoucherEnum } from '@/types/enum'
+import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from '@/types/enum'
 
 import VoucherForm from './VoucherForm'
 
@@ -44,7 +44,9 @@ function ViewVoucherDetail() {
       startTime: '',
       endTime: '',
       status: StatusEnum.ACTIVE,
-      visibility: false
+      visibility: false,
+      selectedProducts: [],
+      applyType: VoucherApplyTypeEnum.ALL
     }
   })
   const amountVoucher = form.watch('amount') || 0

@@ -1,3 +1,5 @@
+import { IProductTable, IResponseProduct } from '@/types/product'
+
 export function generateCouponCode(): string {
   const length = Math.floor(Math.random() * (10 - 5 + 1)) + 5 // Random length between 5 and 10
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
@@ -36,4 +38,58 @@ export const enumToArray = (enumObj: object): Array<{ id: number; value: string;
       .toLowerCase()
       .replace(/^\w/, (c) => c.toUpperCase()) // Format key for label
   }))
+}
+
+/**
+ * Converts the raw input data into an array of IProductTable objects.
+ * Each classification in a product is treated as a separate row in the output.
+ *
+ * @param data - Array of raw product data.
+ * @returns Array of IProductTable objects.
+ */
+export function convertToProductTable(data: IResponseProduct[]): IProductTable[] {
+  const products: IProductTable[] = []
+
+  // Iterate through each product in the input data
+  data.forEach((product) => {
+    const {
+      id: productId,
+      name: productName,
+      description,
+      detail,
+      sku: productSku,
+      createdAt,
+      updatedAt,
+      brand,
+      category,
+      productClassifications,
+      images: productImages
+    } = product
+
+    // Iterate through each classification of the product
+    productClassifications.forEach((classification) => {
+      const { title, price, quantity, sku, type, status, images } = classification
+
+      // Push a new product table row for each classification
+      products.push({
+        id: productId, // Classification ID
+        name: productName, // Name of the product
+        description, // Description of the product
+        detail, // Serialized detail information of the product
+        sku: sku == productSku ? productSku : sku, // SKU of the classification
+        price, // Price of the classification
+        quantity, // Quantity available for the classification
+        status, // Status of the classification
+        updatedAt, // Last updated timestamp
+        createdAt, // Creation timestamp
+        title, // Title of the classification
+        type, // Type of classification
+        brand, // Associated brand
+        category, // Associated category
+        images: images?.length ? images : productImages // Use classification images or fallback to product images
+      })
+    })
+  })
+
+  return products // Return the transformed array
 }

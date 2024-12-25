@@ -1,4 +1,4 @@
-import BrandTable from './voucher-table-ui'
+import VouchersTable from './voucher-table-ui'
 
 export default function VoucherTable() {
   return (
@@ -7,7 +7,7 @@ export default function VoucherTable() {
         <MainChart />
       </div> */}
       <div className='h-full w-full rounded-lg '>
-        <BrandTable />
+        <VouchersTable />
       </div>
     </div>
   )

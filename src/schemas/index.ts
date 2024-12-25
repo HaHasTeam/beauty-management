@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import { defaultRequiredRegex, numberRequiredRegex } from '@/constants/regex'
-import { DiscountTypeEnum, StatusEnum, VoucherEnum } from '@/types/enum'
+import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from '@/types/enum'
 
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
 export const reasonSchema = z.object({
@@ -18,6 +18,14 @@ export const brandCreateSchema = z.object({
   phone: z.string().regex(phoneRegex, 'Invalid phone number!').max(10).min(1).optional(),
 
   address: z.string().max(255, 'Address cannot exceed 255 characters').optional(),
+  province: z.string().max(255),
+  district: z.string().max(255),
+  ward: z.string().max(255),
+
+  businessTaxCode: z.string().max(100),
+  businessRegistrationCode: z.string().max(100),
+  establishmentDate: z.string().max(255).optional(),
+  businessRegistrationAddress: z.string().max(255).optional(),
   status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING)
 })
 
@@ -67,7 +75,9 @@ export const voucherCreateSchema = z.object({
   //     message: 'End Time must be greater than the current time.'
   //   }),
   startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  applyType: z.nativeEnum(VoucherApplyTypeEnum).optional().default(VoucherApplyTypeEnum.ALL),
   endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
   status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE),
-  visibility: z.boolean().default(false).optional()
+  visibility: z.boolean().default(false).optional(),
+  selectedProducts: z.array(z.string())
 })
