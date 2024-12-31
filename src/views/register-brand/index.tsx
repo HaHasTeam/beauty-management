@@ -157,20 +157,6 @@ function RegisterBrand() {
     }
   }
 
-  // useEffect(() => {
-  //   if (accessToken && refreshToken) {
-  //     useStore.getState().setAuthState({
-  //       isAuthenticated: true,
-  //       isLoading: false,
-  //       authData: {
-  //         accessToken: accessToken,
-  //         refreshToken: refreshToken
-  //       }
-  //     })
-  //   } else {
-  //     window.location.href = 'http://localhost:3001/'
-  //   }
-  // }, [accessToken, navigate, refreshToken])
   return (
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-secondary px-4 py-3 shadow-md'>

@@ -10,7 +10,7 @@ import { useDataTable } from '@/hooks/useDataTable'
 import { voucherCreateSchema } from '@/schemas'
 import { IProductTable, IResponseProduct } from '@/types/product'
 import { DataTableQueryState } from '@/types/table'
-import { convertToProductTable } from '@/utils'
+import { convertToProductTable2 } from '@/utils'
 
 import { getColumns } from './ProductsTableColumns'
 
@@ -41,7 +41,7 @@ export default function IndexPage({
   const queryStates = useState<DataTableQueryState<IProductTable>>({} as DataTableQueryState<IProductTable>)
   const { table } = useDataTable({
     queryStates,
-    data: convertToProductTable(list) ?? [],
+    data: convertToProductTable2(list) ?? [],
     columns,
     pageCount: 1,
     initialState: {

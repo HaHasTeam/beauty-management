@@ -30,7 +30,14 @@ interface ProductListDialogProps {
   // isDialog: boolean
 }
 
-export default function ProductListDialog({ open, onOpenChange, onDone, products, isLoading }: ProductListDialogProps) {
+export default function ProductListDialog({
+  open,
+  onOpenChange,
+  onDone,
+  products,
+  isLoading,
+  form: parentForm
+}: ProductListDialogProps) {
   const formId = useId()
 
   const form = useForm<FormValues>({
@@ -77,7 +84,7 @@ export default function ProductListDialog({ open, onOpenChange, onDone, products
               <ProductAppliesTable
                 list={products}
                 isLoading={isLoading}
-                form={form}
+                form={parentForm}
                 isDialog={true}
                 handleProductSelect={handleProductSelect}
               />

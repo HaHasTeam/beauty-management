@@ -93,3 +93,47 @@ export function convertToProductTable(data: IResponseProduct[]): IProductTable[]
 
   return products // Return the transformed array
 }
+
+export function convertToProductTable2(data: IResponseProduct[]): IProductTable[] {
+  const products: IProductTable[] = []
+
+  // Iterate through each product in the input data
+  data.forEach((product) => {
+    const {
+      id: productId,
+      name: productName,
+      description,
+      detail,
+      sku: productSku,
+      createdAt,
+      updatedAt,
+      brand,
+      category,
+      status,
+      productClassifications,
+      images: productImages
+    } = product
+
+    // Calculate the total quantity for this product from its classifications
+    const productQuantity = productClassifications.reduce((sum, classification) => sum + classification?.quantity, 0)
+
+    // Add the product information to the list
+    products.push({
+      id: productId,
+      name: productName,
+      description,
+      detail,
+      sku: productSku,
+      price: 0, // Price is not applicable here since we are listing only products
+      quantity: productQuantity, // Total quantity from classifications
+      status: status, // Status is not applicable here
+      updatedAt,
+      createdAt,
+      brand,
+      category,
+      images: productImages
+    })
+  })
+
+  return products // Return the product list and total quantity
+}

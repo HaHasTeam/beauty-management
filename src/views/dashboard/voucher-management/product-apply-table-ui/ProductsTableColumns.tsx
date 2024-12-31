@@ -46,37 +46,40 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
       id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
       cell: ({ row }) => {
-        const displayName = row.original.name + ' ' + row.original.title
+        const displayName = row.original.name
+        const productImage = row?.original?.images[0].fileUrl ?? ''
         return (
           <div className='flex items-center gap-2'>
             <div className='w-8 h-8 rounded bg-muted flex items-center justify-center'>
               <Image className='w-4 h-4 text-muted-foreground' />
+
+              <img src={productImage} alt={displayName} />
             </div>
             <span>{displayName}</span>
           </div>
         )
       }
     },
-    {
-      accessorKey: 'title',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Classification' />,
-      cell: ({ row }) => {
-        const displayName = row.original.title
-        return (
-          <div className='flex space-x-2 items-center'>
-            <span className='max-w-[31.25rem] truncate'>{displayName}</span>
-          </div>
-        )
-      }
-    },
-    {
-      accessorKey: 'sku',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='SKU' />,
-      cell: ({ cell }) => <div>{cell.row.original.sku || '--'}</div>,
-      size: 100,
-      enableSorting: false,
-      enableHiding: false
-    },
+    // {
+    //   accessorKey: 'title',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Classification' />,
+    //   cell: ({ row }) => {
+    //     const displayName = row.original.title
+    //     return (
+    //       <div className='flex space-x-2 items-center'>
+    //         <span className='max-w-[31.25rem] truncate'>{displayName}</span>
+    //       </div>
+    //     )
+    //   }
+    // },
+    // {
+    //   accessorKey: 'sku',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title='SKU' />,
+    //   cell: ({ cell }) => <div>{cell.row.original.sku || '--'}</div>,
+    //   size: 100,
+    //   enableSorting: false,
+    //   enableHiding: false
+    // },
     {
       accessorKey: 'quantity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Quantity' />,
@@ -85,14 +88,14 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
       enableSorting: false,
       enableHiding: false
     },
-    {
-      accessorKey: 'price',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Price' />,
-      cell: ({ cell }) => <div>{cell.row.original.price}</div>,
-      size: 10,
-      enableSorting: false,
-      enableHiding: false
-    },
+    // {
+    //   accessorKey: 'price',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Price' />,
+    //   cell: ({ cell }) => <div>{cell.row.original.price}</div>,
+    //   size: 10,
+    //   enableSorting: false,
+    //   enableHiding: false
+    // },
     {
       accessorKey: 'createdAt',
       id: 'createdAt'

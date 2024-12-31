@@ -50,8 +50,8 @@ export type IServerProductClassification = {
   id?: string
   title?: string
   price?: number
-  quantity?: number
-  images?: IImage[]
+  quantity: number
+  images: IImage[]
   status?: string
   type?: string
   sku?: string
@@ -112,12 +112,14 @@ export type IProductTable = {
   status?: string
   updatedAt?: string
   description: string
+  productClassifications: IServerProductClassification[]
+
   detail?: string
   brand?: IBrand
   category?: ICategory
   menu?: string
   title?: string
-  images?: IImage[] | string[]
+  images: IImage[]
   type?: string
   sku?: string
   createdAt: string
