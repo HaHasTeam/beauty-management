@@ -1,14 +1,11 @@
-import { IResponseProduct, IServerCreateProduct } from '@/types/product'
+import { IResponseProduct, IServerCreateProduct, TProduct } from '@/types/product'
 import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-export const getAllProductApi = toQueryFetcher<void, TServerResponse<IResponseProduct[]>>(
-  'getAllProductApi',
-  async () => {
-    return privateRequest('/products')
-  }
-)
+export const getAllProductApi = toQueryFetcher<void, TServerResponse<TProduct[]>>('getAllProductApi', async () => {
+  return privateRequest('/products')
+})
 export const getProductApi = toQueryFetcher<string, TServerResponse<IResponseProduct[]>>(
   'getProductApi',
   async (productId) => {

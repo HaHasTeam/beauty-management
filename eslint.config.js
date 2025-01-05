@@ -1,4 +1,4 @@
-import js from '@eslint/js'
+import eslint from '@eslint/js'
 import pluginQuery from '@tanstack/eslint-plugin-query'
 import importPlugin from 'eslint-plugin-import'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
@@ -12,7 +12,7 @@ import tseslint, { configs } from 'typescript-eslint'
 export default tseslint.config(
   { ignores: ['dist', '/node_modules', 'src/components/ui'] },
   {
-    extends: [js.configs.recommended, ...configs.recommended, importPlugin.flatConfigs.recommended],
+    extends: [eslint.configs.recommended, ...configs.recommended, importPlugin.flatConfigs.recommended],
     files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -37,6 +37,7 @@ export default tseslint.config(
       'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
       'unused-imports/no-unused-imports': 'error',
       'no-console': ['error'],
+
       'unused-imports/no-unused-vars': [
         'warn',
         {
@@ -59,7 +60,8 @@ export default tseslint.config(
           printWidth: 120,
           jsxSingleQuote: true
         }
-      ]
+      ],
+      'typescript-eslint/ban-ts-comment': 'off'
     },
     settings: {
       'import/parsers': {
