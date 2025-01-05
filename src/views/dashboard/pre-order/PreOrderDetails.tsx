@@ -109,7 +109,7 @@ const PreOrderDetails = () => {
         label: (
           <div className='flex gap-2'>
             <Avatar className='size-5 relative'>
-              <AvatarImage src={product.images[0] || ''} />
+              <AvatarImage src={product.images[0].fileUrl || ''} />
               <AvatarFallback className='font-bold dark:bg-accent/20'>{product.name[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <span className='ml-2'>{product.name}</span>

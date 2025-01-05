@@ -244,3 +244,9 @@ export default React.forwardRef(BaseSelect) as <IsMulti extends boolean = false>
     isMulti?: IsMulti
   }
 ) => ReactElement
+
+export type TOption = {
+  label: string
+  value: string | number
+  display?: React.ReactNode
+}

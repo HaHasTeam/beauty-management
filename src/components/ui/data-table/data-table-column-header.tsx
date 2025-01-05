@@ -43,18 +43,20 @@ export function DataTableColumnHeader<TData, TValue>({
                 ? 'Sorted ascending. Click to sort descending.'
                 : 'Not sorted. Click to sort ascending.'
           }
-          className='-ml-3 h-8 w-fit border-none text-xs hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent [&>svg:last-child]:hidden'
+          className='-ml-3 h-8 w-full border-none text-xs hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent [&>svg:last-child]:hidden flex items-center'
         >
-          {title}
-          <SelectIcon asChild>
-            {column.getCanSort() && column.getIsSorted() === 'desc' ? (
-              <ArrowDown className='ml-2.5 size-4' aria-hidden='true' />
-            ) : column.getIsSorted() === 'asc' ? (
-              <ArrowUp className='ml-2.5 size-4' aria-hidden='true' />
-            ) : (
-              <ChevronsUpDown className='ml-2.5 size-4' aria-hidden='true' />
-            )}
-          </SelectIcon>
+          <span className='flex-1 truncate'>{title}</span>
+          <span>
+            <SelectIcon asChild>
+              {column.getCanSort() && column.getIsSorted() === 'desc' ? (
+                <ArrowDown className='ml-2.5 size-4' aria-hidden='true' />
+              ) : column.getIsSorted() === 'asc' ? (
+                <ArrowUp className='ml-2.5 size-4' aria-hidden='true' />
+              ) : (
+                <ChevronsUpDown className='ml-2.5 size-4' aria-hidden='true' />
+              )}
+            </SelectIcon>
+          </span>
         </SelectTrigger>
         <SelectContent align='start'>
           {column.getCanSort() && (
