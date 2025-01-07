@@ -33,7 +33,13 @@ const getProductItemDisplay = (product: TProduct) => {
 }
 
 const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
-  const { placeholder = props.multiple ? 'Select products' : 'Select a product', className, onChange, value } = props
+  const {
+    placeholder = props.multiple ? 'Select products' : 'Select a product',
+    className,
+    onChange,
+    value,
+    multiple = false
+  } = props
   const { userData } = useStore(
     useShallow((state) => ({
       userData: state.user
@@ -63,31 +69,45 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
   }, [productList])
 
   const selectedOptions = useMemo(() => {
-    if (!value) return []
-    const options = value as string[]
-    return options.map((option) => {
-      const product = productList?.data.find((product) => product.id === option)
+    if (multiple) {
+      if (!value) return []
+      const options = value as string[]
+      return options.map((option) => {
+        const product = productList?.data.find((product) => product.id === option)
+        return {
+          value: product?.id,
+          label: product?.name,
+          display: getProductItemDisplay(product as TProduct)
+        }
+      })
+    } else {
+      if (!value) return null
+      const product = productList?.data.find((product) => product.id === value)
       return {
         value: product?.id,
         label: product?.name,
         display: getProductItemDisplay(product as TProduct)
       }
-    })
-  }, [value, productList?.data])
+    }
+  }, [value, productList?.data, multiple])
 
   return (
     <AsyncSelect
       defaultOptions={productOptions}
-      isMulti={true}
+      isMulti={multiple}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingProductList}
       isClearable
       value={selectedOptions}
       onChange={(options) => {
-        const optionValues = options as TOption[]
-
-        if (onChange) onChange(optionValues.map((option) => option.value) as unknown as ChangeEvent<HTMLInputElement>)
+        if (multiple) {
+          const optionValues = options as TOption[]
+          if (onChange) onChange(optionValues.map((option) => option.value) as unknown as ChangeEvent<HTMLInputElement>)
+        } else {
+          const optionValues = options as TOption
+          if (onChange) onChange(optionValues?.value as unknown as ChangeEvent<HTMLInputElement>)
+        }
       }}
     />
   )

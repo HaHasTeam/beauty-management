@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Boxes, Rocket, SaveIcon, Siren, TicketPlus, Tickets } from 'lucide-react'
+import { Boxes, SaveIcon, Siren, TicketPlus, Tickets } from 'lucide-react'
 import { useEffect, useId, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -11,7 +11,7 @@ import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import SelectProduct from '@/components/select-product'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -185,6 +185,15 @@ const GroupProductDetails = () => {
               </AlertDescription>
             </div>
           </div>
+          <AlertAction
+            onClick={() => {
+              toggleGroupProductStatusFn(itemId)
+            }}
+            loading={isTogglingGroupProductStatus}
+            variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'warning' : 'success'}
+          >
+            {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'Close group' : 'Activate group'}
+          </AlertAction>
         </Alert>
       )}
 
@@ -218,24 +227,6 @@ const GroupProductDetails = () => {
                   : 'This group product is currently inactive and cannot be viewed by your customers.'}
               </p>
             </div>
-          )}
-          {itemId && (
-            <Button
-              variant={'secondary'}
-              className='uppercase font-light shadow-lg'
-              size={'sm'}
-              loading={isTogglingGroupProductStatus}
-              onClick={() => {
-                toggleGroupProductStatusFn(itemId)
-              }}
-            >
-              {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? (
-                <Rocket className='rotate-90' />
-              ) : (
-                <Rocket />
-              )}
-              {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'Inactivate group' : 'Activate group'}
-            </Button>
           )}
         </div>
       </Card>
@@ -341,7 +332,7 @@ const GroupProductDetails = () => {
                         return (
                           <FormItem>
                             <FormLabel required>Maximum Buy Amount Each Person</FormLabel>
-                            <Input {...field} placeholder={`e.g. 10`} type='quantity' />
+                            <Input {...field} placeholder={`e.g. 10`} type='quantity' symbol='Items/ Product' />
                             <FormDescription>
                               This is the maximum amount that each person can buy for this group product.
                             </FormDescription>

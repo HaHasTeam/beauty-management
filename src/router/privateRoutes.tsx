@@ -98,14 +98,14 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
-        path: 'flash-sale',
+        path: routesConfig[Routes.FLASH_SALE].path.replace('/dashboard/', ''),
         children: [
           {
             index: true,
             element: <FlashSale />
           },
           {
-            path: 'add-flash-sale',
+            path: 'add',
             element: <AddFlashSale />
           }
         ]

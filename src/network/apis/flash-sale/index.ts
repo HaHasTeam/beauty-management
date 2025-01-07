@@ -33,3 +33,12 @@ export const getAllFlashSaleApi = toQueryFetcher<void, TServerResponse<TFlashSal
     })
   }
 )
+
+export const getFlashSaleByIdApi = toQueryFetcher<string, TServerResponse<TFlashSale>>(
+  'getFlashSaleByIdApi',
+  async (id) => {
+    return privateRequest(`/product-discount/get-by-id/${id}`, {
+      method: 'GET'
+    })
+  }
+)
