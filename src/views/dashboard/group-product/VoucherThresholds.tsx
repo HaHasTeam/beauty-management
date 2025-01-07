@@ -142,7 +142,7 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                       return (
                         <FormItem>
                           <FormLabel required>Quantity Of Customer</FormLabel>
-                          <Input {...field} placeholder={`e.g. 10`} type='quantity' />
+                          <Input {...field} placeholder={`e.g. 150`} type='quantity' symbol='People' />
                           <FormDescription>
                             The minimum number of people that must purchase the group product to activate the voucher.
                           </FormDescription>
@@ -166,21 +166,24 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                               return (
                                 <FormItem>
                                   <div className='space-y-2'>
-                                    <div className='flex'>
+                                    <div className='flex w-full'>
                                       <div className='relative'>
                                         <Select
                                           onValueChange={discountTypeField.onChange}
                                           value={discountTypeField.value}
                                           defaultValue={DiscountTypeEnum.AMOUNT}
                                         >
-                                          <SelectTrigger className='min-w-48 h-9 peer inline-flex appearance-none items-center rounded-none rounded-s-lg border border-input bg-background pe-8 ps-3 text-sm text-muted-foreground transition-shadow hover:bg-accent hover:text-accent-foreground focus:z-10 focus-visible:border-ring focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'>
+                                          <SelectTrigger className='inline-flex items-center rounded-none rounded-l-lg border border-input disabled:cursor-not-allowed disabled:opacity-50'>
                                             <SelectValue placeholder='Select discount type' />
                                           </SelectTrigger>
-                                          <SelectContent>
+                                          <SelectContent
+                                            style={{
+                                              width: `var(--radix-dropdown-menu-trigger-width)`
+                                            }}
+                                          >
                                             <SelectItem value={DiscountTypeEnum.AMOUNT}>
                                               <div className='flex items-center gap-1'>
                                                 <DollarSign />
-                                                <span>By Price</span>
                                               </div>
                                             </SelectItem>
                                             <SelectItem
@@ -189,15 +192,14 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                                             >
                                               <div className='flex items-center gap-1'>
                                                 <Percent />
-                                                <span>By Percentage</span>
                                               </div>
                                             </SelectItem>
                                           </SelectContent>
                                         </Select>
                                       </div>
                                       <Input
-                                        className='-ms-px rounded-s-none shadow-none focus-visible:z-10'
-                                        placeholder={`${discountType === DiscountTypeEnum.AMOUNT ? 'e.g. 10,000' : 'e.g. 10%'}`}
+                                        className='-ms-px rounded-s-none shadow-none flex-1'
+                                        placeholder={`${discountType === DiscountTypeEnum.AMOUNT ? 'e.g. 100,000 VND' : 'e.g. 10%'}`}
                                         {...discountValueField}
                                         type={discountType === DiscountTypeEnum.AMOUNT ? 'currency' : 'percentage'}
                                       />
