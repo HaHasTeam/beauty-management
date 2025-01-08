@@ -131,7 +131,8 @@ export function convertToProductTable2(data: IResponseProduct[]): IProductTable[
       createdAt,
       brand,
       category,
-      images: productImages
+      images: productImages,
+      productClassifications: []
     })
   })
 

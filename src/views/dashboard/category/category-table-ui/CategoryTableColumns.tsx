@@ -74,7 +74,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<ICatego
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
         return (
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-label='Open menu' variant='ghost' className='flex size-8 p-0 data-[state=open]:bg-muted'>
                 <Ellipsis className='size-4' aria-hidden='true' />

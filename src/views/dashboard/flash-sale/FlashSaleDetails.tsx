@@ -94,7 +94,7 @@ const FlashSaleDetails = () => {
         label: (
           <div className='flex gap-2'>
             <Avatar className='size-5 relative'>
-              <AvatarImage src={product.images[0] || ''} />
+              <AvatarImage src={product.images[0].fileUrl || ''} />
               <AvatarFallback className='font-bold dark:bg-accent/20'>{product.name[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <span className='ml-2'>{product.name}</span>
@@ -111,7 +111,13 @@ const FlashSaleDetails = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await addFlashSaleFn(values)
+      const findProduct = productList?.data.find((product) => values.product == product.id)
+      const formatData = {
+        productClassifications: findProduct?.productClassifications,
+        ...values
+      }
+
+      await addFlashSaleFn(formatData)
       navigate(routesConfig[Routes.FLASH_SALE].getPath())
     } catch (error) {
       handleServerError({

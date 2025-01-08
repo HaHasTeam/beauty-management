@@ -29,7 +29,7 @@ export function ViewDetailsVouchersSheet({ Voucher, ...props }: ViewDetailsVouch
             <InfoItem
               icon={<Mail className='w-5 h-5 text-primary' />}
               label='Email'
-              value={Voucher?.amount.toString() || 'N/A'}
+              value={Voucher?.amount?.toString() || 'N/A'}
             />
             <InfoItem
               icon={<Phone className='w-5 h-5 text-primary' />}

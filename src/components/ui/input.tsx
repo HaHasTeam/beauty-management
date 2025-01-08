@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
-import { formatNumber } from 'libphonenumber-js'
+
 type InputType = React.HTMLInputTypeAttribute | 'currency' | 'quantity'
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   currencyFormat?: Intl.NumberFormat

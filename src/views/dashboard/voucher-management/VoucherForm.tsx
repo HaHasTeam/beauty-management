@@ -27,7 +27,14 @@ import { cn } from '@/lib/utils'
 import { createVoucherApi, getAllVouchersApi, getVoucherByIdApi, updateVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
 import { useStore } from '@/stores/store'
-import { DiscountTypeEnum, discountTypeEnumArray, StatusEnum, voucherEnumArray } from '@/types/enum'
+import {
+  DiscountTypeEnum,
+  discountTypeEnumArray,
+  StatusEnum,
+  VoucherApplyTypeEnum,
+  voucherEnumArray,
+  VoucherVisibilityEnum
+} from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
 import { generateCouponCode } from '@/utils'
 
@@ -97,10 +104,16 @@ function VoucherForm({
       if (voucherData) {
         await updateVoucherMutation({
           id: voucherData.id,
-          ...formatData
+          ...formatData,
+          applyType: VoucherApplyTypeEnum.ALL,
+          visibility: VoucherVisibilityEnum.PUBLIC
         })
       } else {
-        await createVoucherMutation(formatData)
+        await createVoucherMutation({
+          ...formatData,
+          applyType: VoucherApplyTypeEnum.ALL,
+          visibility: VoucherVisibilityEnum.PUBLIC
+        })
       }
     } catch (error) {
       handleServerError({
