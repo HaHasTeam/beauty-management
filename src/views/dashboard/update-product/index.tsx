@@ -20,6 +20,7 @@ import { uploadFilesApi } from '@/network/apis/file'
 import { getUserProfileApi } from '@/network/apis/user'
 import { getProductApi, updateProductApi } from '@/network/product'
 import { ICategory } from '@/types/category'
+import { ClassificationStatusEnum } from '@/types/classification'
 import { StatusEnum } from '@/types/enum'
 import { ICreateProduct, IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
 import { IImage } from '@/types/productImage'
@@ -161,12 +162,12 @@ const UpdateProduct = () => {
         }
 
         // Process product images
-        const processedMainImages = await processImages(productData?.data[0]?.images ?? [], values.images)
+        const processedMainImages = await processImages(productData?.data?.images ?? [], values.images)
 
         // Process classification images
         const processedClassifications = await Promise.all(
           (values.productClassifications ?? []).map(async (classification, index) => {
-            const originalClassImages = productData?.data[0]?.productClassifications?.[index]?.images ?? []
+            const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
 
             const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
 
@@ -179,7 +180,7 @@ const UpdateProduct = () => {
 
         const transformedData: IServerCreateProduct = {
           name: values?.name,
-          brand: productData?.data[0]?.brand?.id ?? '',
+          brand: productData?.data?.brand?.id ?? '',
           category: values?.category,
           status: values?.status,
           images: processedMainImages,
@@ -239,12 +240,14 @@ const UpdateProduct = () => {
     }
   }
   useEffect(() => {
-    if (productData && productData?.data && productData?.data?.length > 0) {
-      const productClassifications = productData?.data[0]?.productClassifications ?? []
+    if (productData && productData?.data) {
+      const productClassifications = productData?.data?.productClassifications ?? []
 
       // Check for type === CUSTOM
       const hasCustomType = productClassifications.some(
-        (classification) => classification?.type === ProductClassificationTypeEnum.CUSTOM
+        (classification) =>
+          classification?.type === ProductClassificationTypeEnum.CUSTOM &&
+          classification.status === ClassificationStatusEnum.ACTIVE
       )
 
       // Determine productClassifications and fallback price/quantity
@@ -258,7 +261,7 @@ const UpdateProduct = () => {
       const fallbackQuantity = !hasCustomType ? productClassifications[0]?.quantity : undefined
 
       const processFormValue = async () => {
-        const mainImages = productData?.data[0]?.images
+        const mainImages = productData?.data?.images
           ?.filter((image) => image.status === StatusEnum.ACTIVE || !image.status)
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
@@ -276,20 +279,21 @@ const UpdateProduct = () => {
         ])
 
         const formValue: ICreateProduct = {
-          id: productData?.data[0]?.id,
-          name: productData?.data[0]?.name,
-          brand: productData?.data[0]?.brand?.id,
-          category: productData?.data[0]?.category?.id,
+          id: productData?.data?.id,
+          name: productData?.data?.name,
+          brand: productData?.data?.brand?.id,
+          category: productData?.data?.category?.id,
           images: convertedMainImages,
-          description: productData?.data[0]?.description,
-          detail: JSON?.parse(productData?.data[0]?.detail ?? ''),
+          description: productData?.data?.description,
+          detail: JSON?.parse(productData?.data?.detail ?? ''),
           productClassifications: updatedProductClassifications?.map((classification, index) => ({
             ...classification,
             images: convertedClassificationImages[index] || []
           })),
-          status: productData?.data[0]?.status ?? '',
+          status: productData?.data?.status ?? '',
           price: fallbackPrice,
-          quantity: fallbackQuantity
+          quantity: fallbackQuantity,
+          sku: productData?.data?.sku ?? ''
         }
 
         form.reset(formValue)
@@ -302,7 +306,7 @@ const UpdateProduct = () => {
   return (
     <>
       {(isGettingProduct || isGettingCategory || isGettingProfile || isLoading) && <LoadingLayer />}
-      {productData && productData?.data && productData?.data?.length > 0 ? (
+      {productData && productData?.data ? (
         <div className='space-y-3 relative flex sm:gap-3 gap-0 justify-between'>
           <div className='lg:w-[72%] md:w-[70%] sm:w-[85%] w-full'>
             <Form {...form}>

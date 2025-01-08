@@ -294,11 +294,10 @@ export const FormProductSchema = z
     images: fileArray.min(1, { message: productFormMessage.imagesRequired }),
     description: z
       .string()
-      .transform((val) => val.replace(/<[^>]*>/g, '').trim())
-      .refine((val) => val.length > 0, { message: productFormMessage.descriptionRequired })
-      .refine((val) => val.length <= 5000, { message: productFormMessage.descriptionTooLong })
-      // Convert back to original format for form submission
-      .transform((val) => `<p>${val}</p>`),
+      .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
+        message: productFormMessage.descriptionRequired
+      })
+      .refine((val) => val.length <= 80000, { message: productFormMessage.descriptionTooLong }),
     status: z.string().min(1, { message: productFormMessage.statusRequired }),
     // detail information
     detail: z.record(

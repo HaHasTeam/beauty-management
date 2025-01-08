@@ -218,19 +218,10 @@ const BasicInformation = ({
                                 className='border-primary/40'
                                 theme='snow'
                                 {...field}
-                                onChange={(content, _delta, _source, editor) => {
-                                  // Get plain text and trim
-                                  const text = editor.getText().trim()
-
+                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                onChange={(content, _delta, _source, _editor) => {
                                   // Truncate if exceeds limit
-                                  if (text.length > 5000) {
-                                    // Create a new Quill instance to manipulate content
-                                    const truncatedContent = content.split(' ').slice(0, 5000).join(' ')
-
-                                    field.onChange(truncatedContent)
-                                  } else {
-                                    field.onChange(content)
-                                  }
+                                  field.onChange(content.trim())
                                 }}
                               />
                             </FormControl>

@@ -9,7 +9,7 @@ export const getAllProductApi = toQueryFetcher<void, TServerResponse<IResponsePr
     return privateRequest('/products')
   }
 )
-export const getProductApi = toQueryFetcher<string, TServerResponse<IResponseProduct[]>>(
+export const getProductApi = toQueryFetcher<string, TServerResponse<IResponseProduct>>(
   'getProductApi',
   async (productId) => {
     return privateRequest(`/products/get-by-id/${productId}`)
