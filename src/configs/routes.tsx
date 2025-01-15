@@ -131,7 +131,7 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/pre-order/add-pre-order'
   },
   [Routes.FLASH_SALE]: {
-    name: 'Flash Sale',
+    name: 'Flash Sale Product',
     title: 'Flash Sale',
     description: 'Flash Sale',
     path: '/dashboard/flash-sale',
@@ -148,8 +148,8 @@ export const routesConfig: TRoutes = {
     name: 'Add Flash Sale',
     title: 'Add Flash Sale',
     description: 'Add Flash Sale',
-    path: '/dashboard/flash-sale/add-flash-sale',
-    getPath: () => '/dashboard/flash-sale/add-flash-sale'
+    path: '/dashboard/flash-sale/add',
+    getPath: () => '/dashboard/flash-sale/add'
   },
   [Routes.DASHBOARD_HOME]: {
     name: 'Main Dashboard',

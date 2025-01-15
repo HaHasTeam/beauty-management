@@ -44,7 +44,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
 
     return (
       <Form {...form}>
-        <Popover modal={false} open={isOpen} onOpenChange={setIsOpen}>
+        <Popover open={isOpen} onOpenChange={setIsOpen} modal={false}>
           <PopoverTrigger asChild>
             <FormControl>
               <Button
@@ -91,6 +91,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
                     const [hours, minutes] = e.split(':')
                     const newDate = new Date(date.getTime())
                     newDate.setHours(parseInt(hours), parseInt(minutes))
+                    setDate(newDate)
                     handlePickDate(newDate)
                   }
                 }}
