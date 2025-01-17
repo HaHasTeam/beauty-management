@@ -79,7 +79,8 @@ const CreateProduct = () => {
         message:
           form.getValues('status') === ProductEnum.OFFICIAL
             ? productFormMessage.successCreateOfficialMessage
-            : productFormMessage.successCreateInactiveMessage
+            : productFormMessage.successCreateInactiveMessage,
+        isShowDescription: false
       })
       handleReset()
     }

@@ -406,6 +406,7 @@
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
     "error": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn, vui lòng thử lại sau. Nếu vấn đề vẫn tiếp diễn, vui lòng liên hệ với đội ngũ hỗ trợ.",
-    "info": "Đây là một thông báo để cung cấp thêm thông tin quan trọng liên quan đến công việc của bạn."
+    "info": "Đây là một thông báo để cung cấp thêm thông tin quan trọng liên quan đến công việc của bạn.",
+    "warning": "Bạn sắp thực hiện một hành động không an toàn, vui lòng cẩn thận. Nếu bạn không chắc chắn, hãy liên hệ với đội hỗ trợ."
   }
 }

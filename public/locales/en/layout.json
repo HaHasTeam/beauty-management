@@ -406,6 +406,7 @@
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
     "error": "An error occurred while processing your request, please try again later. If the problem persists, please contact the support team.",
-    "info": "This is a message to provide important additional information related to your work."
+    "info": "This is a message to provide important additional information related to your work.",
+    "warning": "You are about to perform a unsafe action, please be cautious. If you are not sure, please contact the support team."
   }
 }
