@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-import { defaultRequiredRegex, numberRequiredRegex } from '@/constants/regex'
+import { defaultRequiredRegex, numberRequiredRegex, phoneRegex } from '@/constants/regex'
 import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from '@/types/enum'
 
-const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
+// const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
 export const reasonSchema = z.object({
   reason: z.string().min(1, 'Reason is required').max(200, 'Name cannot exceed 200 characters')
 })
@@ -15,7 +15,7 @@ export const brandCreateSchema = z.object({
   document: fileArray.min(1, 'You must upload at least 1 document for your license details'),
   description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
   email: z.string().email('Invalid email address'),
-  phone: z.string().regex(phoneRegex, 'Invalid phone number!').max(10).min(1).optional(),
+  phone: z.string().max(10).min(1).refine(phoneRegex.pattern, phoneRegex.message).optional(),
 
   address: z.string().max(255, 'Address cannot exceed 255 characters').optional(),
   province: z.string().max(255),
@@ -80,4 +80,12 @@ export const voucherCreateSchema = z.object({
   status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE),
   visibility: z.boolean().default(false).optional(),
   selectedProducts: z.array(z.string())
+})
+
+export const CreateAddressBrandSchema = z.object({
+  detailAddress: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  ward: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  district: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  province: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  fullAddress: z.string().optional()
 })

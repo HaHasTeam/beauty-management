@@ -24,5 +24,8 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './src/assets'),
       '@hooks': path.resolve(__dirname, './src/hooks')
     }
+  },
+  server: {
+    port: 5174
   }
 })

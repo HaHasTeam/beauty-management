@@ -40,7 +40,13 @@ function RegisterBrand() {
       description: '',
       document: [],
       logo: [],
-      name: ''
+      name: '',
+      businessRegistrationAddress: '',
+      businessTaxCode: '',
+      district: '',
+      businessRegistrationCode: '',
+      province: '',
+      ward: ''
     }
   })
   const handleServerError = useHandleServerError()
@@ -128,6 +134,13 @@ function RegisterBrand() {
             email: values.email,
             phone: values.phone,
             description: values.description,
+            province: values.province,
+            district: values.district,
+            ward: values.ward,
+            businessTaxCode: values.businessTaxCode,
+            businessRegistrationCode: values.businessRegistrationCode,
+            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+            businessRegistrationAddress: values.businessRegistrationAddress,
             status: StatusEnum.PENDING
           }
           await requestCreateBrandFn(formatData)
@@ -144,7 +157,14 @@ function RegisterBrand() {
             logo: '',
             phone: values.phone,
             description: values.description,
-            status: StatusEnum.PENDING
+            status: StatusEnum.PENDING,
+            province: values.province,
+            district: values.district,
+            ward: values.ward,
+            businessTaxCode: values.businessTaxCode,
+            businessRegistrationCode: values.businessRegistrationCode,
+            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+            businessRegistrationAddress: values.businessRegistrationAddress
           }
           await requestCreateBrandFn(formatData)
         }

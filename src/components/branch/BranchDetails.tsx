@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 import { IconRight } from 'react-day-picker'
 import type { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
@@ -9,7 +10,7 @@ import { templateFileUrl } from '@/constants/infor'
 import type { Steppers } from '@/hooks/useStepper'
 import { brandCreateSchema } from '@/schemas'
 
-import { AddressPopup } from '../address-popup'
+import AddAddressDialog from '../address/AddAddressDialog'
 import Button from '../button'
 import UploadFilePreview from '../file-input/UploadFilePreview'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
@@ -23,12 +24,8 @@ type Props = {
   form: UseFormReturn<z.infer<typeof brandCreateSchema>>
 }
 function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
-  const [addresses, setAddresses] = useState<string[]>([])
-  const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false)
+  const { t } = useTranslation()
 
-  const handleAddAddress = (newAddress: string) => {
-    setAddresses([...addresses, newAddress])
-  }
   return (
     <div className=''>
       <div className='flex w-full items-center gap-4 mb-10'>
@@ -49,7 +46,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
                 <FormLabel required>Name</FormLabel>
                 <FormControl>
                   <Input
-                    className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                    // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                     placeholder='
                 please enter your brand name
                     '
@@ -68,7 +65,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
                 <FormLabel required>Email Brand</FormLabel>
                 <FormControl>
                   <Input
-                    className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                    // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                     placeholder='
                      e.g. allure@gmail.com
                     '
@@ -81,7 +78,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           />
         </div>
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name='address'
           render={({ field }) => (
@@ -89,7 +86,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
               <FormLabel required>Address</FormLabel>
               <FormControl>
                 <Input
-                  className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                  // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                   placeholder='Address'
                   {...field}
                 />
@@ -97,8 +94,15 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
               <FormMessage />
             </FormItem>
           )}
+        /> */}
+        <AddAddressDialog
+          parenForm={form}
+          triggerComponent={
+            <Button className='text-primary border-primary hover:text-primary hover:bg-primary/15' variant='outline'>
+              <PlusCircle /> {t('address.addNewAddress')}
+            </Button>
+          }
         />
-
         <FormField
           control={form.control}
           name='description'
@@ -107,7 +111,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input
-                  className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                  // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                   placeholder='
                  description
                     '
@@ -127,7 +131,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
               <FormLabel>Phone</FormLabel>
               <FormControl>
                 <Input
-                  className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                  // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                   placeholder='Phone'
                   {...field}
                 />
@@ -209,11 +213,6 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           Next
         </Button>
       </div>
-      <AddressPopup
-        isOpen={isAddressPopupOpen}
-        onClose={() => setIsAddressPopupOpen(false)}
-        onSave={handleAddAddress}
-      />
     </div>
   )
 }
