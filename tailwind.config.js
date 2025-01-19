@@ -77,5 +77,5 @@ export default {
   },
   //import key work not make animation work, so I have to use require instead
   // eslint-disable-next-line
-  plugins: [require('tailwindcss-animate')]
+  plugins: [import('tailwindcss-animate')]
 }

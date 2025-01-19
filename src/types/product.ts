@@ -1,4 +1,4 @@
-import { IBrand, TBrand } from './brand'
+import { IBrand } from './brand'
 import { ICategory } from './category'
 import { IImage } from './productImage'
 import { TMetaData } from './request'
@@ -6,11 +6,17 @@ import { TMetaData } from './request'
 // common starts
 export type TProduct = TMetaData & {
   name: string
+  brand?: IBrand
+  category?: ICategory
+  images: IImage[]
   description: string
-  detail: string
-  brand: TBrand
-  images: string[]
-  status: ProductStatusEnum
+  status?: string
+  detail?: string
+  productClassifications?: IServerProductClassification[]
+  price?: number
+  quantity?: number
+  sku?: string
+  menu?: string
 }
 
 export type IProductDetail = {
@@ -142,6 +148,7 @@ export enum ProductStatusEnum {
   OFFICIAL = 'OFFICIAL',
   OUT_OF_STOCK = 'OUT_OF_STOCK',
   INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED'
+  BANNED = 'BANNED',
+  PENDING = 'PENDING'
 }
 // enum ends

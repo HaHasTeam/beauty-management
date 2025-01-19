@@ -12,6 +12,9 @@ import AddCategory from '@/views/dashboard/category/AddCategory'
 import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
+import GroupProduct from '@/views/dashboard/group-product'
+import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
+import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
 import MerchantsDirectory from '@/views/dashboard/merchants-directory'
 import { RedirectToMainDashboard } from '@/views/dashboard/others'
 import PreOrder from '@/views/dashboard/pre-order'
@@ -25,6 +28,7 @@ import UpdateProduct from '@/views/dashboard/update-product'
 import Vouchers from '@/views/dashboard/voucher-management'
 import ViewVoucherDetail from '@/views/dashboard/voucher-management/ViewVoucherDetail'
 
+import AuthGuard from './guard/AuthGuard'
 // import Brands from '@/views/dashboard/brand-management'
 // import Brands from '@/views/dashboard/brand-management'\
 
@@ -32,9 +36,9 @@ export const privateRoutes: RouteObject[] = [
   {
     path: '/dashboard',
     element: (
-      // <AuthGuard>
-      <Layout />
-      // </AuthGuard>
+      <AuthGuard>
+        <Layout />
+      </AuthGuard>
     ),
     children: [
       {
@@ -94,14 +98,14 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
-        path: 'flash-sale',
+        path: routesConfig[Routes.FLASH_SALE].path.replace('/dashboard/', ''),
         children: [
           {
             index: true,
             element: <FlashSale />
           },
           {
-            path: 'add-flash-sale',
+            path: 'add',
             element: <AddFlashSale />
           }
         ]
@@ -147,6 +151,23 @@ export const privateRoutes: RouteObject[] = [
       {
         path: routesConfig[Routes.UPDATE_PRODUCT].path.replace('/dashboard/', ''),
         element: <UpdateProduct />
+      },
+      {
+        path: routesConfig[Routes.GROUP_PRODUCT].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <GroupProduct />
+          },
+          {
+            path: 'add',
+            element: <AddGroupProduct />
+          },
+          {
+            path: ':id',
+            element: <GroupProductDetailById />
+          }
+        ]
       },
       {
         path: '*',

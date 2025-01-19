@@ -380,32 +380,32 @@ export default function SalesInformation({
                                 <TableHeader>
                                   <TableRow>
                                     <TableHead>
-                                      <FormLabel required styleParent='justify-center'>
+                                      <FormLabel required className='justify-center'>
                                         Phân loại 1
                                       </FormLabel>
                                     </TableHead>
                                     {classificationCount === 2 && (
                                       <TableHead>
-                                        <FormLabel required styleParent='justify-center text-center'>
+                                        <FormLabel required className='justify-center text-center'>
                                           Phân loại 2
                                         </FormLabel>
                                       </TableHead>
                                     )}
                                     <TableHead>
-                                      <FormLabel required styleParent='justify-center'>
+                                      <FormLabel required className='justify-center'>
                                         Giá
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel required styleParent='justify-center'>
+                                      <FormLabel required className='justify-center'>
                                         Số lượng
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel styleParent='justify-center'>SKU sản phẩm</FormLabel>
+                                      <FormLabel className='justify-center'>SKU sản phẩm</FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel styleParent='justify-center'>Thao tác</FormLabel>
+                                      <FormLabel className='justify-center'>Thao tác</FormLabel>
                                     </TableHead>
                                   </TableRow>
                                 </TableHeader>
@@ -413,7 +413,7 @@ export default function SalesInformation({
                                   {combinations.map((combo, index) => (
                                     <TableRow key={index}>
                                       <TableCell className='space-y-2'>
-                                        <FormLabel styleParent='justify-center'>
+                                        <FormLabel className='justify-center'>
                                           {combo?.title?.split('-')[0]?.trim()}
                                         </FormLabel>
                                         <FormField
@@ -470,7 +470,7 @@ export default function SalesInformation({
                                       </TableCell>
                                       {classificationCount === 2 && (
                                         <TableCell className='align-middle'>
-                                          <FormLabel styleParent='justify-center h-9 align-middle'>
+                                          <FormLabel className='justify-center h-9 align-middle'>
                                             {combo?.title?.split('-')[1]?.trim()}
                                           </FormLabel>
                                           <div className='h-5'></div>
