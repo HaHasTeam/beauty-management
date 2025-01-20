@@ -5,15 +5,13 @@ import { immer } from 'zustand/middleware/immer'
 import { createAuthSlice } from './auth/authSlice'
 import { createBranchSlice } from './branch/branchSlice'
 import { ManagementClientStore, Store } from './store.type'
-import { createUserSlice } from './userSlice'
 
 export const useStore = create<Store>()(
   devtools(
     persist(
       subscribeWithSelector(
         immer((...a) => ({
-          ...createAuthSlice(...a),
-          ...createUserSlice(...a)
+          ...createAuthSlice(...a)
         }))
       ),
       {

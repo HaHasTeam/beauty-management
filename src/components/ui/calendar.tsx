@@ -1,5 +1,3 @@
-'use client'
-
 import * as React from 'react'
 import { buttonVariants } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -32,7 +30,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         table: 'w-full border-collapse space-y-1',
         head_row: 'flex',
         head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
-        row: 'flex w-full mt-2',
+        row: 'flex w-full mt-2 first:justify-end',
         cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: cn(buttonVariants({ variant: 'ghost' }), 'h-9 w-9 p-0 font-normal aria-selected:opacity-100'),
         day_selected:
@@ -45,7 +43,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ...classNames
       }}
       components={{
-        Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {
+        Dropdown: ({ value, onChange, children }: DropdownProps) => {
           const options = React.Children.toArray(children) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[]
           const selected = options.find((child) => child.props.value === value)
           const handleChange = (value: string) => {
@@ -76,8 +74,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
             </Select>
           )
         },
-        IconLeft: ({ ...props }) => <ChevronLeft className='h-4 w-4' />,
-        IconRight: ({ ...props }) => <ChevronRight className='h-4 w-4' />
+        IconLeft: () => <ChevronLeft className='h-4 w-4' />,
+        IconRight: () => <ChevronRight className='h-4 w-4' />
       }}
       {...props}
     />

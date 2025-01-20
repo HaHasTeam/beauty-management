@@ -27,7 +27,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
   ({ field, onlyFutureDates, onlyPastDates, showTime = false, buttonClassName, required = false }, ref) => {
     const [isOpen, setIsOpen] = useState(false)
     const [date, setDate] = useState<Date | undefined>(field.value ? new Date(field.value as string) : undefined)
-    const [time, setTime] = useState<string>('05:00')
+    const [time, setTime] = useState<string>('21:00')
     const form = useForm()
     const handlePickDate = (selectedDate: Date) => {
       setDate(selectedDate)
@@ -44,7 +44,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
 
     return (
       <Form {...form}>
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <Popover open={isOpen} onOpenChange={setIsOpen} modal={false}>
           <PopoverTrigger asChild>
             <FormControl>
               <Button
@@ -56,7 +56,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
                 )}
               >
                 {date ? (
-                  `${format(date, 'PPP')} ${showTime ? time : ''}`
+                  `${format(date, 'PPP')} ${showTime ? `: ${time}` : ''}`
                 ) : (
                   <span>{showTime ? 'Select Date & Time' : 'Select Date'}</span>
                 )}
@@ -91,6 +91,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
                     const [hours, minutes] = e.split(':')
                     const newDate = new Date(date.getTime())
                     newDate.setHours(parseInt(hours), parseInt(minutes))
+                    setDate(newDate)
                     handlePickDate(newDate)
                   }
                 }}

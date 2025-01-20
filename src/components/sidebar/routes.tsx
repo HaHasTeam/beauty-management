@@ -1,6 +1,5 @@
 // Auth Imports
-import { Layers2Icon } from 'lucide-react'
-import { CiSquareQuestion } from 'react-icons/ci'
+import { Boxes, Layers2Icon } from 'lucide-react'
 import { FaBox } from 'react-icons/fa6'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
@@ -42,9 +41,9 @@ export const routes: IRoute[] = [
     collapse: false
   },
   {
-    name: routesConfig[Routes.REQUESTS_QUEUE].name,
-    path: routesConfig[Routes.REQUESTS_QUEUE].path,
-    icon: <CiSquareQuestion className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    name: routesConfig[Routes.GROUP_PRODUCT].name,
+    path: routesConfig[Routes.GROUP_PRODUCT].path,
+    icon: <Boxes className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

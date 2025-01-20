@@ -162,12 +162,12 @@ const UpdateProduct = () => {
         }
 
         // Process product images
-        const processedMainImages = await processImages(productData?.data?.images ?? [], values.images)
+        const processedMainImages = await processImages(productData?.data?.[0]?.images ?? [], values.images)
 
         // Process classification images
         const processedClassifications = await Promise.all(
           (values.productClassifications ?? []).map(async (classification, index) => {
-            const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
+            const originalClassImages = productData?.data?.[0]?.productClassifications?.[index]?.images ?? []
 
             const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
 
@@ -180,7 +180,7 @@ const UpdateProduct = () => {
 
         const transformedData: IServerCreateProduct = {
           name: values?.name,
-          brand: productData?.data?.brand?.id ?? '',
+          brand: productData?.data?.[0]?.brand?.id ?? '',
           category: values?.category,
           status: values?.status,
           images: processedMainImages,
@@ -241,7 +241,7 @@ const UpdateProduct = () => {
   }
   useEffect(() => {
     if (productData && productData?.data) {
-      const productClassifications = productData?.data?.productClassifications ?? []
+      const productClassifications = productData?.data?.[0]?.productClassifications ?? []
 
       // Check for type === CUSTOM
       const hasCustomType = productClassifications.some(
@@ -261,7 +261,7 @@ const UpdateProduct = () => {
       const fallbackQuantity = !hasCustomType ? productClassifications[0]?.quantity : undefined
 
       const processFormValue = async () => {
-        const mainImages = productData?.data?.images
+        const mainImages = productData?.data?.[0]?.images
           ?.filter((image) => image.status === StatusEnum.ACTIVE || !image.status)
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
@@ -279,21 +279,21 @@ const UpdateProduct = () => {
         ])
 
         const formValue: ICreateProduct = {
-          id: productData?.data?.id,
-          name: productData?.data?.name,
-          brand: productData?.data?.brand?.id,
-          category: productData?.data?.category?.id,
+          id: productData?.data?.[0]?.id,
+          name: productData?.data?.[0]?.name,
+          brand: productData?.data?.[0]?.brand?.id,
+          category: productData?.data?.[0]?.category?.id,
           images: convertedMainImages,
-          description: productData?.data?.description,
-          detail: JSON?.parse(productData?.data?.detail ?? ''),
+          description: productData?.data?.[0]?.description,
+          detail: JSON?.parse(productData?.data?.[0]?.detail ?? ''),
           productClassifications: updatedProductClassifications?.map((classification, index) => ({
             ...classification,
             images: convertedClassificationImages[index] || []
           })),
-          status: productData?.data?.status ?? '',
+          status: productData?.data?.[0]?.status ?? '',
           price: fallbackPrice,
           quantity: fallbackQuantity,
-          sku: productData?.data?.sku ?? ''
+          sku: productData?.data?.[0]?.sku ?? ''
         }
 
         form.reset(formValue)

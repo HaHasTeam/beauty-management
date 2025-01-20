@@ -29,7 +29,7 @@ const AsyncSelect = React.forwardRef<
 
   return (
     <AsyncSelectComponent
-      className='HELLO'
+      className={props.className}
       instanceId={id}
       ref={ref}
       value={value}

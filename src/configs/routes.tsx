@@ -30,7 +30,10 @@ export enum Routes {
   UPDATE_BRAND = 'update-brand',
   VOUCHER = 'voucher',
   ADD_VOUCHER = 'add-voucher',
-  UPDATE_VOUCHER = 'update-voucher'
+  UPDATE_VOUCHER = 'update-voucher',
+  GROUP_PRODUCT = 'group-product',
+  ADD_GROUP_PRODUCT = 'add-group-product',
+  GROUP_PRODUCT_DETAILS = 'group-product-details'
 }
 
 export const routesConfig: TRoutes = {
@@ -128,7 +131,7 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/pre-order/add-pre-order'
   },
   [Routes.FLASH_SALE]: {
-    name: 'Flash Sale',
+    name: 'Flash Sale Product',
     title: 'Flash Sale',
     description: 'Flash Sale',
     path: '/dashboard/flash-sale',
@@ -145,8 +148,8 @@ export const routesConfig: TRoutes = {
     name: 'Add Flash Sale',
     title: 'Add Flash Sale',
     description: 'Add Flash Sale',
-    path: '/dashboard/flash-sale/add-flash-sale',
-    getPath: () => '/dashboard/flash-sale/add-flash-sale'
+    path: '/dashboard/flash-sale/add',
+    getPath: () => '/dashboard/flash-sale/add'
   },
   [Routes.DASHBOARD_HOME]: {
     name: 'Main Dashboard',
@@ -231,5 +234,26 @@ export const routesConfig: TRoutes = {
     description: 'Update beauty product',
     path: '/dashboard/products/update/:id',
     getPath: () => '/dashboard/products/update/:id'
+  },
+  [Routes.GROUP_PRODUCT]: {
+    name: 'Group Product',
+    title: 'Group Product',
+    description: 'Manage your beauty products',
+    path: '/dashboard/group-product',
+    getPath: () => '/dashboard/group-product'
+  },
+  [Routes.ADD_GROUP_PRODUCT]: {
+    name: 'Add Group Product',
+    title: 'Add Group Product',
+    description: 'Add a new beauty product',
+    path: '/dashboard/group-product/add',
+    getPath: () => '/dashboard/group-product/add'
+  },
+  [Routes.GROUP_PRODUCT_DETAILS]: {
+    name: 'Group Product Details',
+    title: 'Group Product Details',
+    description: 'View and manage group product details',
+    path: '/dashboard/group-product/[id]',
+    getPath: (params) => `/dashboard/group-product/${params.id}`
   }
 }

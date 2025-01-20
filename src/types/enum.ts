@@ -61,3 +61,14 @@ export enum OrderEnum {
   GROUP_BUYING = 'GROUP_BUYING',
   FLASH_SALE = 'FLASH_SALE'
 }
+
+export enum VoucherVisibilityEnum {
+  WALLET = 'WALLET',
+  PUBLIC = 'PUBLIC',
+  GROUP = 'GROUP'
+}
+
+export enum VoucherApplyTypeEnum {
+  ALL = 'ALL',
+  SPECIFIC = 'SPECIFIC'
+}
