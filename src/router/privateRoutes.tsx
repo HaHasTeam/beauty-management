@@ -16,6 +16,8 @@ import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
 import MerchantsDirectory from '@/views/dashboard/merchants-directory'
+import OrderList from '@/views/dashboard/order-management'
+import OrderDetails from '@/views/dashboard/order-management/OrderDetails'
 import { RedirectToMainDashboard } from '@/views/dashboard/others'
 import PreOrder from '@/views/dashboard/pre-order'
 import PreOrderDetailById from '@/views/dashboard/pre-order/[id]'
@@ -167,6 +169,17 @@ export const privateRoutes: RouteObject[] = [
             path: ':id',
             element: <GroupProductDetailById />
           }
+        ]
+      },
+      {
+        path: routesConfig[Routes.ORDER_LIST].path.replace('/dashboard/', ''),
+
+        children: [
+          {
+            index: true,
+            element: <OrderList />
+          },
+          { path: ':id', element: <OrderDetails /> }
         ]
       },
       {

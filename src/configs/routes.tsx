@@ -25,6 +25,7 @@ export enum Routes {
   ADD_CATEGORY = 'add-category',
   CATEGORY_DETAILS = 'category-details',
   UPDATE_PRODUCT = 'update-product',
+  PRODUCT_DETAILS = 'product-details',
   REGISTER_BRAND = 'register-brand',
   ADD_BRAND = 'add-brand',
   UPDATE_BRAND = 'update-brand',
@@ -33,7 +34,9 @@ export enum Routes {
   UPDATE_VOUCHER = 'update-voucher',
   GROUP_PRODUCT = 'group-product',
   ADD_GROUP_PRODUCT = 'add-group-product',
-  GROUP_PRODUCT_DETAILS = 'group-product-details'
+  GROUP_PRODUCT_DETAILS = 'group-product-details',
+  ORDER_DETAILS = 'order-details',
+  ORDER_LIST = 'order-list'
 }
 
 export const routesConfig: TRoutes = {
@@ -235,6 +238,13 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/products/update/:id',
     getPath: () => '/dashboard/products/update/:id'
   },
+  [Routes.PRODUCT_DETAILS]: {
+    name: 'Product Details',
+    title: 'Product Details',
+    description: 'Beauty product',
+    path: '/dashboard/products/:id',
+    getPath: () => '/dashboard/products/:id'
+  },
   [Routes.GROUP_PRODUCT]: {
     name: 'Group Product',
     title: 'Group Product',
@@ -255,5 +265,19 @@ export const routesConfig: TRoutes = {
     description: 'View and manage group product details',
     path: '/dashboard/group-product/[id]',
     getPath: (params) => `/dashboard/group-product/${params.id}`
+  },
+  [Routes.ORDER_LIST]: {
+    name: 'Order List',
+    title: 'Order List',
+    description: 'Order List',
+    path: '/dashboard/orders',
+    getPath: () => '/dashboard/orders'
+  },
+  [Routes.ORDER_DETAILS]: {
+    name: 'Order Details',
+    title: 'Order Details',
+    description: 'Beauty order',
+    path: '/dashboard/orders/:id',
+    getPath: () => '/dashboard/orders/:id'
   }
 }

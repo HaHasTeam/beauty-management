@@ -36,13 +36,17 @@
     "flashSale": "Flash sale",
     "liveStream": "Livestream",
     "preOrder": "Đặt trước",
-    "groupBuying": "Mua nhóm"
+    "groupBuying": "Mua nhóm",
+    "hidden": "Đã ẩn",
+    "outOfStock": "Hết hàng",
+    "waiting": "Sắp diễn ra"
   },
   "statusTag": {
     "default": "Mặc định"
   },
   "flashSale": {
-    "title": "Flash Sale"
+    "title": "Flash Sale",
+    "waiting": "Flash Sale sẽ diễn ra vào ngày {{val, MM/DD/YYYY HH:mm:ss}}"
   },
   "footer": {
     "contactTitle": "Khám phá vẻ đẹp thiên nhiên với các sản phẩm chăm sóc tự nhiên của chúng tôi."
@@ -67,7 +71,8 @@
     "cancel": "Hủy",
     "ok": "Đồng ý",
     "save": "Lưu",
-    "submit": "Gửi"
+    "submit": "Gửi",
+    "backToHome": "Quay lại Trang chủ"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -86,7 +91,10 @@
     "vietnamese": "VN"
   },
   "search": {
-    "result": "Kết quả tìm kiếm cho từ khóa {{keyword}}: {{total}} dữ liệu"
+    "result": "Kết quả tìm kiếm cho từ khóa {{keyword}}: {{total}} dữ liệu",
+    "reset": "Đặt lại",
+    "orderPlaceholder": "Tìm đơn hàng theo Mã đơn hàng, Tên sản phẩm hoặc Tên thương hiệu",
+    "orderButton": "Tìm đơn hàng"
   },
   "filter": {
     "title": "Lọc",
@@ -153,6 +161,22 @@
       "description": "Khám phá những sản phẩm đang thịnh hành.",
       "button": "Khám phá sản phẩm"
     },
+    "order": {
+      "title": "Danh sách đơn hàng của bạn đang trống",
+      "description": "Bạn chưa đặt bất kỳ đơn hàng nào. Hãy bắt đầu khám phá sản phẩm của chúng tôi và tận hưởng các ưu đãi hấp dẫn!",
+      "statusDescription": "Hiện không có đơn hàng nào đang ở trạng thái này.",
+      "button": "Bắt đầu mua sắm"
+    },
+    "orderDetail": {
+      "title": "Không tìm thấy chi tiết đơn hàng",
+      "description": "Hiện không có chi tiết nào cho đơn hàng này. Vui lòng kiểm tra lịch sử đơn hàng hoặc liên hệ bộ phận hỗ trợ khách hàng để được trợ giúp.",
+      "button": "Quay lại danh sách đơn hàng"
+    },
+    "checkout": {
+      "title": "Danh sách mua hàng trống",
+      "description": "Khám phá những sản phẩm đang thịnh hành.",
+      "button": "Mua sắm"
+    },
     "address": {
       "title": "Không có địa chỉ nào được tìm thấy",
       "description": "Có vẻ như bạn chưa thêm bất kỳ địa chỉ nào. Hãy thêm một địa chỉ ngay để trải nghiệm mua sắm thuận tiện hơn!",
@@ -187,6 +211,21 @@
       "title": "Phân loại sản phẩm trống",
       "description": "Phân loại sản phẩm hiện tại không khả dụng!",
       "button": "Đồng ý"
+    },
+    "brandVoucher": {
+      "title": "Không có voucher",
+      "description": "Chưa có mã giảm giá nào của Shop. Nhập mã giảm giá có thể sử dụng vào thanh bên trên.",
+      "button": "Khám phá thương hiệu"
+    },
+    "product": {
+      "title": "Không tìm thấy sản phẩm",
+      "description": "Chúng tôi không tìm thấy sản phẩm nào phù hợp với tiêu chí của bạn. Vui lòng thử điều chỉnh bộ lọc hoặc tìm kiếm sản phẩm khác.",
+      "button": "Duyệt sản phẩm"
+    },
+    "productDetail": {
+      "title": "Không tìm thấy sản phẩm",
+      "description": "Sản phẩm bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
+      "button": "Xem các sản phẩm khác"
     }
   },
   "productDetail": {
@@ -195,12 +234,21 @@
     "quantity": "Số lượng",
     "total": "Tạm tính",
     "priceDetail": "Chi tiết giá",
-    "descriptionTitle": "Mô tả thêm",
+    "descriptionTitle": "Mô tả",
+    "detailTitle": "Thông tin chi tiết",
     "breadcrumbProductName": "{{name}}",
-    "brandDeal": "Deal của thương hiệu",
+    "brandDeal": "Ưu đãi của thương hiệu",
+    "classifications": "Phân loại",
     "classification": "Phân loại",
+    "classification1": "Phân loại 1",
+    "classification2": "Phân loại 2",
     "selectOption": "Chọn tùy chọn",
-    "selectClassification": "Chọn phân loại"
+    "selectClassification": "Chọn phân loại",
+    "title": "Chi tiết sản phẩm",
+    "originalPrice": "Giá gốc",
+    "Color": "Màu sắc",
+    "Size": "Kích cỡ",
+    "Other": "Khác"
   },
   "event": {
     "finishIn": "Kết thúc trong"
@@ -238,7 +286,8 @@
     },
     "joined": {
       "title": "Tham gia vào",
-      "value": "{{time}} trước"
+      "value": "{{time}} trước",
+      "time": "{{time}}"
     },
     "products": {
       "title": "Sản phẩm",
@@ -249,6 +298,7 @@
       "count": "{{count}}k"
     },
     "chatNow": "Nhắn tin ngay",
+    "chat": "Nhắn tin",
     "viewShop": "Xem thương hiệu"
   },
   "breadcrumb": {
@@ -256,6 +306,7 @@
   },
   "date": {
     "toLocaleDateString": "{{val, DD/MM/YYYY}}",
+    "toLocaleDateTimeString": "{{val, DD/MM/YYYY HH:mm:ss}}",
     "expiredDate": "Hạn sử dụng",
     "exp": "HSD"
   },
@@ -280,6 +331,7 @@
     "Products": "Sản phẩm",
     "saved": "Đã tiết kiệm",
     "selectAll": "Chọn tất cả",
+    "removeAll": "Xóa tất cả",
     "voucher": "Voucher",
     "selectVoucher": "Chọn hoặc nhập voucher",
     "buy": "Mua hàng",
@@ -288,9 +340,28 @@
     "checkoutDescription": "(Giá này đã bao gồm thuế GTGT, nhưng chưa bao gồm phí vận chuyển)",
     "acceptCondition": "Nhấn \"Đặt hàng\" đồng nghĩa với việc bạn đồng ý tuân theo ",
     "savings": "Tiết kiệm",
-    "totalCost": "Tổng chi phí sản phẩm",
+    "directDiscount": "Giảm giá trực tiếp từ sản phẩm",
+    "discountBrand": "Mã khuyến mãi từ thương hiệu",
+    "discountPlatform": "Mã khuyến mãi từ nền tảng",
+    "totalCost": "Tổng tiền hàng",
     "totalDiscount": "Tổng giảm giá từ voucher",
-    "totalPayment": "Tổng thanh toán"
+    "totalPayment": "Tổng tiền thanh toán",
+    "discountDetails": "Chi tiết khuyến mãi",
+    "productLeft": "Còn {{count}} sản phẩm",
+    "updateClassificationSuccess": "Thay đổi phân loại sản phẩm thành công!",
+    "soldOutMessage": "Phân loại hàng này đã bán hết, vui lòng chọn phân loại khác.",
+    "soldOutAllMessage": "Sản phẩm này đã hết hàng.",
+    "hiddenAllMessage": "Sản phẩm này đã bị ẩn.",
+    "hiddenMessage": "Phân loại hàng này đã bị ẩn, vui lòng chọn phân loại khác.",
+    "maxQuantityError": "Số lượng còn lại của phân loại sản phẩm này là {{maxQuantity}}.",
+    "negativeQuantityError": "Số lượng sản phẩm không thể bé hơn 1.",
+    "addToCartSuccess": "Sản phẩm đã được thêm vào giỏ hàng.",
+    "chooseClassification": "Vui lòng chọn phân loại sản phẩm để mua.",
+    "tmpTotalProductPrice": "Giá tạm tính (khi áp dụng các voucher trên)",
+    "estimateProductPrice": "Giá tạm tính",
+    "voucherNote": "*Vui lòng thêm Voucher khi đặt hàng ở bước thanh toán để được giá như trên",
+    "buyToDiscountCurrency": "Mua từ {{minOrder, currency}} để được giảm {{discount, currency}}. Số lượng Voucher có hạn",
+    "buyToDiscountPercentage": "Mua từ {{minOrder, currency}} để được giảm {{discount}}%. Số lượng Voucher có hạn"
   },
   "address": {
     "title": "Địa chỉ",
@@ -336,7 +407,8 @@
     "setAsDefault": "Đặt làm địa chỉ mặc định",
     "addSuccess": "Thêm địa chỉ mới thành công!",
     "updateSuccess": "Địa chỉ của bạn đã được cập nhật thành công.",
-    "alertMessage": "Please add new address before {{action}}!"
+    "alertMessage": "Please add new address before {{action}}!",
+    "notes": "Ghi chú"
   },
   "voucher": {
     "title": "Voucher",
@@ -349,7 +421,7 @@
     "codePlaceholder": "Nhập mã voucher của bạn vào đây",
     "input": "Nhập mã voucher của bạn vào đây",
     "condition": "Điều kiện",
-    "chooseProductBrandAlert": "Vui lòng chọn sản phẩm từ Brand để áp dụng Voucher này",
+    "chooseProductBrandAlert": "Vui lòng chọn sản phẩm từ thương hiệu để áp dụng voucher.",
     "chooseProductAppAlert": "Vui lòng chọn sản phẩm để sử dụng ưu đãi.",
     "description": "Nhập hoặc chọn 1 voucher",
     "help": "Trợ giúp",
@@ -357,7 +429,37 @@
     "howToUse": "Cách Sử Dụng Voucher",
     "howToFind": "Cách Tìm Voucher",
     "howToUseDescription": "Để có thể áp dụng mã Allure Voucher, bạn hãy chọn nút \"Lưu\" để lấy voucher và mục ví voucher của bạn nhé.",
-    "howToFindDescription": "Bạn có thể tìm thấy Allure Voucher xuyên suốt trang web và ứng dụng. Mẹo riêng cho bạn nè, hãy bắt đầu với những trang chương trình khuyến mãi và trang chủ của thương hiệu nhé!"
+    "howToFindDescription": "Bạn có thể tìm thấy Allure Voucher xuyên suốt trang web và ứng dụng. Mẹo riêng cho bạn nè, hãy bắt đầu với những trang chương trình khuyến mãi và trang chủ của thương hiệu nhé!",
+    "off": {
+      "amount": "Giảm {{amount, currency}}",
+      "percentage": "Giảm {{percentage}}%",
+      "numberPercentage": "Giảm {{percentage}}%",
+      "minOrder": "Đơn tối thiểu {{amount, currency}}",
+      "maxDiscount": "Giảm tối đa {{amount, currency}}",
+      "specific": "Sản phẩm nhất định",
+      "specificDescription": "Áp dụng cho một số sản phẩm nhất định của {{val}} trong chương trình giảm giá.",
+      "all": "Tất cả sản phẩm",
+      "allDescription": "Áp dụng cho tất cả sản phẩm của {{val}}."
+    },
+    "informationTitle": "Thông tin mã giảm giá",
+    "discount": "Ưu đãi",
+    "nameTitle": "Tên mã giảm giá",
+    "descriptionTitle": "Mô tả",
+    "applicableProducts": "Sản phẩm áp dụng",
+    "discountAmount": "Đã giảm {{amount, currency}}",
+    "discountPercentage": "Đã giảm {{percentage}}%",
+    "brand": "thương hiệu",
+    "platform": "nền tảng",
+    "collectSuccess": "Thu thập voucher thành công!",
+    "bestChoice": "Lựa chọn tốt nhất",
+    "bestDiscountPercentageDisplay": "Voucher giảm đến {{percentage}}%",
+    "bestDiscountAmountDisplay": "Voucher giảm đến {{amount, currency}}",
+    "reason": {
+      "notApplicable": "Voucher này không áp dụng cho các sản phẩm đã chọn hoặc không đáp ứng điều kiện sử dụng.",
+      "soldOut": "Voucher này không còn hiệu lực do các sản phẩm áp dụng đã hết hàng.",
+      "notStart": "Voucher này chưa có hiệu lực. Vui lòng kiểm tra ngày bắt đầu và thử lại sau.",
+      "minOrder": "Voucher này yêu cầu đơn hàng tối thiểu {{amount, currency}} để sử dụng."
+    }
   },
   "dialog": {
     "cancel": "Hủy",
@@ -396,17 +498,93 @@
     "cvvFull": "Card Verification Value",
     "bankAccountEx": "VD: NGUYEN VAN A",
     "cardNumberEx": "VD: 4123 4567 8901 2345",
-    "cvvEx": "VD: 123"
+    "cvvEx": "VD: 123",
+    "CARD": "Thẻ tín dụng/ghi nợ",
+    "WALLET": "Ví",
+    "CASH": "Thanh toán khi nhận hàng"
   },
   "order": {
+    "loading": "Đang tải đơn hàng...",
+    "viewDetail": "Xem chi tiết",
+    "buyAgain": "Mua lại",
+    "classification": "Phân loại",
+    "all": "Tất cả",
+    "created": "Đơn hàng đã tạo",
+    "pending": "Chờ thanh toán",
+    "waitConfirm": "Chờ xác nhận",
+    "shipping": "Vận chuyển",
+    "delivering": "Chờ giao hàng",
+    "cancelled": "Đã hủy",
+    "completed": "Hoàn thành",
+    "return": "Trả hàng/Hoàn tiền",
+    "returnOrder": "Trả hàng",
+    "lastUpdated": "Cập nhật lần cuối",
     "success": "Đặt hàng thành công!",
-    "failed": "Đặt hàng thất bại!",
-    "loading": "Đang tải đơn hàng..."
+    "prepareCash": "Chuẩn bị tiền mặt",
+    "failure": "Đặt hàng thất bại!",
+    "retry": "Vui lòng thử lại sau",
+    "orderId": "Mã đơn hàng",
+    "viewOrder": "Xem đơn hàng",
+    "continueShopping": "Tiếp tục mua sắm",
+    "tryAgain": "Thử lại",
+    "successDescription": "Chúng tôi sẽ gửi email xác nhận đơn hàng với thông tin chi tiết về đơn hàng của bạn và một liên kết để theo dõi tiến trình của nó.",
+    "failureDescription": "Rất tiếc, chúng tôi không thể xử lý đơn hàng của bạn. Vui lòng thử lại sau hoặc liên hệ bộ phận hỗ trợ để được trợ giúp.",
+    "writeFeedback": "Viết đánh giá"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
     "error": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn, vui lòng thử lại sau. Nếu vấn đề vẫn tiếp diễn, vui lòng liên hệ với đội ngũ hỗ trợ.",
     "info": "Đây là một thông báo để cung cấp thêm thông tin quan trọng liên quan đến công việc của bạn.",
     "warning": "Bạn sắp thực hiện một hành động không an toàn, vui lòng cẩn thận. Nếu bạn không chắc chắn, hãy liên hệ với đội hỗ trợ."
+  },
+  "delete": {
+    "productCart": {
+      "title": "Xóa sản phẩm",
+      "description": "Bạn có chắc chắn muốn bỏ sản phẩm này khỏi giỏ hàng không? Hành động này không thể hoàn tác.",
+      "confirm": "Xác Nhận",
+      "cancel": "Hủy",
+      "success": "Sản phẩm đã được bỏ khỏi giỏ hàng thành công."
+    },
+    "cart": {
+      "title": "Xóa {{amount}} sản phẩm",
+      "description": "Bạn có chắc chắn muốn bỏ {{amount}} sản phẩm khỏi giỏ hàng không? Hành động này không thể hoàn tác.",
+      "confirm": "Xác Nhận",
+      "cancel": "Hủy",
+      "success": "{{amount}} sản phẩm đã được bỏ khỏi giỏ hàng thành công.",
+      "all": "tất cả",
+      "All": "Tất cả"
+    }
+  },
+  "warning": {
+    "cart": {
+      "title": "Chưa chọn sản phẩm",
+      "description": "Bạn chưa chọn sản phẩm nào trong giỏ hàng để thanh toán. Vui lòng chọn ít nhất một sản phẩm để tiếp tục.",
+      "confirm": "Đồng ý",
+      "insufficientStockTitle": "Hàng không đủ",
+      "insufficientStockDescription": "Một số sản phẩm bạn chọn không đủ hàng: {{products}}. Vui lòng cập nhật giỏ hàng để tiếp tục.",
+      "soldOutTitle": "Hết hàng",
+      "soldOutDescription": "Một số sản phẩm bạn chọn đã hết hàng: {{products}}. Vui lòng bỏ chọn các sản phẩm này để tiếp tục."
+    }
+  },
+  "paymentMethod": {
+    "tag": {
+      "cash": "Tiền mặt",
+      "card": "Thẻ tín dụng/Ghi nợ",
+      "wallet": "Ví điện tử"
+    }
+  },
+  "orderDetail": {
+    "title": "Chi tiết đơn hàng",
+    "shippingAddress": "Địa chỉ nhận hàng",
+    "recipientName": "Tên người nhận",
+    "address": "Địa chỉ",
+    "phone": "Điện thoại",
+    "notes": "Ghi chú",
+    "no": "Không",
+    "message": "Tin nhắn",
+    "subTotal": "Tạm Tính",
+    "quantity": "Số lượng",
+    "products": "Sản phẩm",
+    "status": "Trạng thái"
   }
 }

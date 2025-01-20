@@ -72,3 +72,61 @@ export enum VoucherApplyTypeEnum {
   ALL = 'ALL',
   SPECIFIC = 'SPECIFIC'
 }
+
+export enum PaymentMethod {
+  CASH = 'CASH',
+  CARD = 'CARD',
+  WALLET = 'WALLET'
+}
+
+export enum ShippingStatusEnum {
+  TO_PAY = 'TO_PAY',
+  TO_SHIP = 'TO_SHIP',
+  WAIT_FOR_CONFIRMATION = 'WAIT_FOR_CONFIRMATION',
+  TO_RECEIVED = 'TO_RECEIVED',
+  RETURN_REFUND = 'RETURN_REFUND',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  CANCELLED_BY_SHOP = 'CANCELLED_BY_SHOP'
+}
+export enum ProductDiscountEnum {
+  ACTIVE = 'ACTIVE',
+  SOLD_OUT = 'SOLD_OUT',
+  WAITING = 'WAITING',
+  INACTIVE = 'INACTIVE',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum VoucherStatusEnum {
+  AVAILABLE = 'AVAILABLE',
+  UNAVAILABLE = 'UNAVAILABLE'
+}
+
+export enum ProductCartStatusEnum {
+  HIDDEN = 'HIDDEN',
+  SOLD_OUT = 'SOLD_OUT'
+}
+export enum ClassificationTypeEnum {
+  DEFAULT = 'DEFAULT',
+  CUSTOM = 'CUSTOM'
+}
+
+export enum VoucherUsedStatusEnum {
+  AVAILABLE = 'AVAILABLE',
+  UNAVAILABLE = 'UNAVAILABLE',
+  UNCLAIMED = 'UNCLAIMED'
+}
+
+export enum VoucherUnavailableReasonEnum {
+  MINIMUM_ORDER_NOT_MET = 'MINIMUM_ORDER_NOT_MET',
+  OUT_OF_STOCK = 'OUT_OF_STOCK',
+  NOT_START_YET = 'NOT_START_YET',
+  NOT_APPLICABLE = 'NOT_APPLICABLE'
+}
+
+export enum ResultEnum {
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+  WARNING = 'WARNING',
+  FAILURE = 'FAILURE'
+}

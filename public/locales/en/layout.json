@@ -36,13 +36,16 @@
     "flashSale": "Flash Sale",
     "liveStream": "Live Stream",
     "preOrder": "Pre Order",
-    "groupBuying": "Group Buying"
+    "groupBuying": "Group Buying",
+    "hidden": "Hidden",
+    "outOfStock": "Sold old"
   },
   "statusTag": {
     "default": "Default"
   },
   "flashSale": {
-    "title": "Flash Sale"
+    "title": "Flash Sale",
+    "waiting": "Flash Sale will take place on {{val, MM/DD/YYYY HH:mm:ss}}"
   },
   "footer": {
     "contactTitle": "Discover nature's beauty with our natural care products."
@@ -67,7 +70,8 @@
     "cancel": "Cancel",
     "ok": "Confirm",
     "save": "Save",
-    "submit": "Submit"
+    "submit": "Submit",
+    "backToHome": "Back to Home"
   },
   "noData": "No matching data found",
   "sell": {
@@ -86,7 +90,10 @@
     "vietnamese": "VN"
   },
   "search": {
-    "result": "Search results for {{keyword}}: {{total}} data"
+    "result": "Search results for {{keyword}}: {{total}} data",
+    "reset": "Reset",
+    "orderPlaceholder": "Search for orders by Order ID, Product Name, or Brand Name",
+    "orderButton": "Search Order"
   },
   "filter": {
     "title": "Filter",
@@ -150,8 +157,24 @@
     },
     "cart": {
       "title": "Your cart is empty",
-      "description": "Check out what's trending",
+      "description": "Discover what's trending",
       "button": "Discover Products"
+    },
+    "order": {
+      "title": "Your order history is empty",
+      "description": "You haven't placed any orders yet. Start exploring our products and enjoy amazing deals!",
+      "statusDescription": "There are currently no orders in this status.",
+      "button": "Start Shopping"
+    },
+    "orderDetail": {
+      "title": "No Order Details Found",
+      "description": "There are no details available for this order. Please check your order history or contact customer support for assistance.",
+      "button": "Back to Order List"
+    },
+    "checkout": {
+      "title": "Your checkout list is empty",
+      "description": "Discover what's trending",
+      "button": "Start Shopping"
     },
     "address": {
       "title": "No Address Found",
@@ -187,6 +210,26 @@
       "title": "No product classifications",
       "description": "Product classifications are no longer available!",
       "button": "Confirm"
+    },
+    "brandVoucher": {
+      "title": "No Vouchers Available",
+      "description": "There are no vouchers from this brand. Enter a valid voucher code in the bar above.",
+      "button": "Explore Brand"
+    },
+    "platformVoucher": {
+      "title": "No Vouchers Available",
+      "description": "There are no vouchers from {{platformName}}. Enter a valid voucher code in the bar above.",
+      "button": "Explore {{platformName}} Vouchers"
+    },
+    "product": {
+      "title": "No Products Found",
+      "description": "We couldn't find any products matching your criteria. Please try adjusting your filters or search for something else.",
+      "button": "Browse Products"
+    },
+    "productDetail": {
+      "title": "Product Not Found",
+      "description": "The product you're looking for either does not exist, has been removed, or is currently unavailable.",
+      "button": "Browse Other Products"
     }
   },
   "productDetail": {
@@ -196,11 +239,20 @@
     "total": "Total",
     "priceDetail": "Price Detail",
     "descriptionTitle": "Description",
+    "detailTitle": "Detail",
     "breadcrumbProductName": "{{name}}",
-    "brandDeal": "Brand Deal",
-    "classification": "Classifications",
+    "brandDeal": "Brand Vouchers",
+    "classifications": "Classifications",
+    "classification": "Classification",
+    "classification1": "Classifications 1",
+    "classification2": "Classifications 2",
     "selectOption": "Select Option",
-    "selectClassification": "Select Classification"
+    "selectClassification": "Select Classification",
+    "title": "Product details",
+    "originalPrice": "Original Price",
+    "Color": "Color",
+    "Size": "Size",
+    "Other": "Other"
   },
   "event": {
     "finishIn": "Finish In"
@@ -238,7 +290,8 @@
     },
     "joined": {
       "title": "Joined",
-      "value": "{{time}} ago"
+      "value": "{{time}} ago",
+      "time": "{{time}}"
     },
     "products": {
       "title": "Products",
@@ -249,6 +302,7 @@
       "count": "{{count}}k"
     },
     "chatNow": "Chat Now",
+    "chat": "Chat",
     "viewShop": "View Shop"
   },
   "breadcrumb": {
@@ -256,6 +310,7 @@
   },
   "date": {
     "toLocaleDateString": "{{val, MM/DD/YYYY}}",
+    "toLocaleDateTimeString": "{{val, MM/DD/YYYY HH:mm:ss}}",
     "expiredDate": "Expired Date",
     "exp": "Exp"
   },
@@ -280,6 +335,7 @@
     "Products": "Products",
     "saved": "Saved",
     "selectAll": "Select All",
+    "removeAll": "Remove All",
     "voucher": "Voucher",
     "selectVoucher": "Select or Enter Voucher",
     "buy": "Buy",
@@ -288,9 +344,28 @@
     "checkoutDescription": "(This price includes VAT, but does not include shipping fees)",
     "acceptCondition": "By clicking \"Place Order\", you agree to comply with the ",
     "savings": "Savings",
-    "totalCost": "Total Cost of Products",
-    "totalDiscount": "Total Discount from Vouchers",
-    "totalPayment": "Total Payment"
+    "directDiscount": "Direct discount from products",
+    "totalCost": "Total product cost",
+    "discountBrand": "Discount from brand vouchers",
+    "discountPlatform": "Discount from platform vouchers",
+    "totalDiscount": "Total discount from Vouchers",
+    "totalPayment": "Total payment",
+    "discountDetails": "Discount Details",
+    "productLeft": "{{count}} products left",
+    "updateClassificationSuccess": "Update product classification successfully!",
+    "soldOutMessage": "This product classification is sold out, please choose another.",
+    "soldOutAllMessage": "This product is sold out.",
+    "hiddenAllMessage": "This product is hidden.",
+    "hiddenMessage": "This product classification is hidden, please choose another.",
+    "maxQuantityError": "The remaining quantity of this product classification is {{maxQuantity}}.",
+    "negativeQuantityError": "The quantity cannot be less than 1.",
+    "addToCartSuccess": "The product has been added to your cart.",
+    "chooseClassification": "To buy, choose a classification.",
+    "tmpTotalProductPrice": "Estimated price (when applying the vouchers above)",
+    "estimateProductPrice": "Estimated price",
+    "voucherNote": "*Please add vouchers at the checkout step to receive the price mentioned above",
+    "buyToDiscountCurrency": "Spend {{minOrder, currency}} to get a discount of {{discount, currency}}. Limited number of vouchers available",
+    "buyToDiscountPercentage": "Spend {{minOrder, currency}} to get a discount of {{discount}}%. Limited number of vouchers available"
   },
   "address": {
     "title": "Address",
@@ -336,7 +411,8 @@
     "setAsDefault": "Set as Default Address",
     "addSuccess": "Add new address successfully!",
     "updateSuccess": "Your address has been successfully updated!",
-    "alertMessage": "Please add new address before {{action}}!"
+    "alertMessage": "Please add new address before {{action}}!",
+    "notes": "Notes"
   },
   "voucher": {
     "title": "Voucher",
@@ -349,15 +425,45 @@
     "codePlaceholder": "Enter your voucher code here",
     "input": "Enter your voucher code here",
     "condition": "Condition",
-    "chooseProductBrandAlert": "Please choose a product from the brand to apply this voucher.",
-    "chooseProductAppAlert": "Please choose a product to use this offer.",
+    "chooseProductBrandAlert": "Please choose at least one product from the brand to apply vouchers.",
+    "chooseProductAppAlert": "Please choose at least one product to use vouchers.",
     "description": "Enter or choose 1 voucher",
     "help": "Help",
     "chooseVoucher": "Choose voucher",
     "howToUse": "How To Use Voucher",
     "howToFind": "How To Find Voucher",
     "howToUseDescription": "To apply an Allure Voucher code, click the \"Save\" button to claim the voucher and check it in your voucher wallet.",
-    "howToFindDescription": "You can find Allure Vouchers throughout the website and app. Here's a tip: start with the promotion pages and the brand's homepage!"
+    "howToFindDescription": "You can find Allure Vouchers throughout the website and app. Here's a tip: start with the promotion pages and the brand's homepage!",
+    "off": {
+      "amount": "Discount of {{amount, currency}}",
+      "percentage": "Discount of {{percentage}}%",
+      "numberPercentage": "Off {{percentage}}%",
+      "minOrder": "Minimum order of {{amount, currency}}",
+      "maxDiscount": "Maximum discount of {{amount, currency}}",
+      "specific": "Specific products",
+      "specificDescription": "Applicable for certain specific products of {{val}} in the promotion.",
+      "all": "All products",
+      "allDescription": "Applicable for all products of {{val}}."
+    },
+    "informationTitle": "Voucher Information",
+    "discount": "Discount",
+    "nameTitle": "Name",
+    "descriptionTitle": "Description",
+    "applicableProducts": "Applicable Products",
+    "discountAmount": "Discount of {{amount, currency}}",
+    "bestDiscountPercentageDisplay": "Voucher for up to {{percentage}}% off",
+    "bestDiscountAmountDisplay": "Voucher for up to {{amount, currency}} off",
+    "discountPercentage": "Discount of {{percentage}}%",
+    "brand": "brand",
+    "platform": "platform",
+    "collectSuccess": "Collect voucher success!",
+    "bestChoice": "Best choice",
+    "reason": {
+      "notApplicable": "This voucher is not applicable to the selected items or does not meet the usage conditions.",
+      "soldOut": "This voucher is no longer valid because the applicable products are out of stock.",
+      "notStart": "This voucher is not yet valid. Please check the start date and try again later.",
+      "minOrder": "This voucher requires a minimum order of {{amount, currency}} to be used."
+    }
   },
   "dialog": {
     "cancel": "Cancel",
@@ -396,17 +502,93 @@
     "cvvFull": "Card Verification Value",
     "bankAccountEx": "EG: JOHN SMITH",
     "cardNumberEx": "EG: 4123 4567 8901 2345",
-    "cvvEx": "EG: 123"
+    "cvvEx": "EG: 123",
+    "CARD": "Credit Card/Debit Card",
+    "WALLET": "Wallet",
+    "CASH": "Cash on Delivery"
   },
   "order": {
-    "success": "Create order successfully!",
-    "failed": "Create order failed!",
-    "loading": "Loading order..."
+    "loading": "Loading order...",
+    "viewDetail": "View details",
+    "buyAgain": "Buy Again",
+    "classification": "Classification",
+    "all": "All",
+    "created": "Order Created",
+    "pending": "Pending Payment",
+    "waitConfirm": "Pending Confirmation",
+    "shipping": "Shipping",
+    "delivering": "Delivering",
+    "cancelled": "Cancelled",
+    "completed": "Completed",
+    "return": "Return/Refund",
+    "returnOrder": "Return",
+    "lastUpdated": "Last updated",
+    "success": "Order placed successfully!",
+    "prepareCash": "Prepare cash",
+    "failure": "Order placement failed!",
+    "retry": "Please try again later",
+    "orderId": "Order ID",
+    "viewOrder": "View order",
+    "continueShopping": "Continue Shopping",
+    "tryAgain": "Try Again",
+    "successDescription": "We will receive an order confirmation email with details of your order and a link to track it's progress.",
+    "failureDescription": "Unfortunately, we were unable to process your order. Please try again later or contact support for assistance.",
+    "writeFeedback": "Write review"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
     "error": "An error occurred while processing your request, please try again later. If the problem persists, please contact the support team.",
     "info": "This is a message to provide important additional information related to your work.",
     "warning": "You are about to perform a unsafe action, please be cautious. If you are not sure, please contact the support team."
+  },
+  "delete": {
+    "productCart": {
+      "title": "Remove item",
+      "description": "Are you sure you want to remove this item from your cart?",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "success": "Item has been successfully removed from your cart."
+    },
+    "cart": {
+      "title": "Remove {{amount}} items",
+      "description": "Are you sure you want to remove {{amount}} items from your cart? This action cannot be undone.",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "success": "{{amount}} items have been removed from your cart. You can continue shopping to add new items.",
+      "all": "all",
+      "All": "All"
+    }
+  },
+  "warning": {
+    "cart": {
+      "title": "No items selected",
+      "description": "You have not selected any items in your cart for checkout. Please select at least one item to proceed.",
+      "confirm": "Okay",
+      "insufficientStockTitle": "Insufficient stock",
+      "insufficientStockDescription": "Some items you selected in your cart have insufficient stock: {{products}}. Please update your cart to continue.",
+      "soldOutTitle": "Items sold out",
+      "soldOutDescription": "Some items you selected in your cart are sold out: {{products}}. Please deselect these items to proceed."
+    }
+  },
+  "paymentMethod": {
+    "tag": {
+      "cash": "Cash",
+      "card": "Credit/Debit Card",
+      "wallet": "Digital Wallet"
+    }
+  },
+  "orderDetail": {
+    "title": "Order Details",
+    "shippingAddress": "Recipient Address",
+    "recipientName": "Recipient's Name",
+    "address": "Address",
+    "phone": "Phone Number",
+    "notes": "Notes",
+    "no": "No",
+    "message": "Message",
+    "subTotal": "Sub Total",
+    "quantity": "Quantity",
+    "products": "Products",
+    "status": "Status"
   }
 }
