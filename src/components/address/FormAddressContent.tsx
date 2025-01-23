@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import {} from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -5,6 +6,7 @@ import { z } from 'zod'
 
 import Label from '@/components/form-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getCommune, getDistrict, getProvince } from '@/network/apis/address'
 import { CreateAddressBrandSchema } from '@/schemas'
 
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
@@ -15,6 +17,29 @@ interface FormAddressContentProps {
 }
 export default function FormAddressContent({ form }: FormAddressContentProps) {
   const { t } = useTranslation()
+  const { data: listProvinceData } = useQuery({
+    queryKey: [getProvince.queryKey],
+    queryFn: getProvince.fn,
+    select(data) {
+      return data.data
+    }
+  })
+  const { data: listCommuneData } = useQuery({
+    queryKey: [getCommune.queryKey],
+    queryFn: getCommune.fn,
+    select(data) {
+      return data.data
+    }
+  })
+  const { data: listDistrictData } = useQuery({
+    queryKey: [getDistrict.queryKey],
+    queryFn: getDistrict.fn,
+    select(data) {
+      return data.data
+    }
+  })
+  // eslint-disable-next-line no-console
+  console.log('dataa', listDistrictData, listCommuneData, listProvinceData)
 
   return (
     <div className='w-full py-2'>
@@ -62,7 +87,12 @@ export default function FormAddressContent({ form }: FormAddressContentProps) {
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>
-                      <Select onValueChange={(value) => field?.onChange(value)} value={field?.value || ''}>
+                      <Select
+                        onValueChange={(value) => {
+                          field?.onChange(value)
+                        }}
+                        value={field?.value || ''}
+                      >
                         <SelectTrigger>
                           <SelectValue {...field} placeholder={t('address.chooseDistrict')} />
                         </SelectTrigger>

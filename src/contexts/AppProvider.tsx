@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, Suspense, useContext, useEffect, useState } from 'react'
 
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import { getRoleIdByEnum } from '@/network/apis/role'
@@ -27,13 +27,13 @@ const AppProvider = (props: Props) => {
     }
   }, [getRoleIdByEnumData])
 
-  const isLoading = isGettingRolesIdByEnum
-
-  if (isLoading) {
-    return <LoadingLayer label='Initializing...' />
-  }
-
-  return <AppProviderContext.Provider value={{ rolesData }}>{props.children}</AppProviderContext.Provider>
+  return (
+    <AppProviderContext.Provider value={{ rolesData }}>
+      <Suspense fallback={isGettingRolesIdByEnum && <LoadingLayer label='Initializing...' />}>
+        {props.children}
+      </Suspense>
+    </AppProviderContext.Provider>
+  )
 }
 
 export const useAppProvider = () => {

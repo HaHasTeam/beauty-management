@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { IconRight } from 'react-day-picker'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -15,6 +15,7 @@ import Button from '../button'
 import UploadFilePreview from '../file-input/UploadFilePreview'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
+import { Textarea } from '../ui/textarea'
 
 type Props = {
   stepIndex: number
@@ -25,7 +26,38 @@ type Props = {
 }
 function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
   const { t } = useTranslation()
+  const [addressText, setAddressText] = useState('')
+  const handleAdress = async ({
+    ward,
+    district,
+    province,
+    fullAddress
+  }: {
+    detailAddress: string
+    ward: string
+    district: string
+    province: string
+    fullAddress: string
+  }) => {
+    form.setValue('address', fullAddress)
+    form.setValue('district', district)
+    form.setValue('ward', ward)
+    form.setValue('province', province)
 
+    setAddressText(fullAddress)
+  }
+
+  const addressDisplay = useMemo(() => {
+    return addressText !== '' ? (
+      <Button className='text-primary border-primary hover:text-primary hover:bg-primary/15' variant='outline'>
+        {addressText}
+      </Button>
+    ) : (
+      <Button className='text-primary border-primary hover:text-primary hover:bg-primary/15' variant='outline'>
+        <PlusCircle /> {t('address.addNewAddress')}
+      </Button>
+    )
+  }, [addressText, t])
   return (
     <div className=''>
       <div className='flex w-full items-center gap-4 mb-10'>
@@ -95,14 +127,12 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             </FormItem>
           )}
         /> */}
-        <AddAddressDialog
-          parenForm={form}
-          triggerComponent={
-            <Button className='text-primary border-primary hover:text-primary hover:bg-primary/15' variant='outline'>
-              <PlusCircle /> {t('address.addNewAddress')}
-            </Button>
-          }
-        />
+
+        <div className='space-y-2'>
+          <FormLabel required>Address</FormLabel>
+          <AddAddressDialog parentForm={form} getAddress={handleAdress} triggerComponent={addressDisplay} />
+        </div>
+
         <FormField
           control={form.control}
           name='description'
@@ -110,13 +140,14 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input
-                  // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                  placeholder='
+                <Textarea rows={4} placeholder='description' className='resize-none' {...field} />
+                {/* <Input
+                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                        placeholder='
                  description
                     '
-                  {...field}
-                />
+                        {...field}
+                      /> */}
               </FormControl>
               <FormMessage />
             </FormItem>

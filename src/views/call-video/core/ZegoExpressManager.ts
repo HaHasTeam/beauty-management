@@ -66,7 +66,7 @@ export class ZegoExpressManager {
   }
   joinRoom(roomID: string, token: string, user: ZegoUser, options?: ZegoMediaOptions[]): Promise<boolean> {
     if (!token) {
-      console.error('Error: [joinRoom] token is empty, please enter a right token')
+      // console.error('Error: [joinRoom] token is empty, please enter a right token')
       return Promise.resolve(false)
     }
     this.roomID = roomID
@@ -131,7 +131,7 @@ export class ZegoExpressManager {
   }
   getLocalVideoView(): HTMLMediaElement {
     if (!this.roomID) {
-      console.error('Error: [getVideoView] You need to join the room first and then set the videoView')
+      // console.error('Error: [getVideoView] You need to join the room first and then set the videoView')
     }
     const { streamID, userID } = this.localParticipant
     const renderView = this.generateVideoView(ZegoVideoViewType.Local, userID)
@@ -150,10 +150,10 @@ export class ZegoExpressManager {
   }
   getRemoteVideoView(userID: string): HTMLMediaElement {
     if (!this.roomID) {
-      console.error('Error: [getVideoView] You need to join the room first and then set the videoView')
+      // console.error('Error: [getVideoView] You need to join the room first and then set the videoView')
     }
     if (!userID) {
-      console.error('Error: [getVideoView] userID is empty, please enter a right userID')
+      // console.error('Error: [getVideoView] userID is empty, please enter a right userID')
     }
     const renderView = this.generateVideoView(ZegoVideoViewType.Remote, userID)
     const participant = this.participantDic.get(userID) as ZegoParticipant
@@ -171,7 +171,7 @@ export class ZegoExpressManager {
   leaveRoom() {
     ZegoExpressManager.engine.stopPublishingStream(this.localParticipant.streamID)
     ZegoExpressManager.engine.destroyStream(this.streamMap.get(this.localParticipant.streamID) as MediaStream)
-    this.streamMap.forEach((streamObj, streamID) => {
+    this.streamMap.forEach((_streamObj, streamID) => {
       ZegoExpressManager.engine.stopPlayingStream(streamID)
       ;(this.streamDic.get(streamID) as ZegoParticipant).renderView &&
         ((this.streamDic.get(streamID) as ZegoParticipant).renderView.srcObject = null)
@@ -222,10 +222,10 @@ export class ZegoExpressManager {
   }
   private generateStreamID(userID: string, roomID: string): string {
     if (!userID) {
-      console.error('Error: [generateStreamID] userID is empty, please enter a right userID')
+      // console.error('Error: [generateStreamID] userID is empty, please enter a right userID')
     }
     if (!roomID) {
-      console.error('Error: [generateStreamID] roomID is empty, please enter a right roomID')
+      // console.error('Error: [generateStreamID] roomID is empty, please enter a right roomID')
     }
 
     // The streamID can use any character.
@@ -245,7 +245,7 @@ export class ZegoExpressManager {
   private onOtherEvent() {
     ZegoExpressManager.engine.on(
       'roomUserUpdate',
-      (roomID: string, updateType: 'DELETE' | 'ADD', userList: ZegoUser[]) => {
+      (_roomID: string, updateType: 'DELETE' | 'ADD', userList: ZegoUser[]) => {
         userList.forEach((user) => {
           if (updateType === 'ADD') {
             const participant = this.participantDic.get(user.userID)
@@ -266,7 +266,7 @@ export class ZegoExpressManager {
     )
     ZegoExpressManager.engine.on(
       'roomStreamUpdate',
-      (roomID: string, updateType: 'DELETE' | 'ADD', streamList: ZegoStreamList[]) => {
+      (_roomID: string, updateType: 'DELETE' | 'ADD', streamList: ZegoStreamList[]) => {
         streamList.forEach((stream) => {
           const participant = this.participantDic.get(stream.user.userID)
           if (updateType === 'ADD') {

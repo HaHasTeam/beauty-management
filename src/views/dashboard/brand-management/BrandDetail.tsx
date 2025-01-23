@@ -35,15 +35,7 @@ const BrandDetail = ({
   const queryClient = useQueryClient()
   const id = useId()
   const navigate = useNavigate()
-  // const { userData } = useStore(
-  //   useShallow((state) => ({
-  //     userData: state.user
-  //   }))
-  // )
-  // - mã số thuế doanh nghiệp
-  // - mã số đăng ký kinh doanh
-  // - địa chỉ đăng ký kinh doanh (làm giống địa chỉ account á)
-  //  - ngày thành lập (không bắt buộc)
+
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
   const { mutateAsync: uploadFilesFn } = useMutation({

@@ -5,17 +5,18 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
-import { useToast } from '@/hooks/useToast'
 import { brandCreateSchema, CreateAddressBrandSchema } from '@/schemas'
+import { parseAddress } from '@/utils/string'
 
 import Button from '../button'
-import LoadingLayer from '../loading-icon/LoadingLayer'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Form } from '../ui/form'
 import { ScrollArea } from '../ui/scroll-area'
 import FormAddressContent from './FormAddressContent'
 
 interface AddAddressDialogProps {
+  parentForm: UseFormReturn<z.infer<typeof brandCreateSchema>>
+
   triggerComponent: React.ReactElement<unknown>
   getAddress: ({
     detailAddress,
@@ -29,26 +30,27 @@ interface AddAddressDialogProps {
     district: string
     province: string
     fullAddress: string
-  }) => void
+  }) => Promise<void>
 }
-const AddAddressDialog = ({ triggerComponent, getAddress }: AddAddressDialogProps) => {
+const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddressDialogProps) => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const id = useId()
 
   const handleServerError = useHandleServerError()
+  const address = parentForm?.watch('address')
 
   const defaultValues = {
-    detailAddress: '',
-    ward: '',
-    district: '',
-    province: '',
-    fullAddress: ''
+    detailAddress: parseAddress(address || '').detailAddress || '',
+    ward: parseAddress(address || '').ward || '',
+    district: parseAddress(address || '').district || '',
+    province: parseAddress(address || '').province || '',
+    fullAddress: parseAddress(address || '').fullAddress || ''
   }
 
   const form = useForm<z.infer<typeof CreateAddressBrandSchema>>({
     resolver: zodResolver(CreateAddressBrandSchema),
-    defaultValues
+    values: defaultValues
   })
   const handleReset = () => {
     form.reset()
@@ -63,7 +65,8 @@ const AddAddressDialog = ({ triggerComponent, getAddress }: AddAddressDialogProp
         fullAddress: `${values.detailAddress}, ${values.ward}, ${values.district}, ${values.province}`
       }
 
-      getAddress({ ...transformedValues })
+      await getAddress({ ...transformedValues })
+      handleReset()
     } catch (error) {
       handleServerError({
         error,
@@ -83,7 +86,7 @@ const AddAddressDialog = ({ triggerComponent, getAddress }: AddAddressDialogProp
             </div>
           </DialogHeader>
           <Form {...form}>
-            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full' id={`form-${id}`}>
+            <form noValidate className='w-full' id={`form-${id}`}>
               <div>
                 {/* Form Address */}
                 <ScrollArea className='h-72'>
@@ -95,7 +98,7 @@ const AddAddressDialog = ({ triggerComponent, getAddress }: AddAddressDialogProp
                   <Button type='button' variant='outline' onClick={() => setOpen(false)}>
                     {t('dialog.cancel')}
                   </Button>
-                  <Button form={`form-${id}`} type='button'>
+                  <Button form={`form-${id}`} type='button' onClick={form.handleSubmit(onSubmit)}>
                     {t('dialog.ok')}
                   </Button>
                 </div>

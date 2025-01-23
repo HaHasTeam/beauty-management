@@ -27,8 +27,8 @@ import { StatusEnum } from '@/types/enum'
 
 function RegisterBrand() {
   const { successToast } = useToast()
-  const navigate = useNavigate()
   const { t } = useTranslation()
+  const navigate = useNavigate()
   // const accountId = accessToken ? jwtDecode<TEmailDecoded>(accessToken).accountId : undefined
 
   const form = useForm<z.infer<typeof brandCreateSchema>>({

@@ -6,7 +6,7 @@ function CallVideo() {
   const { roomId } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-  const zpRef = useRef(null)
+  // const zpRef = useRef<string | null>(null)
   const videoContainerRef = useRef(null)
   const [joined, setJoined] = useState(false)
   const [callType, setCallType] = useState('') // State to store the call type
@@ -15,16 +15,17 @@ function CallVideo() {
   const myMeeting = (type: string) => {
     const appID = 1292666621
     const serverSecret = '238bd2dd799597045012d544792a7864'
+    const roomValid = roomId || ''
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,
-      roomId,
+      roomValid,
       Date.now().toString(),
       'Your Name'
     )
 
     const zp = ZegoUIKitPrebuilt.create(kitToken)
-    zpRef.current = zp
+    // zpRef.current = zp
 
     zp.joinRoom({
       container: videoContainerRef.current,
@@ -54,9 +55,9 @@ function CallVideo() {
   }
   // Handle exit from the room
   const handleExit = () => {
-    if (zpRef.current) {
-      zpRef.current.destroy()
-    }
+    // if (zpRef.current) {
+    //   zpRef.current.destroy()
+    // }
     navigate('/')
   }
 
@@ -65,7 +66,7 @@ function CallVideo() {
     const query = new URLSearchParams(location.search)
     const type = query.get('type')
 
-    setCallType(type) // Update state with call type
+    setCallType(type || '') // Update state with call type
   }, [location.search])
 
   // Initialize meeting after callType state is set
@@ -76,10 +77,11 @@ function CallVideo() {
 
     // Cleanup function for component unmount
     return () => {
-      if (zpRef.current) {
-        zpRef.current.destroy()
-      }
+      // if (zpRef.current) {
+      //   zpRef.current.destroy()
+      // }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callType, roomId, navigate])
 
   return (
