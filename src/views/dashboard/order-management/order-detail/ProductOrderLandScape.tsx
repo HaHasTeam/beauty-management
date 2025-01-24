@@ -57,23 +57,6 @@ const ProductOrderDetailLandscape = ({
                   <ProductTag tag={eventType} size='small' />
                 )}
               </div>
-              <div className='sm:flex gap-2 hidden'>
-                {status === ShippingStatusEnum.COMPLETED && (
-                  <Button variant='outline' size='sm' className='border border-primary text-primary'>
-                    {t('order.buyAgain')}
-                  </Button>
-                )}
-                {status === ShippingStatusEnum.COMPLETED && (
-                  <Button variant='outline' size='sm' className='border border-primary text-primary'>
-                    {t('order.buyAgain')}
-                  </Button>
-                )}
-                {!isFeedback && (
-                  <Button variant='outline' size='sm' className='border border-primary text-primary'>
-                    {t('order.writeFeedback')}
-                  </Button>
-                )}
-              </div>
             </div>
           </div>
           <div className='order-3 sm:order-2 xl:w-[30%] lg:w-[30%] md:w-[30%] w-full'>

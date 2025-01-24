@@ -2,12 +2,15 @@ import { useQuery } from '@tanstack/react-query'
 import { MessageSquareText, Truck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 
 import Empty from '@/components/empty/Empty'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import OrderStatus from '@/components/order-status'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getOrderByIdApi } from '@/network/apis/order'
+import { useStore } from '@/stores/store'
+import { RoleEnum } from '@/types/enum'
 
 import BrandOrderInformation from './order-detail/BrandOrderInformation'
 import OrderDetailItems from './order-detail/OrderDetailItems'
@@ -18,6 +21,18 @@ import OrderSummary from './order-detail/OrderSummary'
 const OrderDetails = () => {
   const { id } = useParams()
   const { t } = useTranslation()
+
+  const { user } = useStore(
+    useShallow((state) => ({
+      // addProduct: state.addProduct,
+      // removeProduct: state.removeProduct,
+      // incQty: state.incQty,
+      // decQty: state.decQty,
+      // setTotal: state.setTotal,
+      // reset: state.reset,
+      user: state.user
+    }))
+  )
   const { data: useOrderData, isFetching } = useQuery({
     queryKey: [getOrderByIdApi.queryKey, id as string],
     queryFn: getOrderByIdApi.fn,
@@ -90,22 +105,24 @@ const OrderDetails = () => {
 
               <div className='space-y-2'>
                 {/* brand */}
-                <BrandOrderInformation
-                  brandId={
-                    (
-                      useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-                      useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
-                      useOrderData?.data?.orderDetails?.[0]?.productClassification
-                    )?.product?.brand?.id ?? ''
-                  }
-                  brandName={
-                    (
-                      useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-                      useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
-                      useOrderData?.data?.orderDetails?.[0]?.productClassification
-                    )?.product?.brand?.name ?? 'Brand'
-                  }
-                />
+                {user?.role === RoleEnum.ADMIN ? (
+                  <BrandOrderInformation
+                    brandId={
+                      (
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification
+                      )?.product?.brand?.id ?? ''
+                    }
+                    brandName={
+                      (
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification
+                      )?.product?.brand?.name ?? 'Brand'
+                    }
+                  />
+                ) : null}
 
                 {/* order items */}
                 <div>
