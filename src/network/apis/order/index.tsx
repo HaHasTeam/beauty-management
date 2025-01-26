@@ -1,4 +1,4 @@
-import { ICreateOrder, ICreatePreOrder, IOrder, IOrderFilter, IOrderItem } from '@/types/order'
+import { ICancelOrder, ICreateOrder, ICreatePreOrder, IOrder, IOrderFilter, IOrderItem } from '@/types/order'
 import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
@@ -48,3 +48,13 @@ export const updateOrderApi = toMutationFetcher<IOrder, TServerResponse<IOrder>>
     data
   })
 })
+
+export const cancelOrderApi = toMutationFetcher<ICancelOrder, TServerResponse<IOrder>>(
+  'cancelOrderApi',
+  async ({ orderId, reason }) => {
+    return privateRequest(`/orders/customer-cancel-order/${orderId}`, {
+      method: 'POST',
+      data: { reason }
+    })
+  }
+)

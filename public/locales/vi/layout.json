@@ -500,6 +500,7 @@
     "cardNumberEx": "VD: 4123 4567 8901 2345",
     "cvvEx": "VD: 123",
     "CARD": "Thẻ tín dụng/ghi nợ",
+    "BANK_TRANSFER": "Thẻ tín dụng/ghi nợ",
     "WALLET": "Ví",
     "CASH": "Thanh toán khi nhận hàng"
   },
@@ -530,7 +531,24 @@
     "tryAgain": "Thử lại",
     "successDescription": "Chúng tôi sẽ gửi email xác nhận đơn hàng với thông tin chi tiết về đơn hàng của bạn và một liên kết để theo dõi tiến trình của nó.",
     "failureDescription": "Rất tiếc, chúng tôi không thể xử lý đơn hàng của bạn. Vui lòng thử lại sau hoặc liên hệ bộ phận hỗ trợ để được trợ giúp.",
-    "writeFeedback": "Viết đánh giá"
+    "writeFeedback": "Viết đánh giá",
+    "cancelOrder": "Hủy đơn",
+    "cancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với hủy tất cả sản phẩm trong đơn hàng và không thể thay đổi. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
+    "cancelOrderReason": {
+      "changeOfMind": "Thay đổi ý định",
+      "foundCheaper": "Tìm thấy giá rẻ hơn",
+      "voucherChange": "Thay đổi mã khuyến mãi",
+      "productChange": "Thay đổi chi tiết sản phẩm (màu sắc, kích thước, số lượng)",
+      "paymentDifficulty": "Quy trình thanh toán quá phức tạp",
+      "addressChange": "Thay đổi địa chỉ giao hàng",
+      "enterReason": "Vui lòng nhập lý do của bạn",
+      "deliveryIssue": "Vấn đề về giao hàng",
+      "productIssue": "Vấn đề về sản phẩm",
+      "other": "Khác",
+      "selectAReason": "Chọn lý do",
+      "reason": "Lý do",
+      "otherReason": "Chi tiết"
+    }
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",

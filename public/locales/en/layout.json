@@ -504,6 +504,7 @@
     "cardNumberEx": "EG: 4123 4567 8901 2345",
     "cvvEx": "EG: 123",
     "CARD": "Credit Card/Debit Card",
+    "BANK_TRANSFER": "Credit Card/Debit Card",
     "WALLET": "Wallet",
     "CASH": "Cash on Delivery"
   },
@@ -534,7 +535,24 @@
     "tryAgain": "Try Again",
     "successDescription": "We will receive an order confirmation email with details of your order and a link to track it's progress.",
     "failureDescription": "Unfortunately, we were unable to process your order. Please try again later or contact support for assistance.",
-    "writeFeedback": "Write review"
+    "writeFeedback": "Write review",
+    "cancelOrder": "Cancel order",
+    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
+    "cancelOrderReason": {
+      "changeOfMind": "Changed my mind",
+      "foundCheaper": "Found a cheaper option",
+      "voucherChange": "Change in voucher",
+      "productChange": "Change in product details (color, size, quantity)",
+      "paymentDifficulty": "Payment process too complicated",
+      "addressChange": "Change in delivery address",
+      "enterReason": "Please enter your reason",
+      "deliveryIssue": "Issue with delivery",
+      "productIssue": "Issue with the product",
+      "other": "Other",
+      "selectAReason": "Select a reason",
+      "reason": "Reason",
+      "otherReason": "Details"
+    }
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",

@@ -88,3 +88,8 @@ export type ICreatePreOrder = {
   paymentMethod: string
   notes: string
 }
+
+export type ICancelOrder = {
+  orderId: string
+  reason: string
+}
