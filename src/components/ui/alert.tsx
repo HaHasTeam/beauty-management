@@ -17,7 +17,9 @@ const alertVariants = cva(
         warning:
           'border-yellow-900/80 text-yellow-800 dark:border-yellow-500 [&>svg]:text-yellow-500 bg-yellow-300 dark:bg-yellow-900 dark:text-yellow-500 shadow-lg',
         success:
-          'border-green-900/80 text-green-800 dark:border-green-500 [&>svg]:text-green-500 bg-green-300 dark:bg-green-900 dark:text-green-500 shadow-lg'
+          'border-green-900/80 text-green-800 dark:border-green-500 [&>svg]:text-green-500 bg-green-100 dark:bg-green-900 dark:text-green-500 shadow-lg',
+        highlight:
+          'border-purple-900/80 text-purple-800 dark:border-purple-500 [&>svg]:text-purple-500 bg-purple-300 dark:bg-purple-900 dark:text-purple-500 shadow-lg'
       }
     },
     defaultVariants: {
@@ -32,7 +34,8 @@ const actionVariants = cva('', {
       default: 'border-[1.5px] border-gray-700 text-gray-600  [&>svg]:text-gray-500 bg-gray-300',
       destructive: 'border-[1.5px] border-red-700 text-red-600  [&>svg]:text-red-500 bg-red-300',
       warning: 'border-[1.5px] border-yellow-700 text-yellow-600  [&>svg]:text-yellow-500 bg-yellow-300',
-      success: 'border-[1.5px] border-green-700 text-green-600  [&>svg]:text-green-500 bg-green-300'
+      success: 'border-[1.5px] border-green-700 text-green-600  [&>svg]:text-green-500 bg-green-300',
+      highlight: 'border-[1.5px] border-purple-700 text-purple-600  [&>svg]:text-purple-500 bg-purple-300'
     }
   },
   defaultVariants: {

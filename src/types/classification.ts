@@ -1,10 +1,14 @@
+import { TFile } from './file'
+import { ProductClassificationTypeEnum } from './product'
 import { TMetaData } from './request'
 
 export type TClassification = TMetaData & {
   title: string
   price: number
   quantity: number
-  image: string | null
+  images: TFile[]
+  sku: string
+  type: ProductClassificationTypeEnum
   status: ClassificationStatusEnum
 }
 

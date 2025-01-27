@@ -1,4 +1,6 @@
 import { TBrand } from './brand'
+import { TClassification } from './classification'
+import { TFile } from './file'
 import { TProduct } from './product'
 import { TMetaData } from './request'
 
@@ -8,13 +10,14 @@ export type TFlashSale = TMetaData & {
   discount: number
   product: TProduct
   brand: TBrand
-  images: string[]
+  images: TFile[]
+  productClassifications: Partial<TClassification>[]
   status: FlashSaleStatusEnum
 }
 
 export enum FlashSaleStatusEnum {
-  PENDING = 'PENDING',
+  SOLD_OUT = 'SOLD_OUT',
+  WAITING = 'WAITING',
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED'
+  INACTIVE = 'INACTIVE'
 }

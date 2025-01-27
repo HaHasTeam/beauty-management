@@ -92,7 +92,7 @@ export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
                   <FormLabel required>Email</FormLabel>
                   <FormControl>
                     <Input
-                      className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                      className='h-[50px] focus:outline-0 dark:placeholder:text-zinc-400'
                       placeholder='e.g. allure@gmail.com'
                       {...field}
                     />
@@ -110,7 +110,7 @@ export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
                   <FormLabel required>Password</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                      className='h-[50px] w-full focus:outline-0 dark:placeholder:text-zinc-400'
                       placeholder='e.g. ********'
                       {...field}
                     />

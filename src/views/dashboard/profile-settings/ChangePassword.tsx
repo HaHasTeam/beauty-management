@@ -8,7 +8,7 @@ import CardSection from '@/components/card-section'
 import FormLabel from '@/components/form-label'
 import { PasswordInput } from '@/components/password-input'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { requiredRegex } from '@/constants/regex'
 
 const formSchema = z
@@ -68,9 +68,6 @@ const ChangePassword = () => {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  This is your current password. Please enter it to verify your identity.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -90,7 +87,6 @@ const ChangePassword = () => {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>This is your new password. Make sure you remember it.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -110,7 +106,6 @@ const ChangePassword = () => {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>Please confirm your new password.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

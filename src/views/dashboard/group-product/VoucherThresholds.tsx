@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
 import { Button } from '@/components/ui/button'
-import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { StepItem } from '@/components/ui/stepper'
@@ -143,9 +143,6 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                         <FormItem>
                           <FormLabel required>Quantity Of Customer</FormLabel>
                           <Input {...field} placeholder={`e.g. 150`} type='quantity' symbol='People' />
-                          <FormDescription>
-                            The minimum number of people that must purchase the group product to activate the voucher.
-                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )
@@ -209,9 +206,6 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                               )
                             }}
                           />
-                          <FormDescription>
-                            The discount value that will be applied to the group product.
-                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )
@@ -230,9 +224,6 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                             rows={5}
                           />
                         </FormControl>
-                        <FormDescription>
-                          The description of the voucher that will be shown to customers.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

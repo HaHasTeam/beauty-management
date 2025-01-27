@@ -280,7 +280,6 @@ const CategoryDetails = () => {
             </CardTitle>
             <CardDescription>Manipulate the category details here.</CardDescription>
           </CardHeader>
-
           <CardContent>
             <div className='w-full gap-4 flex flex-col'>
               <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>

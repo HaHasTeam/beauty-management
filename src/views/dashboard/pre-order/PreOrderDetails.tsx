@@ -1,152 +1,105 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { useId, useMemo } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { CiFileOff } from 'react-icons/ci'
-import { FaCameraRotate } from 'react-icons/fa6'
-import { IoCloudUploadSharp, IoCreateOutline } from 'react-icons/io5'
-import { LuSaveAll } from 'react-icons/lu'
-import { MdDeleteOutline } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Calendar, SaveIcon, Siren } from 'lucide-react'
+import { useEffect, useId, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
 import * as z from 'zod'
-import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
-import CardSection from '@/components/card-section'
-import UploadFileModal from '@/components/file-input/UploadFileModal'
+import { TriggerUploadRef } from '@/components/file-input/UploadFiles'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card } from '@/components/ui/card'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import SelectProduct from '@/components/select-product'
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
-import { defaultRequiredRegex, numberRequiredRegex, requiredFileRegex } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { cn } from '@/lib/utils'
-import { addPreOderApi } from '@/network/apis/pre-order'
-import { getProductByBrandIdApi } from '@/network/apis/product'
-import { useStore } from '@/stores/store'
+import { addPreOderApi, getPreOrderByIdApi, updatePreOrderApi } from '@/network/apis/pre-order'
+import { TAddPreOderRequestParams, TUpdatePreOrderRequestParams } from '@/network/apis/pre-order/type'
+import { PreOrderStatusEnum } from '@/types/pre-order'
+import { ProductClassificationTypeEnum } from '@/types/product'
 
-const formSchema = z.object({
-  product: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  productClassifications: z
-    .array(
-      z.object({
-        title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-        price: z.coerce
-          .number({
-            message: numberRequiredRegex.message
-          })
-          .positive({ message: 'Please enter a valid price' }),
-        image: z.string(),
-        type: z.string().default('DEFAULT'),
-        quantity: z.coerce
-          .number({
-            message: numberRequiredRegex.message
-          })
-          .positive({ message: 'Please enter a valid quantity' })
-      })
-    )
-    .nonempty(),
-  images: z.array(z.string()).nonempty({
-    message: requiredFileRegex.message
-  })
-})
+import ClassificationConfig from './ClassificationConfig'
+import { convertFormToPreProduct, convertPreProductToForm, formSchema } from './helper'
 
 const PreOrderDetails = () => {
   const id = useId()
-  const navigate = useNavigate()
-  const { userData } = useStore(
-    useShallow((state) => ({
-      userData: state.user
-    }))
-  )
+  const params = useParams()
+  const triggerRef = useRef<TriggerUploadRef>(null)
+  const queryClient = useQueryClient()
+  const itemId = params.id !== 'add' ? params.id : undefined
+  const { data: preProduct, isFetching: isGettingPreProduct } = useQuery({
+    queryKey: [getPreOrderByIdApi.queryKey, itemId as string],
+    queryFn: getPreOrderByIdApi.fn,
+    enabled: !!itemId
+  })
 
+  const navigate = useNavigate()
+  const { successToast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       product: '',
       startTime: '',
       endTime: '',
-      productClassifications: [],
-      images: []
+      productClassifications: [
+        {
+          append: {
+            images: [],
+            type: ProductClassificationTypeEnum.CUSTOM
+          }
+        }
+      ]
     }
   })
 
-  const { data: productList, isLoading: isGettingProductList } = useQuery({
-    queryKey: [
-      getProductByBrandIdApi.queryKey,
-      {
-        brandId: userData?.brands?.length ? userData.brands[0].id : ''
-      }
-    ],
-    queryFn: getProductByBrandIdApi.fn,
-    enabled: !!userData?.brands?.length
-  })
-
-  const { mutateAsync: addPreOrderFn } = useMutation({
+  const { mutateAsync: addPreProductFn } = useMutation({
     mutationKey: [addPreOderApi.mutationKey],
     mutationFn: addPreOderApi.fn,
     onSuccess: () => {
       successToast({
-        message: 'Amazing! Pre-order has been added successfully.'
+        message: 'Amazing! Pre-order product has been added successfully.'
       })
       form.reset()
     }
   })
 
-  const productListOptions = useMemo(() => {
-    if (productList?.data) {
-      return productList.data.map((product) => ({
-        label: (
-          <div className='flex gap-2'>
-            <Avatar className='size-5 relative'>
-              <AvatarImage src={product.images[0].fileUrl || ''} />
-              <AvatarFallback className='font-bold dark:bg-accent/20'>{product.name[0].toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <span className='ml-2'>{product.name}</span>
-          </div>
-        ),
-        value: product.id
-      }))
+  const { mutateAsync: updatePreProductFn, isPending: isUpdatingPreProduct } = useMutation({
+    mutationKey: [updatePreOrderApi.mutationKey],
+    mutationFn: updatePreOrderApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Amazing! Pre-order has been updated successfully.'
+      })
     }
-    return []
-  }, [productList])
-
-  const { fields, prepend, remove } = useFieldArray({
-    control: form.control,
-    name: 'productClassifications'
   })
 
-  const handleAddClassification = () => {
-    prepend({
-      type: 'DEFAULT',
-      title: '',
-      price: 0,
-      quantity: 0,
-      image: ''
-    })
-  }
-
-  const handleRemoveClassification = (index: number) => {
-    remove(index)
-  }
-
   const handleServerError = useHandleServerError()
-  const { successToast } = useToast()
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit() {
     try {
-      await addPreOrderFn(values)
-      navigate(routesConfig[Routes.PRE_ORDER].getPath())
+      const triggerFns = triggerRef.current?.triggers
+      if (triggerFns) {
+        await Promise.all(triggerFns.map((trigger) => trigger()))
+      }
+      const values = form.getValues()
+      if (itemId) {
+        await updatePreProductFn(convertFormToPreProduct(values) as TUpdatePreOrderRequestParams)
+        queryClient.invalidateQueries({
+          queryKey: [getPreOrderByIdApi.queryKey, itemId as string]
+        })
+      } else {
+        await addPreProductFn(
+          convertFormToPreProduct({
+            ...values
+          }) as TAddPreOderRequestParams
+        )
+        navigate(routesConfig[Routes.PRE_ORDER].getPath())
+      }
     } catch (error) {
       handleServerError({
         error,
@@ -154,27 +107,175 @@ const PreOrderDetails = () => {
       })
     }
   }
-  const isLoading = isGettingProductList
+
+  useEffect(() => {
+    if (preProduct?.data) {
+      form.reset(convertPreProductToForm(preProduct.data))
+    }
+  }, [preProduct?.data, form])
+
+  const preProductData = preProduct?.data
+
+  const handleChangeStatus = async (status: PreOrderStatusEnum) => {
+    try {
+      const values = form.getValues()
+      await updatePreProductFn({
+        id: values.id ?? '',
+        status: status
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getPreOrderByIdApi.queryKey, itemId as string]
+      })
+    } catch (error) {
+      handleServerError({
+        error,
+        form
+      })
+    }
+  }
+
+  const getHeader = () => {
+    if (!itemId) return null
+    switch (preProductData?.status) {
+      case PreOrderStatusEnum.ACTIVE:
+        return (
+          <Alert variant={'success'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-white'>Active</span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This pre-order product is currently active and visible to your customers. If you want to make any
+                  changes, please inactivate it first.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(PreOrderStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingPreProduct}
+              variant={'default'}
+            >
+              {'Close pre-order product'}
+            </AlertAction>
+          </Alert>
+        )
+      case PreOrderStatusEnum.INACTIVE:
+        return (
+          <Alert variant={'default'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-gray-300 bg-gray-400 text-white'>Inactive</span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This pre-order product is currently inactive and not visible to your customers.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(PreOrderStatusEnum.ACTIVE)
+              }}
+              loading={isUpdatingPreProduct}
+              variant={'success'}
+            >
+              {'Close pre-order product'}
+            </AlertAction>
+          </Alert>
+        )
+      case PreOrderStatusEnum.WAITING:
+        return (
+          <Alert variant={'warning'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-yellow-300 bg-yellow-400 text-white'>
+                    Waiting
+                  </span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This pre-order product is currently waiting and not visible to your customers. If you want to make any
+                  changes, please inactivate it first.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(PreOrderStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingPreProduct}
+              variant={'default'}
+            >
+              {'Close pre-order product'}
+            </AlertAction>
+          </Alert>
+        )
+      case PreOrderStatusEnum.SOLD_OUT:
+        return (
+          <Alert variant={'highlight'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-purple-300 bg-purple-400  text-white'>
+                    Sold Out
+                  </span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This pre-order product is currently sold out and not visible to your customers. If you want to make
+                  any changes, please inactivate it first.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(PreOrderStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingPreProduct}
+              variant={'default'}
+            >
+              {'Close pre-order product'}
+            </AlertAction>
+          </Alert>
+        )
+      default:
+        return null
+    }
+  }
+
+  const getFooter = () => {
+    switch (preProductData?.status) {
+      case PreOrderStatusEnum.ACTIVE:
+      case PreOrderStatusEnum.SOLD_OUT:
+      case PreOrderStatusEnum.WAITING:
+        return null
+      default:
+        return (
+          <div className='flex items-center justify-end'>
+            {
+              <Button type='submit' form={`form-${id}`} loading={form.formState.isSubmitting}>
+                <SaveIcon />
+                Save Pre-order Product
+              </Button>
+            }
+          </div>
+        )
+    }
+  }
   return (
     <>
-      {isLoading && <LoadingContentLayer />}
-      <Card className={'h-min flex items-center align-center max-w-full py-4 px-4 dark:border-zinc-800'}>
-        <div className='flex gap-4 items-center justify-between w-full flex-wrap'>
-          <div>
-            <h1 className='text-2xl font-bold dark:text-white'>Add Pre-order</h1>
-            <p className='text-muted-foreground'>Add a new pre-order to your store</p>
-          </div>
-          <Button
-            type='submit'
-            className='flex gap-2 items-center'
-            form={`form-${id}`}
-            loading={form.formState.isSubmitting}
-          >
-            <LuSaveAll />
-            <span>Save Pre-order</span>
-          </Button>
-        </div>
-      </Card>
+      {isGettingPreProduct && <LoadingContentLayer />}
+      {getHeader()}
       <Form {...form}>
         <form
           noValidate
@@ -182,299 +283,96 @@ const PreOrderDetails = () => {
           className='w-full flex-col gap-8 flex'
           id={`form-${id}`}
         >
-          <CardSection
-            title='Pre-order Details'
-            description='Pre Order Details are the details of the product you are pre ordering'
-          >
-            <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
-              <FormField
-                control={form.control}
-                name='product'
-                render={({ field }) => (
-                  <FormItem className='flex flex-col col-span-1 sm:col-span-2'>
-                    <FormLabel required>Pre-order Product</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl className='w-full'>
-                          <Button
-                            variant='outline'
-                            role='combobox'
-                            className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
-                          >
-                            {field.value
-                              ? productListOptions.find((product) => product.value === field.value)?.label
-                              : 'Select product'}
-                            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className='p-0'
-                        sideOffset={5}
-                        style={{
-                          width: 'var(--radix-popover-trigger-width)',
-                          maxHeight: 'var(--radix-popover-content-available-height)'
-                        }}
-                      >
-                        <Command>
-                          <CommandInput placeholder='Search for product' />
-                          <CommandList>
-                            <CommandEmpty>No product found. Try another search term.</CommandEmpty>
-                            <CommandGroup>
-                              {productListOptions.map((product) => (
-                                <CommandItem
-                                  value={product.value}
-                                  key={product.value}
-                                  onSelect={() => {
-                                    form.setValue('product', product.value)
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      'mr-2 h-4 w-4',
-                                      product.value === field.value ? 'opacity-100' : 'opacity-0'
-                                    )}
-                                  />
-                                  {product.label}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>This is the pre-order product that will be displayed on dashboard</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='startTime'
-                render={({ field, formState }) => {
-                  return (
-                    <FormItem className='flex flex-col'>
-                      <FormLabel required>Start Time</FormLabel>
-                      <FlexDatePicker
-                        showTime
-                        onlyFutureDates
-                        field={field}
-                        formState={{
-                          ...formState,
-                          ...form
-                        }}
-                      />
-                      <FormDescription>
-                        This is the start time that will be displayed on your pre-order details.
-                      </FormDescription>
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center gap-1'>
+                <Calendar />
+                Pre-order Product Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                <FormField
+                  control={form.control}
+                  name='product'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Pre-order Product</FormLabel>
+                      <SelectProduct {...field} multiple={false} />
                       <FormMessage />
                     </FormItem>
-                  )
-                }}
-              />
-              <FormField
-                control={form.control}
-                name='endTime'
-                render={({ field, formState }) => {
-                  return (
-                    <FormItem className='flex flex-col'>
-                      <FormLabel required>End Time</FormLabel>
-                      <FlexDatePicker
-                        showTime
-                        onlyFutureDates
-                        field={field}
-                        formState={{
-                          ...formState,
-                          ...form
-                        }}
-                      />
-                      <FormDescription>
-                        This is the end time that will be displayed on your pre-order details.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }}
-              />
-              <FormField
-                control={form.control}
-                name='images'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
-                      <FormLabel required>Images</FormLabel>
-                      <div className='items-center w-full h-[400px] lg:h-60 border-2 border-dashed rounded-lg shadow-lg flex flex-col gap-8 lg:flex-row p-2'>
-                        <div className='w-1/4 flex justify-center lg:border-r-4 border-dashed lg:border-b-0 border-b-4 p-4 border-r-0'>
-                          <UploadFileModal
-                            field={field}
-                            Trigger={
-                              <p className='relative p-4 rounded-full border-2 shadow-lg cursor-pointer hover:scale-110 hover:opacity-100 opacity-50 transition-all duration-100 ease-linear'>
-                                <IoCloudUploadSharp size={60} />
-                              </p>
-                            }
-                            dropZoneConfigOptions={{
-                              maxFiles: 6
-                            }}
-                          />
-                        </div>
-                        <div className='h-full flex-1 overflow-auto'>
-                          {field.value.length > 0 && (
-                            <div className='grid grid-cols-3 gap-2 max-h-full overflow-auto'>
-                              {field.value.map((image, index) => (
-                                <img
-                                  src={image}
-                                  alt={`Image ${index}`}
-                                  className='size-full h-24 p-2 border bg-accent rounded-xl object-contain shadow-lg'
-                                />
-                              ))}
-                            </div>
-                          )}
-                          {field.value.length === 0 && (
-                            <div className='flex-1 h-full flex justify-center items-center gap-1'>
-                              <CiFileOff size={30} />
-                              <p className='text-muted-foreground'>No images uploaded.</p>
-                            </div>
-                          )}
-                          <div></div>
-                        </div>
-                      </div>
-                      <FormDescription>
-                        These are the images that will be displayed on your pre-order details.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }}
-              />
-            </div>
-          </CardSection>
-          <CardSection
-            rightComponent={
-              <Button type='button' className='flex gap-2 items-center' onClick={handleAddClassification}>
-                <IoCreateOutline />
-                <span>Add An Classification </span>
-              </Button>
-            }
-            title='Pre-order classification'
-            description='Pre-order classification are the details of the product you are pre ordering'
-          >
-            {fields.length > 0 && (
-              <div className='w-full flex flex-col gap-4'>
-                {fields.map((field, index) => {
-                  return (
-                    <div
-                      key={field.id}
-                      className='gap-4 grid grid-flow-row grid-cols-1 lg:grid-cols-2 border-2 p-4 rounded-xl shadow-xl relative'
-                    >
-                      <MdDeleteOutline
-                        onClick={() => handleRemoveClassification(index)}
-                        className='absolute text-red-500 border-2 p-1 shadow-xl right-1 top-1 border-red-600 rounded-full bg-red-200 opacity-50 hover:opacity-100 transition-all duration-200 ease-linear cursor-pointer'
-                        size={30}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.title`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Classification Title</FormLabel>
-                            <FormControl>
-                              <Input placeholder='e.g. Class A' {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              This is the classification title that will be displayed on your pre-order details.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.price`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Classification Price</FormLabel>
-                            <FormControl>
-                              <Input
-                                type='number'
-                                placeholder='
-                          e.g. 100.00 
-                         '
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              This is the classification price that will be displayed on your pre-order details.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.quantity`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Classification Quantity</FormLabel>
-                            <FormControl>
-                              <Input placeholder='e.g. 21' {...field} type='quantity' />
-                            </FormControl>
-                            <FormDescription>
-                              This is the classification quantity that will be displayed on your pre-order details.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.image`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Display image</FormLabel>
-                            <FormControl>
-                              <Avatar className='size-9 relative'>
-                                <AvatarImage src={form.watch(`productClassifications.${index}.image`) || ''} />
-                                <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>
-                                  {form.watch(`productClassifications.${index}.title`) || ''}
-                                </AvatarFallback>
-                                <UploadFileModal
-                                  field={{
-                                    ...field,
-                                    value: form.watch(`productClassifications.${index}.image`) || ''
-                                  }}
-                                  Trigger={
-                                    <FaCameraRotate
-                                      size={20}
-                                      className='cursor-pointer absolute bottom-2 right-2 hover:scale-150 transition-all shadow-lg duration-500 text-foreground p-0.5 rounded-full bg-primary/80 opacity-40 hover:opacity-100'
-                                    />
-                                  }
-                                />
-                              </Avatar>
-                            </FormControl>
-                            <FormDescription>
-                              This is the classification image that will be displayed on your pre-order details.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )
-                })}
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='startTime'
+                  render={({ field, formState }) => {
+                    return (
+                      <FormItem className='flex flex-col'>
+                        <FormLabel required>Start Time Of Pre-order Product</FormLabel>
+                        <FlexDatePicker
+                          showTime
+                          onlyFutureDates
+                          field={field}
+                          formState={{
+                            ...formState,
+                            ...form
+                          }}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name='endTime'
+                  render={({ field, formState }) => {
+                    return (
+                      <FormItem className='flex flex-col'>
+                        <FormLabel required>End Time Of Pre-order Product</FormLabel>
+                        <FlexDatePicker
+                          showTime
+                          onlyFutureDates
+                          field={field}
+                          formState={{
+                            ...formState,
+                            ...form
+                          }}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                />
+                {/* <FormField
+                  control={form.control}
+                  name='images'
+                  render={({ field }) => {
+                    return (
+                      <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
+                        <FormLabel required>Images Of Flash Sale</FormLabel>
+                        <UploadFiles
+                          triggerRef={triggerImageUploadRef}
+                          form={form}
+                          field={field}
+                          dropZoneConfigOptions={{
+                            maxFiles: 6
+                          }}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                /> */}
               </div>
-            )}
-            {
-              <div className='flex justify-center items-center'>
-                {fields.length === 0 && (
-                  <div className='flex gap-2 items-center'>
-                    <CiFileOff size={20} />
-                    <p className='text-muted-foreground'>No classification added.</p>
-                  </div>
-                )}
-              </div>
-            }
-          </CardSection>
+            </CardContent>
+          </Card>
+          {form.watch('product') && (
+            <ClassificationConfig form={form} productId={form.watch('product')} triggerImageUploadRef={triggerRef} />
+          )}
         </form>
+        {getFooter()}
       </Form>
     </>
   )

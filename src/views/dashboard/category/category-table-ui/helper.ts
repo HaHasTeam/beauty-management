@@ -10,7 +10,7 @@ export function getStatusIcon(status: FlashSaleStatusEnum) {
       textColor: 'text-green-500',
       bgColor: 'bg-green-100'
     },
-    [FlashSaleStatusEnum.PENDING]: {
+    [FlashSaleStatusEnum.WAITING]: {
       icon: CircleDashed,
       iconColor: 'text-yellow-500',
       textColor: 'text-yellow-500',
@@ -22,11 +22,11 @@ export function getStatusIcon(status: FlashSaleStatusEnum) {
       textColor: 'text-gray-500',
       bgColor: 'bg-gray-100'
     },
-    [FlashSaleStatusEnum.BANNED]: {
+    [FlashSaleStatusEnum.SOLD_OUT]: {
       icon: CircleX,
-      iconColor: 'text-red-500',
-      textColor: 'text-red-500',
-      bgColor: 'bg-red-100'
+      iconColor: 'text-purple-500',
+      textColor: 'text-purple-500',
+      bgColor: 'bg-purple-100'
     }
   }
   return statusIcons[status] || CircleIcon

@@ -11,3 +11,10 @@ export const getProductByBrandIdApi = toQueryFetcher<TGetProductByBrandIdRequest
     return privateRequest(`/products/get-by-brand/${params?.brandId}`)
   }
 )
+
+export const getProductByIdApi = toQueryFetcher<string, TServerResponse<TProduct>>(
+  'getProductByIdApi',
+  async (params) => {
+    return privateRequest(`/products/get-by-id/${params}`)
+  }
+)
