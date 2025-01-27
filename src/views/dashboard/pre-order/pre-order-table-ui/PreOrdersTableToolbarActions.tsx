@@ -1,6 +1,5 @@
 import { type Table } from '@tanstack/react-table'
-import { Download } from 'lucide-react'
-import { IoIosAddCircleOutline } from 'react-icons/io'
+import { Download, ListPlusIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -29,8 +28,8 @@ export function PreOrderTableToolbarActions({ table }: PreOrderTableToolbarActio
         />
       ) : null}
       <Button size={'sm'} onClick={handleAddPreOrder}>
-        <IoIosAddCircleOutline />
-        Add Pre-order
+        <ListPlusIcon />
+        Add Pre-order Product
       </Button>
       <Button
         variant='outline'

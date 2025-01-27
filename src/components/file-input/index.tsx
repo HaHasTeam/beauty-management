@@ -1,4 +1,4 @@
-import { Trash2 as RemoveIcon } from 'lucide-react'
+import { FileDown, Trash2 as RemoveIcon, View } from 'lucide-react'
 import {
   createContext,
   Dispatch,
@@ -27,6 +27,7 @@ type FileUploaderContextType = {
   setActiveIndex: Dispatch<SetStateAction<number>>
   orientation: 'horizontal' | 'vertical'
   direction: DirectionOptions
+  getPreviewUrl: (index: number) => string
 }
 
 const FileUploaderContext = createContext<FileUploaderContextType | null>(null)
@@ -196,9 +197,17 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
       onDropAccepted: () => setIsFileTooBig(false)
     })
 
+    const getPreviewUrl = (index: number) => {
+      if (!value) return ''
+      const file = value[index]
+      const url = URL.createObjectURL(file)
+      return url
+    }
+
     return (
       <FileUploaderContext.Provider
         value={{
+          getPreviewUrl,
           dropzoneState,
           isLOF,
           isFileTooBig,
@@ -255,8 +264,9 @@ FileUploaderContent.displayName = 'FileUploaderContent'
 
 export const FileUploaderItem = forwardRef<HTMLDivElement, { index: number } & React.HTMLAttributes<HTMLDivElement>>(
   ({ className, index, children, ...props }, ref) => {
-    const { removeFileFromSet, activeIndex, direction } = useFileUpload()
+    const { removeFileFromSet, activeIndex, direction, getPreviewUrl } = useFileUpload()
     const isSelected = index === activeIndex
+    const previewUrl = getPreviewUrl(index)
     return (
       <div
         ref={ref}
@@ -270,14 +280,29 @@ export const FileUploaderItem = forwardRef<HTMLDivElement, { index: number } & R
         <div className='font-medium leading-none tracking-tight flex items-center gap-1.5 h-full w-full'>
           {children}
         </div>
-        <button
-          type='button'
-          className={cn('absolute', direction === 'rtl' ? 'top-2 left-2' : 'top-2 right-2')}
-          onClick={() => removeFileFromSet(index)}
-        >
-          <span className='sr-only'>remove item {index}</span>
-          <RemoveIcon className='w-4 h-4 hover:stroke-destructive duration-200 ease-in-out' />
-        </button>
+        <div className={cn('absolute flex items-center gap-2', direction === 'rtl' ? 'top-2 left-2' : 'top-2 right-2')}>
+          <a href={previewUrl} target='_blank' rel='noreferrer'>
+            <span className='sr-only'>Preview {index}</span>
+            <View
+              strokeWidth={3}
+              className='w-4 h-4 hover:stroke-destructive duration-200 ease-in-out text-green-700'
+            />
+          </a>
+          <a href={previewUrl} download={true}>
+            <span className='sr-only'>Download file {index}</span>
+            <FileDown
+              strokeWidth={3}
+              className='w-4 h-4 hover:stroke-destructive duration-200 ease-in-out text-yellow-700'
+            />
+          </a>
+          <button type='button' onClick={() => removeFileFromSet(index)}>
+            <span className='sr-only'>remove item {index}</span>
+            <RemoveIcon
+              strokeWidth={3}
+              className='w-4 h-4 hover:stroke-destructive duration-200 ease-in-out text-red-700'
+            />
+          </button>
+        </div>
       </div>
     )
   }
@@ -298,7 +323,7 @@ export const FileInput = forwardRef<
     <div
       ref={ref}
       {...props}
-      className={`relative w-full ${isDisabled ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer '}`}
+      className={`relative w-full h-full ${isDisabled ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer '}`}
     >
       <div
         className={cn(

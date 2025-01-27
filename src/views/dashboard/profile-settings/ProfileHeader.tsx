@@ -2,12 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { FaCameraRotate } from 'react-icons/fa6'
 import { MdPhoto } from 'react-icons/md'
 import { z } from 'zod'
 
 import Button from '@/components/button'
-import UploadFileModal from '@/components/file-input/UploadFileModal'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
@@ -72,7 +70,7 @@ const ProfileHeader = () => {
         <FormField
           control={form.control}
           name='avatar'
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <Card className={'h-min flex items-center align-center max-w-full py-8 px-4 dark:border-zinc-800'}>
                 <div className='flex gap-4 items-center justify-between w-full flex-wrap'>
@@ -80,7 +78,7 @@ const ProfileHeader = () => {
                     <Avatar className='min-h-[68px] min-w-[68px] relative'>
                       <AvatarImage src={form.watch('avatar') || ''} />
                       <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>A</AvatarFallback>
-                      <UploadFileModal
+                      {/* <UploadFileModal
                         field={field}
                         Trigger={
                           <FaCameraRotate
@@ -88,7 +86,7 @@ const ProfileHeader = () => {
                             className='cursor-pointer absolute bottom-3 right-3 hover:scale-150 transition-all shadow-lg duration-500 text-foreground p-0.5 rounded-full bg-primary/80'
                           />
                         }
-                      />
+                      /> */}
                     </Avatar>
                     <div>
                       <p className='text-xl font-extrabold  leading-[100%]  pl-4 md:text-3xl'>Allure Beauty</p>

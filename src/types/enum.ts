@@ -72,3 +72,8 @@ export enum VoucherApplyTypeEnum {
   ALL = 'ALL',
   SPECIFIC = 'SPECIFIC'
 }
+
+export enum ClassificationTypeEnum {
+  DEFAULT = 'DEFAULT',
+  CUSTOM = 'CUSTOM'
+}

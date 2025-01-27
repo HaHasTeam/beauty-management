@@ -1,23 +1,17 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, EyeIcon, FilePenLine, MoveRight, SettingsIcon, TicketCheck, XIcon } from 'lucide-react'
-import { GrRevert } from 'react-icons/gr'
+import { Ellipsis, EyeIcon, FilePenLine, MoveRight, SettingsIcon, TicketCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { DiscountTypeEnum } from '@/types/enum'
 import { GroupProductStatusEnum, TGroupProduct } from '@/types/group-product'
 import { formatCurrency, formatNumber } from '@/utils/number'
+import { getDisplayString } from '@/utils/string'
 
 import { getStatusIcon } from './helper'
 
@@ -96,9 +90,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TGroupP
       header: ({ column }) => <DataTableColumnHeader column={column} title='Max Amount' />,
       cell: ({ row }) =>
         row.original.maxBuyAmountEachPerson && (
-          <div className='text-xs font-light text-center flex mx-auto p-1 px-2 border bg-yellow-400 w-fit min-w-[90px] rounded-full shadow-xl justify-center'>
-            {`Limit ${formatNumber(row.original.maxBuyAmountEachPerson, ' items')}`}
-          </div>
+          <div className='text-center font-bold'>{formatNumber(row.original.maxBuyAmountEachPerson)}</div>
         ),
       size: 200
     },
@@ -129,7 +121,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TGroupP
               className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
               aria-hidden='true'
             />
-            <span className='capitalize'>{statusValue.toLowerCase()}</span>
+            <span className='capitalize'>{getDisplayString(statusValue)}</span>
           </div>
         )
       },
@@ -144,7 +136,8 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TGroupP
       cell: ({ cell }) =>
         formatDate(cell.getValue() as Date, {
           hour: 'numeric',
-          minute: 'numeric'
+          minute: 'numeric',
+          month: '2-digit'
         }),
       size: 250
     },
@@ -181,32 +174,6 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TGroupP
                   View Details
                 </span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {row.original.status !== GroupProductStatusEnum.INACTIVE ? (
-                <DropdownMenuItem
-                  className='bg-red-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'ban' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <XIcon />
-                    Unpublish GroupProduct
-                  </span>
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  className='bg-green-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'publish' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <GrRevert />
-                    Publish GroupProduct
-                  </span>
-                </DropdownMenuItem>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )
