@@ -1,45 +1,62 @@
-import { useQuery } from '@tanstack/react-query'
-import {} from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import Label from '@/components/form-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { getCommune, getDistrict, getProvince } from '@/network/apis/address'
+import { useHandleAddressMock } from '@/hooks/useHandleAddressMock'
 import { CreateAddressBrandSchema } from '@/schemas'
 
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Textarea } from '../ui/textarea'
 
 interface FormAddressContentProps {
+  // provinceData?: TAddressProvinceMock[]
+  // districtData?: TAddressDistrictMock[]
+  // communeData?: TAddressCommuneMock[]
   form: UseFormReturn<z.infer<typeof CreateAddressBrandSchema>>
 }
 export default function FormAddressContent({ form }: FormAddressContentProps) {
   const { t } = useTranslation()
-  const { data: listProvinceData } = useQuery({
-    queryKey: [getProvince.queryKey],
-    queryFn: getProvince.fn,
-    select(data) {
-      return data.data
-    }
-  })
-  const { data: listCommuneData } = useQuery({
-    queryKey: [getCommune.queryKey],
-    queryFn: getCommune.fn,
-    select(data) {
-      return data.data
-    }
-  })
-  const { data: listDistrictData } = useQuery({
-    queryKey: [getDistrict.queryKey],
-    queryFn: getDistrict.fn,
-    select(data) {
-      return data.data
-    }
+  const { communeData, districtData, provinceData } = useHandleAddressMock({
+    districtId: form.watch('district'),
+    provinceId: form.watch('province')
   })
   // eslint-disable-next-line no-console
-  console.log('dataa', listDistrictData, listCommuneData, listProvinceData)
+  console.log('dataa', communeData, districtData, provinceData)
+
+  // const handleChangeProvince = useCallback(async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const value = Number(event.target.value)
+  //   if (value === 0) {
+  //     setDistrictList([])
+  //     setCommuneList([])
+  //     setDistrictValue(0)
+  //     setCommuneValue(0)
+  //     return
+  //   }
+  //   setIsLoadingDistrict(true)
+  //   const districtList = await getDistrict(value)
+  //   setDistrictList(districtList)
+  //   setIsLoadingDistrict(false)
+  // }, [])
+
+  // const handleChangeDistrict = useCallback(async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const value = Number(event.target.value)
+  //   setDistrictValue(value)
+  //   if (value === 0) {
+  //     setCommuneList([])
+  //     setCommuneValue(0)
+  //   } else {
+  //     setIsLoadingCommune(true)
+  //     const communeList = await getCommune(value)
+  //     setCommuneList(communeList)
+  //     setIsLoadingCommune(false)
+  //   }
+  // }, [])
+
+  // const handleChangeCommune = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setCommuneValue(Number(event.target.value))
+  // }, [])
 
   return (
     <div className='w-full py-2'>
@@ -63,8 +80,13 @@ export default function FormAddressContent({ form }: FormAddressContentProps) {
                           <SelectValue {...field} placeholder={t('address.chooseProvinceOrCity')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='hcm'>Hồ Chí Minh</SelectItem>
-                          <SelectItem value='hn'>HN</SelectItem>
+                          {provinceData?.map((el) => {
+                            return (
+                              <SelectItem value={el.idProvince} key={el.idProvince}>
+                                {el.name}
+                              </SelectItem>
+                            )
+                          })}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -97,8 +119,13 @@ export default function FormAddressContent({ form }: FormAddressContentProps) {
                           <SelectValue {...field} placeholder={t('address.chooseDistrict')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='hcm'>Thu Duc</SelectItem>
-                          <SelectItem value='hn'>Q1</SelectItem>
+                          {districtData?.map((el) => {
+                            return (
+                              <SelectItem value={el.idDistrict} key={el.idDistrict}>
+                                {el.name}
+                              </SelectItem>
+                            )
+                          })}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -126,8 +153,13 @@ export default function FormAddressContent({ form }: FormAddressContentProps) {
                           <SelectValue {...field} placeholder={t('address.chooseWard')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='hcm'>Truong Thanh</SelectItem>
-                          <SelectItem value='hn'>My Tho</SelectItem>
+                          {communeData?.map((el) => {
+                            return (
+                              <SelectItem value={el.idCommune} key={el.idCommune}>
+                                {el.name}
+                              </SelectItem>
+                            )
+                          })}
                         </SelectContent>
                       </Select>
                     </FormControl>

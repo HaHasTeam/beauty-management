@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useId, useState } from 'react'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
+import { getCommuneMutation, getDistrictMutation, getProvinceMutation } from '@/network/apis/address'
 import { brandCreateSchema, CreateAddressBrandSchema } from '@/schemas'
 import { parseAddress } from '@/utils/string'
 
@@ -40,18 +42,33 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
   const handleServerError = useHandleServerError()
   const address = parentForm?.watch('address')
 
+  const { detailAddress, ward, district, province, fullAddress } = parseAddress(address || '')
   const defaultValues = {
-    detailAddress: parseAddress(address || '').detailAddress || '',
-    ward: parseAddress(address || '').ward || '',
-    district: parseAddress(address || '').district || '',
-    province: parseAddress(address || '').province || '',
-    fullAddress: parseAddress(address || '').fullAddress || ''
+    detailAddress: detailAddress || '',
+    ward: ward || '',
+    district: district || '',
+    province: province || '',
+    fullAddress: fullAddress || ''
   }
+  const { mutateAsync: getProvinceMutate } = useMutation({
+    mutationKey: [getProvinceMutation.mutationKey],
+    mutationFn: getProvinceMutation.fn
+  })
 
+  const { mutateAsync: getDistrictMutate } = useMutation({
+    mutationKey: [getDistrictMutation.mutationKey],
+    mutationFn: getDistrictMutation.fn
+  })
+
+  const { mutateAsync: getCommuneMutate } = useMutation({
+    mutationKey: [getCommuneMutation.mutationKey],
+    mutationFn: getCommuneMutation.fn
+  })
   const form = useForm<z.infer<typeof CreateAddressBrandSchema>>({
     resolver: zodResolver(CreateAddressBrandSchema),
     values: defaultValues
   })
+
   const handleReset = () => {
     form.reset()
     setOpen(false)
@@ -59,10 +76,18 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
 
   async function onSubmit(values: z.infer<typeof CreateAddressBrandSchema>) {
     try {
+      const provinceSelected = await getProvinceMutate(values.province)
+      const districtSelected = await getDistrictMutate({ idDistrict: values.district, idProvince: values.province })
+      const communeSelected = await getCommuneMutate({
+        idCommune: values.ward,
+        idDistrict: values.district,
+        idProvince: values.province
+      })
+
       const transformedValues = {
         ...values,
 
-        fullAddress: `${values.detailAddress}, ${values.ward}, ${values.district}, ${values.province}`
+        fullAddress: `${values.detailAddress}, ${communeSelected.data[0].name}, ${districtSelected.data[0].name}, ${provinceSelected.data[0].name}`
       }
 
       await getAddress({ ...transformedValues })
@@ -90,7 +115,12 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
               <div>
                 {/* Form Address */}
                 <ScrollArea className='h-72'>
-                  <FormAddressContent form={form} />
+                  <FormAddressContent
+                    form={form}
+                    // communeData={communeData}
+                    // districtData={districtData}
+                    // provinceData={provinceData}
+                  />
                 </ScrollArea>
               </div>
               <DialogFooter>

@@ -138,3 +138,14 @@ export function convertToProductTable2(data: IResponseProduct[]): IProductTable[
 
   return products // Return the product list and total quantity
 }
+
+export function convertToSlug(text: string): string {
+  return text
+    .toLowerCase() // Convert to lowercase
+    .normalize('NFD') // Normalize Unicode characters (decompose accents)
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .trim() // Trim leading and trailing spaces
+    .replace(/\s+/g, '-') // Replace spaces with dashes
+    .replace(/-+/g, '-') // Remove duplicate dashes
+}
