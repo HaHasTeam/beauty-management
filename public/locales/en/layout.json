@@ -504,9 +504,9 @@
     "cardNumberEx": "EG: 4123 4567 8901 2345",
     "cvvEx": "EG: 123",
     "CARD": "Credit Card/Debit Card",
-    "BANK_TRANSFER": "Credit Card/Debit Card",
     "WALLET": "Wallet",
-    "CASH": "Cash on Delivery"
+    "CASH": "Cash on Delivery",
+    "BANK_TRANSFER": "Credit Card/Debit Card"
   },
   "order": {
     "loading": "Loading order...",
@@ -552,7 +552,8 @@
       "selectAReason": "Select a reason",
       "reason": "Reason",
       "otherReason": "Details"
-    }
+    },
+    "cancelSuccess": "Cancel order successfully!"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -608,6 +609,20 @@
     "subTotal": "Sub Total",
     "quantity": "Quantity",
     "products": "Products",
-    "status": "Status"
+    "status": "Status",
+    "cancelBy": "Canceled by",
+    "cancelByDate": "Canceled at",
+    "cancelReason": "Cancellation reason",
+    "cancelOrderDetails": "Cancellation details",
+    "customer": "Customer",
+    "brand": "Brand"
+  },
+  "validation": {
+    "emailValid": "Please enter a valid email address",
+    "required": "Please fill out this field",
+    "paymentRequired": "Please choose a payment method",
+    "reasonRequired": "Please choose a reason",
+    "passwordValid": "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number and one special character",
+    "phoneValid": "Please fill in a valid phone number"
   }
 }

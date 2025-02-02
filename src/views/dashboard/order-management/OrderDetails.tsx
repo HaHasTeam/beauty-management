@@ -1,16 +1,19 @@
-import { useQuery } from '@tanstack/react-query'
-import { MessageSquareText, Truck } from 'lucide-react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Ban, MessageSquareText, Truck } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
+import Button from '@/components/button'
+import CancelOrderDialog from '@/components/dialog/CancelOrderDialog'
 import Empty from '@/components/empty/Empty'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import OrderStatus from '@/components/order-status'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getOrderByIdApi } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
-import { RoleEnum } from '@/types/enum'
+import { RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
 import BrandOrderInformation from './order-detail/BrandOrderInformation'
 import OrderDetailItems from './order-detail/OrderDetailItems'
@@ -21,6 +24,9 @@ import OrderSummary from './order-detail/OrderSummary'
 const OrderDetails = () => {
   const { id } = useParams()
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
+  const [isTrigger, setIsTrigger] = useState<boolean>(false)
 
   const { user } = useStore(
     useShallow((state) => ({
@@ -38,6 +44,14 @@ const OrderDetails = () => {
     queryFn: getOrderByIdApi.fn,
     enabled: !!id
   })
+
+  useEffect(() => {
+    if (isTrigger) {
+      queryClient.invalidateQueries({
+        queryKey: [getOrderByIdApi.queryKey]
+      })
+    }
+  }, [isTrigger, queryClient])
 
   return (
     <>
@@ -62,7 +76,35 @@ const OrderDetails = () => {
             <div className='space-y-6 w-full'>
               {/* order status tracking */}
               <OrderStatusTracking currentStatus={useOrderData?.data?.status} />
-
+              {/* order cancel detail */}
+              {(useOrderData?.data?.status === ShippingStatusEnum.CANCELLED ||
+                useOrderData?.data?.status === ShippingStatusEnum.CANCELLED_BY_SHOP) && (
+                <div className='w-full flex'>
+                  <OrderGeneral
+                    title={t('orderDetail.cancelOrderDetails')}
+                    icon={<Ban />}
+                    status='danger'
+                    content={
+                      <div className='flex flex-col gap-1 text-sm md:text-base'>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.cancelByDate')}:</span>{' '}
+                          {useOrderData?.data?.recipientName}
+                        </p>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.cancelBy')}:</span>{' '}
+                          {useOrderData?.data?.status === ShippingStatusEnum.CANCELLED
+                            ? t('orderDetail.customer')
+                            : t('orderDetail.brand')}
+                        </p>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.cancelReason')}:</span>{' '}
+                          {useOrderData?.data?.phone}
+                        </p>
+                      </div>
+                    }
+                  />
+                </div>
+              )}
               {/* order customer information, shipment */}
               <div className='flex flex-col md:flex-row gap-4 justify-between w-full items-stretch'>
                 <div className='w-full md:w-1/2 flex'>
@@ -71,18 +113,21 @@ const OrderDetails = () => {
                     icon={<Truck />}
                     content={
                       <div className='flex flex-col gap-1 text-sm md:text-base'>
-                        <span>
-                          {t('orderDetail.recipientName')}: {useOrderData?.data?.recipientName}
-                        </span>
-                        <span>
-                          {t('orderDetail.address')}: {useOrderData?.data?.shippingAddress}
-                        </span>
-                        <span>
-                          {t('orderDetail.phone')}: {useOrderData?.data?.phone}
-                        </span>
-                        <span>
-                          {t('orderDetail.notes')}: {useOrderData?.data?.notes ?? t('orderDetail.no')}
-                        </span>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.recipientName')}:</span>{' '}
+                          {useOrderData?.data?.recipientName}
+                        </p>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.address')}:</span>{' '}
+                          {useOrderData?.data?.shippingAddress}
+                        </p>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.phone')}:</span> {useOrderData?.data?.phone}
+                        </p>
+                        <p>
+                          <span className='font-medium'>{t('orderDetail.notes')}:</span>{' '}
+                          {useOrderData?.data?.notes ?? t('orderDetail.no')}
+                        </p>
                       </div>
                     }
                   />
@@ -92,12 +137,12 @@ const OrderDetails = () => {
                     title={t('orderDetail.message')}
                     icon={<MessageSquareText />}
                     content={
-                      <span className='text-sm md:text-base'>
-                        {t('orderDetail.message')}:{' '}
+                      <p className='text-sm md:text-base'>
+                        <span className='font-medium'>{t('orderDetail.message')}: </span>
                         {useOrderData?.data?.message && useOrderData?.data?.message !== ''
                           ? useOrderData?.data?.message
                           : t('orderDetail.no')}
-                      </span>
+                      </p>
                     }
                   />
                 </div>
@@ -141,6 +186,19 @@ const OrderDetails = () => {
                     paymentMethod={useOrderData?.data?.paymentMethod}
                   />
                 </div>
+                {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
+                  useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
+                  useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER) && (
+                  <div className='w-full'>
+                    <Button
+                      variant='outline'
+                      className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                      onClick={() => setOpenCancelOrderDialog(true)}
+                    >
+                      {t('order.cancelOrder')}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </>
@@ -151,6 +209,15 @@ const OrderDetails = () => {
             description={t('empty.orderDetail.description')}
             link={routesConfig[Routes.ORDER_LIST].path}
             linkText={t('empty.orderDetail.button')}
+          />
+        )}
+        {!isFetching && useOrderData?.data && (
+          <CancelOrderDialog
+            open={openCancelOrderDialog}
+            setOpen={setOpenCancelOrderDialog}
+            onOpenChange={setOpenCancelOrderDialog}
+            setIsTrigger={setIsTrigger}
+            orderId={useOrderData?.data?.id ?? ''}
           />
         )}
       </div>

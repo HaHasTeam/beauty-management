@@ -500,9 +500,9 @@
     "cardNumberEx": "VD: 4123 4567 8901 2345",
     "cvvEx": "VD: 123",
     "CARD": "Thẻ tín dụng/ghi nợ",
-    "BANK_TRANSFER": "Thẻ tín dụng/ghi nợ",
     "WALLET": "Ví",
-    "CASH": "Thanh toán khi nhận hàng"
+    "CASH": "Thanh toán khi nhận hàng",
+    "BANK_TRANSFER": "Thẻ tín dụng/ghi nợ"
   },
   "order": {
     "loading": "Đang tải đơn hàng...",
@@ -548,7 +548,8 @@
       "selectAReason": "Chọn lý do",
       "reason": "Lý do",
       "otherReason": "Chi tiết"
-    }
+    },
+    "cancelSuccess": "Cancel order failed!"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -604,6 +605,20 @@
     "subTotal": "Tạm Tính",
     "quantity": "Số lượng",
     "products": "Sản phẩm",
-    "status": "Trạng thái"
+    "status": "Trạng thái",
+    "cancelBy": "Hủy bởi",
+    "cancelByDate": "Hủy vào lúc",
+    "cancelReason": "Lý do hủy",
+    "cancelOrderDetails": "Chi tiết hủy đơn",
+    "customer": "Khách hàng",
+    "brand": "Thương hiệu"
+  },
+  "validation": {
+    "emailValid": "Vui lòng nhập một địa chỉ email hợp lệ",
+    "required": "Vui lòng điền vào trường này",
+    "paymentRequired": "Vui lòng chọn phương thức thanh toán",
+    "reasonRequired": "Vui lòng chọn lý do",
+    "passwordValid": "Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm một chữ cái viết hoa, một chữ cái viết thường, một số và một ký tự đặc biệt",
+    "phoneValid": "Vui lòng nhập một số điện thoại hợp lệ"
   }
 }

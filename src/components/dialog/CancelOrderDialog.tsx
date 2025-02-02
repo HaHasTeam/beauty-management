@@ -22,11 +22,18 @@ import { Textarea } from '../ui/textarea'
 interface CancelOrderDialogProps {
   orderId: string
   open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
   onOpenChange: (open: boolean) => void
   setIsTrigger: Dispatch<SetStateAction<boolean>>
 }
 
-export default function CancelOrderDialog({ orderId, open, onOpenChange, setIsTrigger }: CancelOrderDialogProps) {
+export default function CancelOrderDialog({
+  orderId,
+  open,
+  setOpen,
+  onOpenChange,
+  setIsTrigger
+}: CancelOrderDialogProps) {
   const { t } = useTranslation()
   const { successToast } = useToast()
   const formId = useId()
@@ -55,6 +62,7 @@ export default function CancelOrderDialog({ orderId, open, onOpenChange, setIsTr
   const handleReset = () => {
     form.reset()
     setIsOtherReason(false)
+    setOpen(false)
   }
   const form = useForm<z.infer<typeof CancelOrderSchema>>({
     resolver: zodResolver(CancelOrderSchema),
@@ -65,7 +73,7 @@ export default function CancelOrderDialog({ orderId, open, onOpenChange, setIsTr
     mutationFn: cancelOrderApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('order.success')
+        message: t('order.cancelSuccess')
       })
       setIsTrigger((prev) => !prev)
       handleReset()
