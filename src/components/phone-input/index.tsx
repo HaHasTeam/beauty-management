@@ -21,9 +21,11 @@ type CountryOption = {
 i18nIsoCountries.registerLocale(enCountries)
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>
-
+type PhoneInputWithCountriesProps = InputProps & {
+  isShowCountry?: boolean // Optional prop to control whether the country combobox is shown
+}
 const PhoneInputWithCountries = (() => {
-  return forwardRef<HTMLInputElement, InputProps>(({ ...field }, ref) => {
+  return forwardRef<HTMLInputElement, PhoneInputWithCountriesProps>(({ isShowCountry = true, ...field }, ref) => {
     const options = getCountriesOptions().filter((option) => option.value === 'VN')
 
     // You can use a the country of the phone number to set the default country
@@ -60,15 +62,17 @@ const PhoneInputWithCountries = (() => {
     return (
       <div className={cn('not-prose mt-8 flex flex-col gap-4', field.className)}>
         <div className='flex gap-2'>
-          <ComboboxCountryInput
-            value={country}
-            onValueChange={onCountryChange}
-            options={options}
-            placeholder='Find your country...'
-            renderOption={({ option }) => `${isoToEmoji(option.value)} ${option.label}`}
-            renderValue={(option) => option.label}
-            emptyMessage='No country found.'
-          />
+          {isShowCountry && (
+            <ComboboxCountryInput
+              value={country}
+              onValueChange={onCountryChange}
+              options={options}
+              placeholder='Find your country...'
+              renderOption={({ option }) => `${isoToEmoji(option.value)} ${option.label}`}
+              renderValue={(option) => option.label}
+              emptyMessage='No country found.'
+            />
+          )}
           <PhoneInput
             ref={ref}
             international

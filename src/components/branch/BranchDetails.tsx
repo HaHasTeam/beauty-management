@@ -13,6 +13,7 @@ import { brandCreateSchema } from '@/schemas'
 import AddAddressDialog from '../address/AddAddressDialog'
 import Button from '../button'
 import UploadFilePreview from '../file-input/UploadFilePreview'
+import { PhoneInputWithCountries } from '../phone-input'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
@@ -161,11 +162,12 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <FormControl>
-                <Input
+                <PhoneInputWithCountries {...field} isShowCountry={false} />
+                {/* <Input
                   // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                   placeholder='Phone'
                   {...field}
-                />
+                /> */}
               </FormControl>
               <FormMessage />
             </FormItem>

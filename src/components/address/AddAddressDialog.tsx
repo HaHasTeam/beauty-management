@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -8,9 +8,11 @@ import { z } from 'zod'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { getCommuneMutation, getDistrictMutation, getProvinceMutation } from '@/network/apis/address'
 import { brandCreateSchema, CreateAddressBrandSchema } from '@/schemas'
+import { convertToSlug } from '@/utils'
 import { parseAddress } from '@/utils/string'
 
 import Button from '../button'
+import LoadingLayer from '../loading-icon/LoadingLayer'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Form } from '../ui/form'
 import { ScrollArea } from '../ui/scroll-area'
@@ -38,29 +40,39 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const id = useId()
-
+  const [loading, setLoading] = useState(false)
+  const [location, setLocation] = useState({
+    ward: '',
+    district: '',
+    province: ''
+  })
   const handleServerError = useHandleServerError()
   const address = parentForm?.watch('address')
+  const ward = parentForm?.watch('ward')
+  const district = parentForm?.watch('district')
+  const province = parentForm?.watch('province')
 
-  const { detailAddress, ward, district, province, fullAddress } = parseAddress(address || '')
+  const { detailAddress, fullAddress } = parseAddress(address || '')
+
   const defaultValues = {
     detailAddress: detailAddress || '',
-    ward: ward || '',
-    district: district || '',
-    province: province || '',
+    ward: location.ward || '',
+    district: location.district || '',
+    province: location.province || '',
     fullAddress: fullAddress || ''
   }
-  const { mutateAsync: getProvinceMutate } = useMutation({
+
+  const { mutateAsync: getProvinceMutate, isPending: isProvinceMutatePending } = useMutation({
     mutationKey: [getProvinceMutation.mutationKey],
     mutationFn: getProvinceMutation.fn
   })
 
-  const { mutateAsync: getDistrictMutate } = useMutation({
+  const { mutateAsync: getDistrictMutate, isPending: isDistrictMutatePending } = useMutation({
     mutationKey: [getDistrictMutation.mutationKey],
     mutationFn: getDistrictMutation.fn
   })
 
-  const { mutateAsync: getCommuneMutate } = useMutation({
+  const { mutateAsync: getCommuneMutate, isPending: isCommuneMutatePending } = useMutation({
     mutationKey: [getCommuneMutation.mutationKey],
     mutationFn: getCommuneMutation.fn
   })
@@ -85,8 +97,10 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
       })
 
       const transformedValues = {
-        ...values,
-
+        ward: communeSelected.data[0].name,
+        province: provinceSelected.data[0].name,
+        district: districtSelected.data[0].name,
+        detailAddress: values.detailAddress,
         fullAddress: `${values.detailAddress}, ${communeSelected.data[0].name}, ${districtSelected.data[0].name}, ${provinceSelected.data[0].name}`
       }
 
@@ -100,11 +114,49 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
     }
   }
 
+  useEffect(() => {
+    if (!address) return
+
+    const fetchAddress = async () => {
+      try {
+        setLoading(true)
+
+        const provinceRes = await getProvinceMutate('')
+        const findProvince = provinceRes.data.find((el) => convertToSlug(el.name) === convertToSlug(province))
+
+        if (!findProvince) return
+        setLocation((prev) => ({ ...prev, province: findProvince.idProvince }))
+
+        const districtRes = await getDistrictMutate({ idProvince: findProvince.idProvince })
+        const findDistrict = districtRes.data.find((el) => convertToSlug(el.name) === convertToSlug(district))
+
+        if (!findDistrict) return
+        setLocation((prev) => ({ ...prev, district: findDistrict.idDistrict }))
+
+        const communeRes = await getCommuneMutate({
+          idProvince: findProvince.idProvince,
+          idDistrict: findDistrict.idDistrict
+        })
+        const findWard = communeRes.data.find((el) => convertToSlug(el.name) === convertToSlug(ward))
+
+        if (!findWard) return
+        setLocation((prev) => ({ ...prev, ward: findWard.idCommune }))
+      } catch (error) {
+        console.error('Error fetching address data in dialog:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAddress()
+  }, [address, district, getCommuneMutate, getDistrictMutate, getProvinceMutate, province, ward])
+
   return (
-    <div>
+    <>
+      {loading && <LoadingLayer />}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
-        <DialogContent className='max-w-md sm:max-w-xl lg:max-w-3xl'>
+        <DialogContent className='max-w-md sm:max-w-xl lg:max-w-3xl' aria-describedby='address-content'>
           <DialogHeader>
             <div className='flex justify-between items-center'>
               <DialogTitle>{t('address.addNewAddress')}</DialogTitle>
@@ -115,12 +167,7 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
               <div>
                 {/* Form Address */}
                 <ScrollArea className='h-72'>
-                  <FormAddressContent
-                    form={form}
-                    // communeData={communeData}
-                    // districtData={districtData}
-                    // provinceData={provinceData}
-                  />
+                  <FormAddressContent form={form} />
                 </ScrollArea>
               </div>
               <DialogFooter>
@@ -128,7 +175,12 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
                   <Button type='button' variant='outline' onClick={() => setOpen(false)}>
                     {t('dialog.cancel')}
                   </Button>
-                  <Button form={`form-${id}`} type='button' onClick={form.handleSubmit(onSubmit)}>
+                  <Button
+                    form={`form-${id}`}
+                    type='button'
+                    onClick={form.handleSubmit(onSubmit)}
+                    loading={isProvinceMutatePending || isDistrictMutatePending || isCommuneMutatePending}
+                  >
                     {t('dialog.ok')}
                   </Button>
                 </div>
@@ -137,7 +189,7 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
           </Form>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   )
 }
 

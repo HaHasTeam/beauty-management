@@ -181,7 +181,7 @@ function RegisterBrand() {
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-secondary px-4 py-3 shadow-md'>
         <div className='flex items-center gap-2'>
-          <img src={MockImage} alt='Shopee Logo' width={32} height={32} className='h-8 w-8' />
+          <img src={MockImage} alt='Logo' width={32} height={32} className='h-8 w-8' />
           <span className='text-lg'>{t('header.registerBrand')}</span>
         </div>
       </header>

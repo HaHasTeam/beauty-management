@@ -15,7 +15,7 @@ export const brandCreateSchema = z.object({
   document: fileArray.min(1, 'You must upload at least 1 document for your license details'),
   description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
   email: z.string().email('Invalid email address'),
-  phone: z.string().max(10).min(1).refine(phoneRegex.pattern, phoneRegex.message).optional(),
+  phone: z.string().refine(phoneRegex.pattern, phoneRegex.message).optional(),
 
   address: z.string().max(255, 'Address cannot exceed 255 characters').optional(),
   province: z.string().max(255),

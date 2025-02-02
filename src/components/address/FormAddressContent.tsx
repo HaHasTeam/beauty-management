@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useHandleAddressMock } from '@/hooks/useHandleAddressMock'
 import { CreateAddressBrandSchema } from '@/schemas'
 
+import LoadingContentLayer from '../loading-icon/LoadingContentLayer'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Textarea } from '../ui/textarea'
 
@@ -18,48 +19,14 @@ interface FormAddressContentProps {
 }
 export default function FormAddressContent({ form }: FormAddressContentProps) {
   const { t } = useTranslation()
-  const { communeData, districtData, provinceData } = useHandleAddressMock({
+  const { communeData, districtData, provinceData, communeQuery, districtQuery, provinceQuery } = useHandleAddressMock({
     districtId: form.watch('district'),
     provinceId: form.watch('province')
   })
-  // eslint-disable-next-line no-console
-  console.log('dataa', communeData, districtData, provinceData)
-
-  // const handleChangeProvince = useCallback(async (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const value = Number(event.target.value)
-  //   if (value === 0) {
-  //     setDistrictList([])
-  //     setCommuneList([])
-  //     setDistrictValue(0)
-  //     setCommuneValue(0)
-  //     return
-  //   }
-  //   setIsLoadingDistrict(true)
-  //   const districtList = await getDistrict(value)
-  //   setDistrictList(districtList)
-  //   setIsLoadingDistrict(false)
-  // }, [])
-
-  // const handleChangeDistrict = useCallback(async (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const value = Number(event.target.value)
-  //   setDistrictValue(value)
-  //   if (value === 0) {
-  //     setCommuneList([])
-  //     setCommuneValue(0)
-  //   } else {
-  //     setIsLoadingCommune(true)
-  //     const communeList = await getCommune(value)
-  //     setCommuneList(communeList)
-  //     setIsLoadingCommune(false)
-  //   }
-  // }, [])
-
-  // const handleChangeCommune = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setCommuneValue(Number(event.target.value))
-  // }, [])
 
   return (
     <div className='w-full py-2'>
+      {districtQuery.isLoading || communeQuery.isLoading || (provinceQuery.isLoading && <LoadingContentLayer />)}
       <div className='space-y-6'>
         <div className='grid gap-4'>
           <FormField
@@ -75,7 +42,14 @@ export default function FormAddressContent({ form }: FormAddressContentProps) {
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>
-                      <Select onValueChange={(value) => field?.onChange(value)} value={field?.value || ''}>
+                      <Select
+                        onValueChange={(value) => {
+                          form.setValue('district', '')
+                          form.setValue('ward', '')
+                          field?.onChange(value)
+                        }}
+                        value={field?.value || ''}
+                      >
                         <SelectTrigger>
                           <SelectValue {...field} placeholder={t('address.chooseProvinceOrCity')} />
                         </SelectTrigger>
@@ -111,6 +85,7 @@ export default function FormAddressContent({ form }: FormAddressContentProps) {
                     <FormControl>
                       <Select
                         onValueChange={(value) => {
+                          form.setValue('ward', '')
                           field?.onChange(value)
                         }}
                         value={field?.value || ''}
