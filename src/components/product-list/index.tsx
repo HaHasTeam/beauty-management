@@ -1,44 +1,40 @@
 import { useQuery } from '@tanstack/react-query'
 import { PlusCircle } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Routes, routesConfig } from '@/configs/routes'
 import { getAllProductApi } from '@/network/product'
-import { IProductTable } from '@/types/product'
 
 import LoadingContentLayer from '../loading-icon/LoadingContentLayer'
-import ProductTable from '../product-list/ProductTable'
 
 const ProductList = () => {
-  const [tableData, setTableData] = useState<IProductTable[]>([])
-  const { data: allProductData, isFetching: isGettingAllProduct } = useQuery({
+  // const [tableData, setTableData] = useState<IProductTable[]>([])
+  const { isFetching: isGettingAllProduct } = useQuery({
     queryKey: [getAllProductApi.queryKey],
     queryFn: getAllProductApi.fn
   })
 
-  useEffect(() => {
-    if (allProductData?.data) {
-      setTableData(
-        allProductData?.data?.map((product) => ({
-          id: product.id ?? '',
-          name: product.name ?? '',
-          status: product.status ?? '',
-          updatedAt: product.updatedAt ?? '',
-          description: product.description ?? '',
-          detail: product.detail ?? '',
-          brand: product.brand,
-          category: product.category,
-          menu: ''
-        }))
-      )
-    }
-  }, [allProductData])
+  // useEffect(() => {
+  //   if (allProductData?.data) {
+  //     setTableData(
+  //       allProductData?.data?.map((product) => ({
+  //         id: product.id ?? '',
+  //         name: product.name ?? '',
+  //         status: product.status ?? '',
+  //         updatedAt: product.updatedAt ?? '',
+  //         description: product.description ?? '',
+  //         detail: product.detail ?? '',
+  //         brand: product.brand,
+  //         category: product.category,
+  //         menu: ''
+  //       }))
+  //     )
+  //   }
+  // }, [allProductData])
 
-  return isGettingAllProduct ? (
-    <LoadingContentLayer />
-  ) : (
+  return (
     <div className='flex flex-col space-y-4'>
+      {isGettingAllProduct && <LoadingContentLayer />}
       <div className='flex justify-end'>
         <Link
           to={routesConfig[Routes.CREATE_PRODUCT].getPath()}
@@ -48,7 +44,7 @@ const ProductList = () => {
           Create Product
         </Link>
       </div>
-      <ProductTable tableData={tableData} />
+      {/* <ProductTable tableData={tableData} /> */}
     </div>
   )
 }

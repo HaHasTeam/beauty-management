@@ -71,9 +71,7 @@ const FlashSaleDetails = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const findProduct = productList?.data.find((product) => values.product == product.id)
       const formatData = {
-        productClassifications: findProduct?.productClassifications,
         ...values
       }
 

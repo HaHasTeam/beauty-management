@@ -94,7 +94,7 @@ const BrandDetail = ({
             ward: values.ward,
             businessTaxCode: values.businessTaxCode,
             businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
             businessRegistrationAddress: values.businessRegistrationAddress,
             status: StatusEnum.PENDING
           }
@@ -125,7 +125,7 @@ const BrandDetail = ({
             ward: values.ward,
             businessTaxCode: values.businessTaxCode,
             businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
             businessRegistrationAddress: values.businessRegistrationAddress
           }
           if (brandData && brandData?.id) {

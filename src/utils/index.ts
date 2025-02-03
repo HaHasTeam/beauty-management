@@ -86,7 +86,8 @@ export function convertToProductTable(data: IResponseProduct[]): IProductTable[]
         type, // Type of classification
         brand, // Associated brand
         category, // Associated category
-        images: images?.length ? images : productImages // Use classification images or fallback to product images
+        images: images?.length ? images : productImages, // Use classification images or fallback to product images
+        productClassifications: []
       })
     })
   })
@@ -115,7 +116,10 @@ export function convertToProductTable2(data: IResponseProduct[]): IProductTable[
     } = product
 
     // Calculate the total quantity for this product from its classifications
-    const productQuantity = productClassifications.reduce((sum, classification) => sum + classification?.quantity, 0)
+    const productQuantity = productClassifications.reduce(
+      (sum, classification) => sum + (classification.quantity ?? 0),
+      0
+    )
 
     // Add the product information to the list
     products.push({

@@ -55,7 +55,7 @@ export type IServerProductClassification = {
   id?: string
   title?: string
   price?: number
-  quantity: number
+  quantity?: number
   images: IImage[]
   status?: string
   type?: string

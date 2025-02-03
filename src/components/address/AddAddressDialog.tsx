@@ -142,6 +142,7 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
         if (!findWard) return
         setLocation((prev) => ({ ...prev, ward: findWard.idCommune }))
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching address data in dialog:', error)
       } finally {
         setLoading(false)

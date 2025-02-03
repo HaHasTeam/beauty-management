@@ -139,7 +139,7 @@ function RegisterBrand() {
             ward: values.ward,
             businessTaxCode: values.businessTaxCode,
             businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
             businessRegistrationAddress: values.businessRegistrationAddress,
             status: StatusEnum.PENDING
           }
@@ -163,7 +163,7 @@ function RegisterBrand() {
             ward: values.ward,
             businessTaxCode: values.businessTaxCode,
             businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
             businessRegistrationAddress: values.businessRegistrationAddress
           }
           await requestCreateBrandFn(formatData)

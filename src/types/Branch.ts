@@ -14,7 +14,7 @@ export type IBranch = {
   ward?: string
   businessTaxCode?: string
   businessRegistrationCode?: string
-  establishmentDate?: string | Date
+  establishmentDate?: string
   businessRegistrationAddress?: string
   status?: StatusEnum
 }

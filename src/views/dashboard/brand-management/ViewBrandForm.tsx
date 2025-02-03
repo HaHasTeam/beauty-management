@@ -67,7 +67,6 @@ function ViewBrandForm() {
           businessTaxCode: brandData.businessTaxCode,
           businessRegistrationCode: brandData.businessRegistrationCode,
           establishmentDate: brandData.establishmentDate ? brandData.establishmentDate : '',
-
           businessRegistrationAddress: brandData.businessRegistrationAddress
         }
         form.reset(formatData)
