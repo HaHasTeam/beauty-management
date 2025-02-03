@@ -80,3 +80,8 @@ export enum VoucherWalletStatus {
 
 export const voucherEnumArray = enumToArray(VoucherEnum)
 export const discountTypeEnumArray = enumToArray(DiscountTypeEnum)
+
+export enum ClassificationTypeEnum {
+  DEFAULT = 'DEFAULT',
+  CUSTOM = 'CUSTOM'
+}

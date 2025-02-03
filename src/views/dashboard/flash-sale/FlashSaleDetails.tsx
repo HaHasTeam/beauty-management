@@ -1,57 +1,53 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { TicketPlus, Zap } from 'lucide-react'
-import { useId } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { SaveIcon, Siren, Zap } from 'lucide-react'
+import { useEffect, useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { CiFileOff } from 'react-icons/ci'
-import { IoCloudUploadSharp } from 'react-icons/io5'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as z from 'zod'
 
-import UploadFileModal from '@/components/file-input/UploadFileModal'
+import Button from '@/components/button'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import SelectProduct from '@/components/select-product'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Routes, routesConfig } from '@/configs/routes'
-import { defaultRequiredRegex, requiredFileRegex } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { addFlashSaleApi, getFlashSaleByIdApi } from '@/network/apis/flash-sale'
+import { addFlashSaleApi, getFlashSaleByIdApi, updateFlashSaleApi } from '@/network/apis/flash-sale'
+import { TAddFlashSaleRequestParams, TUpdateFlashSaleRequestParams } from '@/network/apis/flash-sale/type'
 import { FlashSaleStatusEnum } from '@/types/flash-sale'
 
-const formSchema = z.object({
-  product: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  images: z.array(z.string()).nonempty({
-    message: requiredFileRegex.message
-  }),
-  discount: z.coerce
-    .number({
-      message: defaultRequiredRegex.message
-    })
-    .positive({
-      message: defaultRequiredRegex.message
-    })
-})
+import ClassificationConfig from './ClassificationConfig'
+import { convertFlashSaleToForm, convertFormToFlashSale, formSchema } from './helper'
 
 const FlashSaleDetails = () => {
   const id = useId()
   const params = useParams()
-  const itemId = params.id !== 'add' ? params.id : undefined
-  const navigate = useNavigate()
 
+  const queryClient = useQueryClient()
+  const itemId = params.id !== 'add' ? params.id : undefined
+  const { data: flashSale, isFetching: isGettingFlashSale } = useQuery({
+    queryKey: [getFlashSaleByIdApi.queryKey, itemId as string],
+    queryFn: getFlashSaleByIdApi.fn,
+    enabled: !!itemId
+  })
+  // const triggerImageUploadRef = useRef<TriggerUploadRef>(null)
+
+  const navigate = useNavigate()
+  const { successToast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       product: '',
       startTime: '',
       endTime: '',
-      images: []
+      // images: [],
+      productClassifications: [{}]
     }
   })
 
@@ -66,17 +62,36 @@ const FlashSaleDetails = () => {
     }
   })
 
+  const { mutateAsync: updateFlashSaleFn, isPending: isUpdatingFlashSale } = useMutation({
+    mutationKey: [updateFlashSaleApi.mutationKey],
+    mutationFn: updateFlashSaleApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Amazing! flash sale has been updated successfully.'
+      })
+    }
+  })
+
   const handleServerError = useHandleServerError()
-  const { successToast } = useToast()
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const formatData = {
-        ...values
+      if (itemId) {
+        await updateFlashSaleFn(convertFormToFlashSale(values) as TUpdateFlashSaleRequestParams)
+        queryClient.invalidateQueries({
+          queryKey: [getFlashSaleByIdApi.queryKey, itemId as string]
+        })
+      } else {
+        // await triggerImageUploadRef.current?.trigger()
+        // const newImages = form.watch('images')
+        await addFlashSaleFn(
+          convertFormToFlashSale({
+            ...values
+            // images: newImages
+          }) as TAddFlashSaleRequestParams
+        )
+        navigate(routesConfig[Routes.FLASH_SALE].getPath())
       }
-
-      await addFlashSaleFn(formatData)
-      navigate(routesConfig[Routes.FLASH_SALE].getPath())
     } catch (error) {
       handleServerError({
         error,
@@ -85,66 +100,174 @@ const FlashSaleDetails = () => {
     }
   }
 
-  const { data: flashSale, isLoading: isGettingFlashSale } = useQuery({
-    queryKey: [getFlashSaleByIdApi.queryKey, itemId as string],
-    queryFn: getFlashSaleByIdApi.fn,
-    enabled: !!itemId
-  })
+  useEffect(() => {
+    if (flashSale?.data) {
+      form.reset(convertFlashSaleToForm(flashSale.data))
+    }
+  }, [flashSale?.data, form])
 
+  const flashSaleData = flashSale?.data
+
+  const handleChangeStatus = async (status: FlashSaleStatusEnum) => {
+    try {
+      const values = form.getValues()
+      await updateFlashSaleFn({
+        id: values.id ?? '',
+        status: status
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getFlashSaleByIdApi.queryKey, itemId as string]
+      })
+    } catch (error) {
+      handleServerError({
+        error,
+        form
+      })
+    }
+  }
+
+  const getHeader = () => {
+    if (!itemId) return null
+    switch (flashSaleData?.status) {
+      case FlashSaleStatusEnum.ACTIVE:
+        return (
+          <Alert variant={'success'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-white'>Active</span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This flash sale is currently active and visible to your customers. If you want to make any changes,
+                  please inactivate it first.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingFlashSale}
+              variant={'default'}
+            >
+              {'Close flash sale'}
+            </AlertAction>
+          </Alert>
+        )
+      case FlashSaleStatusEnum.INACTIVE:
+        return (
+          <Alert variant={'default'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-gray-300 bg-gray-400 text-white'>Inactive</span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This flash sale is currently inactive and not visible to your customers.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(FlashSaleStatusEnum.ACTIVE)
+              }}
+              loading={isUpdatingFlashSale}
+              variant={'success'}
+            >
+              {'Close flash sale'}
+            </AlertAction>
+          </Alert>
+        )
+      case FlashSaleStatusEnum.WAITING:
+        return (
+          <Alert variant={'warning'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-yellow-300 bg-yellow-400 text-white'>
+                    Waiting
+                  </span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This flash sale is currently waiting and not visible to your customers. If you want to make any
+                  changes, please inactivate it first.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingFlashSale}
+              variant={'default'}
+            >
+              {'Close flash sale'}
+            </AlertAction>
+          </Alert>
+        )
+      case FlashSaleStatusEnum.SOLD_OUT:
+        return (
+          <Alert variant={'highlight'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div className='flex flex-col'>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-purple-300 bg-purple-400  text-white'>
+                    Sold Out
+                  </span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This flash sale is currently sold out and not visible to your customers. If you want to make any
+                  changes, please inactivate it first.
+                </AlertDescription>
+              </div>
+            </div>
+            <AlertAction
+              onClick={() => {
+                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingFlashSale}
+              variant={'default'}
+            >
+              {'Close flash sale'}
+            </AlertAction>
+          </Alert>
+        )
+      default:
+        return null
+    }
+  }
+
+  const getFooter = () => {
+    switch (flashSaleData?.status) {
+      case FlashSaleStatusEnum.ACTIVE:
+      case FlashSaleStatusEnum.SOLD_OUT:
+      case FlashSaleStatusEnum.WAITING:
+        return null
+      default:
+        return (
+          <div className='flex items-center justify-end'>
+            {
+              <Button type='submit' form={`form-${id}`} loading={form.formState.isSubmitting}>
+                <SaveIcon />
+                Save Flash Sale Product
+              </Button>
+            }
+          </div>
+        )
+    }
+  }
   return (
     <>
       {isGettingFlashSale && <LoadingContentLayer />}
-      <Card className={'h-min flex items-center align-center max-w-full py-4 px-4 dark:border-zinc-800'}>
-        <div className='flex gap-4 items-center justify-between w-full flex-wrap'>
-          {!itemId && (
-            <div>
-              <h1 className='text-2xl font-bold dark:text-white flex items-center gap-2'>
-                <TicketPlus size={28} strokeWidth={3} absoluteStrokeWidth />
-                <span>Add Flash Sale Product</span>
-              </h1>
-              <p className='text-muted-foreground'>
-                You are about to add a new flash sale product. Please fill in the details below.
-              </p>
-            </div>
-          )}
-          {itemId && (
-            <div>
-              <h1 className='text-2xl font-bold dark:text-white flex items-center gap-2'>
-                <TicketPlus size={28} strokeWidth={3} absoluteStrokeWidth />
-                <div className='flex items-center gap-2 flex-nowrap'>
-                  <span>Edit Flash Sale Product</span>
-                  <span>
-                    <span className='text-primary max-lg:text-sm truncate w-[100px]'>#{flashSale?.data?.id}</span>
-                  </span>
-                </div>
-              </h1>
-              <p className='text-muted-foreground'>
-                {flashSale?.data?.status === FlashSaleStatusEnum.ACTIVE
-                  ? 'If you want to make any changes, please inactivate it first.'
-                  : 'This flash sale product is currently inactive and cannot be viewed by your customers.'}
-              </p>
-            </div>
-          )}
-          {/* {itemId && (
-            <Button
-              variant={'secondary'}
-              className='uppercase font-light shadow-lg'
-              size={'sm'}
-              loading={isTogglingGroupProductStatus}
-              onClick={() => {
-                toggleGroupProductStatusFn(itemId)
-              }}
-            >
-              {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? (
-                <Rocket className='rotate-90' />
-              ) : (
-                <Rocket />
-              )}
-              {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'Inactivate group' : 'Activate group'}
-            </Button>
-          )} */}
-        </div>
-      </Card>
+      {getHeader()}
       <Form {...form}>
         <form
           noValidate
@@ -158,9 +281,6 @@ const FlashSaleDetails = () => {
                 <Zap />
                 Flash Sale Product Details
               </CardTitle>
-              <CardDescription>
-                Configure the flash sale product details that will be displayed on your dashboard.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
@@ -171,9 +291,6 @@ const FlashSaleDetails = () => {
                     <FormItem>
                       <FormLabel required>Flash Sale Product</FormLabel>
                       <SelectProduct {...field} multiple={false} />
-                      <FormDescription>
-                        This is the flash sale product that will be displayed on dashboard
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -193,9 +310,6 @@ const FlashSaleDetails = () => {
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
-                        This is the classification price that will be displayed on your pre-order details.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -216,9 +330,6 @@ const FlashSaleDetails = () => {
                             ...form
                           }}
                         />
-                        <FormDescription>
-                          This is the start time that will be displayed on your flash sale details.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )
@@ -240,68 +351,37 @@ const FlashSaleDetails = () => {
                             ...form
                           }}
                         />
-                        <FormDescription>
-                          This is the end time that will be displayed on your flash sale details.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )
                   }}
                 />
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name='images'
                   render={({ field }) => {
                     return (
                       <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
-                        <FormLabel required>Images</FormLabel>
-                        <div className='items-center w-full h-[400px] lg:h-60 border-2 border-dashed rounded-lg shadow-lg flex flex-col gap-8 lg:flex-row p-2'>
-                          <div className='w-1/4 flex justify-center lg:border-r-4 border-dashed lg:border-b-0 border-b-4 p-4 border-r-0'>
-                            <UploadFileModal
-                              field={field}
-                              Trigger={
-                                <p className='relative p-4 rounded-full border-2 shadow-lg cursor-pointer hover:scale-110 hover:opacity-100 opacity-50 transition-all duration-100 ease-linear'>
-                                  <IoCloudUploadSharp size={60} />
-                                </p>
-                              }
-                              dropZoneConfigOptions={{
-                                maxFiles: 6
-                              }}
-                            />
-                          </div>
-                          <div className='h-full flex-1 overflow-auto'>
-                            {field.value.length > 0 && (
-                              <div className='grid grid-cols-3 gap-2 max-h-full overflow-auto'>
-                                {field.value.map((image, index) => (
-                                  <img
-                                    src={image}
-                                    alt={`Image ${index}`}
-                                    className='size-full h-24 p-2 border bg-accent rounded-xl object-contain shadow-lg'
-                                  />
-                                ))}
-                              </div>
-                            )}
-                            {field.value.length === 0 && (
-                              <div className='flex-1 h-full flex justify-center items-center gap-1'>
-                                <CiFileOff size={30} />
-                                <p className='text-muted-foreground'>No images uploaded.</p>
-                              </div>
-                            )}
-                            <div></div>
-                          </div>
-                        </div>
-                        <FormDescription>
-                          These are the images that will be displayed on your flash sale details.
-                        </FormDescription>
+                        <FormLabel required>Images Of Flash Sale</FormLabel>
+                        <UploadFiles
+                          triggerRef={triggerImageUploadRef}
+                          form={form}
+                          field={field}
+                          dropZoneConfigOptions={{
+                            maxFiles: 6
+                          }}
+                        />
                         <FormMessage />
                       </FormItem>
                     )
                   }}
-                />
+                /> */}
               </div>
             </CardContent>
           </Card>
+          {form.watch('product') && <ClassificationConfig form={form} productId={form.watch('product')} />}
         </form>
+        {getFooter()}
       </Form>
     </>
   )

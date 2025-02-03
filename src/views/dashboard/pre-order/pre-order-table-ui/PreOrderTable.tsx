@@ -15,7 +15,6 @@ import { DataTableRowAction, getColumns } from './PreOrdersTableColumns'
 import { PreOrdersTableFloatingBar } from './PreOrdersTableFloatingBar'
 import { PreOrderTableToolbarActions } from './PreOrdersTableToolbarActions'
 import { PublishPreOrdersDialog } from './PublishPreOrdersDialog'
-import { ViewDetailsPreOrderSheet } from './ViewDetailsPreOrderSheet'
 
 interface PreOrderTableProps {
   data: TPreOrder[]
@@ -25,13 +24,7 @@ interface PreOrderTableProps {
 
 export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TPreOrder> | null>(null)
-  const columns = React.useMemo(
-    () =>
-      getColumns({
-        setRowAction
-      }),
-    []
-  )
+  const columns = React.useMemo(() => getColumns(), [])
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
@@ -105,11 +98,6 @@ export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTablePro
         PreOrders={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={() => rowAction?.row.toggleSelected(false)}
-      />
-      <ViewDetailsPreOrderSheet
-        PreOrder={rowAction?.row.original}
-        open={rowAction?.type === 'view'}
-        onOpenChange={() => setRowAction(null)}
       />
     </>
   )

@@ -44,81 +44,78 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
 
     return (
       <Form {...form}>
-        <Popover open={isOpen} onOpenChange={setIsOpen} modal={false}>
-          <PopoverTrigger asChild>
-            <FormControl>
-              <Button
-                ref={ref}
-                variant={'outline'}
-                className={cn(
-                  `w-full font-normal overflow-clip ${buttonClassName}`,
-                  !field.value && 'text-muted-foreground'
-                )}
-              >
-                {date ? (
-                  `${format(date, 'PPP')} ${showTime ? `: ${time}` : ''}`
-                ) : (
-                  <span>{showTime ? 'Select Date & Time' : 'Select Date'}</span>
-                )}
-                <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-              </Button>
-            </FormControl>
-          </PopoverTrigger>
-          <PopoverContent className='w-auto p-0 flex items-start' align='start'>
-            <Calendar
-              mode='single'
-              captionLayout='dropdown'
-              selected={date}
-              onSelect={(selectedDate) => {
-                const [hours, minutes] = time.split(':')
-                selectedDate?.setHours(parseInt(hours), parseInt(minutes))
-                handlePickDate(selectedDate!)
-              }}
-              onDayClick={() => setIsOpen(false)}
-              fromYear={1950}
-              toYear={new Date().getFullYear() + 100}
-              disabled={(date) =>
-                (onlyFutureDates && date < new Date()) || (onlyPastDates && date > new Date()) ? true : false
-              }
-              required={required}
-            />
-            {showTime && (
-              <Select
-                defaultValue={time!}
-                onValueChange={(e) => {
-                  setTime(e)
-                  if (date) {
-                    const [hours, minutes] = e.split(':')
-                    const newDate = new Date(date.getTime())
-                    newDate.setHours(parseInt(hours), parseInt(minutes))
-                    setDate(newDate)
-                    handlePickDate(newDate)
-                  }
+        <div className='flex items-center'>
+          <Popover open={isOpen} onOpenChange={setIsOpen} modal={false}>
+            <PopoverTrigger asChild>
+              <FormControl>
+                <Button
+                  ref={ref}
+                  variant={'outline'}
+                  className={cn(
+                    `flex-1 font-normal overflow-clip ${buttonClassName} rounded-none rounded-l-lg`,
+                    !field.value && 'text-muted-foreground'
+                  )}
+                >
+                  {date ? `${format(date, 'PPP')} ` : <span>{'Select Date'}</span>}
+                  <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                </Button>
+              </FormControl>
+            </PopoverTrigger>
+            <PopoverContent className='w-auto p-0 flex items-start' align='start'>
+              <Calendar
+                mode='single'
+                captionLayout='dropdown'
+                selected={date}
+                onSelect={(selectedDate) => {
+                  const [hours, minutes] = time.split(':')
+                  selectedDate?.setHours(parseInt(hours), parseInt(minutes))
+                  handlePickDate(selectedDate!)
                 }}
-                open={true}
-              >
-                <SelectTrigger className='font-normal focus:ring-0 w-[120px] my-4 mr-2'>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className='border-none shadow-none mr-2 fixed top-2 left-0'>
-                  <ScrollArea className='h-[15rem]'>
-                    {Array.from({ length: 96 }).map((_, i) => {
-                      const hour = Math.floor(i / 4)
-                        .toString()
-                        .padStart(2, '0')
-                      const minute = ((i % 4) * 15).toString().padStart(2, '0')
-                      return (
-                        <SelectItem key={i} value={`${hour}:${minute}`}>
-                          {hour}:{minute}
-                        </SelectItem>
-                      )
-                    })}
-                  </ScrollArea>
-                </SelectContent>
-              </Select>
-            )}
-          </PopoverContent>
-        </Popover>
+                onDayClick={() => setIsOpen(false)}
+                fromYear={1950}
+                toYear={new Date().getFullYear() + 100}
+                disabled={(date) =>
+                  (onlyFutureDates && date < new Date()) || (onlyPastDates && date > new Date()) ? true : false
+                }
+                required={required}
+              />
+            </PopoverContent>
+          </Popover>
+          {showTime && (
+            <Select
+              defaultValue={time!}
+              onValueChange={(e) => {
+                setTime(e)
+                if (date) {
+                  const [hours, minutes] = e.split(':')
+                  const newDate = new Date(date.getTime())
+                  newDate.setHours(parseInt(hours), parseInt(minutes))
+                  setDate(newDate)
+                  handlePickDate(newDate)
+                }
+              }}
+            >
+              <SelectTrigger className='font-normal focus:ring-0 w-[100px] rounded-none rounded-r-lg border border-l-0'>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <ScrollArea className='h-[15rem]'>
+                  {Array.from({ length: 96 }).map((_, i) => {
+                    const hour = Math.floor(i / 4)
+                      .toString()
+                      .padStart(2, '0')
+                    const minute = ((i % 4) * 15).toString().padStart(2, '0')
+                    return (
+                      <SelectItem key={i} value={`${hour}:${minute}`}>
+                        {hour}:{minute}
+                      </SelectItem>
+                    )
+                  })}
+                </ScrollArea>
+              </SelectContent>
+            </Select>
+          )}
+        </div>
       </Form>
     )
   }
