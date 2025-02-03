@@ -1,17 +1,13 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, EyeIcon, SettingsIcon, XIcon } from 'lucide-react'
-import { GrRevert } from 'react-icons/gr'
+import { Ellipsis, FilePenLine, Image, SettingsIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 
@@ -21,10 +17,8 @@ export interface DataTableRowAction<TData> {
   row: Row<TData>
   type: 'ban' | 'view' | 'publish'
 }
-interface GetColumnsProps {
-  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TPreOrder> | null>>
-}
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrder>[] {
+
+export function getColumns(): ColumnDef<TPreOrder>[] {
   return [
     {
       id: 'select',
@@ -45,52 +39,47 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
       ),
       enableSorting: false,
       enableHiding: false,
-      size: 100
-    },
-    // {
-    //   id: 'product',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
-    //   cell: ({ row }) => {
-    //     const displayName = row.original.product.name
-    //     const image = row.original.product.images[0]
-    //     return (
-    //       <div className='flex space-x-2 items-center'>
-    //         <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
-    //           <AvatarImage src={image} />
-    //           <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
-    //         </Avatar>
-    //         <span className='max-w-[31.25rem] truncate'>{displayName}</span>
-    //       </div>
-    //     )
-    //   }
-    // },
-    {
-      accessorKey: 'startTime',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Start Time' />,
-      cell: ({ cell }) => (
-        <div>
-          {formatDate(cell.getValue() as Date, {
-            hour: 'numeric',
-            minute: 'numeric'
-          })}
-        </div>
-      ),
-      size: 200
+      size: 20
     },
     {
-      accessorKey: 'endTime',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='End Time' />,
-      cell: ({ cell }) => (
-        <div>
-          {formatDate(cell.getValue() as Date, {
-            hour: 'numeric',
-            minute: 'numeric'
-          })}
-        </div>
-      ),
-      size: 200
-    },
+      id: 'product',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Flash Sale Product' />,
+      cell: ({ row }) => {
+        const productName = row.original.product.name
+        const image = row.original.product.images ? row.original.product.images[0].fileUrl : ''
 
+        return (
+          <div className='flex gap-1 items-center'>
+            <Avatar className='rounded-lg'>
+              <AvatarImage src={image} className='bg-transparent size-5' />
+              <AvatarFallback className='bg-transparent'>
+                <Image size={24} />
+              </AvatarFallback>
+            </Avatar>
+            <span className='max-w-[31.25rem] truncate'>{productName}</span>
+          </div>
+        )
+      },
+      size: 620,
+      enableHiding: false
+    },
+    {
+      accessorKey: 'productClassifications',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Classifications' />,
+      cell: ({ row }) => {
+        const classificationList = row.original.productClassifications
+        return (
+          <div className='flex items-center gap-1 flex-wrap capitalize font-normal'>
+            {classificationList
+              .map((classification) => classification.title + `(${classification.quantity})`)
+              .join(', ')}
+          </div>
+        )
+      },
+      enableSorting: false,
+      enableHiding: false,
+      size: 350
+    },
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
@@ -122,24 +111,48 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
           </div>
         )
       },
-      size: 50,
+      size: 100,
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id))
       }
     },
     {
-      accessorKey: 'createdAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Created At' />,
-      cell: ({ cell }) =>
-        formatDate(cell.getValue() as Date, {
-          hour: 'numeric',
-          minute: 'numeric'
-        })
+      accessorKey: 'startTime',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Start Time' />,
+      cell: ({ cell }) => (
+        <div>
+          {formatDate(cell.getValue() as Date, {
+            hour: 'numeric',
+            minute: 'numeric',
+            month: '2-digit'
+          })}
+        </div>
+      ),
+      size: 200
     },
+    {
+      accessorKey: 'endTime',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='End Time' />,
+      cell: ({ cell }) => (
+        <div>
+          {formatDate(cell.getValue() as Date, {
+            hour: 'numeric',
+            minute: 'numeric',
+            month: '2-digit'
+          })}
+        </div>
+      ),
+      size: 200
+    },
+
     {
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
+        const navigate = useNavigate()
+        const handleNavigate = () => {
+          navigate(routesConfig[Routes.PRE_ORDER_DETAILS].getPath({ id: row.original.id }))
+        }
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -148,42 +161,12 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem
-                onClick={() => {
-                  setRowAction({ row: row, type: 'view' })
-                }}
-              >
+              <DropdownMenuItem onClick={handleNavigate} className='bg-blue-200 text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <EyeIcon />
-                  View Details
+                  <FilePenLine size={16} strokeWidth={3} />
+                  <span className='font-semibold'>Edit</span>
                 </span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {row.original.status !== PreOrderStatusEnum.INACTIVE ? (
-                <DropdownMenuItem
-                  className='bg-red-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'ban' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <XIcon />
-                    Unpublish PreOrder
-                  </span>
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  className='bg-green-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'publish' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <GrRevert />
-                    Publish PreOrder
-                  </span>
-                </DropdownMenuItem>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )

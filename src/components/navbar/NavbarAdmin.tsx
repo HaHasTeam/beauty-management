@@ -1,9 +1,17 @@
+import { useLocation, useParams } from 'react-router-dom'
+
 import NavLink from '@/components/link/NavLink'
+import { minifyString } from '@/utils/string'
 
 import AdminNavbarLinks from './NavbarLinksAdmin'
 
 export default function AdminNavbar(props: { brandText: string }) {
   const { brandText } = props
+
+  const location = useLocation()
+  const params = useParams()
+  const isAddPath = location.pathname.split('/').includes('add')
+  const isEditPath = !!params.id
 
   return (
     <nav
@@ -27,7 +35,16 @@ export default function AdminNavbar(props: { brandText: string }) {
         </div>
         <p className='text-md shrink capitalize text-zinc-950 dark:text-white md:text-3xl'>
           <NavLink to='#' className='font-bold capitalize hover:text-zinc-950 dark:hover:text-white'>
-            {brandText}
+            {isAddPath ? (
+              `Add ${brandText}`
+            ) : isEditPath ? (
+              <span>
+                {`Edit ${brandText}`}{' '}
+                <span className='text-primary max-lg:text-sm truncate w-[100px]'>#{minifyString(params?.id)}</span>
+              </span>
+            ) : (
+              brandText
+            )}
           </NavLink>
         </p>
       </div>

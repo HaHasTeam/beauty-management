@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Boxes, SaveIcon, Siren, TicketPlus, Tickets } from 'lucide-react'
+import { Boxes, SaveIcon, Siren, Tickets } from 'lucide-react'
 import { useEffect, useId, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -12,8 +12,8 @@ import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import SelectProduct from '@/components/select-product'
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
@@ -161,19 +161,15 @@ const GroupProductDetails = () => {
     <>
       {isGettingGroupProduct && <LoadingContentLayer />}
       {itemId && (
-        <Alert variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'success' : 'warning'}>
+        <Alert variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'success' : 'default'}>
           <div className='flex items-center gap-2'>
             <Siren className='size-4' />
             <div className='flex flex-col'>
               <AlertTitle className='flex items-center gap-2'>
                 {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? (
-                  <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-green-600'>
-                    Active
-                  </span>
+                  <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-white'>Active</span>
                 ) : (
-                  <span className='p-0.5 px-2 rounded-lg border border-yellow-300 bg-yellow-400 text-yellow-600'>
-                    Inactive
-                  </span>
+                  <span className='p-0.5 px-2 rounded-lg border border-gray-300 bg-gray-400 text-white'>Inactive</span>
                 )}
                 <span className='font-bold uppercase text-xs'>status</span>
               </AlertTitle>
@@ -190,46 +186,12 @@ const GroupProductDetails = () => {
               toggleGroupProductStatusFn(itemId)
             }}
             loading={isTogglingGroupProductStatus}
-            variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'warning' : 'success'}
+            variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'default' : 'success'}
           >
             {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'Close group' : 'Activate group'}
           </AlertAction>
         </Alert>
       )}
-
-      <Card className={'h-min flex items-center align-center max-w-full py-4 px-4 dark:border-zinc-800'}>
-        <div className='flex gap-4 items-center justify-between w-full flex-wrap'>
-          {!itemId && (
-            <div>
-              <h1 className='text-2xl font-bold dark:text-white flex items-center gap-2'>
-                <TicketPlus size={28} strokeWidth={3} absoluteStrokeWidth />
-                <span>Add Group Product</span>
-              </h1>
-              <p className='text-muted-foreground'>
-                You are about to add a group product. Please fill out the form below.
-              </p>
-            </div>
-          )}
-          {itemId && (
-            <div>
-              <h1 className='text-2xl font-bold dark:text-white flex items-center gap-2'>
-                <TicketPlus size={28} strokeWidth={3} absoluteStrokeWidth />
-                <div className='flex items-center gap-2 flex-nowrap'>
-                  <span>Edit Group Product</span>
-                  <span>
-                    <span className='text-primary max-lg:text-sm truncate w-[100px]'>#{groupProduct?.data?.id}</span>
-                  </span>
-                </div>
-              </h1>
-              <p className='text-muted-foreground'>
-                {groupProduct?.data?.status === GroupProductStatusEnum.ACTIVE
-                  ? 'If you want to make any changes, please inactivate it first.'
-                  : 'This group product is currently inactive and cannot be viewed by your customers.'}
-              </p>
-            </div>
-          )}
-        </div>
-      </Card>
 
       <Form {...form}>
         <form
@@ -244,9 +206,6 @@ const GroupProductDetails = () => {
                 <Boxes />
                 Group Product Details
               </CardTitle>
-              <CardDescription>
-                Configure the group product campaign details. This will be displayed on the dashboard.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
@@ -258,9 +217,6 @@ const GroupProductDetails = () => {
                       <FormItem>
                         <FormLabel required>Name Of Group Product</FormLabel>
                         <Input {...field} placeholder={`e.g. "Mystery box"`} />
-                        <FormDescription>
-                          This is the name that will be displayed on your group product details.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )
@@ -274,9 +230,6 @@ const GroupProductDetails = () => {
                       <FormItem>
                         <FormLabel required>Products</FormLabel>
                         <SelectProduct {...field} multiple />
-                        <FormDescription>
-                          Select the products that will be included in this group product.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )
@@ -297,9 +250,6 @@ const GroupProductDetails = () => {
                           rows={5}
                         />
                       </FormControl>
-                      <FormDescription>
-                        This is the description that will be displayed on your group product details.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -316,9 +266,6 @@ const GroupProductDetails = () => {
                         <FormControl>
                           <Switch checked={field.value} onCheckedChange={field.onChange} className='' />
                         </FormControl>
-                        <FormDescription>
-                          If enabled, this will allow you to set the maximum buy amount for this group product.
-                        </FormDescription>
                       </FormItem>
                     )}
                   />
@@ -333,9 +280,6 @@ const GroupProductDetails = () => {
                           <FormItem>
                             <FormLabel required>Maximum Buy Amount Each Person</FormLabel>
                             <Input {...field} placeholder={`e.g. 10`} type='quantity' symbol='Items/ Product' />
-                            <FormDescription>
-                              This is the maximum amount that each person can buy for this group product.
-                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )
@@ -443,9 +387,6 @@ const GroupProductDetails = () => {
                 <Tickets />
                 Voucher Strategy
               </CardTitle>
-              <CardDescription>
-                Configure the voucher strategy for your group product. This will be displayed on the dashboard.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className='w-full'>
