@@ -113,8 +113,8 @@ export const routesConfig: TRoutes = {
     getPath: (id) => `/dashboard/voucher/update/${id}`
   },
   [Routes.PRE_ORDER]: {
-    name: 'Pre Order',
-    title: 'Pre Order',
+    name: 'Pre-order Product',
+    title: 'Pre-order Product',
     description: 'Pre Order',
     path: '/dashboard/pre-order',
     getPath: () => '/dashboard/pre-order'
@@ -127,11 +127,11 @@ export const routesConfig: TRoutes = {
     getPath: (params) => `/dashboard/pre-order/${params.id}`
   },
   [Routes.ADD_PRE_ORDER]: {
-    name: 'Add Pre Order',
-    title: 'Add Pre Order',
+    name: 'Add Pre-order',
+    title: 'Add Pre-order',
     description: 'Add Pre Order',
-    path: '/dashboard/pre-order/add-pre-order',
-    getPath: () => '/dashboard/pre-order/add-pre-order'
+    path: '/dashboard/pre-order/add',
+    getPath: () => '/dashboard/pre-order/add'
   },
   [Routes.FLASH_SALE]: {
     name: 'Flash Sale Product',

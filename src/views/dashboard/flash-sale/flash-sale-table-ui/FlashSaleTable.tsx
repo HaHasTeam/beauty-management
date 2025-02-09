@@ -14,7 +14,6 @@ import { DataTableRowAction, getColumns } from './FlashSalesTableColumns'
 import { FlashSalesTableFloatingBar } from './FlashSalesTableFloatingBar'
 import { FlashSaleTableToolbarActions } from './FlashSalesTableToolbarActions'
 import { getStatusIcon } from './helper'
-import { ViewDetailsFlashSaleSheet } from './ViewDetailsFlashSaleSheet'
 
 interface FlashSaleTableProps {
   data: TFlashSale[]
@@ -24,13 +23,7 @@ interface FlashSaleTableProps {
 
 export function FlashSaleTable({ data, pageCount, queryStates }: FlashSaleTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TFlashSale> | null>(null)
-  const columns = React.useMemo(
-    () =>
-      getColumns({
-        setRowAction
-      }),
-    []
-  )
+  const columns = React.useMemo(() => getColumns(), [])
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
@@ -97,11 +90,6 @@ export function FlashSaleTable({ data, pageCount, queryStates }: FlashSaleTableP
         FlashSales={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={() => rowAction?.row.toggleSelected(false)}
-      />
-      <ViewDetailsFlashSaleSheet
-        FlashSale={rowAction?.row.original}
-        open={rowAction?.type === 'view'}
-        onOpenChange={() => setRowAction(null)}
       />
     </>
   )

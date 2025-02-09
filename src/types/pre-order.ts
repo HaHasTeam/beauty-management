@@ -8,14 +8,13 @@ export type TPreOrder = TMetaData & {
   status: PreOrderStatusEnum
   product: TProduct
   productClassifications: TClassification[]
-  images?: string[]
 }
 
 export enum PreOrderStatusEnum {
-  PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED'
+  SOLD_OUT = 'SOLD_OUT',
+  WAITING = 'WAITING',
+  INACTIVE = 'INACTIVE'
 }
 
 export type IPreOrder = TMetaData & {

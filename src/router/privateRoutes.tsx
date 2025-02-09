@@ -11,6 +11,7 @@ import CategoryDetailById from '@/views/dashboard/category/[id]'
 import AddCategory from '@/views/dashboard/category/AddCategory'
 import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
+import FlashSaleDetailsById from '@/views/dashboard/flash-sale/[id]'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
 import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
@@ -85,14 +86,16 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
-        path: 'pre-order',
-
+        path: routesConfig[Routes.PRE_ORDER].path.replace('/dashboard/', ''),
         children: [
           {
             index: true,
             element: <PreOrder />
           },
-          { path: 'add-pre-order', element: <AddPreOrder /> },
+          {
+            path: 'add',
+            element: <AddPreOrder />
+          },
           {
             path: ':id',
             element: <PreOrderDetailById />
@@ -109,6 +112,10 @@ export const privateRoutes: RouteObject[] = [
           {
             path: 'add',
             element: <AddFlashSale />
+          },
+          {
+            path: ':id',
+            element: <FlashSaleDetailsById />
           }
         ]
       },

@@ -1,7 +1,8 @@
 import { StatusEnum } from './enum'
+import { TFile } from './file'
 import { IImage } from './image'
 import { IPreOrder } from './pre-order'
-import { IProduct } from './product'
+import { IProduct, ProductClassificationTypeEnum } from './product'
 import { IProductDiscount } from './product-discount'
 import { TMetaData } from './request'
 
@@ -9,7 +10,9 @@ export type TClassification = TMetaData & {
   title: string
   price: number
   quantity: number
-  image: string | null
+  images: TFile[]
+  sku: string
+  type: ProductClassificationTypeEnum
   status: ClassificationStatusEnum
 }
 

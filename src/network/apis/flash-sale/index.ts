@@ -3,7 +3,11 @@ import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-import { TAddFlashSaleRequestParams, TGetAllFlashSaleByBrandIdRequestParams } from './type'
+import {
+  TAddFlashSaleRequestParams,
+  TGetAllFlashSaleByBrandIdRequestParams,
+  TUpdateFlashSaleRequestParams
+} from './type'
 
 export const addFlashSaleApi = toMutationFetcher<TAddFlashSaleRequestParams, TServerResponse<TFlashSale>>(
   'addFlashSaleApi',
@@ -39,6 +43,16 @@ export const getFlashSaleByIdApi = toQueryFetcher<string, TServerResponse<TFlash
   async (id) => {
     return privateRequest(`/product-discount/get-by-id/${id}`, {
       method: 'GET'
+    })
+  }
+)
+
+export const updateFlashSaleApi = toMutationFetcher<TUpdateFlashSaleRequestParams, TServerResponse<TFlashSale>>(
+  'updateFlashSaleApi',
+  async (params) => {
+    return privateRequest(`/product-discount/${params.id}`, {
+      method: 'PUT',
+      data: params
     })
   }
 )
