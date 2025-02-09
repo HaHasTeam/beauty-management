@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import FormLabel from '@/components/form-label'
 import { TagsInput } from '@/components/tags-input'
-import Tooltip from '@/components/tooltip'
+import CompoundTooltip from '@/components/Tooltip'
 import {
   Dialog,
   DialogContent,
@@ -118,7 +118,7 @@ const InviteCoWorker = () => {
                         placeholder='Enter your member email'
                         className='flex-1'
                       />
-                      <Tooltip
+                      <CompoundTooltip
                         trigger={
                           <Button className='px-3'>
                             <UploadIcon />
@@ -126,7 +126,7 @@ const InviteCoWorker = () => {
                         }
                         content='Upload a CSV file with a list of emails to invite multiple members.'
                       />
-                      <Tooltip
+                      <CompoundTooltip
                         trigger={
                           <Button className='px-3'>
                             <PiMicrosoftExcelLogoBold />
