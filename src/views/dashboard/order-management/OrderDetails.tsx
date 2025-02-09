@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Ban, MessageSquareText, Truck } from 'lucide-react'
+import { History, MessageSquareText, Truck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -11,7 +11,7 @@ import Empty from '@/components/empty/Empty'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import OrderStatus from '@/components/order-status'
 import { Routes, routesConfig } from '@/configs/routes'
-import { getOrderByIdApi } from '@/network/apis/order'
+import { getOrderByIdApi, getStatusTrackingByIdApi } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
 import { RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
@@ -19,6 +19,7 @@ import BrandOrderInformation from './order-detail/BrandOrderInformation'
 import OrderDetailItems from './order-detail/OrderDetailItems'
 import OrderGeneral from './order-detail/OrderGeneral'
 import OrderStatusTracking from './order-detail/OrderStatusTracking'
+import OrderStatusTrackingDetail from './order-detail/OrderStatusTrackingDetail'
 import OrderSummary from './order-detail/OrderSummary'
 
 const OrderDetails = () => {
@@ -42,6 +43,11 @@ const OrderDetails = () => {
   const { data: useOrderData, isFetching } = useQuery({
     queryKey: [getOrderByIdApi.queryKey, id as string],
     queryFn: getOrderByIdApi.fn,
+    enabled: !!id
+  })
+  const { data: useStatusTrackingData, isFetching: isFetchingStatusTracking } = useQuery({
+    queryKey: [getStatusTrackingByIdApi.queryKey, id ?? ('' as string)],
+    queryFn: getStatusTrackingByIdApi.fn,
     enabled: !!id
   })
 
@@ -75,10 +81,11 @@ const OrderDetails = () => {
           <>
             <div className='space-y-6 w-full'>
               {/* order status tracking */}
-              <OrderStatusTracking currentStatus={useOrderData?.data?.status} />
+              {!isFetchingStatusTracking && useStatusTrackingData && useStatusTrackingData?.data && (
+                <OrderStatusTracking statusTrackingData={useStatusTrackingData?.data} />
+              )}
               {/* order cancel detail */}
-              {(useOrderData?.data?.status === ShippingStatusEnum.CANCELLED ||
-                useOrderData?.data?.status === ShippingStatusEnum.CANCELLED_BY_SHOP) && (
+              {/* {useOrderData?.data?.status === ShippingStatusEnum.CANCELLED && (
                 <div className='w-full flex'>
                   <OrderGeneral
                     title={t('orderDetail.cancelOrderDetails')}
@@ -104,10 +111,23 @@ const OrderDetails = () => {
                     }
                   />
                 </div>
-              )}
-              {/* order customer information, shipment */}
+              )} */}
+              {/* order customer timeline, information, shipment */}
               <div className='flex flex-col md:flex-row gap-4 justify-between w-full items-stretch'>
                 <div className='w-full md:w-1/2 flex'>
+                  <OrderGeneral
+                    title={t('orderDetail.timeline')}
+                    icon={<History />}
+                    content={
+                      !isFetchingStatusTracking && useStatusTrackingData && useStatusTrackingData?.data ? (
+                        <OrderStatusTrackingDetail statusTrackingData={useStatusTrackingData?.data} />
+                      ) : (
+                        <p></p>
+                      )
+                    }
+                  />
+                </div>
+                <div className='w-full md:w-1/2 flex flex-col gap-2'>
                   <OrderGeneral
                     title={t('orderDetail.shippingAddress')}
                     icon={<Truck />}
@@ -131,8 +151,6 @@ const OrderDetails = () => {
                       </div>
                     }
                   />
-                </div>
-                <div className='w-full md:w-1/2 flex'>
                   <OrderGeneral
                     title={t('orderDetail.message')}
                     icon={<MessageSquareText />}

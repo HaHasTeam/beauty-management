@@ -21,6 +21,10 @@ export default function OrderStatus({ tag, text, size = 'medium' }: OrderStatusP
 
   // Define color based on tag
   switch (tag) {
+    case ShippingStatusEnum.JOIN_GROUP_BUYING:
+      tagColorClass = 'text-teal-400'
+      tagText = t('order.joinGroupBuying')
+      break
     case ShippingStatusEnum.TO_PAY:
       tagColorClass = 'text-yellow-400'
       tagText = t('order.pending')
@@ -33,9 +37,17 @@ export default function OrderStatus({ tag, text, size = 'medium' }: OrderStatusP
       tagColorClass = 'text-orange-600'
       tagText = t('order.shipping')
       break
+    case ShippingStatusEnum.PREPARING_ORDER:
+      tagColorClass = 'text-purple-600'
+      tagText = t('order.preparingOrder')
+      break
     case ShippingStatusEnum.TO_RECEIVED:
-      tagColorClass = 'text-blue-600'
+      tagColorClass = 'text-cyan-600'
       tagText = t('order.delivering')
+      break
+    case ShippingStatusEnum.DELIVERED:
+      tagColorClass = 'text-blue-600'
+      tagText = t('order.delivered')
       break
     case ShippingStatusEnum.COMPLETED:
       tagColorClass = 'text-green-600'
@@ -45,9 +57,13 @@ export default function OrderStatus({ tag, text, size = 'medium' }: OrderStatusP
       tagColorClass = 'text-red-600'
       tagText = t('order.cancelled')
       break
-    case ShippingStatusEnum.RETURN_REFUND:
+    case ShippingStatusEnum.RETURNING:
+      tagColorClass = 'text-indigo-600'
+      tagText = t('order.returning')
+      break
+    case ShippingStatusEnum.REFUNDED:
       tagColorClass = 'text-gray-600'
-      tagText = t('order.return')
+      tagText = t('order.refunded')
       break
 
     default:

@@ -43,14 +43,16 @@ export default function CancelOrderDialog({
 
   const reasons: { value: string }[] = useMemo(
     () => [
-      { value: t('order.cancelOrderReason.changeOfMind') },
-      { value: t('order.cancelOrderReason.foundCheaper') },
-      { value: t('order.cancelOrderReason.voucherChange') },
-      { value: t('order.cancelOrderReason.productChange') },
-      { value: t('order.cancelOrderReason.paymentDifficulty') },
-      { value: t('order.cancelOrderReason.addressChange') },
-      { value: t('order.cancelOrderReason.deliveryIssue') },
-      { value: t('order.cancelOrderReason.productIssue') },
+      { value: t('order.cancelOrderReasonByBrand.OUT_OF_STOCK') },
+      { value: t('order.cancelOrderReasonByBrand.INCORRECT_PRICING') },
+      { value: t('order.cancelOrderReasonByBrand.SUSPICIOUS_ORDER') },
+      { value: t('order.cancelOrderReasonByBrand.PAYMENT_FAILED') },
+      { value: t('order.cancelOrderReasonByBrand.UNDELIVERABLE_ADDRESS') },
+      { value: t('order.cancelOrderReasonByBrand.MINIMUM_ORDER_NOT_MET') },
+      { value: t('order.cancelOrderReasonByBrand.POLICY_VIOLATION') },
+      { value: t('order.cancelOrderReasonByBrand.CUSTOMER_REQUEST') },
+      { value: t('order.cancelOrderReasonByBrand.DAMAGED_PRODUCT') },
+      { value: t('order.cancelOrderReasonByBrand.SHIPPING_ISSUE') },
       { value: t('order.cancelOrderReason.other') }
     ],
     [t]
