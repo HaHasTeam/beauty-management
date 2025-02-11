@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 interface LoadingSpinnerProps {
   size?: 'small' | 'medium' | 'large'
-  color?: 'primary' | 'secondary' | 'accent' | 'white' | 'black'
+  color?: 'primary' | 'secondary' | 'accent' | 'white' | 'black' | 'primaryBackground'
   label?: string
   className?: HtmlHTMLAttributes<HTMLDivElement>['className']
 }
@@ -21,7 +21,8 @@ export default function LoadingIcon({ size = 'medium', color = 'primary', label,
     secondary: 'text-secondary',
     accent: 'text-accent',
     white: 'text-white',
-    black: 'text-black'
+    black: 'text-black',
+    primaryBackground: 'text-primary'
   }
 
   return (
