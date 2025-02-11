@@ -14,7 +14,7 @@ export default function StatusTag({ tag, text, size = 'medium' }: StatusTagProps
   const sizeClasses = {
     small: 'px-1 text-xs',
     medium: 'px-2 py-1 text-sm sm:text-xs',
-    large: 'p-3 lg:text-base md:text-sm sm:text-xs',
+    large: 'p-3 lg:text-base md:text-sm sm:text-xs'
   }
 
   // Define color based on tag

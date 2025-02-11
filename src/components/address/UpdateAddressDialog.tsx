@@ -42,13 +42,12 @@ const UpdateAddressDialog = ({ address, triggerComponent }: UpdateAddressDialogP
     fullAddress: address?.fullAddress ?? '',
     type: address?.type ?? AddressEnum?.HOME,
     notes: address?.notes ?? '',
-    isDefault: address?.isDefault ?? false,
+    isDefault: address?.isDefault ?? false
   }
-  console.log(defaultValues)
 
   const form = useForm<z.infer<typeof CreateAddressSchema>>({
     resolver: zodResolver(CreateAddressSchema),
-    defaultValues,
+    defaultValues
   })
   const handleReset = () => {
     form.reset()
@@ -59,16 +58,16 @@ const UpdateAddressDialog = ({ address, triggerComponent }: UpdateAddressDialogP
     mutationFn: updateAddressApi.fn,
     onSuccess: () => {
       successToast({
-        message: `${t('address.updateSuccess')}`,
+        message: `${t('address.updateSuccess')}`
       })
       queryClient.invalidateQueries({
-        queryKey: [getAddressByIdApi.queryKey, address?.id as string],
+        queryKey: [getAddressByIdApi.queryKey, address?.id as string]
       })
       queryClient.invalidateQueries({
-        queryKey: [getMyAddressesApi.queryKey],
+        queryKey: [getMyAddressesApi.queryKey]
       })
       handleReset()
-    },
+    }
   })
   async function onSubmit(values: z.infer<typeof CreateAddressSchema>) {
     try {
@@ -76,17 +75,16 @@ const UpdateAddressDialog = ({ address, triggerComponent }: UpdateAddressDialogP
       const transformedValues = {
         ...values,
         id: address?.id ?? '',
-        fullAddress: `${values.detailAddress}, ${values.ward}, ${values.district}, ${values.province}`,
+        fullAddress: `${values.detailAddress}, ${values.ward}, ${values.district}, ${values.province}`
       }
 
-      console.log(transformedValues)
       await updateAddressFn(transformedValues)
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
       handleServerError({
         error,
-        form,
+        form
       })
     }
   }
@@ -96,31 +94,26 @@ const UpdateAddressDialog = ({ address, triggerComponent }: UpdateAddressDialogP
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
-        <DialogContent className="max-w-md sm:max-w-xl lg:max-w-3xl">
+        <DialogContent className='max-w-md sm:max-w-xl lg:max-w-3xl'>
           <DialogHeader>
-            <div className="flex justify-between items-center">
+            <div className='flex justify-between items-center'>
               <DialogTitle>{t('address.updateAddress')}</DialogTitle>
             </div>
           </DialogHeader>
           <Form {...form}>
-            <form
-              noValidate
-              onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e, form.getValues()))}
-              className="w-full"
-              id={`form-${id}`}
-            >
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full' id={`form-${id}`}>
               <div>
                 {/* Form Address */}
-                <ScrollArea className="h-72">
+                <ScrollArea className='h-72'>
                   <FormAddressContent form={form} initialAddress={defaultValues} />
                 </ScrollArea>
               </div>
               <DialogFooter>
-                <div className="flex justify-end gap-2 w-full">
-                  <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                <div className='flex justify-end gap-2 w-full'>
+                  <Button type='button' variant='outline' onClick={() => setOpen(false)}>
                     {t('dialog.cancel')}
                   </Button>
-                  <Button type="submit" loading={isLoading}>
+                  <Button type='submit' loading={isLoading}>
                     {t('dialog.ok')}
                   </Button>
                 </div>
