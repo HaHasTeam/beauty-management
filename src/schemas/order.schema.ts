@@ -23,3 +23,6 @@ export const CancelOrderSchema = z.object({
   reason: z.string().min(1, i18next.t('validation.reasonRequired')),
   otherReason: z.string()
 })
+export const UpdateOrderStatusSchema = z.object({
+  status: z.string().min(1, i18next.t('validation.statusRequired'))
+})

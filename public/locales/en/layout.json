@@ -71,7 +71,9 @@
     "ok": "Confirm",
     "save": "Save",
     "submit": "Submit",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "approved": "Approved",
+    "rejected": "Rejected"
   },
   "noData": "No matching data found",
   "sell": {
@@ -597,7 +599,27 @@
     "cancelRequestPendingTitle": "Cancellation Request Pending Confirmation",
     "cancelRequestRejectedTitle": "Cancellation Request Rejected",
     "cancelRequestPendingMessage": "Your cancellation request has been submitted and is awaiting confirmation. The order will remain active until the brand reviews and approves the request. We will update you with the result within 2 days. If your request is approved, we will process a refund (if applicable).",
-    "cancelRequestRejectedMessage": "Your cancellation request has been rejected. The order will continue to be processed as usual. You can click \"Return order\" after receiving the item if needed. Please contact customer support if you need further assistance."
+    "cancelRequestRejectedMessage": "Your cancellation request has been rejected. The order will continue to be processed as usual. You can click \"Return order\" after receiving the item if needed. Please contact customer support if you need further assistance.",
+    "statusDescription": {
+      "joinGroupBuying": "The customer has joined a group-buying deal. The order will be processed once the required number of participants is reached.",
+      "pending": "The order has been placed but is awaiting payment. The customer needs to complete the payment to proceed.",
+      "waitConfirm": "The order is awaiting confirmation from the seller.",
+      "shipping": "The order is packed and ready for shipment. Awaiting carrier pickup.",
+      "preparingOrder": "The order has been confirmed, and the warehouse is currently processing and packing the items.",
+      "delivering": "The order has been shipped and is in transit to the customer.",
+      "delivered": "The order has been successfully delivered to the customer’s address.",
+      "completed": "The customer has confirmed receipt of the order, and the transaction is finalized.",
+      "cancelled": "The refund has been processed and issued to the customer.",
+      "returning": "The customer has requested a return, and the order is in the process of being returned to the seller.",
+      "refunded": "The order has been canceled and will not be processed or shipped."
+    },
+    "cancelRequestPendingBrandTitle": "Order Cancellation Request",
+    "CancelOrderRequestBrandMessage": "The customer has requested to cancel the order. Please review and make a decision. You can approve the cancellation or reject it to proceed with the order.",
+    "updateOrderStatusSuccess": "Update order status successfully!",
+    "orderCancellationUpdate": "Order cancellation updated successfully!",
+    "approvedCancelRequest": "Cancellation approved. Order is now canceled.",
+    "rejectedCancelRequest": "Cancellation rejected. Order will proceed.",
+    "rejectedCancelRequestTitle": "Cancellation Rejected"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -667,6 +689,7 @@
     "required": "Please fill out this field",
     "paymentRequired": "Please choose a payment method",
     "reasonRequired": "Please choose a reason",
+    "statusRequired": "Please select a status",
     "passwordValid": "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number and one special character",
     "phoneValid": "Please fill in a valid phone number"
   },

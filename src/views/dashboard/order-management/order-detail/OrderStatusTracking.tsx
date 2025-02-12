@@ -2,7 +2,7 @@ import { Package } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { StatusTrackingIcon, StatusTrackingText } from '@/components/status-tracking-order/StatusTrackingOrder'
-import { ShippingStatusEnum } from '@/types/enum'
+import { CancelOrderRequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
 import { IStatusTracking } from '@/types/status-tracking'
 
 interface OrderStatusTrackingProps {
@@ -122,9 +122,9 @@ const OrderStatusTracking = ({ statusTrackingData }: OrderStatusTrackingProps) =
               <div
                 className={`timeline-icon w-10 h-10 rounded-full flex items-center justify-center relative
               ${
-                step.status === ShippingStatusEnum.CANCELLED
+                step.status === ShippingStatusEnum.CANCELLED || step.status === CancelOrderRequestStatusEnum.APPROVED
                   ? 'bg-red-500 text-white'
-                  : step.status === ShippingStatusEnum.CANCELLED
+                  : step.status === ShippingStatusEnum.REFUNDED
                     ? 'bg-gray-600 text-white'
                     : isCurrent || isCompleted
                       ? 'bg-emerald-500 text-white'
@@ -137,9 +137,9 @@ const OrderStatusTracking = ({ statusTrackingData }: OrderStatusTrackingProps) =
 
               <p
                 className={`text-sm text-center font-medium ${
-                  step.status === ShippingStatusEnum.CANCELLED
+                  step.status === ShippingStatusEnum.CANCELLED || step.status === CancelOrderRequestStatusEnum.APPROVED
                     ? 'text-red-500'
-                    : step.status === ShippingStatusEnum.CANCELLED
+                    : step.status === ShippingStatusEnum.REFUNDED
                       ? 'text-gray-600'
                       : isCurrent || isCompleted
                         ? 'text-emerald-500'

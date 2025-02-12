@@ -188,7 +188,14 @@ export default function CancelOrderDialog({
               />
             )}
             <div className='flex justify-end gap-2 mt-4'>
-              <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => {
+                  onOpenChange(false)
+                  handleReset()
+                }}
+              >
                 {t(`button.cancel`)}
               </Button>
               <Button loading={isLoading} type='submit'>

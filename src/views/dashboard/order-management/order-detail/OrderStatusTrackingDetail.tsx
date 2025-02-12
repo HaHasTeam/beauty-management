@@ -2,7 +2,7 @@ import { Check, Package } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { StatusTrackingIcon, StatusTrackingText } from '@/components/status-tracking-order/StatusTrackingOrder'
-import { RoleEnum, ShippingStatusEnum } from '@/types/enum'
+import { CancelOrderRequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 import { IStatusTracking } from '@/types/status-tracking'
 
 interface OrderStatusTrackingDetailProps {
@@ -60,7 +60,11 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                 <div
                   className={`text-sm font-medium ${currentIndex === index ? 'text-emerald-500' : 'text-muted-foreground'}`}
                 >
-                  {StatusTrackingText(step.status)}
+                  {step.status === CancelOrderRequestStatusEnum.APPROVED
+                    ? t('order.approvedCancelRequest')
+                    : step.status === CancelOrderRequestStatusEnum.REJECTED
+                      ? t('order.approvedCancelRequest')
+                      : StatusTrackingText(step.status)}
                 </div>
                 {(step.status === ShippingStatusEnum.CANCELLED || step.status === ShippingStatusEnum.REFUNDED) && (
                   <div>

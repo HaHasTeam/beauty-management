@@ -1,4 +1,12 @@
-import { ICancelOrder, ICreateOrder, ICreatePreOrder, IOrder, IOrderFilter, IOrderItem } from '@/types/order'
+import {
+  ICancelOrder,
+  ICancelRequestOrder,
+  ICreateOrder,
+  ICreatePreOrder,
+  IOrder,
+  IOrderFilter,
+  IOrderItem
+} from '@/types/order'
 import { TServerResponse } from '@/types/request'
 import { IStatusTracking } from '@/types/status-tracking'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
@@ -49,6 +57,15 @@ export const updateOrderApi = toMutationFetcher<IOrder, TServerResponse<IOrder>>
     data
   })
 })
+export const updateOrderStatusApi = toMutationFetcher<{ id: string; status: string }, TServerResponse<IOrder>>(
+  'updateOrderStatusApi',
+  async ({ id, status }) => {
+    return privateRequest(`/orders/update-status/${id}`, {
+      method: 'PUT',
+      data: status
+    })
+  }
+)
 
 export const cancelOrderApi = toMutationFetcher<ICancelOrder, TServerResponse<IOrder>>(
   'cancelOrderApi',
@@ -59,6 +76,15 @@ export const cancelOrderApi = toMutationFetcher<ICancelOrder, TServerResponse<IO
     })
   }
 )
+export const makeDecisionOnCancelRequestOrderApi = toMutationFetcher<
+  { requestId: string; status: string },
+  TServerResponse<IOrder>
+>('makeDecisionOnCancelRequestOrderApi', async ({ requestId, status }) => {
+  return privateRequest(`/orders/make-decision-on-request/${requestId}`, {
+    method: 'POST',
+    data: { status }
+  })
+})
 
 export const getStatusTrackingByIdApi = toQueryFetcher<string, TServerResponse<IStatusTracking[]>>(
   'getStatusTrackingByIdApi',
@@ -66,3 +92,13 @@ export const getStatusTrackingByIdApi = toQueryFetcher<string, TServerResponse<I
     return privateRequest(`/orders/get-status-tracking/${orderId}`)
   }
 )
+
+export const getBrandCancelRequestApi = toMutationFetcher<
+  { brandId: string; data: { status?: string } },
+  TServerResponse<ICancelRequestOrder[]>
+>('getBrandCancelRequestApi', async ({ brandId, data }) => {
+  return privateRequest(`/orders/get-cancel-request-of-brand/${brandId}`, {
+    method: 'POST',
+    data
+  })
+})

@@ -72,7 +72,9 @@
     "ok": "Đồng ý",
     "save": "Lưu",
     "submit": "Gửi",
-    "backToHome": "Quay lại Trang chủ"
+    "backToHome": "Quay lại Trang chủ",
+    "approved": "Phê duyệt",
+    "rejected": "Từ chối"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -593,7 +595,27 @@
     "cancelRequestPendingTitle": "Yêu Cầu Hủy Đơn Đang Chờ Xác Nhận",
     "cancelRequestRejectedTitle": "Yêu Cầu Hủy Đơn Bị Từ Chối",
     "cancelRequestPendingMessage": "Yêu cầu hủy đơn hàng của bạn đã được gửi và đang chờ xác nhận. Đơn hàng sẽ vẫn được xử lý cho đến khi thương hiệu xem xét và phê duyệt yêu cầu. Chúng tôi sẽ cập nhật kết quả trong vòng 2 ngày. Nếu yêu cầu được chấp nhận, chúng tôi sẽ hoàn tiền cho bạn (nếu có).",
-    "cancelRequestRejectedMessage": "Yêu cầu hủy đơn hàng của bạn đã bị từ chối. Đơn hàng sẽ tiếp tục được xử lý như bình thường. Bạn có thể nhấn \"Trả hàng\" sau khi nhận được sản phẩm nếu có nhu cầu. Vui lòng liên hệ bộ phận hỗ trợ khách hàng nếu cần thêm trợ giúp."
+    "cancelRequestRejectedMessage": "Yêu cầu hủy đơn hàng của bạn đã bị từ chối. Đơn hàng sẽ tiếp tục được xử lý như bình thường. Bạn có thể nhấn \"Trả hàng\" sau khi nhận được sản phẩm nếu có nhu cầu. Vui lòng liên hệ bộ phận hỗ trợ khách hàng nếu cần thêm trợ giúp.",
+    "statusDescription": {
+      "joinGroupBuying": "Khách hàng đã tham gia chương trình mua chung. Đơn hàng sẽ được xử lý khi đủ số lượng người tham gia.",
+      "pending": "Đơn hàng đã được tạo nhưng chưa được thanh toán. Khách hàng cần hoàn tất thanh toán để tiếp tục xử lý đơn.",
+      "waitConfirm": "Đơn hàng đang chờ xác nhận từ phía người bán.",
+      "shipping": "Đơn hàng đã được đóng gói xong, sẵn sàng giao cho đơn vị vận chuyển.",
+      "preparingOrder": "Đơn hàng đã được xác nhận và đang trong quá trình đóng gói, chuẩn bị giao hàng.",
+      "delivering": "Đơn hàng đang được vận chuyển đến địa chỉ của khách hàng.",
+      "delivered": "Đơn hàng đã được giao thành công đến tay khách hàng.",
+      "completed": "Khách hàng đã xác nhận nhận hàng, giao dịch hoàn tất.",
+      "cancelled": "Đơn hàng đã bị hủy và sẽ không được xử lý hoặc giao hàng.",
+      "returning": "Khách hàng đã yêu cầu trả hàng và đơn hàng đang trong quá trình hoàn trả về cho người bán.",
+      "refunded": "Khoản tiền hoàn trả đã được xử lý và gửi lại cho khách hàng."
+    },
+    "cancelRequestPendingBrandTitle": "Yêu Cầu Hủy Đơn Hàng",
+    "CancelOrderRequestBrandMessage": "Khách hàng đã yêu cầu hủy đơn hàng. Vui lòng xem xét và đưa ra quyết định. Bạn có thể phê duyệt để hủy đơn hoặc từ chối để tiếp tục xử lý.",
+    "updateOrderStatusSuccess": "Thay đổi trạng thái đơn hàng thành công!",
+    "orderCancellationUpdate": "Cập nhật hủy đơn hàng thành công!",
+    "approvedCancelRequest": "Yêu cầu hủy được chấp nhận. Đơn hàng đã bị hủy.",
+    "rejectedCancelRequest": "Yêu cầu hủy bị từ chối. Đơn hàng tiếp tục xử lý.",
+    "rejectedCancelRequestTitle": "Yêu Cầu Hủy Bị Từ Chối"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -663,6 +685,7 @@
     "required": "Vui lòng điền vào trường này",
     "paymentRequired": "Vui lòng chọn phương thức thanh toán",
     "reasonRequired": "Vui lòng chọn lý do",
+    "statusRequired": "Vui lòng chọn trạng thái",
     "passwordValid": "Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm một chữ cái viết hoa, một chữ cái viết thường, một số và một ký tự đặc biệt",
     "phoneValid": "Vui lòng nhập một số điện thoại hợp lệ"
   },

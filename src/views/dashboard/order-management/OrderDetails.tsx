@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { History, MessageSquareText, Truck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,13 +7,24 @@ import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import CancelOrderDialog from '@/components/dialog/CancelOrderDialog'
+import UpdateOrderStatus from '@/components/dialog/UpdateOrderStatusDialog'
 import Empty from '@/components/empty/Empty'
+import LoadingIcon from '@/components/loading-icon'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import OrderStatus from '@/components/order-status'
+import { AlertDescription } from '@/components/ui/alert'
 import { Routes, routesConfig } from '@/configs/routes'
-import { getOrderByIdApi, getStatusTrackingByIdApi } from '@/network/apis/order'
+import useHandleServerError from '@/hooks/useHandleServerError'
+import { useToast } from '@/hooks/useToast'
+import {
+  getBrandCancelRequestApi,
+  getOrderByIdApi,
+  getStatusTrackingByIdApi,
+  makeDecisionOnCancelRequestOrderApi
+} from '@/network/apis/order'
 import { useStore } from '@/stores/store'
-import { RoleEnum, ShippingStatusEnum } from '@/types/enum'
+import { CancelOrderRequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
+import { ICancelRequestOrder } from '@/types/order'
 
 import BrandOrderInformation from './order-detail/BrandOrderInformation'
 import OrderDetailItems from './order-detail/OrderDetailItems'
@@ -26,8 +37,14 @@ const OrderDetails = () => {
   const { id } = useParams()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
+  const { successToast } = useToast()
+  const handleServerError = useHandleServerError()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
   const [isTrigger, setIsTrigger] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
+  const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
+  const [cancelRequests, setCancelRequests] = useState<ICancelRequestOrder[]>([])
 
   const { user } = useStore(
     useShallow((state) => ({
@@ -56,9 +73,79 @@ const OrderDetails = () => {
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
       })
+      queryClient.invalidateQueries({
+        queryKey: [getStatusTrackingByIdApi.queryKey]
+      })
     }
   }, [isTrigger, queryClient])
 
+  const { mutateAsync: getBrandCancelRequestOrderFn } = useMutation({
+    mutationKey: [getBrandCancelRequestApi.mutationKey],
+    mutationFn: getBrandCancelRequestApi.fn,
+    onSuccess: (data) => {
+      setCancelRequests(data?.data)
+      setIsLoading(false)
+    }
+  })
+  const { mutateAsync: makeDecisionOnCancelRequestOrderFn } = useMutation({
+    mutationKey: [makeDecisionOnCancelRequestOrderApi.mutationKey],
+    mutationFn: makeDecisionOnCancelRequestOrderApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: t('order.orderCancellationUpdate')
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getOrderByIdApi.queryKey]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getStatusTrackingByIdApi.queryKey]
+      })
+    }
+  })
+  useEffect(() => {
+    const fetchCancelRequests = async () => {
+      setIsLoading(true)
+      const brandId =
+        (
+          useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
+          useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
+          useOrderData?.data?.orderDetails?.[0]?.productClassification
+        )?.product?.brand?.id ?? ''
+      await getBrandCancelRequestOrderFn({
+        brandId,
+        data: {}
+      })
+    }
+    fetchCancelRequests()
+  }, [getBrandCancelRequestOrderFn, useOrderData?.data?.orderDetails])
+
+  const handleMakeDecisionOnCancelRequest = async (decision: CancelOrderRequestStatusEnum) => {
+    try {
+      if (decision === CancelOrderRequestStatusEnum.APPROVED) {
+        setIsLoadingDecisionApproved(true)
+      } else {
+        setIsLoadingDecisionRejected(true)
+      }
+      await makeDecisionOnCancelRequestOrderFn({
+        requestId:
+          cancelRequests?.find(
+            (request) =>
+              request?.order?.id === useOrderData?.data?.id && request.status === CancelOrderRequestStatusEnum.PENDING
+          )?.id ?? '',
+        status: decision
+      })
+      if (decision === CancelOrderRequestStatusEnum.APPROVED) {
+        setIsLoadingDecisionApproved(false)
+      } else {
+        setIsLoadingDecisionRejected(false)
+      }
+    } catch (error) {
+      setIsLoading(false)
+      handleServerError({
+        error
+      })
+    }
+  }
   return (
     <>
       {isFetching && <LoadingContentLayer />}
@@ -77,9 +164,65 @@ const OrderDetails = () => {
             </div>
           )}
         </div>
+
         {!isFetching && useOrderData && useOrderData?.data && (
           <>
             <div className='space-y-6 w-full'>
+              {/* alert update order status */}
+              <UpdateOrderStatus
+                order={useOrderData?.data}
+                setIsTrigger={setIsTrigger}
+                setOpenCancelOrderDialog={setOpenCancelOrderDialog}
+              />
+
+              {/* handle cancel request for brand and system role */}
+              {!isLoading &&
+                cancelRequests &&
+                cancelRequests?.some(
+                  (request) =>
+                    request?.order?.id === useOrderData?.data?.id &&
+                    request.status === CancelOrderRequestStatusEnum.PENDING
+                ) && (
+                  <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
+                    <div className='flex items-center gap-2 justify-between'>
+                      <div className='flex items-center gap-2'>
+                        <div className='flex flex-col gap-1'>
+                          <div>
+                            <h3
+                              className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold bg-red-100 text-red-600`}
+                            >
+                              {t('order.cancelRequestPendingBrandTitle')}
+                            </h3>
+                          </div>
+                          <AlertDescription>{t('order.CancelOrderRequestBrandMessage')}</AlertDescription>
+                        </div>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
+                          useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
+                          useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER) && (
+                          <div className='flex gap-2 items-center'>
+                            <Button
+                              variant='outline'
+                              className='w-full border text-destructive bg-white border-destructive hover:text-destructive hover:bg-destructive/10'
+                              onClick={() => handleMakeDecisionOnCancelRequest(CancelOrderRequestStatusEnum.REJECTED)}
+                            >
+                              {isLoadingDecisionRejected ? <LoadingIcon /> : t('button.rejected')}
+                            </Button>
+                            <Button
+                              variant='default'
+                              className='w-full border text-white bg-green-500 hover:text-white hover:bg-green-400'
+                              onClick={() => handleMakeDecisionOnCancelRequest(CancelOrderRequestStatusEnum.APPROVED)}
+                            >
+                              {isLoadingDecisionApproved ? <LoadingIcon /> : t('button.approved')}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
               {/* order status tracking */}
               {!isFetchingStatusTracking && useStatusTrackingData && useStatusTrackingData?.data && (
                 <OrderStatusTracking statusTrackingData={useStatusTrackingData?.data} />
