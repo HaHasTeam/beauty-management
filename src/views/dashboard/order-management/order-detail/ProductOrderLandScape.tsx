@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Routes, routesConfig } from '@/configs/routes'
 import { IClassification } from '@/types/classification'
-import { ClassificationTypeEnum, OrderEnum, ShippingStatusEnum } from '@/types/enum'
+import { ClassificationTypeEnum, OrderEnum } from '@/types/enum'
 
 interface ProductOrderDetailLandscapeProps {
   productImage: string
@@ -18,7 +18,6 @@ interface ProductOrderDetailLandscapeProps {
   subTotal: number
   productQuantity: number
   productClassification: IClassification | null
-  status: ShippingStatusEnum
   isFeedback: boolean
 }
 const ProductOrderDetailLandscape = ({
@@ -31,7 +30,6 @@ const ProductOrderDetailLandscape = ({
   unitPriceBeforeDiscount,
   subTotal,
   productClassification,
-  status,
   isFeedback
 }: ProductOrderDetailLandscapeProps) => {
   const { t } = useTranslation()
@@ -97,15 +95,9 @@ const ProductOrderDetailLandscape = ({
           )}
 
           <div className='order-4 flex gap-2 sm:hidden flex-wrap'>
-            {status === ShippingStatusEnum.COMPLETED && (
+            {isFeedback && (
               <Button variant='outline' size='sm' className='border border-primary text-primary'>
-                {t('order.buyAgain')}
-              </Button>
-            )}
-
-            {!isFeedback && (
-              <Button variant='outline' size='sm' className='border border-primary text-primary'>
-                {t('order.writeFeedback')}
+                {t('order.viewFeedback')}
               </Button>
             )}
           </div>

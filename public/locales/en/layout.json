@@ -412,7 +412,10 @@
     "addSuccess": "Add new address successfully!",
     "updateSuccess": "Your address has been successfully updated!",
     "alertMessage": "Please add new address before {{action}}!",
-    "notes": "Notes"
+    "notes": "Notes",
+    "enterNotes": "Enter notes about address",
+    "profileAddress": "My Address",
+    "profileAddressDescription": "Manage your saved addresses for faster checkout and seamless deliveries."
   },
   "voucher": {
     "title": "Voucher",
@@ -541,8 +544,11 @@
     "successDescription": "We will receive an order confirmation email with details of your order and a link to track it's progress.",
     "failureDescription": "Unfortunately, we were unable to process your order. Please try again later or contact support for assistance.",
     "writeFeedback": "Write review",
+    "viewFeedback": "View review",
     "cancelOrder": "Cancel order",
+    "requestCancelOrder": "Request cancel order",
     "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
+    "requestCancelOrderDescription": "Clicking \"Confirm\" button means submitting a request to cancel all items in this order. Since the order is being prepared, this request will need to be reviewed before cancellation. This action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
     "cancelOrderReason": {
       "changeOfMind": "Changed my mind",
       "foundCheaper": "Found a cheaper option",
@@ -586,7 +592,12 @@
       "systemError": "System error in processing the order.",
       "highRiskTransaction": "High-risk transaction detected."
     },
-    "cancelSuccess": "Cancel order successfully!"
+    "cancelSuccess": "Cancel order successfully!",
+    "requestCancelSuccess": "Request cancel order successfully!",
+    "cancelRequestPendingTitle": "Cancellation Request Pending Confirmation",
+    "cancelRequestRejectedTitle": "Cancellation Request Rejected",
+    "cancelRequestPendingMessage": "Your cancellation request has been submitted and is awaiting confirmation. The order will remain active until the brand reviews and approves the request. We will update you with the result within 2 days. If your request is approved, we will process a refund (if applicable).",
+    "cancelRequestRejectedMessage": "Your cancellation request has been rejected. The order will continue to be processed as usual. You can click \"Return order\" after receiving the item if needed. Please contact customer support if you need further assistance."
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",

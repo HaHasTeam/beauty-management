@@ -1,15 +1,13 @@
 import { useTranslation } from 'react-i18next'
 
-import { ShippingStatusEnum } from '@/types/enum'
 import { IOrderDetail } from '@/types/order'
 
 import ProductOrderDetailLandscape from './ProductOrderLandScape'
 
 interface OrderDetailItemsProps {
   orderDetails: IOrderDetail[]
-  status: ShippingStatusEnum
 }
-const OrderDetailItems = ({ orderDetails, status }: OrderDetailItemsProps) => {
+const OrderDetailItems = ({ orderDetails }: OrderDetailItemsProps) => {
   const { t } = useTranslation()
   return (
     <div className='w-full'>
@@ -49,7 +47,6 @@ const OrderDetailItems = ({ orderDetails, status }: OrderDetailItemsProps) => {
             subTotal={orderDetail?.subTotal}
             productQuantity={orderDetail?.productClassification?.quantity}
             productClassification={orderDetail?.productClassification}
-            status={status}
             isFeedback={orderDetail?.isFeedback}
           />
         ))}

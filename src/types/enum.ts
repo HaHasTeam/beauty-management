@@ -133,3 +133,9 @@ export enum ResultEnum {
   WARNING = 'WARNING',
   FAILURE = 'FAILURE'
 }
+
+export enum CancelOrderRequestStatusEnum {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
+}

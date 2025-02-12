@@ -190,10 +190,7 @@ const OrderDetails = () => {
                 {/* order items */}
                 <div>
                   {/* order items */}
-                  <OrderDetailItems
-                    orderDetails={useOrderData?.data?.orderDetails}
-                    status={useOrderData?.data?.status}
-                  />
+                  <OrderDetailItems orderDetails={useOrderData?.data?.orderDetails} />
 
                   {/* order summary */}
                   <OrderSummary

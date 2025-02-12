@@ -7,8 +7,12 @@ type AlertMessageProps = {
   className?: string
   size?: 'small' | 'medium' | 'large'
   textSize?: 'small' | 'medium' | 'large'
+  titleSize?: 'small' | 'medium' | 'large'
   color?: 'primary' | 'secondary' | 'accent' | 'warn' | 'black' | 'danger'
   text?: 'primary' | 'secondary' | 'accent' | 'black' | 'danger'
+  titleClassName?: string
+  title?: string
+  isShowIcon?: boolean
 }
 const AlertMessage = ({
   message,
@@ -16,7 +20,11 @@ const AlertMessage = ({
   size = 'medium',
   color = 'warn',
   text = 'black',
-  textSize = 'medium'
+  textSize = 'medium',
+  titleClassName,
+  title,
+  titleSize = 'large',
+  isShowIcon = true
 }: AlertMessageProps) => {
   const sizeClasses = {
     small: 'w-2 h-2',
@@ -47,9 +55,22 @@ const AlertMessage = ({
   }
   return (
     <Alert variant='default' className={`bg-yellow-50 flex items-center ${className}`}>
-      <AlertDescription className='flex items-center gap-2 border-0'>
-        <Info className={`flex items-center ${sizeClasses[size]} ${iconColorClasses[color]}`} />
-        <span className={`${textColorClasses[text]} ${textSizeClasses[textSize]}`}>{message}</span>
+      <AlertDescription className='border-0'>
+        {title && (
+          <h3
+            className={`${isShowIcon && 'ml-5'} font-bold ${iconColorClasses[color]} ${titleClassName} ${textSizeClasses[titleSize]}`}
+          >
+            {title}
+          </h3>
+        )}
+        <div className='flex items-center gap-2'>
+          {isShowIcon && (
+            <div>
+              <Info className={`flex items-center ${sizeClasses[size]} ${iconColorClasses[color]}`} size={24} />
+            </div>
+          )}
+          <span className={`${textColorClasses[text]} ${textSizeClasses[textSize]}`}>{message}</span>
+        </div>
       </AlertDescription>
     </Alert>
   )
