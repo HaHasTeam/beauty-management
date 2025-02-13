@@ -6,15 +6,15 @@ import { UseFormReturn } from 'react-hook-form'
 import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
 
+import FormCategorySelection from '@/components/form-category-selection'
 import FormLabel from '@/components/form-label'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 import { modules } from '@/variables/textEditor'
 
-import FormCategorySelection from '../form-category-selection'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
-import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
 import UploadProductImages from './UploadProductImages'
 
 interface BasicInformationProps {
@@ -218,19 +218,10 @@ const BasicInformation = ({
                                 className='border-primary/40'
                                 theme='snow'
                                 {...field}
-                                onChange={(content, _delta, _source, editor) => {
-                                  // Get plain text and trim
-                                  const text = editor.getText().trim()
-
+                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                onChange={(content, _delta, _source, _editor) => {
                                   // Truncate if exceeds limit
-                                  if (text.length > 5000) {
-                                    // Create a new Quill instance to manipulate content
-                                    const truncatedContent = content.split(' ').slice(0, 5000).join(' ')
-
-                                    field.onChange(truncatedContent)
-                                  } else {
-                                    field.onChange(content)
-                                  }
+                                  field.onChange(content.trim())
                                 }}
                               />
                             </FormControl>

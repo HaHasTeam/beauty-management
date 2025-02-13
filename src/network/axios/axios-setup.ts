@@ -6,3 +6,10 @@ export const axiosBaseOptions: RawAxiosRequestConfig = {
     Accept: 'application/json'
   }
 }
+
+export const axiosProvincesOptions: RawAxiosRequestConfig = {
+  baseURL: import.meta.env.VITE_PROVINCES_API_BASE_URL as string,
+  headers: {
+    Accept: 'application/json'
+  }
+}

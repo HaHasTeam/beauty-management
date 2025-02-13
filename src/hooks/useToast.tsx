@@ -1,4 +1,5 @@
 import { ShieldAlertIcon, ShieldCheckIcon, ShieldXIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 type ToastOptions = {
@@ -6,15 +7,15 @@ type ToastOptions = {
   description?: string
   duration?: number
   onClose?: () => void
+  isShowDescription?: boolean
 }
 
 export const useToast = () => {
-  const successToast = ({ message, description, duration, onClose }: ToastOptions) => {
+  const { t } = useTranslation()
+  const successToast = ({ message, description, duration, onClose, isShowDescription = true }: ToastOptions) => {
     toast.success(message, {
       description: (
-        <span className='text-green-500 text-xs'>
-          {description || 'Your request has been successfully processed, continue with your work.'}
-        </span>
+        <span className='text-green-500 text-xs'>{isShowDescription && (description || t('toast.success'))}</span>
       ),
       icon: <ShieldCheckIcon size={20} />,
       duration,
@@ -22,13 +23,10 @@ export const useToast = () => {
     })
   }
 
-  const errorToast = ({ message, description, duration, onClose }: ToastOptions) => {
+  const errorToast = ({ message, description, duration, onClose, isShowDescription = true }: ToastOptions) => {
     toast.error(message, {
       description: (
-        <span className='text-red-500 text-xs'>
-          {description ||
-            'An error occurred while processing your request, please try again later. If the problem persists, please contact the support team.'}
-        </span>
+        <span className='text-red-500 text-xs'>{isShowDescription && (description || t('toast.error'))}</span>
       ),
       duration,
       onDismiss: onClose,
@@ -36,13 +34,10 @@ export const useToast = () => {
     })
   }
 
-  const warningToast = ({ message, description, duration, onClose }: ToastOptions) => {
+  const warningToast = ({ message, description, duration, onClose, isShowDescription = true }: ToastOptions) => {
     toast.warning(message, {
       description: (
-        <span className='text-yellow-500 text-xs'>
-          {description ||
-            'You are about to perform a unsafe action, please be cautious. If you are not sure, please contact the support team.'}
-        </span>
+        <span className='text-yellow-500 text-xs'>{isShowDescription && (description || t('toast.warning'))}</span>
       ),
       duration,
       onDismiss: onClose,
@@ -50,13 +45,10 @@ export const useToast = () => {
     })
   }
 
-  const infoToast = ({ message, description, duration, onClose }: ToastOptions) => {
+  const infoToast = ({ message, description, duration, onClose, isShowDescription = true }: ToastOptions) => {
     toast.info(message, {
       description: (
-        <span className='text-blue-500 text-xs'>
-          {description ||
-            'This is an information message, you can use it to provide additional information to the user. If you are not sure, please contact the support team.'}
-        </span>
+        <span className='text-blue-500 text-xs'>{isShowDescription && (description || t('toast.infor'))}</span>
       ),
       duration,
       onDismiss: onClose

@@ -281,6 +281,7 @@ export const productFormDetailFields: IProductFormFields[] = [
   }
 ]
 
+const skuRegex = /^[a-zA-Z0-9-_]{6,8}$/
 const fileArray = z.array(z.instanceof(File))
 export const FormProductSchema = z
   .object({
@@ -294,11 +295,10 @@ export const FormProductSchema = z
     images: fileArray.min(1, { message: productFormMessage.imagesRequired }),
     description: z
       .string()
-      .transform((val) => val.replace(/<[^>]*>/g, '').trim())
-      .refine((val) => val.length > 0, { message: productFormMessage.descriptionRequired })
-      .refine((val) => val.length <= 5000, { message: productFormMessage.descriptionTooLong })
-      // Convert back to original format for form submission
-      .transform((val) => `<p>${val}</p>`),
+      .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
+        message: productFormMessage.descriptionRequired
+      })
+      .refine((val) => val.length <= 80000, { message: productFormMessage.descriptionTooLong }),
     status: z.string().min(1, { message: productFormMessage.statusRequired }),
     // detail information
     detail: z.record(
@@ -317,17 +317,24 @@ export const FormProductSchema = z
         z.object({
           id: z.string().min(0).optional(),
           title: z.string().min(1, { message: productFormMessage.classificationTitleRequired }).optional(),
-          sku: z.string().optional(),
+          sku: z.string().regex(skuRegex, { message: productFormMessage.SKURegex }).optional(),
           type: z.string().min(0).optional(),
           price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
           quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-          images: fileArray.min(1, { message: productFormMessage.imagesRequired }).optional()
+          images: fileArray.min(1, { message: productFormMessage.imagesRequired }).optional(),
+          color: z.string().optional(),
+          size: z.string().optional(),
+          other: z.string().optional()
         })
       )
       .optional(),
     price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
     quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-    sku: z.string().optional()
+    sku: z
+      .string()
+      .min(6, { message: productFormMessage.SKUValidate })
+      .max(8, { message: productFormMessage.SKUValidate })
+      .regex(skuRegex, { message: productFormMessage.SKURegex })
   })
   .refine(
     (data) => {
@@ -378,6 +385,19 @@ export const FormProductSchema = z
     },
     {
       message: productFormMessage.quantityValidate,
+      path: ['productClassifications']
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.productClassifications && data.productClassifications.length > 0) {
+        // If productClassifications exist, ensure quantity  must be at least 1
+        return data.productClassifications.every((item) => item.sku && skuRegex.test(item.sku))
+      }
+      return true
+    },
+    {
+      message: productFormMessage.SKUValidateFull,
       path: ['productClassifications']
     }
   )

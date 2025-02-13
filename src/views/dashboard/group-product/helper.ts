@@ -1,6 +1,6 @@
 import * as z from 'zod'
 
-import { defaultRequiredRegex, integerRequiredRegex } from '@/constants/regex'
+import { defaultRequiredRegex, numberRequiredRegex } from '@/constants/regex'
 import { TCreateGroupProductRequestParams, TUpdateGroupProductRequestParams } from '@/network/apis/group-product/type'
 import { DiscountTypeEnum, VoucherApplyTypeEnum, VoucherVisibilityEnum } from '@/types/enum'
 import { TGroupProduct } from '@/types/group-product'
@@ -31,7 +31,7 @@ export const formSchema = z.object({
         .number()
         .int()
         .positive({
-          message: integerRequiredRegex.message
+          message: numberRequiredRegex.message
         })
         .optional(),
       hasMaxBuyAmount: z.boolean().default(false)
@@ -79,11 +79,11 @@ export const formSchema = z.object({
         id: z.string().optional(),
         threshold: z.coerce
           .number({
-            message: integerRequiredRegex.message
+            message: numberRequiredRegex.message
           })
           .int()
           .positive({
-            message: integerRequiredRegex.message
+            message: numberRequiredRegex.message
           }),
         voucher: z.object({
           id: z.string().optional(),
@@ -91,10 +91,10 @@ export const formSchema = z.object({
           applyType: z.nativeEnum(VoucherApplyTypeEnum).default(VoucherApplyTypeEnum.ALL),
           discountValue: z.coerce
             .number({
-              message: integerRequiredRegex.message
+              message: numberRequiredRegex.message
             })
             .positive({
-              message: integerRequiredRegex.message
+              message: numberRequiredRegex.message
             }),
           description: z.string().optional(),
           discountType: z.nativeEnum(DiscountTypeEnum),
