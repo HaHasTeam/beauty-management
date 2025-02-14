@@ -1,6 +1,6 @@
+import i18next from 'i18next'
 import { z } from 'zod'
 
-import { productFormMessage } from '@/constants/message'
 import { IOption } from '@/types/option'
 
 export type IFormProductFieldId = keyof z.infer<typeof FormProductSchema>['detail']
@@ -288,18 +288,18 @@ export const FormProductSchema = z
     // basic information
     name: z
       .string()
-      .min(1, { message: productFormMessage.productNameRequired })
-      .max(120, { message: productFormMessage.productNameLengthRequired }),
-    brand: z.string().min(1, { message: productFormMessage.brandRequired }),
-    category: z.string().min(1, { message: productFormMessage.categoryRequired }),
-    images: fileArray.min(1, { message: productFormMessage.imagesRequired }),
+      .min(1, { message: i18next.t('productFormMessage.productNameRequired') })
+      .max(120, { message: i18next.t('productFormMessage.productNameLengthRequired') }),
+    brand: z.string().min(1, { message: i18next.t('productFormMessage.brandRequired') }),
+    category: z.string().min(1, { message: i18next.t('productFormMessage.categoryRequired') }),
+    images: fileArray.min(1, { message: i18next.t('productFormMessage.imagesRequired') }),
     description: z
       .string()
       .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
-        message: productFormMessage.descriptionRequired
+        message: i18next.t('productFormMessage.descriptionRequired')
       })
-      .refine((val) => val.length <= 80000, { message: productFormMessage.descriptionTooLong }),
-    status: z.string().min(1, { message: productFormMessage.statusRequired }),
+      .refine((val) => val.length <= 80000, { message: i18next.t('productFormMessage.descriptionTooLong') }),
+    status: z.string().min(1, { message: i18next.t('productFormMessage.statusRequired') }),
     // detail information
     detail: z.record(
       z
@@ -316,25 +316,43 @@ export const FormProductSchema = z
       .array(
         z.object({
           id: z.string().min(0).optional(),
-          title: z.string().min(1, { message: productFormMessage.classificationTitleRequired }).optional(),
-          sku: z.string().regex(skuRegex, { message: productFormMessage.SKURegex }).optional(),
+          title: z
+            .string()
+            .min(1, { message: i18next.t('productFormMessage.classificationTitleRequired') })
+            .optional(),
+          sku: z
+            .string()
+            .regex(skuRegex, { message: i18next.t('productFormMessage.SKURegex') })
+            .optional(),
           type: z.string().min(0).optional(),
-          price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
-          quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-          images: fileArray.min(1, { message: productFormMessage.imagesRequired }).optional(),
+          price: z
+            .number()
+            .min(1000, { message: i18next.t('productFormMessage.priceValidate') })
+            .optional(),
+          quantity: z
+            .number()
+            .min(1, { message: i18next.t('productFormMessage.quantityValidate') })
+            .optional(),
+          images: fileArray.min(1, { message: i18next.t('productFormMessage.imagesRequired') }).optional(),
           color: z.string().optional(),
           size: z.string().optional(),
           other: z.string().optional()
         })
       )
       .optional(),
-    price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
-    quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
+    price: z
+      .number()
+      .min(1000, { message: i18next.t('productFormMessage.priceValidate') })
+      .optional(),
+    quantity: z
+      .number()
+      .min(1, { message: i18next.t('productFormMessage.quantityValidate') })
+      .optional(),
     sku: z
       .string()
-      .min(6, { message: productFormMessage.SKUValidate })
-      .max(8, { message: productFormMessage.SKUValidate })
-      .regex(skuRegex, { message: productFormMessage.SKURegex })
+      .min(6, { message: i18next.t('productFormMessage.SKUValidate') })
+      .max(8, { message: i18next.t('productFormMessage.SKUValidate') })
+      .regex(skuRegex, { message: i18next.t('productFormMessage.SKURegex') })
   })
   .refine(
     (data) => {
@@ -345,7 +363,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: productFormMessage.priceRequired,
+      message: i18next.t('productFormMessage.priceRequired'),
       path: ['price']
     }
   )
@@ -358,7 +376,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: productFormMessage.quantityRequired,
+      message: i18next.t('productFormMessage.quantityRequired'),
       path: ['quantity']
     }
   )
@@ -371,7 +389,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: productFormMessage.priceValidate,
+      message: i18next.t('productFormMessage.priceValidate'),
       path: ['productClassifications']
     }
   )
@@ -384,7 +402,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: productFormMessage.quantityValidate,
+      message: i18next.t('productFormMessage.quantityValidate'),
       path: ['productClassifications']
     }
   )
@@ -397,7 +415,7 @@ export const FormProductSchema = z
       return true
     },
     {
-      message: productFormMessage.SKUValidateFull,
+      message: i18next.t('productFormMessage.SKUValidateFull'),
       path: ['productClassifications']
     }
   )

@@ -2,9 +2,9 @@
 import { Check, ChevronDown, ChevronRight, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import { productFormMessage } from '@/constants/message'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
@@ -27,6 +27,7 @@ export default function FormCategorySelection({
   defineFormSignal,
   form
 }: FormCategorySelectionProps) {
+  const { t } = useTranslation()
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([])
   const [chosenCategories, setChosenCategories] = useState<ICategory[]>([])
   const [open, setOpen] = useState(false)
@@ -74,7 +75,7 @@ export default function FormCategorySelection({
 
     if (hasSubCategories) {
       // If the last selected category has children, show an error or notification
-      setCategoryError(productFormMessage.categoryLastLevel)
+      setCategoryError(t('createProduct.pleaseChooseLastLevelCategory'))
       return
     }
 
@@ -147,10 +148,12 @@ export default function FormCategorySelection({
               className={`${!open && 'outline-none ring-1 ring-ring'} relative border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
             >
               {!chosenCategories || chosenCategories?.length === 0 ? (
-                <span className='text-muted-foreground line-clamp-1'>Vui lòng chọn danh mục</span>
+                <span className='text-muted-foreground line-clamp-1'>{t('createProduct.pleaseChooseCategory')}</span>
               ) : (
                 <div className='flex items-center justify-between gap-1 w-full'>
-                  <span>{chosenCategories.map((cat) => cat.name).join(' > ') || 'Vui lòng chọn danh mục'}</span>
+                  <span>
+                    {chosenCategories.map((cat) => cat.name).join(' > ') || t('createProduct.pleaseChooseCategory')}
+                  </span>
                 </div>
               )}
               <ChevronDown className='w-5 h-5 text-muted-foreground' />
@@ -160,7 +163,7 @@ export default function FormCategorySelection({
         <PopoverContent className='w-[100%] p-0' align='start'>
           <div className='w-full flex flex-col bg-white p-3 rounded-lg shadow-md'>
             <div className='flex text-sm p-2 bg-yellow-50 items-center gap-2 rounded-md'>
-              <Info className='w-4 h-4' /> Vui lòng chọn danh mục cuối cấp được in đậm.
+              <Info className='w-4 h-4' /> {t('createProduct.pleaseChooseLastLevelCategory')}
             </div>
             <div className='w-full h-full flex'>
               <div className='w-full bg-white mt-1 border border-gray-300'>
@@ -233,10 +236,10 @@ export default function FormCategorySelection({
               })}
             </div>
             <div className='space-y-2'>
-              <span className='text-sm font-semibold'>Đang chọn: </span>
+              <span className='text-sm font-semibold'>{t('createProduct.beingChoosing')}: </span>
               {selectedCategories && selectedCategories?.length > 0 && (
                 <span className='text-blue-500'>
-                  {selectedCategories.map((cat) => cat.name).join(' > ') || 'Vui lòng chọn danh mục'}
+                  {selectedCategories.map((cat) => cat.name).join(' > ') || t('createProduct.pleaseChooseCategory')}
                 </span>
               )}
               {categoryError && categoryError.length > 0 && (
@@ -244,7 +247,7 @@ export default function FormCategorySelection({
               )}
               <div className='flex space-x-2'>
                 <Button type='button' onClick={handleConfirmSelectCategory}>
-                  Xác nhận
+                  {t('button.select')}
                 </Button>
                 <Button
                   type='button'
@@ -252,7 +255,7 @@ export default function FormCategorySelection({
                   className='border hover:border-primary hover:text-primary'
                   onClick={handleCancelCategorySelect}
                 >
-                  Bỏ chọn
+                  {t('button.deselect')}
                 </Button>
               </div>
             </div>

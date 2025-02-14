@@ -3,6 +3,7 @@ import { FilesIcon, Upload } from 'lucide-react'
 import { ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '@/components/file-input'
 import { PreviewDialog } from '@/components/file-input/PreviewImageDialog'
@@ -33,6 +34,7 @@ const UploadProductImages = <T extends FieldValues>({
   centerItem = false,
   setIsImagesUpload
 }: UploadFileModalProps<T>) => {
+  const { t } = useTranslation()
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
 
@@ -42,7 +44,7 @@ const UploadProductImages = <T extends FieldValues>({
   }>(() => {
     if (typeof field?.value === 'string') {
       if (dropZoneConfigOptions?.maxFiles && dropZoneConfigOptions?.maxFiles > 1) {
-        throw new Error('Field value must be an array')
+        throw new Error(t('validation.arrayRequired'))
       }
 
       return {
@@ -60,7 +62,7 @@ const UploadProductImages = <T extends FieldValues>({
         fieldValue: field?.value
       }
     }
-    throw new Error('Field value must be a string or an array')
+    throw new Error(t('validation.stringOrArrayRequired'))
   }, [field?.value, dropZoneConfigOptions?.maxFiles])
 
   const isDragActive = false
@@ -161,11 +163,11 @@ const UploadProductImages = <T extends FieldValues>({
       })
     }
   }
-  const message = `You can upload up to ${dropZoneConfig.maxFiles} files. Accepted file formats are ${Object.values(
+  const message = `${t('validation.fileCountValid', { count: dropZoneConfig.maxFiles })}. ${t('validation.fileFormat')} ${Object.values(
     dropZoneConfig.accept
   )
     .flat()
-    .join(', ')}. Each file must be under ${dropZoneConfig.maxSize / (1024 * 1024)}MB.`
+    .join(', ')}. ${t('validation.sizeFileValid', { size: dropZoneConfig.maxSize / (1024 * 1024) })}`
   return (
     <>
       {header}
@@ -190,17 +192,15 @@ const UploadProductImages = <T extends FieldValues>({
                       <div className='w-32 h-32 overflow-hidden hover:bg-primary/15 flex flex-col items-center justify-center text-center border border-dashed rounded-xl border-primary py-4 text-primary transition-all duration-500'>
                         <Upload className='w-12 h-12 mb-4 text-muted-foreground' />
                         {isDragActive ? (
-                          <p className='text-lg font-medium text-foreground'>Drop your file here</p>
+                          <p className='text-lg font-medium text-foreground'>{t('createProduct.dropFile')}</p>
                         ) : (
                           <>
-                            <p className='text-lg font-medium text-primary'>Drag & drop your files here</p>
-                            <p className='mt-2 text-sm text-muted-foreground'>or click to select files</p>
+                            <p className='text-lg font-medium text-primary'>{t('createProduct.dragAndDrop')}</p>
+                            <p className='mt-2 text-sm text-muted-foreground'>{t('createProduct.selectFile')}</p>
                             {files && files.length < dropZoneConfig.maxFiles ? (
                               <span className='mt-2 text-sm text-primary px-8'>{message} </span>
                             ) : (
-                              <span className='mt-2 text-sm text-primary px-8'>
-                                {`You have reached the maximum number of files allowed`}
-                              </span>
+                              <span className='mt-2 text-sm text-primary px-8'>{t('createProduct.reachMaxFiles')}</span>
                             )}
                           </>
                         )}

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -12,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
 import { steps } from '@/constants/helper'
-import { productFormMessage, productPageMessage } from '@/constants/message'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllCategoryApi } from '@/network/apis/category'
@@ -31,6 +31,7 @@ import DetailInformation from '../create-product/DetailInformation'
 import SalesInformation from '../create-product/SalesInformation'
 
 const UpdateProduct = () => {
+  const { t } = useTranslation()
   const { id } = useParams()
   const productId = id ?? ''
   const formId = useId()
@@ -95,10 +96,11 @@ const UpdateProduct = () => {
     mutationFn: updateProductApi.fn,
     onSuccess: () => {
       successToast({
-        message:
+        message: t('createProduct.successUpdate'),
+        description:
           form.getValues('status') === ProductEnum.OFFICIAL
-            ? productFormMessage.successUpdateOfficialMessage
-            : productFormMessage.successUpdateInactiveMessage
+            ? t('createProduct.successOfficialDescription')
+            : t('createProduct.successInactiveDescription')
       })
       queryClient.invalidateQueries({
         queryKey: [getProductApi.queryKey, productId as string]
@@ -347,10 +349,10 @@ const UpdateProduct = () => {
                 />
                 <div className='w-full flex flex-row-reverse justify-start gap-3'>
                   <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                    Submit and Show
+                    {t('button.submitAndShow')}
                   </Button>
                   <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-                    Submit and Hide
+                    {t('button.submitAndHide')}
                   </Button>
                   <Button
                     variant='outline'
@@ -360,7 +362,7 @@ const UpdateProduct = () => {
                       navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
                     }}
                   >
-                    Hủy
+                    {t('button.cancel')}
                   </Button>
                 </div>
               </form>
@@ -379,7 +381,7 @@ const UpdateProduct = () => {
         </div>
       ) : (
         <div className='h-[600px] w-full flex justify-center items-center'>
-          <Empty title={productPageMessage.emptyProductTitle} description={productPageMessage.emptyProductMessage} />
+          <Empty title={t('empty.productDetail.title')} description={t('empty.productDetail.description')} />
         </div>
       )}
     </>

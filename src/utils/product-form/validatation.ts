@@ -1,4 +1,5 @@
-import { productFormMessage } from '@/constants/message'
+import { useTranslation } from 'react-i18next'
+
 import { IClassificationOption, ICombination } from '@/types/productForm'
 
 export const validateOptionTitles = (
@@ -16,7 +17,8 @@ export const validateOptionTitles = (
   return null
 }
 
-export const validateSKUs = (combinations: ICombination[]) => {
+export const ValidateSKUs = (combinations: ICombination[]) => {
+  const { t } = useTranslation()
   // Create a Map to track SKUs and their indices
   const skuMap = new Map<string, number[]>()
   let duplicatedIndices: number[] = []
@@ -41,6 +43,6 @@ export const validateSKUs = (combinations: ICombination[]) => {
   return {
     isUnique: duplicatedIndices.length === 0,
     duplicatedIndices,
-    errorMessage: duplicatedIndices.length > 0 ? productFormMessage.SKURequired : ''
+    errorMessage: duplicatedIndices.length > 0 ? t('productFormMessage.SKURequired') : ''
   }
 }

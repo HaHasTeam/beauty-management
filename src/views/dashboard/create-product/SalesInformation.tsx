@@ -1,5 +1,6 @@
 import { ImagePlus, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import AlertCustom from '@/components/alert'
 import FormLabel from '@/components/form-label'
@@ -9,11 +10,10 @@ import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/f
 import { Input, InputNormal } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { productFormMessage } from '@/constants/message'
 import { IProductClassification, ProductClassificationTypeEnum } from '@/types/product'
 import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
 import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
-import { validateOptionTitles, validateSKUs } from '@/utils/product-form/validatation'
+import { validateOptionTitles, ValidateSKUs } from '@/utils/product-form/validatation'
 
 import UploadProductImages from './UploadProductImages'
 
@@ -26,6 +26,7 @@ export default function SalesInformation({
   activeStep,
   setActiveStep
 }: SalesInformationProps) {
+  const { t } = useTranslation()
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
   const [combinations, setCombinations] = useState<ICombination[]>([])
@@ -242,7 +243,7 @@ export default function SalesInformation({
     setDuplicateOptionIndex(duplicateIndex)
     if (duplicateIndex !== null) {
       setIsValid(false)
-      setErrorOption('Each option in the same classification must have a unique name.')
+      setErrorOption(t('createProduct.uniqueNameClassification'))
     } else {
       setIsValid(true)
       setErrorOption('')
@@ -319,7 +320,7 @@ export default function SalesInformation({
   }, [form, price, productClassificationsForm, combinations, quantity, setCompleteSteps])
 
   useEffect(() => {
-    const { isUnique, errorMessage, duplicatedIndices } = validateSKUs(combinations)
+    const { isUnique, errorMessage, duplicatedIndices } = ValidateSKUs(combinations)
     setIsValid(isUnique)
     setErrorSKUMessage(errorMessage)
     setDuplicatedSKUIndex(duplicatedIndices)
@@ -351,11 +352,11 @@ export default function SalesInformation({
       >
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
-            <h2 className='font-bold text-xl'>Thông tin phân loại sản phẩm</h2>
+            <h2 className='font-bold text-xl'>{t('createProduct.classificationInformation')}</h2>
           </AccordionTrigger>
           <AccordionContent>
             {selectedCategory === '' || selectedCategory === undefined ? (
-              <AlertCustom message='Vui lòng chọn danh mục để xem các thông tin' />
+              <AlertCustom message={t('createProduct.pleaseChooseCategoryToViewInformation')} />
             ) : (
               <div className='space-y-6'>
                 <div>
@@ -367,13 +368,13 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel required>SKU sản phẩm</FormLabel>
+                              <FormLabel required>{t('createProduct.skuProduct')}</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
                                 <Input
                                   type='string'
-                                  placeholder='Nhập SKU sản phẩm'
+                                  placeholder={t('createProduct.skuProductPlaceholder')}
                                   className='border-primary/40'
                                   {...field}
                                   value={field?.value ?? ''}
@@ -388,7 +389,9 @@ export default function SalesInformation({
                   </div>
                   <div className='w-full flex gap-2'>
                     <div className={`w-[15%] ${classificationCount <= 0 ? 'flex items-center' : 'items-start'}`}>
-                      <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
+                      <FormLabel required={classificationCount > 0}>
+                        {t('createProduct.productClassification')}
+                      </FormLabel>
                     </div>
                     <div className='w-full space-y-1'>
                       <div className='w-full space-y-3'>
@@ -402,7 +405,7 @@ export default function SalesInformation({
                             disabled={classificationCount >= MAX_CLASSIFICATION_LEVEL}
                           >
                             <Plus className='w-4 h-4' />
-                            Thêm nhóm phân loại
+                            {t('createProduct.newProductClassification')}
                           </Button>
                         )}
                         {(classificationsOptions ?? []).length > 0 && (
@@ -419,7 +422,9 @@ export default function SalesInformation({
 
                                 <div className='space-y-2'>
                                   <div className='flex gap-2 items-center'>
-                                    <FormLabel required={classificationCount > 0}>Chọn tên phân loại</FormLabel>
+                                    <FormLabel required={classificationCount > 0}>
+                                      {t('createProduct.chooseClassificationName')}
+                                    </FormLabel>
                                     <div className='space-y-1'>
                                       <FormControl>
                                         <Select
@@ -428,7 +433,7 @@ export default function SalesInformation({
                                         >
                                           <SelectTrigger>
                                             <SelectValue
-                                              placeholder='Chọn tên phân loại'
+                                              placeholder={t('createProduct.pleaseChooseClassificationName')}
                                               className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
                                             />
                                           </SelectTrigger>
@@ -446,19 +451,19 @@ export default function SalesInformation({
                                               value='Color'
                                               disabled={isClassificationTypeUsedInOtherLevels('Color', index)}
                                             >
-                                              Color
+                                              {t('createProduct.color')}
                                             </SelectItem>
                                             <SelectItem
                                               value='Size'
                                               disabled={isClassificationTypeUsedInOtherLevels('Size', index)}
                                             >
-                                              Size
+                                              {t('createProduct.size')}
                                             </SelectItem>
                                             <SelectItem
                                               value='Other'
                                               disabled={isClassificationTypeUsedInOtherLevels('Other', index)}
                                             >
-                                              Other
+                                              {t('createProduct.other')}
                                             </SelectItem>
                                           </SelectContent>
                                         </Select>
@@ -469,7 +474,7 @@ export default function SalesInformation({
                                   <div className='flex gap-2 items-center'>
                                     <div>
                                       <FormLabel required={classificationCount > 0}>
-                                        Phân loại {classification?.title}
+                                        {t('createProduct.classification')} {classification?.title}
                                       </FormLabel>
                                     </div>
                                     <Button
@@ -479,7 +484,7 @@ export default function SalesInformation({
                                       className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
                                       onClick={() => handleAddOption(index)}
                                     >
-                                      Thêm Option
+                                      {t('createProduct.addOption')}
                                     </Button>
                                   </div>
                                   <div className='grid grid-cols-2 gap-x-5 gap-y-3 lg:gap-x-10'>
@@ -494,7 +499,7 @@ export default function SalesInformation({
                                                 <div className='flex gap-2 items-center'>
                                                   <FormControl>
                                                     <Input
-                                                      placeholder={`e.g. Red etc`}
+                                                      placeholder={t('createProduct.classificationEg')}
                                                       {...field}
                                                       value={option}
                                                       onChange={(e) => {
@@ -528,7 +533,7 @@ export default function SalesInformation({
                         )}
                         {combinations.length > 0 && (
                           <div className='mt-4 bg-primary/5 rounded-lg p-4 space-y-2'>
-                            <h3 className='text-md font-semibold'>Tùy chọn giá và số lượng</h3>
+                            <h3 className='text-md font-semibold'>{t('createProduct.inputPriceAndQuantity')}</h3>
                             <div>
                               <Table className='hover:bg-transparent items-center'>
                                 <TableHeader>
@@ -554,21 +559,21 @@ export default function SalesInformation({
                                     )}
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        Giá
+                                        {t('createProduct.price')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        Số lượng
+                                        {t('createProduct.quantity')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        SKU sản phẩm
+                                        {t('createProduct.skuProduct')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel className='justify-center'>Thao tác</FormLabel>
+                                      <FormLabel className='justify-center'>{t('createProduct.action')}</FormLabel>
                                     </TableHead>
                                   </TableRow>
                                 </TableHeader>
@@ -616,7 +621,7 @@ export default function SalesInformation({
                                                             <ImagePlus className='w-12 h-12 text-primary' />
 
                                                             <p className='text-sm text-primary'>
-                                                              Drag & drop or browse file ({files?.length ?? 0}/
+                                                              {t('createProduct.dragOrBrowse')} ({files?.length ?? 0}/
                                                               {maxFiles})
                                                             </p>
                                                           </div>
@@ -655,7 +660,7 @@ export default function SalesInformation({
                                             <FormItem>
                                               <FormControl>
                                                 <InputNormal
-                                                  placeholder='Nhập giá'
+                                                  placeholder={t('createProduct.inputPrice')}
                                                   type='number'
                                                   {...field}
                                                   value={combo?.price ?? ''}
@@ -676,7 +681,7 @@ export default function SalesInformation({
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
                                                 {field?.value === undefined && (
                                                   <span className='text-destructive text-xs font-semibold'>
-                                                    {productFormMessage.priceClassificationRequired}
+                                                    {t('productFormMessage.priceClassificationRequired')}
                                                   </span>
                                                 )}
                                               </div>
@@ -692,7 +697,7 @@ export default function SalesInformation({
                                             <FormItem>
                                               <FormControl>
                                                 <InputNormal
-                                                  placeholder='Nhập số lượng'
+                                                  placeholder={t('createProduct.inputQuantity')}
                                                   type='number'
                                                   {...field}
                                                   value={combo.quantity ?? ''}
@@ -713,7 +718,7 @@ export default function SalesInformation({
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
                                                 {field?.value === undefined && (
                                                   <span className='text-destructive text-xs font-semibold'>
-                                                    {productFormMessage.quantityClassificationRequired}
+                                                    {t('productFormMessage.quantityClassificationRequired')}
                                                   </span>
                                                 )}
                                               </div>
@@ -729,7 +734,7 @@ export default function SalesInformation({
                                             <FormItem>
                                               <FormControl>
                                                 <Input
-                                                  placeholder='Nhập SKU sản phẩm'
+                                                  placeholder={t('createProduct.inputSku')}
                                                   type='string'
                                                   {...field}
                                                   value={combo.sku ?? 1}
@@ -784,13 +789,13 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel required>Giá</FormLabel>
+                              <FormLabel required>{t('createProduct.price')}</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
                                 <InputNormal
                                   type='number'
-                                  placeholder='Nhập vào'
+                                  placeholder={t('createProduct.inputPrice')}
                                   className='border-primary/40'
                                   {...field}
                                   value={field.value ?? ''}
@@ -815,13 +820,13 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel required>Số lượng</FormLabel>
+                              <FormLabel required>{t('createProduct.quantity')}</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
                                 <InputNormal
                                   type='number'
-                                  placeholder='Nhập vào'
+                                  placeholder={t('createProduct.inputQuantity')}
                                   className='border-primary/40'
                                   {...field}
                                   value={field.value ?? ''}

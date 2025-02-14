@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -11,7 +12,6 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
 import { steps } from '@/constants/helper'
-import { productFormMessage } from '@/constants/message'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllCategoryApi } from '@/network/apis/category'
@@ -27,6 +27,8 @@ import DetailInformation from './DetailInformation'
 import SalesInformation from './SalesInformation'
 
 const CreateProduct = () => {
+  const DEFAULT_TITLE = 'Default'
+  const { t } = useTranslation()
   const [resetSignal, setResetSignal] = useState(false)
   const [isValid, setIsValid] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
@@ -78,9 +80,12 @@ const CreateProduct = () => {
       successToast({
         message:
           form.getValues('status') === ProductEnum.OFFICIAL
-            ? productFormMessage.successCreateOfficialMessage
-            : productFormMessage.successCreateInactiveMessage,
-        isShowDescription: false
+            ? t('createProduct.successOfficial')
+            : t('createProduct.successInactive'),
+        description:
+          form.getValues('status') === ProductEnum.OFFICIAL
+            ? t('createProduct.successOfficialDescription')
+            : t('createProduct.successInactiveDescription')
       })
       handleReset()
     }
@@ -136,7 +141,7 @@ const CreateProduct = () => {
                 }))
               : [
                   {
-                    title: 'Default',
+                    title: DEFAULT_TITLE,
                     images: [],
                     price: values.price ?? 1000,
                     quantity: values.quantity ?? 1,
@@ -207,10 +212,10 @@ const CreateProduct = () => {
               />
               <div className='w-full flex flex-row-reverse justify-start gap-3'>
                 <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                  Submit and Show
+                  {t('button.submitAndShow')}
                 </Button>
                 <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-                  Submit and Hide
+                  {t('button.submitAndHide')}
                 </Button>
                 <Button
                   variant='outline'
@@ -220,7 +225,7 @@ const CreateProduct = () => {
                     navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
                   }}
                 >
-                  Hủy
+                  {t('button.cancel')}
                 </Button>
               </div>
             </form>

@@ -3,6 +3,7 @@ import './index.css'
 
 import { useEffect, useRef, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import AlertCustom from '@/components/alert'
@@ -36,6 +37,7 @@ export default function DetailInformation({
   isValid,
   setCompleteSteps
 }: DetailInformationProps) {
+  const { t } = useTranslation()
   const [productDetailField, setProductDetailField] = useState<IProductFormFields[]>([])
   const MAX_MULTI_SELECT_ITEMS = 5
   const DETAIL_INFORMATION_INDEX = 2
@@ -119,16 +121,16 @@ export default function DetailInformation({
       >
         <AccordionItem value='description' className='last:overflow-visible'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline overflow-visible'>
-            <h2 className='font-bold text-xl'>Thông tin chi tiết</h2>
+            <h2 className='font-bold text-xl'>{t('createProduct.detailInformation')}</h2>
           </AccordionTrigger>
           <AccordionContent className='overflow-visible'>
             {!productDetailField || productDetailField?.length === 0 ? (
-              <AlertCustom message='Vui lòng chọn danh mục để xem các thông tin' />
+              <AlertCustom message={t('createProduct.pleaseChooseCategoryToViewInformation')} />
             ) : (
               <div>
                 <div className='flex items-center justify-end'>
                   <span className='text-sm text-muted-foreground'>
-                    Hoàn thành:{' '}
+                    {'createProduct.completed'}:{' '}
                     {
                       Object.entries(detailValue ?? {}).filter(([_, value]) => {
                         if (Array.isArray(value)) {
@@ -167,11 +169,11 @@ export default function DetailInformation({
                               <FormSelect
                                 fieldId={formField?.id}
                                 fieldLabel={formField?.label}
-                                placeholder={'Vui lòng chọn'}
-                                emptyText={'Không có kết quả'}
+                                placeholder={t('createProduct.pleaseSelect')}
+                                emptyText={t('createProduct.noResults')}
                                 items={formField?.options ?? []}
-                                inputPlaceholder={'Nhập vào'}
-                                buttonText={'Thêm thuộc tính mới'}
+                                inputPlaceholder={t('createProduct.inputPlaceholder')}
+                                buttonText={t('createProduct.newAttributes')}
                                 type='singleChoice'
                                 form={form}
                                 resetSignal={resetSignal}
@@ -184,11 +186,11 @@ export default function DetailInformation({
                               <FormSelect
                                 fieldId={formField?.id}
                                 fieldLabel={formField?.label}
-                                placeholder={'Vui lòng chọn'}
-                                emptyText={'Không có kết quả'}
+                                placeholder={t('createProduct.pleaseSelect')}
+                                emptyText={t('createProduct.noResults')}
                                 items={formField?.options ?? []}
-                                inputPlaceholder={'Nhập vào'}
-                                buttonText={'Thêm thuộc tính mới'}
+                                inputPlaceholder={t('createProduct.inputPlaceholder')}
+                                buttonText={t('createProduct.newAttributes')}
                                 type='multipleChoice'
                                 maxMultiSelectItems={MAX_MULTI_SELECT_ITEMS}
                                 form={form}
@@ -203,7 +205,7 @@ export default function DetailInformation({
                                 <Input
                                   type={formField?.inputType}
                                   className='border-primary/40'
-                                  placeholder={'Vui lòng điền vào'}
+                                  placeholder={t('createProduct.textPlaceholder')}
                                   {...field}
                                   value={field?.value ?? ''}
                                   required={formField?.required}
@@ -244,7 +246,9 @@ export default function DetailInformation({
                             formField?.type !== 'multipleChoice' &&
                             formField?.type !== 'singleChoice' ? (
                               <span className='text-xs text-destructive font-semibold'>
-                                Vui lòng {formField?.type === 'date' ? 'chọn' : 'nhập'} {formField?.label}
+                                {t('createProduct.please')}{' '}
+                                {formField?.type === 'date' ? t('createProduct.select') : t('createProduct.input')}{' '}
+                                {formField?.label}
                               </span>
                             ) : null}
                           </FormItem>

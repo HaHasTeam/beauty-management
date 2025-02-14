@@ -3,6 +3,7 @@ import 'react-quill-new/dist/quill.snow.css'
 import { ImagePlus } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
 
@@ -35,6 +36,9 @@ const BasicInformation = ({
   setActiveStep,
   setCompleteSteps
 }: BasicInformationProps) => {
+  const MAX_PRODUCT_IMAGES = 7
+  const MAX_PRODUCT_NAME_LENGTH = 120
+  const { t } = useTranslation()
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const BASIC_INFORMATION_INDEX = 1
   const productImages = form.watch('images')
@@ -78,7 +82,7 @@ const BasicInformation = ({
       <Accordion type='single' collapsible className='w-full' defaultValue='description'>
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
-            <h2 className='font-bold text-xl'>Thông tin cơ bản</h2>
+            <h2 className='font-bold text-xl'>{t('createProduct.basicInformation')}</h2>
           </AccordionTrigger>
           <AccordionContent>
             <div className='space-y-4'>
@@ -89,15 +93,15 @@ const BasicInformation = ({
                   <FormItem className='w-full'>
                     <div className='flex w-full gap-2'>
                       <div className='w-[15%] space-y-1'>
-                        <FormLabel required>Hình ảnh sản phẩm</FormLabel>
-                        <FormDescription>Support only .jpg, .jpeg, .png & max 1MB file</FormDescription>
+                        <FormLabel required>{t('createProduct.productImages')}</FormLabel>
+                        <FormDescription>{t('createProduct.productImagesDescription')}</FormDescription>
                       </div>
                       <FormControl>
                         <div className='w-full space-y-1'>
                           <UploadProductImages
                             field={field}
                             vertical={false}
-                            dropZoneConfigOptions={{ maxFiles: 7 }}
+                            dropZoneConfigOptions={{ maxFiles: MAX_PRODUCT_IMAGES }}
                             renderFileItemUI={(file) => {
                               return (
                                 <div
@@ -119,7 +123,7 @@ const BasicInformation = ({
                                   <ImagePlus className='w-12 h-12 text-primary' />
 
                                   <p className='text-sm text-primary'>
-                                    Drag & drop or browse file ({files?.length ?? 0}/{maxFiles})
+                                    {t('createProduct.inputImage')} ({files?.length ?? 0}/{maxFiles})
                                   </p>
                                 </div>
                               )
@@ -141,12 +145,12 @@ const BasicInformation = ({
                       <FormItem className='w-full'>
                         <div className='w-full flex gap-2'>
                           <div className='w-[15%] flex items-center'>
-                            <FormLabel required>Tên sản phẩm</FormLabel>
+                            <FormLabel required>{t('createProduct.productName')}</FormLabel>
                           </div>
                           <div className='w-full space-y-1'>
                             <FormControl>
                               <Input
-                                placeholder='Tên sản phẩm + Thương hiệu + Model + Thông số kỹ thuật'
+                                placeholder={t('createProduct.productNamePlaceholder')}
                                 className='border-primary/40'
                                 {...field}
                                 value={field.value ?? ''}
@@ -155,7 +159,9 @@ const BasicInformation = ({
                             <FormMessage />
                           </div>
                         </div>
-                        <div className='text-sm text-muted-foreground text-right'>{field?.value?.length ?? 0}/120</div>
+                        <div className='text-sm text-muted-foreground text-right'>
+                          {field?.value?.length ?? 0}/{MAX_PRODUCT_NAME_LENGTH}
+                        </div>
                       </FormItem>
                     )}
                   />
@@ -170,7 +176,7 @@ const BasicInformation = ({
                       <FormItem className='w-full'>
                         <div className='w-full flex gap-2'>
                           <div className='w-[15%] flex items-center'>
-                            <FormLabel required>Danh mục</FormLabel>
+                            <FormLabel required>{t('createProduct.category')}</FormLabel>
                           </div>
                           <div className='w-full space-y-1'>
                             <FormControl>
@@ -201,7 +207,7 @@ const BasicInformation = ({
                       <FormItem className='w-full'>
                         <div className='flex w-full gap-2'>
                           <div className='w-[15%]'>
-                            <FormLabel required>Mô tả sản phẩm</FormLabel>
+                            <FormLabel required>{t('createProduct.description')}</FormLabel>
                           </div>
                           <div className='w-full space-y-1'>
                             <FormControl>
@@ -213,7 +219,7 @@ const BasicInformation = ({
                                     matchVisual: false
                                   }
                                 }}
-                                placeholder='Mô tả sản phẩm'
+                                placeholder={t('createProduct.descriptionPlaceholder')}
                                 style={{ borderRadius: 10, borderColor: '#FEE9DC' }}
                                 className='border-primary/40'
                                 theme='snow'
