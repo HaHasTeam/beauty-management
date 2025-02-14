@@ -804,6 +804,9 @@
     "certificateDescription": "Các sản phẩm làm đẹp phải có chứng nhận hợp lệ (ví dụ: ISO, GMP, FDA) để đảm bảo an toàn và tuân thủ quy định. Chứng nhận có thể là báo cáo an toàn sản phẩm hoặc tài liệu phê duyệt từ cơ quan quản lý.",
     "hide": "Ẩn",
     "show": "Hiện",
-    "copy": "Sao chép"
+    "copy": "Sao chép",
+    "downloadCertificate": "Tải chứng nhận",
+    "viewCertificate": "Xem chứng nhận",
+    "download": "Tải xuống"
   }
 }

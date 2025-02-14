@@ -804,6 +804,9 @@
     "certificateDescription": "Beauty products must include a valid certificate (e.g., ISO, GMP, FDA) to ensure safety and compliance. This can be a product safety report or regulatory approval document.",
     "hide": "Hide",
     "show": "Show",
-    "copy": "Copy"
+    "copy": "Copy",
+    "downloadCertificate": "Download Certificate",
+    "viewCertificate": "View Certificate",
+    "download": "Download"
   }
 }
