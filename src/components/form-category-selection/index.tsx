@@ -145,7 +145,7 @@ export default function FormCategorySelection({
           <FormControl>
             <div
               onClick={handleShowCategorySelect}
-              className={`${!open && 'outline-none ring-1 ring-ring'} relative border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
+              className={`${!open ? 'outline-none' : 'ring-1 ring-ring'} relative border-primary/40 hover:cursor-pointer flex text-sm items-center justify-between py-2 px-3 shadow-sm rounded-md w-full border bg-transparent transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50`}
             >
               {!chosenCategories || chosenCategories?.length === 0 ? (
                 <span className='text-muted-foreground line-clamp-1'>{t('createProduct.pleaseChooseCategory')}</span>
@@ -246,16 +246,16 @@ export default function FormCategorySelection({
                 <div className='text-destructive font-semibold text-sm'>{categoryError}</div>
               )}
               <div className='flex space-x-2'>
-                <Button type='button' onClick={handleConfirmSelectCategory}>
-                  {t('button.select')}
-                </Button>
                 <Button
                   type='button'
                   variant='outline'
-                  className='border hover:border-primary hover:text-primary'
+                  className='border hover:border-primary hover:bg-primary/10 hover:text-primary'
                   onClick={handleCancelCategorySelect}
                 >
                   {t('button.deselect')}
+                </Button>
+                <Button type='button' onClick={handleConfirmSelectCategory}>
+                  {t('button.select')}
                 </Button>
               </div>
             </div>

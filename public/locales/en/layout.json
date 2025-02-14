@@ -739,7 +739,8 @@
     "successCreateInactiveMessage": "Product created successfully! It is currently inactive and will not be visible until activated.",
     "successUpdateInactiveMessage": "Product updated successfully! It is currently inactive and will not be visible until activated.",
     "successStatusMessage": "Update product status successfully!",
-    "categoryLastLevel": "Please select the last-level category."
+    "categoryLastLevel": "Please select the last-level category.",
+    "certificateRequired": "Product certificate is required."
   },
   "createProduct": {
     "successOfficial": "Product created successfully!",
@@ -776,7 +777,7 @@
     "selectFile": "or click to select files",
     "reachMaxFiles": "You have reached the maximum number of files allowed",
     "uniqueNameClassification": "Each option in the same classification must have a unique name.",
-    "classificationInformation": "Product Classification Information",
+    "classificationInformation": "Pricing & Inventory",
     "skuProduct": "Product SKU",
     "skuProductPlaceholder": "Enter product SKU",
     "skuClassification": "Product classification SKU",
@@ -797,6 +798,12 @@
     "dragOrBrowse": "Drag & drop or browse file",
     "inputQuantity": "Enter quantity",
     "inputSku": "Enter product SKU",
-    "inputPrice": "Enter price"
+    "inputPrice": "Enter price",
+    "certificate": "Product Certificate",
+    "certFileFormatDescription": "Supports only .pdf, .doc & max 1MB file",
+    "certificateDescription": "Beauty products must include a valid certificate (e.g., ISO, GMP, FDA) to ensure safety and compliance. This can be a product safety report or regulatory approval document.",
+    "hide": "Hide",
+    "show": "Show",
+    "copy": "Copy"
   }
 }

@@ -1,4 +1,4 @@
-import { ImagePlus, Plus, Trash2, X } from 'lucide-react'
+import { ImagePlus, Package, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { IProductClassification, ProductClassificationTypeEnum } from '@/types/product'
 import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
 import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
-import { validateOptionTitles, ValidateSKUs } from '@/utils/product-form/validatation'
+import { validateOptionTitles, validateSKUs } from '@/utils/product-form/validation'
 
 import UploadProductImages from './UploadProductImages'
 
@@ -320,7 +320,7 @@ export default function SalesInformation({
   }, [form, price, productClassificationsForm, combinations, quantity, setCompleteSteps])
 
   useEffect(() => {
-    const { isUnique, errorMessage, duplicatedIndices } = ValidateSKUs(combinations)
+    const { isUnique, errorMessage, duplicatedIndices } = validateSKUs(combinations)
     setIsValid(isUnique)
     setErrorSKUMessage(errorMessage)
     setDuplicatedSKUIndex(duplicatedIndices)
@@ -352,7 +352,10 @@ export default function SalesInformation({
       >
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
-            <h2 className='font-bold text-xl'>{t('createProduct.classificationInformation')}</h2>
+            <div className='flex gap-2 items-center'>
+              <Package />
+              <h2 className='font-bold text-xl'>{t('createProduct.classificationInformation')}</h2>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             {selectedCategory === '' || selectedCategory === undefined ? (

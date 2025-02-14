@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import './index.css'
 
+import { List } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -121,7 +122,10 @@ export default function DetailInformation({
       >
         <AccordionItem value='description' className='last:overflow-visible'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline overflow-visible'>
-            <h2 className='font-bold text-xl'>{t('createProduct.detailInformation')}</h2>
+            <div className='flex gap-2 items-center'>
+              <List />
+              <h2 className='font-bold text-xl'>{t('createProduct.detailInformation')}</h2>
+            </div>
           </AccordionTrigger>
           <AccordionContent className='overflow-visible'>
             {!productDetailField || productDetailField?.length === 0 ? (

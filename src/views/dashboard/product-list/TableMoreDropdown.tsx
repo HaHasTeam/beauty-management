@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AiOutlineShop, AiOutlineUser } from 'react-icons/ai'
 import { BsThreeDots } from 'react-icons/bs'
 import { TiLightbulb } from 'react-icons/ti'
@@ -12,13 +13,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { productFormMessage } from '@/constants/message'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllProductApi, updateProductApi } from '@/network/product'
 import { IServerCreateProduct, ProductEnum } from '@/types/product'
 
 function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; id: string; currentStatus: string }) {
+  const { t } = useTranslation()
   const { transparent, vertical, id, currentStatus } = props
   const [open, setOpen] = useState(false)
   const { successToast } = useToast()
@@ -30,7 +31,7 @@ function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; i
     mutationFn: updateProductApi.fn,
     onSuccess: () => {
       successToast({
-        message: productFormMessage.successStatusMessage
+        message: t('productFormMessage.successStatusMessage')
       })
       queryClient.invalidateQueries({
         queryKey: [getAllProductApi.queryKey]
@@ -82,7 +83,7 @@ function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; i
                   <span>
                     <AiOutlineUser />
                   </span>
-                  Hide
+                  {t('createProduct.hide')}
                 </p>
               </DropdownMenuItem>
             )}
@@ -92,7 +93,7 @@ function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; i
                   <span>
                     <AiOutlineShop />
                   </span>
-                  Show
+                  {t('createProduct.show')}
                 </p>
               </DropdownMenuItem>
             )}
@@ -101,7 +102,7 @@ function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; i
                 <span>
                   <TiLightbulb />
                 </span>
-                Copy
+                {t('createProduct.copy')}
               </p>
             </DropdownMenuItem>
           </DropdownMenuGroup>

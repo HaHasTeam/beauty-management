@@ -53,6 +53,7 @@ const UpdateProduct = () => {
     brand: '',
     category: '',
     images: [],
+    certificate: [],
     description: '',
     detail: {},
     productClassifications: [],
@@ -118,53 +119,75 @@ const UpdateProduct = () => {
 
     return uploadedFilesResponse.data
   }
+  const processImages = async (originalImages: Array<IImage>, currentImages: (File | IImage)[]) => {
+    const processedImages: Array<IImage> = []
+
+    // Track original image IDs to check for deletions
+    const originalImageIds = new Set(originalImages.filter((img) => img.id).map((img) => img.id))
+
+    // Process current images
+    for (const img of currentImages) {
+      if (img instanceof File) {
+        // New file upload
+        const uploadedUrls = await convertFileToUrl([img])
+        processedImages.push({ fileUrl: uploadedUrls[0] })
+      } else if (typeof img === 'object' && img.fileUrl) {
+        // Existing image
+        processedImages.push({
+          id: img.id,
+          fileUrl: img.fileUrl
+        })
+
+        // Remove from tracked original images
+        if (img.id) {
+          originalImageIds.delete(img.id)
+        }
+      }
+    }
+
+    // Mark deleted images as inactive
+    originalImageIds.forEach((id) => {
+      const deletedImage = originalImages.find((img) => img.id === id)
+      if (deletedImage) {
+        processedImages.push({
+          id,
+          fileUrl: deletedImage.fileUrl,
+          status: StatusEnum.INACTIVE
+        })
+      }
+    })
+
+    return processedImages
+  }
+
+  const processCertificate = async (originalCertificate: string | undefined, newCertificate: File[] | undefined) => {
+    if (!newCertificate?.length) {
+      // If no new certificate and there was an original, mark it as inactive
+      if (originalCertificate) {
+        return [{ fileUrl: originalCertificate, status: StatusEnum.INACTIVE }]
+      }
+      return []
+    }
+
+    // If there's a new certificate file, upload it
+    if (newCertificate[0] instanceof File) {
+      const uploadedUrls = await convertFileToUrl([newCertificate[0]])
+      return [{ fileUrl: uploadedUrls[0] }]
+    }
+
+    // Keep existing certificate if no changes
+    return originalCertificate ? [{ fileUrl: originalCertificate }] : []
+  }
+
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
       setIsLoading(true)
       if (isValid) {
-        const processImages = async (originalImages: Array<IImage>, currentImages: (File | IImage)[]) => {
-          const processedImages: Array<IImage> = []
-
-          // Track original image IDs to check for deletions
-          const originalImageIds = new Set(originalImages.filter((img) => img.id).map((img) => img.id))
-
-          // Process current images
-          for (const img of currentImages) {
-            if (img instanceof File) {
-              // New file upload
-              const uploadedUrls = await convertFileToUrl([img])
-              processedImages.push({ fileUrl: uploadedUrls[0] })
-            } else if (typeof img === 'object' && img.fileUrl) {
-              // Existing image
-              processedImages.push({
-                id: img.id,
-                fileUrl: img.fileUrl
-              })
-
-              // Remove from tracked original images
-              if (img.id) {
-                originalImageIds.delete(img.id)
-              }
-            }
-          }
-
-          // Mark deleted images as inactive
-          originalImageIds.forEach((id) => {
-            const deletedImage = originalImages.find((img) => img.id === id)
-            if (deletedImage) {
-              processedImages.push({
-                id,
-                fileUrl: deletedImage.fileUrl,
-                status: StatusEnum.INACTIVE
-              })
-            }
-          })
-
-          return processedImages
-        }
-
         // Process product images
         const processedMainImages = await processImages(productData?.data?.[0]?.images ?? [], values.images)
+
+        // Process certificate
+        const processedCertificate = await processCertificate(productData?.data?.[0]?.certificate, values.certificate)
 
         // Process classification images
         const processedClassifications = await Promise.all(
@@ -186,7 +209,7 @@ const UpdateProduct = () => {
           category: values?.category,
           status: values?.status,
           images: processedMainImages,
-
+          certificate: processedCertificate[0]?.fileUrl ?? '',
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
@@ -241,6 +264,16 @@ const UpdateProduct = () => {
       return []
     }
   }
+  const convertUrlToFile = async (url: string) => {
+    try {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      return new File([blob], url.split('/').pop() || 'file', { type: blob.type })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+      return null
+    }
+  }
   useEffect(() => {
     if (productData && productData?.data) {
       const productClassifications = productData?.data?.[0]?.productClassifications ?? []
@@ -268,6 +301,8 @@ const UpdateProduct = () => {
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
 
+        const certificateUrl = productData?.data?.[0]?.certificate
+
         const classificationImages = updatedProductClassifications?.map(
           (classification) =>
             classification?.images
@@ -275,9 +310,10 @@ const UpdateProduct = () => {
               .filter((fileUrl): fileUrl is string => fileUrl !== undefined) ?? []
         )
 
-        const [convertedMainImages, convertedClassificationImages] = await Promise.all([
+        const [convertedMainImages, convertedClassificationImages, convertedCertificate] = await Promise.all([
           convertUrlsToFiles(mainImages),
-          Promise.all(classificationImages.map(convertUrlsToFiles))
+          Promise.all(classificationImages.map(convertUrlsToFiles)),
+          certificateUrl ? convertUrlToFile(certificateUrl) : null
         ])
 
         const formValue: ICreateProduct = {
@@ -288,6 +324,7 @@ const UpdateProduct = () => {
           images: convertedMainImages,
           description: productData?.data?.[0]?.description,
           detail: JSON?.parse(productData?.data?.[0]?.detail ?? ''),
+          certificate: convertedCertificate ? [convertedCertificate] : [],
           productClassifications: updatedProductClassifications?.map((classification, index) => ({
             ...classification,
             images: convertedClassificationImages[index] || []

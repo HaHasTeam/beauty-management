@@ -22,6 +22,9 @@ type UploadFileModalProps<T extends FieldValues> = {
   vertical: boolean
   centerItem?: boolean
   setIsImagesUpload?: React.Dispatch<SetStateAction<boolean>>
+  isAcceptImage?: boolean
+  isAcceptFile?: boolean
+  isFullWidth?: boolean
 }
 
 const UploadProductImages = <T extends FieldValues>({
@@ -32,7 +35,10 @@ const UploadProductImages = <T extends FieldValues>({
   renderFileItemUI,
   vertical = true,
   centerItem = false,
-  setIsImagesUpload
+  isAcceptImage = true,
+  isAcceptFile = false,
+  setIsImagesUpload,
+  isFullWidth = false
 }: UploadFileModalProps<T>) => {
   const { t } = useTranslation()
   const [files, setFiles] = useState<File[]>([])
@@ -63,15 +69,27 @@ const UploadProductImages = <T extends FieldValues>({
       }
     }
     throw new Error(t('validation.stringOrArrayRequired'))
-  }, [field?.value, dropZoneConfigOptions?.maxFiles])
+  }, [field?.value, t, dropZoneConfigOptions?.maxFiles])
 
   const isDragActive = false
   const dropZoneConfig = {
-    accept: {
-      'image/*': ['.jpg', '.jpeg', '.png']
-      // 'application/pdf': ['.pdf'],
-      // 'application/msword': ['.doc']
-    },
+    accept: isAcceptImage
+      ? {
+          'image/*': ['.jpg', '.jpeg', '.png']
+          // 'application/pdf': ['.pdf'],
+          // 'application/msword': ['.doc']
+        }
+      : isAcceptFile
+        ? {
+            // 'image/*': ['.jpg', '.jpeg', '.png']
+            'application/pdf': ['.pdf'],
+            'application/msword': ['.doc']
+          }
+        : {
+            'image/*': ['.jpg', '.jpeg', '.png'],
+            'application/pdf': ['.pdf'],
+            'application/msword': ['.doc']
+          },
     multiple: true,
     maxFiles: 10,
     maxSize: 1 * 1024 * 1024,
@@ -184,7 +202,7 @@ const UploadProductImages = <T extends FieldValues>({
           <div className='flex w-full flex-wrap'>
             <FileUploaderContent className={centerItem ? 'justify-center' : 'justify-start'}>
               {files && files.length < dropZoneConfig.maxFiles && (
-                <div>
+                <div className={`${isFullWidth ? 'w-full' : ''}`}>
                   <FileInput>
                     {renderInputUI ? (
                       <div>{renderInputUI(isDragActive, files, dropZoneConfig.maxFiles, message)}</div>
@@ -265,7 +283,7 @@ const UploadProductImages = <T extends FieldValues>({
                       <ProductFileUploaderItem
                         key={index}
                         index={index}
-                        className='p-0 flex items-center justify-between rounded-lg hover:border-primary'
+                        className={`${isFullWidth ? 'w-full h-16' : 'w-32 h-32'} p-0 flex items-center justify-between rounded-lg hover:border-primary`}
                       >
                         <PreviewDialog
                           content={

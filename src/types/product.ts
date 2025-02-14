@@ -78,6 +78,7 @@ export type ICreateProduct = {
   price?: number
   quantity?: number
   sku?: string
+  certificate: File[]
 }
 export type IServerCreateProduct = {
   id?: string
@@ -92,6 +93,7 @@ export type IServerCreateProduct = {
   price?: number
   quantity?: number
   sku?: string
+  certificate?: string
 }
 export type IResponseProduct = {
   id?: string
@@ -108,6 +110,7 @@ export type IResponseProduct = {
   sku?: string
   menu?: string
   updatedAt?: string
+  certificate: string
 }
 
 export type IProductTable = {

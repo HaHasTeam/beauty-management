@@ -46,6 +46,7 @@ const CreateProduct = () => {
     brand: 'd84d8d78-d48d-41eb-ab19-dbacea083415',
     category: '',
     images: [],
+    certificate: [],
     description: '',
     detail: {},
     productClassifications: [],
@@ -111,6 +112,7 @@ const CreateProduct = () => {
       setIsLoading(true)
       if (isValid) {
         const imgUrls = await convertFileToUrl(values.images)
+        const certUrl = await convertFileToUrl(values.certificate)
         const classificationImgUrls = await Promise.all(
           (values?.productClassifications ?? []).map(async (classification) => {
             if (classification.images && classification.images.length > 0) {
@@ -131,6 +133,7 @@ const CreateProduct = () => {
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
+          certificate: certUrl[0],
           productClassifications:
             (values?.productClassifications ?? [])?.length > 0
               ? (values?.productClassifications ?? []).map((classification, index) => ({

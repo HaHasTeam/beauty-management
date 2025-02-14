@@ -362,7 +362,7 @@ export const ProductFileUploaderItem = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('cursor-pointer relative w-32 h-32 bg-black/5', className, isSelected ? 'bg-muted' : '')}
+      className={cn('cursor-pointer relative bg-black/5', className, isSelected ? 'bg-muted' : '')}
       {...props}
     >
       <div className='absolute z-0 leading-none tracking-tight flex justify-center items-center gap-1.5 h-full w-full'>
