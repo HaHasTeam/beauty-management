@@ -718,7 +718,7 @@
     "SKURequiredLength": "SKU is required.",
     "SKUValidate": "SKU is required and must be 6-8 characters.",
     "SKUValidateFull": "Invalid SKU, can only contain letters, numbers, \"-\" and \"_\" with length 6-8 characters.",
-    "SKURegex": "SKU can only contain letters, numbers, \"-\" and \"_\".",
+    "SKURegex": "SKU is required, must be 6-8 characters and can only contain letters, numbers, \"-\" and \"_\".",
     "priceValidate": "Price must be at least 1000đ.",
     "quantityValidate": "Quantity must be at least 1.",
     "quantityRequired": "Quantity is required when no product classifications are provided.",

@@ -134,7 +134,7 @@ export default function DetailInformation({
               <div>
                 <div className='flex items-center justify-end'>
                   <span className='text-sm text-muted-foreground'>
-                    {'createProduct.completed'}:{' '}
+                    {t('createProduct.completed')}:{' '}
                     {
                       Object.entries(detailValue ?? {}).filter(([_, value]) => {
                         if (Array.isArray(value)) {

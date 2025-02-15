@@ -718,7 +718,7 @@
     "SKURequiredLength": "SKU là bắt buộc.",
     "SKUValidate": "SKU là bắt buộc và phải có 6-8 ký tự.",
     "SKUValidateFull": "SKU không hợp lệ, chỉ được chứa chữ, số, dấu \"-\" và \"_\" với độ dài 6-8 ký tự.",
-    "SKURegex": "SKU chỉ được chứa chữ, số, dấu \"-\" và \"_\".",
+    "SKURegex": "SKU là bắt buộc, phải có 6-8 ký tự và chỉ được chứa chữ, số, dấu \"-\" và \"_\".",
     "priceValidate": "Giá phải ít nhất 1000đ.",
     "quantityValidate": "Số lượng phải ít nhất 1.",
     "quantityRequired": "Số lượng là bắt buộc khi không có phân loại sản phẩm.",

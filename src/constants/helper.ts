@@ -2,7 +2,7 @@ import i18next from 'i18next'
 
 import { IStepper } from '@/types/stepper'
 
-export const steps: IStepper[] = [
+export const getSteps = (): IStepper[] => [
   {
     id: 1,
     title: i18next.t('createProduct.basicInformation')

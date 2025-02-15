@@ -53,6 +53,9 @@ export type IProductClassification = {
   status?: string
   type?: string
   sku?: string
+  color?: string
+  size?: string
+  other?: string
 }
 export type IServerProductClassification = {
   id?: string
@@ -63,6 +66,9 @@ export type IServerProductClassification = {
   status?: string
   type?: string
   sku?: string
+  color?: string
+  size?: string
+  other?: string
 }
 
 export type ICreateProduct = {

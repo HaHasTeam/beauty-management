@@ -168,7 +168,8 @@ export default function SalesInformation({
   }
 
   const handleRemoveClassification = (index: number) => {
-    setClassificationCount((prev) => prev - 1)
+    const newClassificationCount = Math.max(0, classificationCount - 1)
+    setClassificationCount(newClassificationCount)
 
     // Remove the classification type for this level
     setUsedClassificationTypes((prev) => {
@@ -189,16 +190,26 @@ export default function SalesInformation({
     const updatedOptions = classificationsOptions.filter((_, i) => i !== index)
     setClassificationsOptions(updatedOptions)
 
+    // if (updatedOptions.length <= 0) {
+    //   setCombinations([]) // Reset combinations if no classifications
+    //   form.setValue('productClassifications', [])
+    //   return
+    // }
+    // Check if this is the last classification being removed
+    if (newClassificationCount === 0 || updatedOptions.length === 0) {
+      // Clear all related state
+      setCombinations([])
+      setClassificationsOptions([])
+      setUsedClassificationTypes({})
+      form.setValue('productClassifications', [])
+      return
+    }
+
     const currentClassifications = form.getValues('productClassifications') || []
     const updatedClassifications = currentClassifications.filter((_, i) => i !== index)
 
     // Update the form's productClassifications
     form.setValue('productClassifications', updatedClassifications)
-
-    if (updatedOptions.length <= 0) {
-      setCombinations([]) // Reset combinations if no classifications
-      return
-    }
 
     // Regenerate combinations based on updated options
     regenerateCombinations(updatedOptions)
@@ -272,12 +283,20 @@ export default function SalesInformation({
     const newCombinations = form?.getValues('productClassifications') ?? []
     const classificationsOptions = regenerateUpdatedOptions(newCombinations)
     const newClassificationCount = classificationsOptions?.length
-    // Generate combinations
 
     // Update state
     setClassificationCount(newClassificationCount)
     setClassificationsOptions(classificationsOptions)
     setCombinations(newCombinations)
+
+    // Restore classification types in usedClassificationTypes state
+    const newUsedTypes: { [key: number]: string } = {}
+    classificationsOptions.forEach((option, index) => {
+      if (option.title.toLowerCase() !== `${index + 1}`.toLowerCase()) {
+        newUsedTypes[index] = option.title.toLowerCase()
+      }
+    })
+    setUsedClassificationTypes(newUsedTypes)
   }, [defineFormSignal, form])
 
   // Scroll to the BasicInformation section when activeStep is 1
@@ -451,20 +470,20 @@ export default function SalesInformation({
                                               <SelectItem value='other'>Other</SelectItem>
                                             )} */}
                                             <SelectItem
-                                              value='Color'
-                                              disabled={isClassificationTypeUsedInOtherLevels('Color', index)}
+                                              value='color'
+                                              disabled={isClassificationTypeUsedInOtherLevels('color', index)}
                                             >
                                               {t('createProduct.color')}
                                             </SelectItem>
                                             <SelectItem
-                                              value='Size'
-                                              disabled={isClassificationTypeUsedInOtherLevels('Size', index)}
+                                              value='size'
+                                              disabled={isClassificationTypeUsedInOtherLevels('size', index)}
                                             >
                                               {t('createProduct.size')}
                                             </SelectItem>
                                             <SelectItem
-                                              value='Other'
-                                              disabled={isClassificationTypeUsedInOtherLevels('Other', index)}
+                                              value='other'
+                                              disabled={isClassificationTypeUsedInOtherLevels('other', index)}
                                             >
                                               {t('createProduct.other')}
                                             </SelectItem>
@@ -477,7 +496,12 @@ export default function SalesInformation({
                                   <div className='flex gap-2 items-center'>
                                     <div>
                                       <FormLabel required={classificationCount > 0}>
-                                        {t('createProduct.classification')} {classification?.title}
+                                        {t('createProduct.classification')}{' '}
+                                        {classification?.title && (
+                                          <span className='text-primary'>
+                                            {t(`createProduct.${classification?.title}`)}
+                                          </span>
+                                        )}
                                       </FormLabel>
                                     </div>
                                     <Button
@@ -543,20 +567,23 @@ export default function SalesInformation({
                                   <TableRow>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        {classificationsOptions[0]?.title}
+                                        {classificationsOptions[0]?.title &&
+                                          t(`createProduct.${classificationsOptions[0]?.title}`)}
                                       </FormLabel>
                                     </TableHead>
                                     {classificationCount >= 2 && (
                                       <TableHead>
                                         <FormLabel required className='justify-center text-center'>
-                                          {classificationsOptions[1]?.title}
+                                          {classificationsOptions[1]?.title &&
+                                            t(`createProduct.${classificationsOptions[1]?.title}`)}
                                         </FormLabel>
                                       </TableHead>
                                     )}
-                                    {classificationCount <= 3 && classificationCount >= 2 && (
+                                    {classificationCount === 3 && (
                                       <TableHead>
                                         <FormLabel required className='justify-center text-center'>
-                                          {classificationsOptions[2]?.title}
+                                          {classificationsOptions[2]?.title &&
+                                            t(`createProduct.${classificationsOptions[2]?.title}`)}
                                         </FormLabel>
                                       </TableHead>
                                     )}
@@ -647,7 +674,7 @@ export default function SalesInformation({
                                           <div className='h-5'></div>
                                         </TableCell>
                                       )}
-                                      {classificationCount <= 3 && classificationCount >= 2 && (
+                                      {classificationCount === 3 && (
                                         <TableCell className='align-middle'>
                                           <FormLabel className='justify-center h-9 align-middle'>
                                             {combo?.title?.split('-')[2]?.trim()}
@@ -806,7 +833,7 @@ export default function SalesInformation({
                                     const value = e.target.value
                                     field.onChange(value && parseFloat(value))
                                     handleReset()
-                                    form.resetField('productClassifications')
+                                    form.setValue('productClassifications', [])
                                   }}
                                 />
                               </FormControl>
@@ -837,7 +864,7 @@ export default function SalesInformation({
                                     const value = e.target.value
                                     field.onChange(value && parseFloat(value))
                                     handleReset()
-                                    form.resetField('productClassifications')
+                                    form.setValue('productClassifications', [])
                                   }}
                                 />
                               </FormControl>
