@@ -16,7 +16,7 @@ import LoadingLayer from '../loading-icon/LoadingLayer'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Form } from '../ui/form'
 import { ScrollArea } from '../ui/scroll-area'
-import FormAddressContent from './FormAddressContent'
+import FormAddressBrandContent from './FormAddressBrandContent'
 
 interface AddAddressDialogProps {
   parentForm: UseFormReturn<z.infer<typeof brandCreateSchema>>
@@ -36,7 +36,7 @@ interface AddAddressDialogProps {
     fullAddress: string
   }) => Promise<void>
 }
-const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddressDialogProps) => {
+const AddAddressBrandDialog = ({ triggerComponent, getAddress, parentForm }: AddAddressDialogProps) => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const id = useId()
@@ -168,7 +168,7 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
               <div>
                 {/* Form Address */}
                 <ScrollArea className='h-72'>
-                  <FormAddressContent form={form} />
+                  <FormAddressBrandContent form={form} />
                 </ScrollArea>
               </div>
               <DialogFooter>
@@ -194,4 +194,4 @@ const AddAddressDialog = ({ triggerComponent, getAddress, parentForm }: AddAddre
   )
 }
 
-export default AddAddressDialog
+export default AddAddressBrandDialog

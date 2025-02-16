@@ -17,7 +17,7 @@ interface FormAddressContentProps {
   // communeData?: TAddressCommuneMock[]
   form: UseFormReturn<z.infer<typeof CreateAddressBrandSchema>>
 }
-export default function FormAddressContent({ form }: FormAddressContentProps) {
+export default function FormAddressBrandContent({ form }: FormAddressContentProps) {
   const { t } = useTranslation()
   const { communeData, districtData, provinceData, communeQuery, districtQuery, provinceQuery } = useHandleAddressMock({
     districtId: form.watch('district'),

@@ -10,7 +10,7 @@ import { templateFileUrl } from '@/constants/infor'
 import type { Steppers } from '@/hooks/useStepper'
 import { brandCreateSchema } from '@/schemas'
 
-import AddAddressDialog from '../address/AddAddressDialog'
+import AddAddressBrandDialog from '../address/AddAddressBrandDialog'
 import Button from '../button'
 import UploadFilePreview from '../file-input/UploadFilePreview'
 import { PhoneInputWithCountries } from '../phone-input'
@@ -131,7 +131,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
 
         <div className='space-y-2'>
           <FormLabel required>Address</FormLabel>
-          <AddAddressDialog parentForm={form} getAddress={handleAdress} triggerComponent={addressDisplay} />
+          <AddAddressBrandDialog parentForm={form} getAddress={handleAdress} triggerComponent={addressDisplay} />
         </div>
 
         <FormField
