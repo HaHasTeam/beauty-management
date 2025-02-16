@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
-import { getCommuneMutation, getDistrictMutation, getProvinceMutation } from '@/network/apis/address'
+import { getCommuneMutation, getDistrictMutation, getProvinceMutation } from '@/network/apis/addressBrand'
 import { brandCreateSchema, CreateAddressBrandSchema } from '@/schemas'
 import { convertToSlug } from '@/utils'
 import { parseAddress } from '@/utils/string'

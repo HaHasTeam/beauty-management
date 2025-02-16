@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { getCommune, getDistrict, getProvince } from '@/network/apis/address'
+import { getCommune, getDistrict, getProvince } from '@/network/apis/addressBrand'
 
 export const useHandleAddressMock = ({ provinceId, districtId }: { provinceId?: string; districtId?: string }) => {
   const { data: provinceData, ...provinceQuery } = useQuery({

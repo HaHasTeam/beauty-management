@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { ZegoExpressEngine } from 'zego-express-engine-webrtc'
 
 import { ZegoDeviceUpdateType, ZegoMediaOptions, ZegoUser } from './ZegoExpressManager.entity'
