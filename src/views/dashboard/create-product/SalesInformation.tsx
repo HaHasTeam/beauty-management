@@ -1,19 +1,20 @@
 import { ImagePlus, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
+import AlertCustom from '@/components/alert'
 import FormLabel from '@/components/form-label'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Input, InputNormal } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { productFormMessage } from '@/constants/message'
 import { IProductClassification, ProductClassificationTypeEnum } from '@/types/product'
 import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
 import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
 import { validateOptionTitles, validateSKUs } from '@/utils/product-form/validatation'
 
-import AlertCustom from '../alert'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
-import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import UploadProductImages from './UploadProductImages'
 
 export default function SalesInformation({
@@ -33,31 +34,97 @@ export default function SalesInformation({
   const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
   const [duplicatedSKUIndex, setDuplicatedSKUIndex] = useState<number[]>([])
   const [isImagesUpload, setIsImagesUpload] = useState<boolean>(false)
+  const [usedClassificationTypes, setUsedClassificationTypes] = useState<{ [key: number]: string }>({})
   const selectedCategory = form.watch('category')
   const saleInfoRef = useRef<HTMLDivElement>(null)
   const SALE_INFORMATION_INDEX = 3
+  const MAX_CLASSIFICATION_LEVEL = 3
   const productClassificationsForm = form.watch('productClassifications')
-
   const price = form.watch('price') ?? -1
   const quantity = form.watch('quantity') ?? -1
 
+  // Update classification name selection handling
+  const handleClassificationNameChange = (value: string, index: number) => {
+    // Update used classification types for this level
+    setUsedClassificationTypes((prev) => ({
+      ...prev,
+      [index]: value
+    }))
+
+    // Update classification options
+    const updatedOptions = [...classificationsOptions]
+    updatedOptions[index].title = value
+    setClassificationsOptions(updatedOptions)
+    regenerateCombinations(updatedOptions)
+  }
+
+  // Helper function to check if a classification type is used in other levels
+  const isClassificationTypeUsedInOtherLevels = (type: string, currentIndex: number) => {
+    return Object.entries(usedClassificationTypes).some(
+      ([levelIndex, usedType]) => parseInt(levelIndex) !== currentIndex && usedType === type
+    )
+  }
+
   const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
-    const [options1 = [], options2 = ['']] = updatedOptions.map((c) => c.options)
+    const [options1 = [], options2 = [''], options3 = ['']] = updatedOptions.map((c) => c.options)
     const newCombinations: ICombination[] = []
 
     options1.forEach((o1) => {
-      options2.forEach((o2) => {
-        const existingCombination = combinations.find((combo) => combo.title === (o2 ? `${o1}-${o2}` : `${o1}`))
+      if (options2[0] === '') {
+        // Only one classification level
+        const existingCombination = combinations.find((combo) => combo?.title === o1)
+        const classification1Type = updatedOptions[0]?.title.toLowerCase()
 
         newCombinations.push({
-          title: o2 ? `${o1}-${o2}` : `${o1}`,
+          title: o1,
           price: existingCombination?.price ?? undefined,
           quantity: existingCombination?.quantity ?? undefined,
           images: existingCombination?.images ?? [],
           type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
-          sku: existingCombination?.sku ?? ''
+          sku: existingCombination?.sku ?? '',
+          [classification1Type]: o1
         })
-      })
+      } else {
+        options2.forEach((o2) => {
+          if (options3[0] === '') {
+            // Two classification levels
+            const existingCombination = combinations.find((combo) => combo?.title === `${o1}-${o2}`)
+            const classification1Type = updatedOptions[0]?.title.toLowerCase()
+            const classification2Type = updatedOptions[1]?.title.toLowerCase()
+
+            newCombinations.push({
+              title: `${o1}-${o2}`,
+              price: existingCombination?.price ?? undefined,
+              quantity: existingCombination?.quantity ?? undefined,
+              images: existingCombination?.images ?? [],
+              type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
+              sku: existingCombination?.sku ?? '',
+              [classification1Type]: o1,
+              [classification2Type]: o2
+            })
+          } else {
+            // Three classification levels
+            options3.forEach((o3) => {
+              const existingCombination = combinations.find((combo) => combo?.title === `${o1}-${o2}-${o3}`)
+              const classification1Type = updatedOptions[0]?.title.toLowerCase()
+              const classification2Type = updatedOptions[1]?.title.toLowerCase()
+              const classification3Type = updatedOptions[2]?.title.toLowerCase()
+
+              newCombinations.push({
+                title: `${o1}-${o2}-${o3}`,
+                price: existingCombination?.price ?? undefined,
+                quantity: existingCombination?.quantity ?? undefined,
+                images: existingCombination?.images ?? [],
+                type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
+                sku: existingCombination?.sku ?? '',
+                [classification1Type]: o1,
+                [classification2Type]: o2,
+                [classification3Type]: o3
+              })
+            })
+          }
+        })
+      }
     })
 
     setCombinations(newCombinations)
@@ -74,13 +141,11 @@ export default function SalesInformation({
     // Update the combinations state
     setCombinations(updatedCombinations)
 
-    // Optionally, handle other side effects
-    // For example: Reset form values for this combination if using React Hook Form
     form.setValue('productClassifications', updatedCombinations)
   }
 
   const handleAddClassification = () => {
-    if (classificationCount >= 2) return
+    if (classificationCount >= MAX_CLASSIFICATION_LEVEL) return
     setClassificationCount((prev) => prev + 1)
     setClassificationsOptions((prev) => [...prev, { title: '', options: [] }])
 
@@ -104,6 +169,21 @@ export default function SalesInformation({
   const handleRemoveClassification = (index: number) => {
     setClassificationCount((prev) => prev - 1)
 
+    // Remove the classification type for this level
+    setUsedClassificationTypes((prev) => {
+      const updated = { ...prev }
+      delete updated[index]
+      // Reindex the remaining classifications
+      const reindexed: { [key: number]: string } = {}
+      Object.entries(updated)
+        .sort(([a], [b]) => parseInt(a) - parseInt(b))
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .forEach(([_, value], i) => {
+          reindexed[i] = value
+        })
+      return reindexed
+    })
+
     // Remove the selected classification
     const updatedOptions = classificationsOptions.filter((_, i) => i !== index)
     setClassificationsOptions(updatedOptions)
@@ -122,6 +202,29 @@ export default function SalesInformation({
     // Regenerate combinations based on updated options
     regenerateCombinations(updatedOptions)
   }
+
+  // const handleClassificationNameChange = (value: string, index: number) => {
+  //   // Remove old classification type if it exists
+  //   const oldTitle = classificationsOptions[index].title
+  //   if (oldTitle) {
+  //     const updatedUsedTypes = new Set(usedClassificationTypes)
+  //     updatedUsedTypes.delete(oldTitle.toLowerCase())
+  //     setUsedClassificationTypes(updatedUsedTypes)
+  //   }
+
+  //   // Add new classification type
+  //   if (value) {
+  //     const updatedUsedTypes = new Set(usedClassificationTypes)
+  //     updatedUsedTypes.add(value.toLowerCase())
+  //     setUsedClassificationTypes(updatedUsedTypes)
+  //   }
+
+  //   // Update classification options
+  //   const updatedOptions = [...classificationsOptions]
+  //   updatedOptions[index].title = value
+  //   setClassificationsOptions(updatedOptions)
+  //   regenerateCombinations(updatedOptions)
+  // }
 
   const handleAddOption = (classificationIndex: number) => {
     const updatedOptions = [...classificationsOptions]
@@ -157,6 +260,7 @@ export default function SalesInformation({
     setClassificationCount(0)
     setClassificationsOptions([])
     setCombinations([])
+    setUsedClassificationTypes({})
   }
   useEffect(() => {
     handleReset()
@@ -263,7 +367,7 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel>SKU sản phẩm</FormLabel>
+                              <FormLabel required>SKU sản phẩm</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
@@ -288,14 +392,14 @@ export default function SalesInformation({
                     </div>
                     <div className='w-full space-y-1'>
                       <div className='w-full space-y-3'>
-                        {classificationCount < 2 && (
+                        {classificationCount < MAX_CLASSIFICATION_LEVEL && (
                           <Button
                             variant='outline'
                             size='sm'
                             type='button'
                             className='flex items-center gap-1'
                             onClick={handleAddClassification}
-                            disabled={classificationCount >= 2}
+                            disabled={classificationCount >= MAX_CLASSIFICATION_LEVEL}
                           >
                             <Plus className='w-4 h-4' />
                             Thêm nhóm phân loại
@@ -315,8 +419,58 @@ export default function SalesInformation({
 
                                 <div className='space-y-2'>
                                   <div className='flex gap-2 items-center'>
+                                    <FormLabel required={classificationCount > 0}>Chọn tên phân loại</FormLabel>
+                                    <div className='space-y-1'>
+                                      <FormControl>
+                                        <Select
+                                          onValueChange={(value) => handleClassificationNameChange(value, index)}
+                                          value={classification?.title || ''}
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue
+                                              placeholder='Chọn tên phân loại'
+                                              className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
+                                            />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            {/* {!usedClassificationTypes.has('color') && (
+                                              <SelectItem value='color'>Color</SelectItem>
+                                            )}
+                                            {!usedClassificationTypes.has('size') && (
+                                              <SelectItem value='size'>Size</SelectItem>
+                                            )}
+                                            {!usedClassificationTypes.has('other') && (
+                                              <SelectItem value='other'>Other</SelectItem>
+                                            )} */}
+                                            <SelectItem
+                                              value='Color'
+                                              disabled={isClassificationTypeUsedInOtherLevels('Color', index)}
+                                            >
+                                              Color
+                                            </SelectItem>
+                                            <SelectItem
+                                              value='Size'
+                                              disabled={isClassificationTypeUsedInOtherLevels('Size', index)}
+                                            >
+                                              Size
+                                            </SelectItem>
+                                            <SelectItem
+                                              value='Other'
+                                              disabled={isClassificationTypeUsedInOtherLevels('Other', index)}
+                                            >
+                                              Other
+                                            </SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </div>
+                                  <div className='flex gap-2 items-center'>
                                     <div>
-                                      <FormLabel required={classificationCount > 0}>Phân loại {index + 1}</FormLabel>
+                                      <FormLabel required={classificationCount > 0}>
+                                        Phân loại {classification?.title}
+                                      </FormLabel>
                                     </div>
                                     <Button
                                       type='button'
@@ -381,13 +535,20 @@ export default function SalesInformation({
                                   <TableRow>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        Phân loại 1
+                                        {classificationsOptions[0]?.title}
                                       </FormLabel>
                                     </TableHead>
-                                    {classificationCount === 2 && (
+                                    {classificationCount >= 2 && (
                                       <TableHead>
                                         <FormLabel required className='justify-center text-center'>
-                                          Phân loại 2
+                                          {classificationsOptions[1]?.title}
+                                        </FormLabel>
+                                      </TableHead>
+                                    )}
+                                    {classificationCount <= 3 && classificationCount >= 2 && (
+                                      <TableHead>
+                                        <FormLabel required className='justify-center text-center'>
+                                          {classificationsOptions[2]?.title}
                                         </FormLabel>
                                       </TableHead>
                                     )}
@@ -402,7 +563,9 @@ export default function SalesInformation({
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel className='justify-center'>SKU sản phẩm</FormLabel>
+                                      <FormLabel required className='justify-center'>
+                                        SKU sản phẩm
+                                      </FormLabel>
                                     </TableHead>
                                     <TableHead>
                                       <FormLabel className='justify-center'>Thao tác</FormLabel>
@@ -468,10 +631,18 @@ export default function SalesInformation({
                                           )}
                                         />
                                       </TableCell>
-                                      {classificationCount === 2 && (
+                                      {classificationCount >= 2 && (
                                         <TableCell className='align-middle'>
                                           <FormLabel className='justify-center h-9 align-middle'>
                                             {combo?.title?.split('-')[1]?.trim()}
+                                          </FormLabel>
+                                          <div className='h-5'></div>
+                                        </TableCell>
+                                      )}
+                                      {classificationCount <= 3 && classificationCount >= 2 && (
+                                        <TableCell className='align-middle'>
+                                          <FormLabel className='justify-center h-9 align-middle'>
+                                            {combo?.title?.split('-')[2]?.trim()}
                                           </FormLabel>
                                           <div className='h-5'></div>
                                         </TableCell>
@@ -483,7 +654,7 @@ export default function SalesInformation({
                                           render={({ field, fieldState }) => (
                                             <FormItem>
                                               <FormControl>
-                                                <Input
+                                                <InputNormal
                                                   placeholder='Nhập giá'
                                                   type='number'
                                                   {...field}
@@ -520,7 +691,7 @@ export default function SalesInformation({
                                           render={({ field, fieldState }) => (
                                             <FormItem>
                                               <FormControl>
-                                                <Input
+                                                <InputNormal
                                                   placeholder='Nhập số lượng'
                                                   type='number'
                                                   {...field}
@@ -617,7 +788,7 @@ export default function SalesInformation({
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
-                                <Input
+                                <InputNormal
                                   type='number'
                                   placeholder='Nhập vào'
                                   className='border-primary/40'
@@ -648,7 +819,7 @@ export default function SalesInformation({
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
-                                <Input
+                                <InputNormal
                                   type='number'
                                   placeholder='Nhập vào'
                                   className='border-primary/40'

@@ -1,5 +1,8 @@
 import { IBrand } from './brand'
 import { ICategory } from './category'
+import { IClassification } from './classification'
+import { IPreOrder } from './pre-order'
+import { IProductDiscount } from './product-discount'
 import { IImage } from './productImage'
 import { TMetaData } from './request'
 
@@ -130,12 +133,42 @@ export type IProductTable = {
   createdAt: string
 }
 
+export type IProduct = {
+  id: string
+  name: string
+  tag?: string
+  price: number
+  currentPrice?: number
+  images: IImage[]
+  deal?: number
+  flashSale?: {
+    productAmount: number
+    soldAmount?: number
+  }
+  rating: number
+  ratingAmount: number
+  soldInPastMonth: number
+  description: string
+  classifications: IClassification[]
+  createdAt?: string
+  updatedAt?: string
+  detail: string
+  sku?: string
+  status?: string
+  brand?: IBrand
+  productClassifications?: IClassification[] // use for cart
+  productDiscounts?: IProductDiscount[] | null // use for cart
+  preOrderProducts?: IPreOrder[] | null // use for cart
+  category?: ICategory // use for product details
+}
+
 // common ends
 
 // components interface starts
 export interface ProductTableProps {
   tableData: TProduct[]
 }
+
 // components interface ends
 
 // enum starts

@@ -21,9 +21,11 @@ type CountryOption = {
 i18nIsoCountries.registerLocale(enCountries)
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+
 type PhoneInputWithCountriesProps = InputProps & {
   isShowCountry?: boolean // Optional prop to control whether the country combobox is shown
 }
+
 const PhoneInputWithCountries = (() => {
   return forwardRef<HTMLInputElement, PhoneInputWithCountriesProps>(({ isShowCountry = true, ...field }, ref) => {
     const options = getCountriesOptions().filter((option) => option.value === 'VN')

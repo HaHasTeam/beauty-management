@@ -1,5 +1,9 @@
 export const productFormMessage = {
   SKURequired: 'SKU phân loại sản phẩm không thể trùng',
+  SKURequiredLength: 'SKU is required.',
+  SKUValidate: 'SKU is required and must be 8 characters.',
+  SKUValidateFull: 'SKU không hợp lệ, chỉ được chứa chữ, số, dấu "-" và "_" với độ dài 6-8 ký tự.',
+  SKURegex: 'SKU chỉ được chứa chữ, số, dấu "-" và "_".',
   priceValidate: 'Price must be at least 1000đ.',
   quantityValidate: 'Quantity must be at least 1.',
   quantityRequired: 'Quantity is required when no product classifications are provided.',

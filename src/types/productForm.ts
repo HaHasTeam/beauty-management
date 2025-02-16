@@ -18,6 +18,9 @@ export type ICombination = {
   images?: File[]
   type?: string
   sku?: string
+  color?: string
+  size?: string
+  other?: string
 }
 
 export interface SalesInformationProps {

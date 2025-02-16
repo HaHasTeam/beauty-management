@@ -5,15 +5,14 @@ import { useEffect, useRef, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
+import AlertCustom from '@/components/alert'
+import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormSelect from '@/components/form-select'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { ICategory } from '@/types/category'
 import { FormProductSchema, IProductFormFields } from '@/variables/productFormDetailFields'
-
-import AlertCustom from '../alert'
-import { FlexDatePicker } from '../flexible-date-picker/FlexDatePicker'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
 
 interface DetailInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>

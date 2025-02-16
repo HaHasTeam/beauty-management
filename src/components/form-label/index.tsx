@@ -8,9 +8,9 @@ type Props = HtmlHTMLAttributes<HTMLLabelElement> & {
   htmlFor?: string
 }
 
-const index = ({ required, children, className, htmlFor, ...props }: Props) => {
+const index = ({ required, children, className, htmlFor }: Props) => {
   return (
-    <FormLabel {...props} htmlFor={htmlFor} className={`flex items-center gap-1 ${className}`}>
+    <FormLabel htmlFor={htmlFor} className={`flex items-center gap-1 ${className}`}>
       {required && <span className='text-destructive'>*</span>}
       {children}
     </FormLabel>
