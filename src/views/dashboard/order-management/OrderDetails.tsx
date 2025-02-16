@@ -10,7 +10,7 @@ import CancelOrderDialog from '@/components/dialog/CancelOrderDialog'
 import UpdateOrderStatus from '@/components/dialog/UpdateOrderStatusDialog'
 import Empty from '@/components/empty/Empty'
 import LoadingIcon from '@/components/loading-icon'
-import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
+import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import OrderStatus from '@/components/order-status'
 import { AlertDescription } from '@/components/ui/alert'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -41,6 +41,7 @@ const OrderDetails = () => {
   const handleServerError = useHandleServerError()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
   const [isTrigger, setIsTrigger] = useState<boolean>(false)
+  const [isTriggerCancelRequest, setIsTriggerCancelRequest] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
   const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
@@ -100,6 +101,7 @@ const OrderDetails = () => {
       queryClient.invalidateQueries({
         queryKey: [getStatusTrackingByIdApi.queryKey]
       })
+      setIsTriggerCancelRequest((prev) => !prev)
     }
   })
   useEffect(() => {
@@ -117,7 +119,7 @@ const OrderDetails = () => {
       })
     }
     fetchCancelRequests()
-  }, [getBrandCancelRequestOrderFn, useOrderData?.data?.orderDetails])
+  }, [getBrandCancelRequestOrderFn, useOrderData?.data?.orderDetails, isTriggerCancelRequest])
 
   const handleMakeDecisionOnCancelRequest = async (decision: CancelOrderRequestStatusEnum) => {
     try {
@@ -148,7 +150,7 @@ const OrderDetails = () => {
   }
   return (
     <>
-      {isFetching && <LoadingContentLayer />}
+      {isFetching && <LoadingLayer />}
       <div className='w-full lg:px-5 md:px-4 sm:px-3 px-3 space-y-6 my-5'>
         <div className='flex gap-2 w-full sm:justify-between sm:items-center sm:flex-row flex-col'>
           <div className='flex gap-2 sm:items-center sm:flex-row flex-col'>
@@ -311,7 +313,7 @@ const OrderDetails = () => {
 
               <div className='space-y-2'>
                 {/* brand */}
-                {user?.role === RoleEnum.ADMIN ? (
+                {user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR ? (
                   <BrandOrderInformation
                     brandId={
                       (
@@ -325,7 +327,7 @@ const OrderDetails = () => {
                         useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
                         useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
                         useOrderData?.data?.orderDetails?.[0]?.productClassification
-                      )?.product?.brand?.name ?? 'Brand'
+                      )?.product?.brand?.name ?? t('brand.title')
                     }
                   />
                 ) : null}

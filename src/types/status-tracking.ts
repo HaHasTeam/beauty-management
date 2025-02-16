@@ -1,5 +1,5 @@
 import { IOrder } from './order'
-import { TUser } from './user'
+import { TUserUpdateStatusTracking } from './user'
 
 export interface IStatusTracking {
   id: string
@@ -7,6 +7,6 @@ export interface IStatusTracking {
   updatedAt: string
   reason: string | null
   status: string
-  updatedBy: TUser
+  updatedBy: TUserUpdateStatusTracking
   order: IOrder
 }

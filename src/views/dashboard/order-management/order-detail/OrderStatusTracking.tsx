@@ -107,7 +107,15 @@ const OrderStatusTracking = ({ statusTrackingData }: OrderStatusTrackingProps) =
   const currentIndex = timeline.findIndex((step) => step.status === currentStatus)
   return (
     <div className='w-full relative'>
-      <div className={`absolute top-5 left-[7%] right-[7%] h-0.5 bg-muted`} />
+      {timeline.length > 1 && (
+        <div
+          className='absolute top-5 h-0.5 bg-muted'
+          style={{
+            left: `calc(${100 / (timeline.length * 2)}%)`,
+            right: `calc(${100 / (timeline.length * 2)}%)`
+          }}
+        />
+      )}
       <div className='w-full relative z-10 flex justify-between'>
         {timeline.map((step, index) => {
           const isCurrent = index === currentIndex
@@ -117,7 +125,10 @@ const OrderStatusTracking = ({ statusTrackingData }: OrderStatusTrackingProps) =
             <div
               key={index}
               className='timeline-item flex flex-col items-center gap-2 relative'
-              style={{ flex: '1 0 0%' }}
+              style={{
+                flex: '1 0 0%',
+                maxWidth: `${100 / timeline.length}%`
+              }}
             >
               <div
                 className={`timeline-icon w-10 h-10 rounded-full flex items-center justify-center relative

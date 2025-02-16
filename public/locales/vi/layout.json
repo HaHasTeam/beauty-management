@@ -259,7 +259,12 @@
     "originalPrice": "Giá gốc",
     "Color": "Màu sắc",
     "Size": "Kích cỡ",
-    "Other": "Khác"
+    "Other": "Khác",
+    "viewing": "Đang xem",
+    "view": "Xem",
+    "images": "Hình Ảnh",
+    "viewProductImages": "Xem Hình Ảnh Sản Phẩm",
+    "viewClassificationImages": "Xem Hình Ảnh Của Phân Loại"
   },
   "event": {
     "finishIn": "Kết thúc trong"
@@ -555,7 +560,7 @@
     "cancelOrder": "Hủy đơn",
     "requestCancelOrder": "Yêu cầu hủy đơn",
     "cancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với hủy tất cả sản phẩm trong đơn hàng và không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
-    "requestCancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với việc gửi yêu cầu hủy toàn bộ sản phẩm trong đơn hàng. Do đơn hàng đang được chuẩn bị, yêu cầu này sẽ cần được xét duyệt trước khi hủy. Hành động này không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
+    "requestCancelOrderDescription": "Do đơn hàng đang được chuẩn bị, yêu cầu này sẽ cần được xét duyệt trước khi hủy. Nhấn nút \"Xác nhận\" đồng nghĩa với việc gửi yêu cầu hủy toàn bộ sản phẩm trong đơn hàng. Hành động này không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
     "cancelOrderReason": {
       "changeOfMind": "Thay đổi ý định",
       "foundCheaper": "Tìm thấy giá rẻ hơn",
@@ -718,7 +723,7 @@
     "SKURequiredLength": "SKU là bắt buộc.",
     "SKUValidate": "SKU là bắt buộc và phải có 6-8 ký tự.",
     "SKUValidateFull": "SKU không hợp lệ, chỉ được chứa chữ, số, dấu \"-\" và \"_\" với độ dài 6-8 ký tự.",
-    "SKURegex": "SKU là bắt buộc, phải có 6-8 ký tự và chỉ được chứa chữ, số, dấu \"-\" và \"_\".",
+    "SKURegex": "SKU chỉ được chứa chữ, số, dấu \"-\" và \"_\".",
     "priceValidate": "Giá phải ít nhất 1000đ.",
     "quantityValidate": "Số lượng phải ít nhất 1.",
     "quantityRequired": "Số lượng là bắt buộc khi không có phân loại sản phẩm.",

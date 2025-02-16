@@ -259,7 +259,12 @@
     "originalPrice": "Original Price",
     "Color": "Color",
     "Size": "Size",
-    "Other": "Other"
+    "Other": "Other",
+    "viewing": "Viewing",
+    "view": "View",
+    "images": "Images",
+    "viewProductImages": "View Product Images",
+    "viewClassificationImages": "View Classification Images"
   },
   "event": {
     "finishIn": "Finish In"
@@ -555,7 +560,7 @@
     "cancelOrder": "Cancel order",
     "requestCancelOrder": "Request cancel order",
     "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
-    "requestCancelOrderDescription": "Clicking \"Confirm\" button means submitting a request to cancel all items in this order. Since the order is being prepared, this request will need to be reviewed before cancellation. This action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
+    "requestCancelOrderDescription": "Since the order is being prepared, this request will need to be reviewed before cancellation. Clicking \"Confirm\" button means submitting a request to cancel all items in this order. This action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
     "cancelOrderReason": {
       "changeOfMind": "Changed my mind",
       "foundCheaper": "Found a cheaper option",
@@ -718,7 +723,7 @@
     "SKURequiredLength": "SKU is required.",
     "SKUValidate": "SKU is required and must be 6-8 characters.",
     "SKUValidateFull": "Invalid SKU, can only contain letters, numbers, \"-\" and \"_\" with length 6-8 characters.",
-    "SKURegex": "SKU is required, must be 6-8 characters and can only contain letters, numbers, \"-\" and \"_\".",
+    "SKURegex": "SKU can only contain letters, numbers, \"-\" and \"_\".",
     "priceValidate": "Price must be at least 1000đ.",
     "quantityValidate": "Quantity must be at least 1.",
     "quantityRequired": "Quantity is required when no product classifications are provided.",
