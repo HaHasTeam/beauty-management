@@ -61,12 +61,14 @@ const OrderDetails = () => {
   const { data: useOrderData, isFetching } = useQuery({
     queryKey: [getOrderByIdApi.queryKey, id as string],
     queryFn: getOrderByIdApi.fn,
-    enabled: !!id
+    enabled: !!id,
+    staleTime: 0
   })
   const { data: useStatusTrackingData, isFetching: isFetchingStatusTracking } = useQuery({
     queryKey: [getStatusTrackingByIdApi.queryKey, id ?? ('' as string)],
     queryFn: getStatusTrackingByIdApi.fn,
-    enabled: !!id
+    enabled: !!id,
+    staleTime: 0
   })
 
   useEffect(() => {
