@@ -3,7 +3,7 @@ import { Download } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { exportTableToCSV } from '@/lib/export'
-import { TUser } from '@/types/user'
+import { TUser, UserStatusEnum } from '@/types/user'
 
 import InviteCoWorker from '../InviteCoWorker'
 import { BanAccountsDialog } from './BanAccountsDialog'
@@ -17,6 +17,7 @@ export function AccountTableToolbarActions({ table }: AccountTableToolbarActions
     <div className='flex items-center gap-2'>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
         <BanAccountsDialog
+          status={UserStatusEnum.BANNED}
           accounts={table.getFilteredSelectedRowModel().rows.map((row) => row.original)}
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />

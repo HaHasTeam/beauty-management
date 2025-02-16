@@ -5,7 +5,10 @@ import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from 
 
 // const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
 export const reasonSchema = z.object({
-  reason: z.string().min(1, 'Reason is required').max(200, 'Name cannot exceed 200 characters')
+  reason: z.string().max(300, 'Name cannot exceed 300 characters').optional()
+})
+export const reasonSchemaRequire = z.object({
+  reason: z.string().min(1, 'Please  give the reason')
 })
 // Now add this object into an array
 const fileArray = z.array(z.instanceof(File))

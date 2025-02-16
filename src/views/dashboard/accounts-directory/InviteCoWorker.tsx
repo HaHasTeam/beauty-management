@@ -74,6 +74,7 @@ const InviteCoWorker = () => {
       })
     }
   })
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await inviteMultipleCoWorkersFn(values)

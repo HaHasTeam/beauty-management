@@ -66,7 +66,7 @@ function ViewBrandForm() {
           ward: brandData.ward,
           businessTaxCode: brandData.businessTaxCode,
           businessRegistrationCode: brandData.businessRegistrationCode,
-          establishmentDate: brandData.establishmentDate ? brandData.establishmentDate : '',
+          establishmentDate: brandData.establishmentDate ? brandData.establishmentDate.toString() : '',
           businessRegistrationAddress: brandData.businessRegistrationAddress
         }
         form.reset(formatData)

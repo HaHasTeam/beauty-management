@@ -87,9 +87,11 @@ export const getAllUserApi = toQueryFetcher<void, TServerResponse<TUserResponse[
 export const updateUserStatusApi = toMutationFetcher<TUpdateUserStatusRequestParams, TServerResponse<void>>(
   'updateUserStatusApi',
   async (data) => {
-    return privateRequest(`/accounts/update-account-status/${data.id}`, {
-      method: 'PUT',
+    return privateRequest(`/accounts/update-account-status`, {
+      method: 'POST',
       data: {
+        accountId: data.id,
+        reason: data.reason,
         status: data.status
       }
     })
@@ -99,9 +101,9 @@ export const updateUserStatusApi = toMutationFetcher<TUpdateUserStatusRequestPar
 export const updateUsersListStatusApi = toMutationFetcher<TUpdateUsersListStatusRequestParams, TServerResponse<void>[]>(
   'updateUsersListStatusApi',
   async (data) => {
-    const { ids, status } = data
+    const { ids, status, reason } = data
     const requests = ids.map((id) => {
-      return updateUserStatusApi.raw({ id, status })
+      return updateUserStatusApi.raw({ id, status, reason })
     })
     return Promise.all(requests)
   }

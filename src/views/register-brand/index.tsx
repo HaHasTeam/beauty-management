@@ -139,7 +139,7 @@ function RegisterBrand() {
             ward: values.ward,
             businessTaxCode: values.businessTaxCode,
             businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
+            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
             businessRegistrationAddress: values.businessRegistrationAddress,
             status: StatusEnum.PENDING
           }
@@ -179,9 +179,9 @@ function RegisterBrand() {
 
   return (
     <div className='min-h-screen bg-primary/10'>
-      <header className='border-b bg-secondary px-4 py-3 shadow-md'>
+      <header className='border-b bg-primary text-white px-4 py-3 shadow-md'>
         <div className='flex items-center gap-2'>
-          <img src={MockImage} alt='Logo' width={32} height={32} className='h-8 w-8' />
+          <img src={MockImage} alt='Logo' width={32} height={32} className='h-8 w-8 object-contain' />
           <span className='text-lg'>{t('header.registerBrand')}</span>
         </div>
       </header>
