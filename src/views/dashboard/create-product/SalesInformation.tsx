@@ -1,5 +1,6 @@
-import { ImagePlus, Plus, Trash2, X } from 'lucide-react'
+import { ImagePlus, Package, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import AlertCustom from '@/components/alert'
 import FormLabel from '@/components/form-label'
@@ -9,11 +10,10 @@ import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/f
 import { Input, InputNormal } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { productFormMessage } from '@/constants/message'
 import { IProductClassification, ProductClassificationTypeEnum } from '@/types/product'
 import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
 import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
-import { validateOptionTitles, validateSKUs } from '@/utils/product-form/validatation'
+import { validateOptionTitles, validateSKUs } from '@/utils/product-form/validation'
 
 import UploadProductImages from './UploadProductImages'
 
@@ -26,6 +26,7 @@ export default function SalesInformation({
   activeStep,
   setActiveStep
 }: SalesInformationProps) {
+  const { t } = useTranslation()
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
   const [combinations, setCombinations] = useState<ICombination[]>([])
@@ -167,7 +168,8 @@ export default function SalesInformation({
   }
 
   const handleRemoveClassification = (index: number) => {
-    setClassificationCount((prev) => prev - 1)
+    const newClassificationCount = Math.max(0, classificationCount - 1)
+    setClassificationCount(newClassificationCount)
 
     // Remove the classification type for this level
     setUsedClassificationTypes((prev) => {
@@ -188,16 +190,26 @@ export default function SalesInformation({
     const updatedOptions = classificationsOptions.filter((_, i) => i !== index)
     setClassificationsOptions(updatedOptions)
 
+    // if (updatedOptions.length <= 0) {
+    //   setCombinations([]) // Reset combinations if no classifications
+    //   form.setValue('productClassifications', [])
+    //   return
+    // }
+    // Check if this is the last classification being removed
+    if (newClassificationCount === 0 || updatedOptions.length === 0) {
+      // Clear all related state
+      setCombinations([])
+      setClassificationsOptions([])
+      setUsedClassificationTypes({})
+      form.setValue('productClassifications', [])
+      return
+    }
+
     const currentClassifications = form.getValues('productClassifications') || []
     const updatedClassifications = currentClassifications.filter((_, i) => i !== index)
 
     // Update the form's productClassifications
     form.setValue('productClassifications', updatedClassifications)
-
-    if (updatedOptions.length <= 0) {
-      setCombinations([]) // Reset combinations if no classifications
-      return
-    }
 
     // Regenerate combinations based on updated options
     regenerateCombinations(updatedOptions)
@@ -242,7 +254,7 @@ export default function SalesInformation({
     setDuplicateOptionIndex(duplicateIndex)
     if (duplicateIndex !== null) {
       setIsValid(false)
-      setErrorOption('Each option in the same classification must have a unique name.')
+      setErrorOption(t('createProduct.uniqueNameClassification'))
     } else {
       setIsValid(true)
       setErrorOption('')
@@ -271,12 +283,20 @@ export default function SalesInformation({
     const newCombinations = form?.getValues('productClassifications') ?? []
     const classificationsOptions = regenerateUpdatedOptions(newCombinations)
     const newClassificationCount = classificationsOptions?.length
-    // Generate combinations
 
     // Update state
     setClassificationCount(newClassificationCount)
     setClassificationsOptions(classificationsOptions)
     setCombinations(newCombinations)
+
+    // Restore classification types in usedClassificationTypes state
+    const newUsedTypes: { [key: number]: string } = {}
+    classificationsOptions.forEach((option, index) => {
+      if (option.title.toLowerCase() !== `${index + 1}`.toLowerCase()) {
+        newUsedTypes[index] = option.title.toLowerCase()
+      }
+    })
+    setUsedClassificationTypes(newUsedTypes)
   }, [defineFormSignal, form])
 
   // Scroll to the BasicInformation section when activeStep is 1
@@ -351,11 +371,14 @@ export default function SalesInformation({
       >
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
-            <h2 className='font-bold text-xl'>Thông tin phân loại sản phẩm</h2>
+            <div className='flex gap-2 items-center'>
+              <Package />
+              <h2 className='font-bold text-xl'>{t('createProduct.classificationInformation')}</h2>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             {selectedCategory === '' || selectedCategory === undefined ? (
-              <AlertCustom message='Vui lòng chọn danh mục để xem các thông tin' />
+              <AlertCustom message={t('createProduct.pleaseChooseCategoryToViewInformation')} />
             ) : (
               <div className='space-y-6'>
                 <div>
@@ -367,13 +390,13 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel required>SKU sản phẩm</FormLabel>
+                              <FormLabel required>{t('createProduct.skuProduct')}</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
                                 <Input
                                   type='string'
-                                  placeholder='Nhập SKU sản phẩm'
+                                  placeholder={t('createProduct.skuProductPlaceholder')}
                                   className='border-primary/40'
                                   {...field}
                                   value={field?.value ?? ''}
@@ -388,7 +411,9 @@ export default function SalesInformation({
                   </div>
                   <div className='w-full flex gap-2'>
                     <div className={`w-[15%] ${classificationCount <= 0 ? 'flex items-center' : 'items-start'}`}>
-                      <FormLabel required={classificationCount > 0}>Phân loại hàng</FormLabel>
+                      <FormLabel required={classificationCount > 0}>
+                        {t('createProduct.productClassification')}
+                      </FormLabel>
                     </div>
                     <div className='w-full space-y-1'>
                       <div className='w-full space-y-3'>
@@ -402,7 +427,7 @@ export default function SalesInformation({
                             disabled={classificationCount >= MAX_CLASSIFICATION_LEVEL}
                           >
                             <Plus className='w-4 h-4' />
-                            Thêm nhóm phân loại
+                            {t('createProduct.newProductClassification')}
                           </Button>
                         )}
                         {(classificationsOptions ?? []).length > 0 && (
@@ -419,7 +444,9 @@ export default function SalesInformation({
 
                                 <div className='space-y-2'>
                                   <div className='flex gap-2 items-center'>
-                                    <FormLabel required={classificationCount > 0}>Chọn tên phân loại</FormLabel>
+                                    <FormLabel required={classificationCount > 0}>
+                                      {t('createProduct.chooseClassificationName')}
+                                    </FormLabel>
                                     <div className='space-y-1'>
                                       <FormControl>
                                         <Select
@@ -428,7 +455,7 @@ export default function SalesInformation({
                                         >
                                           <SelectTrigger>
                                             <SelectValue
-                                              placeholder='Chọn tên phân loại'
+                                              placeholder={t('createProduct.pleaseChooseClassificationName')}
                                               className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
                                             />
                                           </SelectTrigger>
@@ -443,22 +470,22 @@ export default function SalesInformation({
                                               <SelectItem value='other'>Other</SelectItem>
                                             )} */}
                                             <SelectItem
-                                              value='Color'
-                                              disabled={isClassificationTypeUsedInOtherLevels('Color', index)}
+                                              value='color'
+                                              disabled={isClassificationTypeUsedInOtherLevels('color', index)}
                                             >
-                                              Color
+                                              {t('createProduct.color')}
                                             </SelectItem>
                                             <SelectItem
-                                              value='Size'
-                                              disabled={isClassificationTypeUsedInOtherLevels('Size', index)}
+                                              value='size'
+                                              disabled={isClassificationTypeUsedInOtherLevels('size', index)}
                                             >
-                                              Size
+                                              {t('createProduct.size')}
                                             </SelectItem>
                                             <SelectItem
-                                              value='Other'
-                                              disabled={isClassificationTypeUsedInOtherLevels('Other', index)}
+                                              value='other'
+                                              disabled={isClassificationTypeUsedInOtherLevels('other', index)}
                                             >
-                                              Other
+                                              {t('createProduct.other')}
                                             </SelectItem>
                                           </SelectContent>
                                         </Select>
@@ -469,7 +496,12 @@ export default function SalesInformation({
                                   <div className='flex gap-2 items-center'>
                                     <div>
                                       <FormLabel required={classificationCount > 0}>
-                                        Phân loại {classification?.title}
+                                        {t('createProduct.classification')}{' '}
+                                        {classification?.title && (
+                                          <span className='text-primary'>
+                                            {t(`createProduct.${classification?.title}`)}
+                                          </span>
+                                        )}
                                       </FormLabel>
                                     </div>
                                     <Button
@@ -479,7 +511,7 @@ export default function SalesInformation({
                                       className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
                                       onClick={() => handleAddOption(index)}
                                     >
-                                      Thêm Option
+                                      {t('createProduct.addOption')}
                                     </Button>
                                   </div>
                                   <div className='grid grid-cols-2 gap-x-5 gap-y-3 lg:gap-x-10'>
@@ -494,7 +526,7 @@ export default function SalesInformation({
                                                 <div className='flex gap-2 items-center'>
                                                   <FormControl>
                                                     <Input
-                                                      placeholder={`e.g. Red etc`}
+                                                      placeholder={t('createProduct.classificationEg')}
                                                       {...field}
                                                       value={option}
                                                       onChange={(e) => {
@@ -528,47 +560,50 @@ export default function SalesInformation({
                         )}
                         {combinations.length > 0 && (
                           <div className='mt-4 bg-primary/5 rounded-lg p-4 space-y-2'>
-                            <h3 className='text-md font-semibold'>Tùy chọn giá và số lượng</h3>
+                            <h3 className='text-md font-semibold'>{t('createProduct.inputPriceAndQuantity')}</h3>
                             <div>
                               <Table className='hover:bg-transparent items-center'>
                                 <TableHeader>
                                   <TableRow>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        {classificationsOptions[0]?.title}
+                                        {classificationsOptions[0]?.title &&
+                                          t(`createProduct.${classificationsOptions[0]?.title}`)}
                                       </FormLabel>
                                     </TableHead>
                                     {classificationCount >= 2 && (
                                       <TableHead>
                                         <FormLabel required className='justify-center text-center'>
-                                          {classificationsOptions[1]?.title}
+                                          {classificationsOptions[1]?.title &&
+                                            t(`createProduct.${classificationsOptions[1]?.title}`)}
                                         </FormLabel>
                                       </TableHead>
                                     )}
-                                    {classificationCount <= 3 && classificationCount >= 2 && (
+                                    {classificationCount === 3 && (
                                       <TableHead>
                                         <FormLabel required className='justify-center text-center'>
-                                          {classificationsOptions[2]?.title}
+                                          {classificationsOptions[2]?.title &&
+                                            t(`createProduct.${classificationsOptions[2]?.title}`)}
                                         </FormLabel>
                                       </TableHead>
                                     )}
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        Giá
+                                        {t('createProduct.price')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        Số lượng
+                                        {t('createProduct.quantity')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
                                       <FormLabel required className='justify-center'>
-                                        SKU sản phẩm
+                                        {t('createProduct.skuProduct')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel className='justify-center'>Thao tác</FormLabel>
+                                      <FormLabel className='justify-center'>{t('createProduct.action')}</FormLabel>
                                     </TableHead>
                                   </TableRow>
                                 </TableHeader>
@@ -616,7 +651,7 @@ export default function SalesInformation({
                                                             <ImagePlus className='w-12 h-12 text-primary' />
 
                                                             <p className='text-sm text-primary'>
-                                                              Drag & drop or browse file ({files?.length ?? 0}/
+                                                              {t('createProduct.dragOrBrowse')} ({files?.length ?? 0}/
                                                               {maxFiles})
                                                             </p>
                                                           </div>
@@ -639,7 +674,7 @@ export default function SalesInformation({
                                           <div className='h-5'></div>
                                         </TableCell>
                                       )}
-                                      {classificationCount <= 3 && classificationCount >= 2 && (
+                                      {classificationCount === 3 && (
                                         <TableCell className='align-middle'>
                                           <FormLabel className='justify-center h-9 align-middle'>
                                             {combo?.title?.split('-')[2]?.trim()}
@@ -655,7 +690,7 @@ export default function SalesInformation({
                                             <FormItem>
                                               <FormControl>
                                                 <InputNormal
-                                                  placeholder='Nhập giá'
+                                                  placeholder={t('createProduct.inputPrice')}
                                                   type='number'
                                                   {...field}
                                                   value={combo?.price ?? ''}
@@ -676,7 +711,7 @@ export default function SalesInformation({
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
                                                 {field?.value === undefined && (
                                                   <span className='text-destructive text-xs font-semibold'>
-                                                    {productFormMessage.priceClassificationRequired}
+                                                    {t('productFormMessage.priceClassificationRequired')}
                                                   </span>
                                                 )}
                                               </div>
@@ -692,7 +727,7 @@ export default function SalesInformation({
                                             <FormItem>
                                               <FormControl>
                                                 <InputNormal
-                                                  placeholder='Nhập số lượng'
+                                                  placeholder={t('createProduct.inputQuantity')}
                                                   type='number'
                                                   {...field}
                                                   value={combo.quantity ?? ''}
@@ -713,7 +748,7 @@ export default function SalesInformation({
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
                                                 {field?.value === undefined && (
                                                   <span className='text-destructive text-xs font-semibold'>
-                                                    {productFormMessage.quantityClassificationRequired}
+                                                    {t('productFormMessage.quantityClassificationRequired')}
                                                   </span>
                                                 )}
                                               </div>
@@ -729,7 +764,7 @@ export default function SalesInformation({
                                             <FormItem>
                                               <FormControl>
                                                 <Input
-                                                  placeholder='Nhập SKU sản phẩm'
+                                                  placeholder={t('createProduct.inputSku')}
                                                   type='string'
                                                   {...field}
                                                   value={combo.sku ?? 1}
@@ -784,13 +819,13 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel required>Giá</FormLabel>
+                              <FormLabel required>{t('createProduct.price')}</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
                                 <InputNormal
                                   type='number'
-                                  placeholder='Nhập vào'
+                                  placeholder={t('createProduct.inputPrice')}
                                   className='border-primary/40'
                                   {...field}
                                   value={field.value ?? ''}
@@ -798,7 +833,7 @@ export default function SalesInformation({
                                     const value = e.target.value
                                     field.onChange(value && parseFloat(value))
                                     handleReset()
-                                    form.resetField('productClassifications')
+                                    form.setValue('productClassifications', [])
                                   }}
                                 />
                               </FormControl>
@@ -815,13 +850,13 @@ export default function SalesInformation({
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
                             <div className='w-[15%] flex items-center'>
-                              <FormLabel required>Số lượng</FormLabel>
+                              <FormLabel required>{t('createProduct.quantity')}</FormLabel>
                             </div>
                             <div className='w-full space-y-1'>
                               <FormControl>
                                 <InputNormal
                                   type='number'
-                                  placeholder='Nhập vào'
+                                  placeholder={t('createProduct.inputQuantity')}
                                   className='border-primary/40'
                                   {...field}
                                   value={field.value ?? ''}
@@ -829,7 +864,7 @@ export default function SalesInformation({
                                     const value = e.target.value
                                     field.onChange(value && parseFloat(value))
                                     handleReset()
-                                    form.resetField('productClassifications')
+                                    form.setValue('productClassifications', [])
                                   }}
                                 />
                               </FormControl>

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -10,8 +11,7 @@ import { StepTrackingVertical } from '@/components/step-tracking'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
-import { steps } from '@/constants/helper'
-import { productFormMessage } from '@/constants/message'
+import { getSteps } from '@/constants/helper'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllCategoryApi } from '@/network/apis/category'
@@ -20,13 +20,15 @@ import { getUserProfileApi } from '@/network/apis/user'
 import { createProductApi } from '@/network/product'
 import { ICategory } from '@/types/category'
 import { IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
-import { FormProductSchema } from '@/variables/productFormDetailFields'
+import { getFormProductSchema } from '@/variables/productFormDetailFields'
 
 import BasicInformation from './BasicInformation'
 import DetailInformation from './DetailInformation'
 import SalesInformation from './SalesInformation'
 
 const CreateProduct = () => {
+  const DEFAULT_TITLE = 'Default'
+  const { t, ready } = useTranslation()
   const [resetSignal, setResetSignal] = useState(false)
   const [isValid, setIsValid] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
@@ -38,12 +40,14 @@ const CreateProduct = () => {
   const { successToast } = useToast()
   const navigate = useNavigate()
   const handleServerError = useHandleServerError()
+  const FormProductSchema = getFormProductSchema()
 
   const defaultProductValues = {
     name: '',
     brand: 'd84d8d78-d48d-41eb-ab19-dbacea083415',
     category: '',
     images: [],
+    certificate: [],
     description: '',
     detail: {},
     productClassifications: [],
@@ -78,9 +82,12 @@ const CreateProduct = () => {
       successToast({
         message:
           form.getValues('status') === ProductEnum.OFFICIAL
-            ? productFormMessage.successCreateOfficialMessage
-            : productFormMessage.successCreateInactiveMessage,
-        isShowDescription: false
+            ? t('createProduct.successOfficial')
+            : t('createProduct.successInactive'),
+        description:
+          form.getValues('status') === ProductEnum.OFFICIAL
+            ? t('createProduct.successOfficialDescription')
+            : t('createProduct.successInactiveDescription')
       })
       handleReset()
     }
@@ -106,6 +113,7 @@ const CreateProduct = () => {
       setIsLoading(true)
       if (isValid) {
         const imgUrls = await convertFileToUrl(values.images)
+        const certUrl = await convertFileToUrl(values.certificate)
         const classificationImgUrls = await Promise.all(
           (values?.productClassifications ?? []).map(async (classification) => {
             if (classification.images && classification.images.length > 0) {
@@ -126,6 +134,7 @@ const CreateProduct = () => {
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
+          certificate: certUrl[0],
           productClassifications:
             (values?.productClassifications ?? [])?.length > 0
               ? (values?.productClassifications ?? []).map((classification, index) => ({
@@ -136,7 +145,7 @@ const CreateProduct = () => {
                 }))
               : [
                   {
-                    title: 'Default',
+                    title: DEFAULT_TITLE,
                     images: [],
                     price: values.price ?? 1000,
                     quantity: values.quantity ?? 1,
@@ -169,7 +178,7 @@ const CreateProduct = () => {
   }, [form, resetSignal, useCategoryData])
   return (
     <>
-      {isLoading && <LoadingLayer />}
+      {isLoading && !ready && <LoadingLayer />}
       <div className='space-y-3 relative flex sm:gap-3 gap-0 justify-between'>
         <div className='lg:w-[72%] md:w-[70%] sm:w-[85%] w-full'>
           <Form {...form}>
@@ -207,10 +216,10 @@ const CreateProduct = () => {
               />
               <div className='w-full flex flex-row-reverse justify-start gap-3'>
                 <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                  Submit and Show
+                  {t('button.submitAndShow')}
                 </Button>
                 <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-                  Submit and Hide
+                  {t('button.submitAndHide')}
                 </Button>
                 <Button
                   variant='outline'
@@ -220,7 +229,7 @@ const CreateProduct = () => {
                     navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
                   }}
                 >
-                  Hủy
+                  {t('button.cancel')}
                 </Button>
               </div>
             </form>
@@ -229,7 +238,7 @@ const CreateProduct = () => {
         <div className='lg:w-[28%] md:w-[30%] sm:w-[15%] w-0 sm:block hidden'>
           <div className='fixed right-8'>
             <StepTrackingVertical
-              steps={steps}
+              steps={getSteps()}
               setActiveStep={setActiveStep}
               activeStep={activeStep}
               completeSteps={completeSteps}

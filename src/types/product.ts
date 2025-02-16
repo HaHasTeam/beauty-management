@@ -53,6 +53,9 @@ export type IProductClassification = {
   status?: string
   type?: string
   sku?: string
+  color?: string
+  size?: string
+  other?: string
 }
 export type IServerProductClassification = {
   id?: string
@@ -63,6 +66,9 @@ export type IServerProductClassification = {
   status?: string
   type?: string
   sku?: string
+  color?: string
+  size?: string
+  other?: string
 }
 
 export type ICreateProduct = {
@@ -78,6 +84,7 @@ export type ICreateProduct = {
   price?: number
   quantity?: number
   sku?: string
+  certificate: File[]
 }
 export type IServerCreateProduct = {
   id?: string
@@ -92,6 +99,7 @@ export type IServerCreateProduct = {
   price?: number
   quantity?: number
   sku?: string
+  certificate?: string
 }
 export type IResponseProduct = {
   id?: string
@@ -109,6 +117,7 @@ export type IResponseProduct = {
   menu?: string
   updatedAt?: string
   createdAt: string
+  certificate: string
 }
 
 export type IProductTable = {
@@ -121,6 +130,7 @@ export type IProductTable = {
   updatedAt?: string
   description: string
   productClassifications: IServerProductClassification[]
+  certificate: string
 
   detail?: string
   brand?: IBrand

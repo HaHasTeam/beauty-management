@@ -62,7 +62,7 @@ export const updateOrderStatusApi = toMutationFetcher<{ id: string; status: stri
   async ({ id, status }) => {
     return privateRequest(`/orders/update-status/${id}`, {
       method: 'PUT',
-      data: status
+      data: { status: status }
     })
   }
 )

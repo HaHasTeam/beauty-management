@@ -1,12 +1,156 @@
+import i18next from 'i18next'
 import { z } from 'zod'
 
-import { productFormMessage } from '@/constants/message'
 import { IOption } from '@/types/option'
 
+export const getFormProductSchema = () => {
+  const skuRegex = /^[a-zA-Z0-9-_]{6,8}$/
+  const fileArray = z.array(z.instanceof(File))
+
+  return z
+    .object({
+      // basic information
+      name: z
+        .string()
+        .min(1, { message: i18next.t('productFormMessage.productNameRequired') })
+        .max(120, { message: i18next.t('productFormMessage.productNameLengthRequired') }),
+      brand: z.string().min(1, { message: i18next.t('productFormMessage.brandRequired') }),
+      category: z.string().min(1, { message: i18next.t('productFormMessage.categoryRequired') }),
+      images: fileArray.min(1, { message: i18next.t('productFormMessage.imagesRequired') }),
+      certificate: fileArray.min(1, { message: i18next.t('productFormMessage.certificateRequired') }),
+      description: z
+        .string()
+        .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
+          message: i18next.t('productFormMessage.descriptionRequired')
+        })
+        .refine((val) => val.length <= 80000, { message: i18next.t('productFormMessage.descriptionTooLong') }),
+      status: z.string().min(1, { message: i18next.t('productFormMessage.statusRequired') }),
+      // detail information
+      detail: z.record(
+        z
+          .union([
+            z.string(), // for type 'date'
+            z.array(z.string()), // for type 'singleChoice' or 'multipleChoice'
+            z.number(), // for type 'input' with number
+            z.string() // for type 'input' with string
+          ])
+          .optional()
+      ),
+      //  sale information
+      productClassifications: z
+        .array(
+          z.object({
+            id: z.string().min(0).optional(),
+            title: z
+              .string()
+              .min(1, { message: i18next.t('productFormMessage.classificationTitleRequired') })
+              .optional(),
+            sku: z
+              .string()
+              .regex(skuRegex, { message: i18next.t('productFormMessage.SKURegex') })
+              .optional(),
+            type: z.string().min(0).optional(),
+            price: z
+              .number()
+              .min(1000, { message: i18next.t('productFormMessage.priceValidate') })
+              .optional(),
+            quantity: z
+              .number()
+              .min(1, { message: i18next.t('productFormMessage.quantityValidate') })
+              .optional(),
+            images: fileArray.min(1, { message: i18next.t('productFormMessage.imagesRequired') }).optional(),
+            color: z.string().optional(),
+            size: z.string().optional(),
+            other: z.string().optional()
+          })
+        )
+        .optional(),
+      price: z
+        .number()
+        .min(1000, { message: i18next.t('productFormMessage.priceValidate') })
+        .optional(),
+      quantity: z
+        .number()
+        .min(1, { message: i18next.t('productFormMessage.quantityValidate') })
+        .optional(),
+      sku: z
+        .string()
+        .min(6, { message: i18next.t('productFormMessage.SKUValidate') })
+        .max(8, { message: i18next.t('productFormMessage.SKUValidate') })
+        .regex(skuRegex, { message: i18next.t('productFormMessage.SKURegex') })
+    })
+    .refine(
+      (data) => {
+        if (!data.productClassifications || data.productClassifications.length === 0) {
+          // If no productClassifications, require product price
+          return data.price !== undefined || data.price !== ''
+        }
+        return true
+      },
+      {
+        message: i18next.t('productFormMessage.priceRequired'),
+        path: ['price']
+      }
+    )
+    .refine(
+      (data) => {
+        if (!data.productClassifications || data.productClassifications.length === 0) {
+          // If no productClassifications, require product quantity
+          return data.quantity !== undefined || data.quantity !== ''
+        }
+        return true
+      },
+      {
+        message: i18next.t('productFormMessage.quantityRequired'),
+        path: ['quantity']
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.productClassifications && data.productClassifications.length > 0) {
+          // If productClassifications exist, ensure price must be at least 1000đ
+          return data.productClassifications.every((item) => item.price !== undefined && item.price >= 1000)
+        }
+        return true
+      },
+      {
+        message: i18next.t('productFormMessage.priceValidate'),
+        path: ['productClassifications']
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.productClassifications && data.productClassifications.length > 0) {
+          // If productClassifications exist, ensure quantity  must be at least 1
+          return data.productClassifications.every((item) => item.quantity !== undefined && item.quantity >= 1)
+        }
+        return true
+      },
+      {
+        message: i18next.t('productFormMessage.quantityValidate'),
+        path: ['productClassifications']
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.productClassifications && data.productClassifications.length > 0) {
+          // If productClassifications exist, ensure quantity  must be at least 1
+          return data.productClassifications.every((item) => item.sku && skuRegex.test(item.sku))
+        }
+        return true
+      },
+      {
+        message: i18next.t('productFormMessage.SKUValidateFull'),
+        path: ['productClassifications']
+      }
+    )
+}
+
+export const FormProductSchema = getFormProductSchema()
 export type IFormProductFieldId = keyof z.infer<typeof FormProductSchema>['detail']
 
 export type IProductFormFields = {
-  id: IFormProductFieldId
+  id: string
   label: string
   type: 'multipleChoice' | 'singleChoice' | 'input' | 'date'
   options?: IOption[]
@@ -280,124 +424,3 @@ export const productFormDetailFields: IProductFormFields[] = [
     ]
   }
 ]
-
-const skuRegex = /^[a-zA-Z0-9-_]{6,8}$/
-const fileArray = z.array(z.instanceof(File))
-export const FormProductSchema = z
-  .object({
-    // basic information
-    name: z
-      .string()
-      .min(1, { message: productFormMessage.productNameRequired })
-      .max(120, { message: productFormMessage.productNameLengthRequired }),
-    brand: z.string().min(1, { message: productFormMessage.brandRequired }),
-    category: z.string().min(1, { message: productFormMessage.categoryRequired }),
-    images: fileArray.min(1, { message: productFormMessage.imagesRequired }),
-    description: z
-      .string()
-      .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
-        message: productFormMessage.descriptionRequired
-      })
-      .refine((val) => val.length <= 80000, { message: productFormMessage.descriptionTooLong }),
-    status: z.string().min(1, { message: productFormMessage.statusRequired }),
-    // detail information
-    detail: z.record(
-      z
-        .union([
-          z.string(), // for type 'date'
-          z.array(z.string()), // for type 'singleChoice' or 'multipleChoice'
-          z.number(), // for type 'input' with number
-          z.string() // for type 'input' with string
-        ])
-        .optional()
-    ),
-    //  sale information
-    productClassifications: z
-      .array(
-        z.object({
-          id: z.string().min(0).optional(),
-          title: z.string().min(1, { message: productFormMessage.classificationTitleRequired }).optional(),
-          sku: z.string().regex(skuRegex, { message: productFormMessage.SKURegex }).optional(),
-          type: z.string().min(0).optional(),
-          price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
-          quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-          images: fileArray.min(1, { message: productFormMessage.imagesRequired }).optional(),
-          color: z.string().optional(),
-          size: z.string().optional(),
-          other: z.string().optional()
-        })
-      )
-      .optional(),
-    price: z.number().min(1000, { message: productFormMessage.priceValidate }).optional(),
-    quantity: z.number().min(1, { message: productFormMessage.quantityValidate }).optional(),
-    sku: z
-      .string()
-      .min(6, { message: productFormMessage.SKUValidate })
-      .max(8, { message: productFormMessage.SKUValidate })
-      .regex(skuRegex, { message: productFormMessage.SKURegex })
-  })
-  .refine(
-    (data) => {
-      if (!data.productClassifications || data.productClassifications.length === 0) {
-        // If no productClassifications, require product price
-        return data.price !== undefined || data.price !== ''
-      }
-      return true
-    },
-    {
-      message: productFormMessage.priceRequired,
-      path: ['price']
-    }
-  )
-  .refine(
-    (data) => {
-      if (!data.productClassifications || data.productClassifications.length === 0) {
-        // If no productClassifications, require product quantity
-        return data.quantity !== undefined || data.quantity !== ''
-      }
-      return true
-    },
-    {
-      message: productFormMessage.quantityRequired,
-      path: ['quantity']
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.productClassifications && data.productClassifications.length > 0) {
-        // If productClassifications exist, ensure price must be at least 1000đ
-        return data.productClassifications.every((item) => item.price !== undefined && item.price >= 1000)
-      }
-      return true
-    },
-    {
-      message: productFormMessage.priceValidate,
-      path: ['productClassifications']
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.productClassifications && data.productClassifications.length > 0) {
-        // If productClassifications exist, ensure quantity  must be at least 1
-        return data.productClassifications.every((item) => item.quantity !== undefined && item.quantity >= 1)
-      }
-      return true
-    },
-    {
-      message: productFormMessage.quantityValidate,
-      path: ['productClassifications']
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.productClassifications && data.productClassifications.length > 0) {
-        // If productClassifications exist, ensure quantity  must be at least 1
-        return data.productClassifications.every((item) => item.sku && skuRegex.test(item.sku))
-      }
-      return true
-    },
-    {
-      message: productFormMessage.SKUValidateFull,
-      path: ['productClassifications']
-    }
-  )

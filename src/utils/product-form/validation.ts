@@ -1,4 +1,5 @@
-import { productFormMessage } from '@/constants/message'
+import i18next from 'i18next'
+
 import { IClassificationOption, ICombination } from '@/types/productForm'
 
 export const validateOptionTitles = (
@@ -41,6 +42,6 @@ export const validateSKUs = (combinations: ICombination[]) => {
   return {
     isUnique: duplicatedIndices.length === 0,
     duplicatedIndices,
-    errorMessage: duplicatedIndices.length > 0 ? productFormMessage.SKURequired : ''
+    errorMessage: duplicatedIndices.length > 0 ? i18next.t('productFormMessage.SKURequired') : ''
   }
 }

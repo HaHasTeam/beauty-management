@@ -87,7 +87,8 @@ export function convertToProductTable(data: IResponseProduct[]): IProductTable[]
         brand, // Associated brand
         category, // Associated category
         images: images?.length ? images : productImages, // Use classification images or fallback to product images
-        productClassifications: []
+        productClassifications: [],
+        certificate: ''
       })
     })
   })
@@ -136,7 +137,8 @@ export function convertToProductTable2(data: IResponseProduct[]): IProductTable[
       brand,
       category,
       images: productImages,
-      productClassifications: []
+      productClassifications: [],
+      certificate: ''
     })
   })
 

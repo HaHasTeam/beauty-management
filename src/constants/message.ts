@@ -1,36 +1,44 @@
-export const productFormMessage = {
-  SKURequired: 'SKU phân loại sản phẩm không thể trùng',
-  SKURequiredLength: 'SKU is required.',
-  SKUValidate: 'SKU is required and must be 8 characters.',
-  SKUValidateFull: 'SKU không hợp lệ, chỉ được chứa chữ, số, dấu "-" và "_" với độ dài 6-8 ký tự.',
-  SKURegex: 'SKU chỉ được chứa chữ, số, dấu "-" và "_".',
-  priceValidate: 'Price must be at least 1000đ.',
-  quantityValidate: 'Quantity must be at least 1.',
-  quantityRequired: 'Quantity is required when no product classifications are provided.',
-  quantityClassificationRequired: 'Quantity is required',
-  priceRequired: 'Price is required when no product classifications are provided.',
-  priceClassificationRequired: 'Price is required',
-  productNameRequired: 'Product name is required.',
-  productNameLengthRequired: 'Product name must be less than 120 characters.',
-  brandRequired: 'Brand is required',
-  categoryRequired: 'Vui lòng chọn danh mục.',
-  imagesRequired: 'Vui lòng chọn ít nhất một ảnh.',
-  descriptionRequired: 'Vui lòng nhập mô tả.',
-  descriptionTooLong: 'Description too long',
-  statusRequired: 'Vui lòng điền trạng thái.',
-  classificationTitleRequired: 'Classification title is required.',
-  successCreateOfficialMessage: '',
-  successUpdateOfficialMessage:
-    'Product updated successfully! It is active and visible on the website after moderator approval.',
-  successCreateInactiveMessage: '',
-  successUpdateInactiveMessage:
-    'Product updated successfully! It is currently inactive and will not be visible until activated.',
-  successStatusMessage: 'Update product status successfully!',
-  categoryLastLevel: 'Please select the last-level category.'
+// productMessages.ts
+import { useTranslation } from 'react-i18next'
+
+export const useProductFormMessage = () => {
+  const { t } = useTranslation()
+
+  return {
+    SKURequired: t('productFormMessage.SKURequired'),
+    SKURequiredLength: t('productFormMessage.SKURequiredLength'),
+    SKUValidate: t('productFormMessage.SKUValidate'),
+    SKUValidateFull: t('productFormMessage.SKUValidateFull'),
+    SKURegex: t('productFormMessage.SKURegex'),
+    priceValidate: t('productFormMessage.priceValidate'),
+    quantityValidate: t('productFormMessage.quantityValidate'),
+    quantityRequired: t('productFormMessage.quantityRequired'),
+    quantityClassificationRequired: t('productFormMessage.quantityClassificationRequired'),
+    priceRequired: t('productFormMessage.priceRequired'),
+    priceClassificationRequired: t('productFormMessage.priceClassificationRequired'),
+    productNameRequired: t('productFormMessage.productNameRequired'),
+    productNameLengthRequired: t('productFormMessage.productNameLengthRequired'),
+    brandRequired: t('productFormMessage.brandRequired'),
+    categoryRequired: t('productFormMessage.categoryRequired'),
+    imagesRequired: t('productFormMessage.imagesRequired'),
+    descriptionRequired: t('productFormMessage.descriptionRequired'),
+    descriptionTooLong: t('productFormMessage.descriptionTooLong'),
+    statusRequired: t('productFormMessage.statusRequired'),
+    classificationTitleRequired: t('productFormMessage.classificationTitleRequired'),
+    successCreateOfficialMessage: t('productFormMessage.successCreateOfficialMessage'),
+    successUpdateOfficialMessage: t('productFormMessage.successUpdateOfficialMessage'),
+    successCreateInactiveMessage: t('productFormMessage.successCreateInactiveMessage'),
+    successUpdateInactiveMessage: t('productFormMessage.successUpdateInactiveMessage'),
+    successStatusMessage: t('productFormMessage.successStatusMessage'),
+    categoryLastLevel: t('productFormMessage.categoryLastLevel')
+  }
 }
 
-export const productPageMessage = {
-  emptyProductTitle: 'Product Not Found',
-  emptyProductMessage:
-    'The product you are looking for does not exist. It may have been removed from the website or is currently unavailable.'
+export const useProductPageMessage = () => {
+  const { t } = useTranslation()
+
+  return {
+    emptyProductTitle: t('empty.productDetail.title'),
+    emptyProductMessage: t('empty.productDetail.description')
+  }
 }
