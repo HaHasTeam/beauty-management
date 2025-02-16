@@ -49,8 +49,8 @@ export function UpdateStatusBrandDialog({
 
   async function onUpdate() {
     try {
-      props.onOpenChange?.(false)
       onSuccess?.(Vouchers)
+      props.onOpenChange?.(false)
     } catch (error) {
       handleServerError({
         error
@@ -88,7 +88,13 @@ export function UpdateStatusBrandDialog({
             <DialogClose asChild>
               <Button variant='outline'>Cancel</Button>
             </DialogClose>
-            <Button aria-label='Update Selected rows' variant='default' className='text-white' onClick={onUpdate}>
+            <Button
+              type='button'
+              aria-label='Update Selected rows'
+              variant='default'
+              className='text-white'
+              onClick={onUpdate}
+            >
               Update To {status}
             </Button>
           </DialogFooter>

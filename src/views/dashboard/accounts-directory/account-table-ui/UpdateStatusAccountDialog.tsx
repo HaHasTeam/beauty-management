@@ -35,65 +35,56 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Textarea } from '@/components/ui/textarea'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { getAllBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
-import { reasonSchema, reasonSchemaRequire } from '@/schemas'
-import { BrandStatusEnum, TBrand } from '@/types/brand'
+import { activateAccountMutateApi } from '@/network/apis/auth'
+import { getAllUserApi } from '@/network/apis/user'
+import { reasonSchema } from '@/schemas'
+import { TUser, UserStatusEnum } from '@/types/user'
 
-interface UpdateStatusBrandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
-  Brands: Row<TBrand>['original'][]
+interface UpdateStatusAccountDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  accounts: Row<TUser>['original'][]
   showTrigger?: boolean
-  status: BrandStatusEnum
+  status: UserStatusEnum
 }
 
-export function UpdateStatusBrandDialog({
-  Brands,
+export function UpdateStatusAccountDialog({
+  accounts,
   showTrigger = true,
   status,
   ...props
-}: UpdateStatusBrandDialogProps) {
+}: UpdateStatusAccountDialogProps) {
   const queryClient = useQueryClient()
 
   const handleServerError = useHandleServerError()
   const isDesktop = useMediaQuery('(min-width: 640px)')
-  const form = useForm<z.infer<typeof reasonSchemaRequire>>({
-    resolver: zodResolver(status == BrandStatusEnum.DENIED ? reasonSchemaRequire : reasonSchema),
+  const form = useForm<z.infer<typeof reasonSchema>>({
+    resolver: zodResolver(reasonSchema),
     defaultValues: {
       reason: ''
     }
   })
   const id = useId()
-  const { mutateAsync: updateStatusBrandMutation } = useMutation({
-    mutationKey: [updateStatusBrandByIdApi.mutationKey],
-    mutationFn: updateStatusBrandByIdApi.fn
+  const { mutateAsync: updateStatusAccountMutation } = useMutation({
+    mutationKey: [activateAccountMutateApi.mutationKey],
+    mutationFn: activateAccountMutateApi.fn
   })
-  const updateStatusBrand = async ({
-    brands,
-    status,
-    reason
-  }: {
-    status: string
-    reason?: string
-    brands: TBrand[]
-  }) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brands.map((item) => updateStatusBrandMutation({ brandId: item.id, status: status, reason }))
+  const updateStatusAccount = async ({ accounts }: { status: string; accounts: TUser[] }) => {
+    const updatePromises = accounts.map((item) => updateStatusAccountMutation(item.id))
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    await queryClient.invalidateQueries({ queryKey: [getAllBrandsApi.queryKey] })
+    await queryClient.invalidateQueries({ queryKey: [getAllUserApi.queryKey] })
     form.reset()
     // await queryClient.invalidateQueries({ queryKey: ['getAllBrands', 'updateStatusBrandById'] })
     props.onOpenChange?.(false)
   }
-  async function onSubmit(values: z.infer<typeof reasonSchemaRequire>) {
+  async function onSubmit() {
     try {
       const formatData = {
         status: status,
-        reason: status !== BrandStatusEnum.DENIED ? status : values.reason,
-        brands: Brands
+        accounts: accounts
       }
 
-      await updateStatusBrand(formatData)
+      await updateStatusAccount(formatData)
     } catch (error) {
       handleServerError({
         error,
@@ -108,7 +99,7 @@ export function UpdateStatusBrandDialog({
           <DialogTrigger asChild>
             <Button variant='destructive' size='sm' className='text-white'>
               <XIcon className='size-4' aria-hidden='true' />
-              Update status {Brands.length} Selected {Brands.length > 1 ? 'Brands' : 'Brand'}
+              Update status {accounts.length} Selected {accounts.length > 1 ? 'Accounts' : 'Account'}
             </Button>
           </DialogTrigger>
         ) : null}
@@ -118,24 +109,24 @@ export function UpdateStatusBrandDialog({
               noValidate
               onSubmit={form.handleSubmit(onSubmit)}
               // className='w-full flex-col gap-8 flex'
-              // id={`form-${id}`}
+              id={`form-${id}`}
             >
               <DialogHeader className='my-2'>
                 <DialogTitle className='flex items-center gap-2'>
                   <GrStatusGood className='size-6' aria-hidden='true' />
-                  Are you sure to update status to {status} {Brands.length >= 2 ? 'these Brands' : 'this Brand'}?
+                  Are you sure to update status to {status} {accounts.length >= 2 ? 'these accounts' : 'this accounts'}?
                 </DialogTitle>
                 <DialogDescription>
                   You are about to <b className='uppercase'>Update</b>{' '}
-                  {Brands.map((Brand, index) => (
+                  {accounts.map((Account, index) => (
                     <div className='' key={index}>
-                      <Badge className='mr-1'>{Brand.name}</Badge>
+                      <Badge className='mr-1'>{Account.email}</Badge>
                     </div>
                   ))}
-                  . After update , the Brand will be active on platform. Please check the Brand information before
+                  . After update , the Account will be active on platform. Please check the Account information before
                   update.
                 </DialogDescription>
-                {status === BrandStatusEnum.DENIED && (
+                {status === UserStatusEnum.BANNED && (
                   <FormField
                     control={form.control}
                     name='reason'
@@ -151,7 +142,7 @@ export function UpdateStatusBrandDialog({
                   />
                 )}
               </DialogHeader>
-              <DialogFooter className='gap-2 sm:space-x-0 '>
+              <DialogFooter className='gap-2 sm:space-x-0 my-2 '>
                 <DialogClose asChild>
                   <Button
                     variant='outline'
@@ -179,7 +170,7 @@ export function UpdateStatusBrandDialog({
         <DrawerTrigger asChild>
           <Button variant='default' size='sm' className='text-white'>
             <XIcon className='size-4' aria-hidden='true' />
-            Update {Brands.length} Selected {Brands.length > 1 ? 'Brands' : 'Brand'}
+            Update {accounts.length} Selected {accounts.length > 1 ? 'accounts' : 'account'}
           </Button>
         </DrawerTrigger>
       ) : null}
@@ -195,14 +186,15 @@ export function UpdateStatusBrandDialog({
               <DrawerTitle>Are you absolutely sure?</DrawerTitle>
               <DrawerDescription>
                 You are about to <b className='uppercase'>update</b>{' '}
-                {Brands.map((Brand, index) => (
+                {accounts.map((account, index) => (
                   <Badge className='mr-1' key={index}>
-                    {Brand.name}
+                    {account.username}
                   </Badge>
                 ))}
-                . After update , the Brand will be active on platform. Please check the Brand information before update.
+                . After update , the account will be active on platform. Please check the account information before
+                update.
               </DrawerDescription>
-              {status === BrandStatusEnum.DENIED && (
+              {/* {status === AccountStatus.DENIED && (
                 <FormField
                   control={form.control}
                   name='reason'
@@ -216,7 +208,7 @@ export function UpdateStatusBrandDialog({
                     </FormItem>
                   )}
                 />
-              )}
+              )} */}
             </DrawerHeader>
 
             <DrawerFooter className='gap-2 sm:space-x-0'>
@@ -224,7 +216,7 @@ export function UpdateStatusBrandDialog({
                 <Button variant='outline'>Cancel</Button>
               </DrawerClose>
               <Button aria-label='Update Selected rows' className='text-white' variant='default' type='submit'>
-                Update Brand{Brands.length > 1 ? 's' : ''}
+                Update Account{accounts.length > 1 ? 's' : ''}
               </Button>
             </DrawerFooter>
           </form>

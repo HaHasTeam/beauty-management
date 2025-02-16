@@ -37,7 +37,7 @@ export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActio
         size='sm'
         onClick={() =>
           exportTableToCSV(table, {
-            filename: 'PreOrders' + Date.now(),
+            filename: 'vouchers-' + Date.now(),
             excludeColumns: ['select', 'actions']
           })
         }

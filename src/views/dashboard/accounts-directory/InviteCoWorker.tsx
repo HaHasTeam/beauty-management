@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import FormLabel from '@/components/form-label'
 import { TagsInput } from '@/components/tags-input'
-import CompoundTooltip from '@/components/tooltip'
+import CompoundTooltip from '@/components/Tooltip'
 import {
   Dialog,
   DialogContent,
@@ -74,6 +74,7 @@ const InviteCoWorker = () => {
       })
     }
   })
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await inviteMultipleCoWorkersFn(values)

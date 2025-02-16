@@ -56,7 +56,7 @@ class MyAxios {
     return this.axiosInstance.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
-      signal: controller ? controller.signal : undefined //用于文件上传可以取消  只需在外部调用controller.abort()即可。 参考//https://juejin.cn/post/6954919023205154824
+      signal: controller ? controller.signal : undefined
     })
   }
 

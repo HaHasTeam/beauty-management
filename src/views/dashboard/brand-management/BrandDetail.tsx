@@ -9,9 +9,10 @@ import * as z from 'zod'
 import Button from '@/components/button'
 import CardSection from '@/components/card-section'
 import UploadFilePreview from '@/components/file-input/UploadFilePreview'
+import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -34,11 +35,6 @@ const BrandDetail = ({
   const queryClient = useQueryClient()
   const id = useId()
   const navigate = useNavigate()
-  // const { userData } = useStore(
-  //   useShallow((state) => ({
-  //     userData: state.user
-  //   }))
-  // )
 
   const handleServerError = useHandleServerError()
   const { successToast } = useToast()
@@ -93,8 +89,16 @@ const BrandDetail = ({
             email: values.email,
             phone: values.phone,
             description: values.description,
+            province: values.province,
+            district: values.district,
+            ward: values.ward,
+            businessTaxCode: values.businessTaxCode,
+            businessRegistrationCode: values.businessRegistrationCode,
+            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
+            businessRegistrationAddress: values.businessRegistrationAddress,
             status: StatusEnum.PENDING
           }
+
           if (brandData && brandData?.id) {
             await updateBrandFn({
               brandId: brandData?.id,
@@ -115,7 +119,14 @@ const BrandDetail = ({
             logo: '',
             phone: values.phone,
             description: values.description,
-            status: StatusEnum.PENDING
+            status: StatusEnum.PENDING,
+            province: values.province,
+            district: values.district,
+            ward: values.ward,
+            businessTaxCode: values.businessTaxCode,
+            businessRegistrationCode: values.businessRegistrationCode,
+            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
+            businessRegistrationAddress: values.businessRegistrationAddress
           }
           if (brandData && brandData?.id) {
             await updateBrandFn({
@@ -247,23 +258,77 @@ const BrandDetail = ({
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name='address'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                        placeholder='Address'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className='grid gap-4 grid-cols-2'>
+                <FormField
+                  control={form.control}
+                  name='province'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Province</FormLabel>
+                      <FormControl>
+                        <Input
+                          className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                          placeholder='Province'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='ward'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Ward</FormLabel>
+                      <FormControl>
+                        <Input
+                          className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                          placeholder='Ward'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='district'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>District</FormLabel>
+                      <FormControl>
+                        <Input
+                          className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                          placeholder='District'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='address'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                          placeholder='Address'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <FormField
                 control={form.control}
                 name='phone'
@@ -301,7 +366,6 @@ const BrandDetail = ({
                   </FormItem>
                 )}
               />
-
               {/* <FormField
           control={form.control}
           name='document'
@@ -319,35 +383,122 @@ const BrandDetail = ({
             </FormItem>
           )}
         /> */}
-
-              <FormField
-                control={form.control}
-                name='document'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Document</FormLabel>
-                    <UploadFilePreview
-                      field={field}
-                      vertical
-                      dropZoneConfigOptions={{ maxFiles: 1 }}
-                      header={
-                        <div>
-                          {/* <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div> */}
-                          <div className='text-muted-foreground'>
-                            You must upload at least 1 document for your lisense details. To help you, we’ve provided a
-                            template file. Please download it, fill in the necessary details, and upload it back:
-                          </div>
-                          <a href={templateFileUrl} download className='text-primary underline'>
-                            Download License Details Template
-                          </a>
-                        </div>
-                      }
+            </div>
+          </CardSection>
+          <CardSection
+            title={'Business Registration Certificate'}
+            description='Store legal documents and contracts of the Seller.'
+          >
+            <FormField
+              control={form.control}
+              name='businessTaxCode'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Business Tax Code</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                      placeholder='Business Tax Code'
+                      {...field}
                     />
+                  </FormControl>
+                  <FormDescription>
+                    A unique identifier issued by the tax authorities, used to recognize the business for tax purposes.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='establishmentDate'
+              render={({ field, formState }) => {
+                return (
+                  <FormItem className='flex flex-col'>
+                    <FormLabel required>Establishment Date</FormLabel>
+                    <FlexDatePicker
+                      onlyPastDates
+                      field={field}
+                      formState={{
+                        ...formState,
+                        ...form
+                      }}
+                    />
+                    <FormDescription>
+                      The date the business was officially established. Use this to specify when the business began its
+                      operations.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
-                )}
-              />
-            </div>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name='businessRegistrationCode'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Business Registration Code</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                      placeholder='Business Registration Code'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    A number or code assigned to the business upon registration, serving as a formal identifier for the
+                    company.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='businessRegistrationAddress'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Business Registration Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                      placeholder='Business Registration Address'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>The official address of the business as stated during registration.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='document'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Document</FormLabel>
+                  <UploadFilePreview
+                    field={field}
+                    vertical
+                    dropZoneConfigOptions={{ maxFiles: 1 }}
+                    header={
+                      <div>
+                        {/* <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div> */}
+                        <div className='text-muted-foreground'>
+                          You must upload at least 1 document for your lisense details. To help you, we’ve provided a
+                          template file. Please download it, fill in the necessary details, and upload it back:
+                        </div>
+                        <a href={templateFileUrl} download className='text-primary underline'>
+                          Download License Details Template
+                        </a>
+                      </div>
+                    }
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardSection>
         </form>
       </Form>

@@ -1,6 +1,6 @@
-export type TServerResponse<T> = {
+export type TServerResponse<T, TItems = undefined> = {
   message: string
-  data: T
+  data: T & (TItems extends undefined ? object : { items: TItems })
 }
 
 export type TMetaData = {

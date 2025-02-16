@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import MockImage from '@/assets/SidebarBadge.png'
@@ -7,12 +8,13 @@ import { Routes, routesConfig } from '@/configs/routes'
 
 function Home() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   return (
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-primary/90 text-white px-4 py-3 shadow-md'>
         <div className='flex items-center gap-2'>
           <img src={MockImage} alt='Shopee Logo' width={32} height={32} className='h-8 w-8 object-contain' />
-          <span className='text-lg'>Đăng ký trở thành Người bán hàng</span>
+          <span className='text-lg'>{t('header.registerBrand')}</span>
         </div>
       </header>
 

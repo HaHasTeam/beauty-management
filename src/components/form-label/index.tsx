@@ -2,7 +2,7 @@ import { HtmlHTMLAttributes } from 'react'
 
 import { FormLabel } from '@/components/ui/form'
 
-type Props = HtmlHTMLAttributes<HTMLDivElement> & {
+type Props = HtmlHTMLAttributes<HTMLLabelElement> & {
   required?: boolean
   children: React.ReactNode
   htmlFor?: string

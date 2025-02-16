@@ -35,7 +35,13 @@ function ViewBrandForm() {
       description: '',
       document: [],
       logo: [],
-      name: ''
+      name: '',
+      businessRegistrationAddress: '',
+      businessTaxCode: '',
+      district: '',
+      businessRegistrationCode: '',
+      province: '',
+      ward: ''
     }
   })
   const imageLogo = form.watch('logo')?.[0]
@@ -54,7 +60,14 @@ function ViewBrandForm() {
           description: brandData.description,
           phone: brandData.phone,
           logo: brandImages.length > 2 ? [brandImages[0]] : [],
-          document: brandImages.length > 2 ? [brandImages[1]] : [brandImages[0]]
+          document: brandImages.length > 2 ? [brandImages[1]] : [brandImages[0]],
+          province: brandData.province,
+          district: brandData.district,
+          ward: brandData.ward,
+          businessTaxCode: brandData.businessTaxCode,
+          businessRegistrationCode: brandData.businessRegistrationCode,
+          establishmentDate: brandData.establishmentDate ? brandData.establishmentDate.toString() : '',
+          businessRegistrationAddress: brandData.businessRegistrationAddress
         }
         form.reset(formatData)
       }

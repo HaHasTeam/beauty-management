@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/lib/utils'
 import { getVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
-import { DiscountTypeEnum, StatusEnum, VoucherEnum } from '@/types/enum'
+import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from '@/types/enum'
 
 import VoucherForm from './VoucherForm'
 
@@ -29,20 +29,24 @@ function ViewVoucherDetail() {
   const form = useForm<z.infer<typeof voucherCreateSchema>>({
     resolver: zodResolver(voucherCreateSchema),
     defaultValues: {
+      orderValueType: 'noLimit',
       name: '',
       code: '',
       type: VoucherEnum.NORMAL,
       discountType: DiscountTypeEnum.AMOUNT,
-      discountValue: 0,
-      maxDiscount: 0,
-      minOrderValue: 0,
-      amount: 0,
+      discountValue: undefined,
+      maxDiscount: undefined,
+      minOrderValue: undefined,
+      amount: undefined,
       description: '',
       // startTime: new Date(),
       // endTime: new Date()
       startTime: '',
       endTime: '',
-      status: false
+      status: StatusEnum.ACTIVE,
+      visibility: false,
+      selectedProducts: [],
+      applyType: VoucherApplyTypeEnum.ALL
     }
   })
   const amountVoucher = form.watch('amount') || 0
@@ -66,7 +70,8 @@ function ViewVoucherDetail() {
           maxDiscount: voucherData.maxDiscount,
           minOrderValue: voucherData.minOrderValue,
           description: voucherData.description,
-          status: voucherData.status === StatusEnum.ACTIVE ? true : false,
+          // status: voucherData.status === StatusEnum.ACTIVE ? true : false,
+          status: voucherData.status,
           amount: voucherData.amount,
           startTime: voucherData.startTime,
           endTime: voucherData.endTime,

@@ -21,7 +21,7 @@ import { getRoleIcon, getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
-  type: 'ban' | 'view' | 'unbanned'
+  type: 'ban' | 'view' | 'unbanned' | 'update-status-active'
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TUser> | null>>
@@ -174,7 +174,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
         return (
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-label='Open menu' variant='ghost' className='flex size-8 p-0 data-[state=open]:bg-muted'>
                 <Ellipsis className='size-4' aria-hidden='true' />
@@ -191,6 +191,21 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
                   View Details
                 </span>
               </DropdownMenuItem>
+              {row.original.status == UserStatusEnum.INACTIVE ||
+                (row.original.status == UserStatusEnum.PENDING && (
+                  <DropdownMenuItem
+                    className='bg-green-500 text-white mb-2'
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'update-status-active' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <GrRevert />
+                      Active
+                    </span>
+                  </DropdownMenuItem>
+                ))}
+
               <DropdownMenuSeparator />
               {row.original.status !== UserStatusEnum.BANNED ? (
                 <DropdownMenuItem

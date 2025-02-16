@@ -30,9 +30,11 @@ export type TUserResponse = TUser
 export type TUpdateUserStatusRequestParams = {
   id: string
   status: UserStatusEnum
+  reason: string
 }
 
 export type TUpdateUsersListStatusRequestParams = {
   ids: string[]
   status: UserStatusEnum
+  reason: string
 }

@@ -1,10 +1,14 @@
-import { useMutation } from '@tanstack/react-query'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
 import { XIcon } from 'lucide-react'
 import * as React from 'react'
+import { useForm } from 'react-hook-form'
 import { FaBan } from 'react-icons/fa'
+import { z } from 'zod'
 
 import Button from '@/components/button'
+import FormLabel from '@/components/form-label'
 import { Badge } from '@/components/ui/badge'
 import {
   Dialog,
@@ -26,22 +30,40 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Textarea } from '@/components/ui/textarea'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useToast } from '@/hooks/useToast'
-import { updateUsersListStatusApi } from '@/network/apis/user'
+import { getAllUserApi, updateUsersListStatusApi } from '@/network/apis/user'
+import { reasonSchema, reasonSchemaRequire } from '@/schemas'
 import { TUser, UserStatusEnum } from '@/types/user'
 
 interface BanAccountsDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   accounts: Row<TUser>['original'][]
   showTrigger?: boolean
   onSuccess?: () => void
+  status: UserStatusEnum
 }
 
-export function BanAccountsDialog({ accounts, showTrigger = true, onSuccess, ...props }: BanAccountsDialogProps) {
+export function BanAccountsDialog({
+  status,
+  accounts,
+  showTrigger = true,
+  onSuccess,
+  ...props
+}: BanAccountsDialogProps) {
   const { successToast } = useToast()
+  const queryClient = useQueryClient()
   const handleServerError = useHandleServerError()
   const isDesktop = useMediaQuery('(min-width: 640px)')
+  const form = useForm<z.infer<typeof reasonSchemaRequire>>({
+    resolver: zodResolver(status == UserStatusEnum.BANNED ? reasonSchemaRequire : reasonSchema),
+    defaultValues: {
+      reason: ''
+    }
+  })
+  const id = React.useId()
   const { mutateAsync: banUsersFn, isPending: isBanningUsers } = useMutation({
     mutationKey: [updateUsersListStatusApi.mutationKey],
     mutationFn: updateUsersListStatusApi.fn,
@@ -52,21 +74,38 @@ export function BanAccountsDialog({ accounts, showTrigger = true, onSuccess, ...
     }
   })
 
-  async function onBan() {
+  // async function onBan() {
+  //   try {
+  //     await banUsersFn({
+  //       ids: accounts.map((account) => account.id),
+  //       status: UserStatusEnum.BANNED
+  //     })
+  //     props.onOpenChange?.(false)
+  //     onSuccess?.()
+  //   } catch (error) {
+  //     handleServerError({
+  //       error
+  //     })
+  //   }
+  // }
+  async function onSubmit(values: z.infer<typeof reasonSchema>) {
     try {
       await banUsersFn({
         ids: accounts.map((account) => account.id),
-        status: UserStatusEnum.BANNED
+        status: UserStatusEnum.BANNED,
+        reason: values.reason || ''
       })
+      await queryClient.invalidateQueries({ queryKey: [getAllUserApi.queryKey] })
+
       props.onOpenChange?.(false)
       onSuccess?.()
     } catch (error) {
       handleServerError({
-        error
+        error,
+        form
       })
     }
   }
-
   if (isDesktop) {
     return (
       <Dialog {...props}>
@@ -79,34 +118,57 @@ export function BanAccountsDialog({ accounts, showTrigger = true, onSuccess, ...
           </DialogTrigger>
         ) : null}
         <DialogContent className='sm:max-w-2xl'>
-          <DialogHeader>
-            <DialogTitle className='flex items-center gap-2'>
-              <FaBan className='size-6' aria-hidden='true' />
-              Are you sure to ban {accounts.length >= 2 ? 'these accounts' : 'this account'}?
-            </DialogTitle>
-            <DialogDescription>
-              You are about to <b className='uppercase'>ban</b>{' '}
-              {accounts.map((account) => (
-                <Badge className='mr-1'>{account.username}</Badge>
-              ))}
-              . After banning, the accounts will be disabled. Please check the accounts before banning.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className='gap-2 sm:space-x-0'>
-            <DialogClose asChild>
-              <Button variant='outline'>Cancel</Button>
-            </DialogClose>
-            <Button
-              aria-label='Ban Selected rows'
-              variant='destructive'
-              className='text-white'
-              onClick={onBan}
-              disabled={isBanningUsers}
-              loading={isBanningUsers}
+          <Form {...form}>
+            <form
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              // className='w-full flex-col gap-8 flex'
+              id={`form-${id}`}
             >
-              Ban User{accounts.length > 1 ? 's' : ''}
-            </Button>
-          </DialogFooter>
+              <DialogHeader>
+                <DialogTitle className='flex items-center gap-2'>
+                  <FaBan className='size-6' aria-hidden='true' />
+                  Are you sure to ban {accounts.length >= 2 ? 'these accounts' : 'this account'}?
+                </DialogTitle>
+                <DialogDescription>
+                  You are about to <b className='uppercase'>ban</b>{' '}
+                  {accounts.map((account) => (
+                    <Badge className='mr-1'>{account.username}</Badge>
+                  ))}
+                  . After banning, the accounts will be disabled. Please check the accounts before banning.
+                </DialogDescription>
+                <FormField
+                  control={form.control}
+                  name='reason'
+                  render={({ field }) => (
+                    <FormItem className='my-2'>
+                      <FormLabel required>Reason</FormLabel>
+                      <FormControl>
+                        <Textarea rows={3} placeholder='reason' className='resize-none' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </DialogHeader>
+              <DialogFooter className='gap-2 sm:space-x-0 my-2'>
+                <DialogClose asChild>
+                  <Button variant='outline'>Cancel</Button>
+                </DialogClose>
+                <Button
+                  aria-label='Ban Selected rows'
+                  variant='destructive'
+                  className='text-white'
+                  // onClick={onBan}
+                  type='submit'
+                  disabled={isBanningUsers}
+                  loading={isBanningUsers}
+                >
+                  Ban User{accounts.length > 1 ? 's' : ''}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     )
@@ -132,8 +194,21 @@ export function BanAccountsDialog({ accounts, showTrigger = true, onSuccess, ...
             ))}
             . After banning, the accounts will be disabled. Please check the accounts before banning.
           </DrawerDescription>
+          <FormField
+            control={form.control}
+            name='reason'
+            render={({ field }) => (
+              <FormItem className='my-2'>
+                <FormLabel required>Reason</FormLabel>
+                <FormControl>
+                  <Textarea rows={3} placeholder='reason' className='resize-none' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </DrawerHeader>
-        <DrawerFooter className='gap-2 sm:space-x-0'>
+        <DrawerFooter className='gap-2 sm:space-x-0 my-2'>
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>
           </DrawerClose>
@@ -141,7 +216,8 @@ export function BanAccountsDialog({ accounts, showTrigger = true, onSuccess, ...
             aria-label='Ban Selected rows'
             className='text-white'
             variant='destructive'
-            onClick={onBan}
+            // onClick={onBan}
+            type='submit'
             disabled={isBanningUsers}
             loading={isBanningUsers}
           >

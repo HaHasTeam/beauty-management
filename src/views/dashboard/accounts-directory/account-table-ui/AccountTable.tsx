@@ -15,6 +15,7 @@ import { AccountsTableFloatingBar } from './AccountsTableFloatingBar'
 import { AccountTableToolbarActions } from './AccountsTableToolbarActions'
 import { BanAccountsDialog } from './BanAccountsDialog'
 import { getRoleIcon, getStatusIcon } from './helper'
+import { UpdateStatusAccountDialog } from './UpdateStatusAccountDialog'
 import { ViewDetailsAccountSheet } from './ViewDetailsAccountSheet'
 
 interface AccountTableProps {
@@ -109,7 +110,15 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
           <AccountTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
+      <UpdateStatusAccountDialog
+        status={UserStatusEnum.ACTIVE}
+        accounts={rowAction?.row.original ? [rowAction?.row.original] : []}
+        showTrigger={false}
+        open={rowAction?.type === 'update-status-active'}
+        onOpenChange={() => setRowAction(null)}
+      />
       <BanAccountsDialog
+        status={UserStatusEnum.BANNED}
         open={rowAction?.type === 'ban'}
         onOpenChange={() => setRowAction(null)}
         accounts={rowAction?.row.original ? [rowAction?.row.original] : []}
