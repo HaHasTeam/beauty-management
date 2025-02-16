@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -11,8 +12,7 @@ import { StepTrackingVertical } from '@/components/step-tracking'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
-import { steps } from '@/constants/helper'
-import { productFormMessage, productPageMessage } from '@/constants/message'
+import { getSteps } from '@/constants/helper'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllCategoryApi } from '@/network/apis/category'
@@ -22,15 +22,23 @@ import { getProductApi, updateProductApi } from '@/network/product'
 import { ICategory } from '@/types/category'
 import { ClassificationStatusEnum } from '@/types/classification'
 import { StatusEnum } from '@/types/enum'
-import { ICreateProduct, IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
+import {
+  ICreateProduct,
+  IServerCreateProduct,
+  IServerProductClassification,
+  ProductClassificationTypeEnum,
+  ProductEnum
+} from '@/types/product'
 import { IImage } from '@/types/productImage'
-import { FormProductSchema } from '@/variables/productFormDetailFields'
+import { getFormProductSchema } from '@/variables/productFormDetailFields'
 
+// import { FormProductSchema } from '@/variables/productFormDetailFields'
 import BasicInformation from '../create-product/BasicInformation'
 import DetailInformation from '../create-product/DetailInformation'
 import SalesInformation from '../create-product/SalesInformation'
 
 const UpdateProduct = () => {
+  const { t } = useTranslation()
   const { id } = useParams()
   const productId = id ?? ''
   const formId = useId()
@@ -46,12 +54,14 @@ const UpdateProduct = () => {
   const { successToast } = useToast()
   const navigate = useNavigate()
   const handleServerError = useHandleServerError()
+  const FormProductSchema = getFormProductSchema()
 
   const defaultProductValues = {
     name: '',
     brand: '',
     category: '',
     images: [],
+    certificate: [],
     description: '',
     detail: {},
     productClassifications: [],
@@ -79,10 +89,11 @@ const UpdateProduct = () => {
   })
 
   const handleReset = () => {
-    form.reset()
+    // form.reset()
     setResetSignal((prev) => !prev)
-    setActiveStep(1)
-    setCompleteSteps([])
+    // setActiveStep(1)
+    // setCompleteSteps([])
+    setDefineFormSignal((prev) => !prev)
   }
 
   const { mutateAsync: uploadFilesFn } = useMutation({
@@ -95,10 +106,11 @@ const UpdateProduct = () => {
     mutationFn: updateProductApi.fn,
     onSuccess: () => {
       successToast({
-        message:
+        message: t('createProduct.successUpdate'),
+        description:
           form.getValues('status') === ProductEnum.OFFICIAL
-            ? productFormMessage.successUpdateOfficialMessage
-            : productFormMessage.successUpdateInactiveMessage
+            ? t('createProduct.successOfficialDescription')
+            : t('createProduct.successInactiveDescription')
       })
       queryClient.invalidateQueries({
         queryKey: [getProductApi.queryKey, productId as string]
@@ -116,91 +128,256 @@ const UpdateProduct = () => {
 
     return uploadedFilesResponse.data
   }
+  const processImages = async (originalImages: Array<IImage>, currentImages: (File | IImage)[]) => {
+    const processedImages: Array<IImage> = []
+
+    // Track original image IDs to check for deletions
+    const originalImageIds = new Set(originalImages.filter((img) => img.id).map((img) => img.id))
+
+    // Process current images
+    for (const img of currentImages) {
+      if (img instanceof File) {
+        // New file upload
+        const uploadedUrls = await convertFileToUrl([img])
+        processedImages.push({ fileUrl: uploadedUrls[0] })
+      } else if (typeof img === 'object' && img.fileUrl) {
+        // Existing image
+        processedImages.push({
+          id: img.id,
+          fileUrl: img.fileUrl
+        })
+
+        // Remove from tracked original images
+        if (img.id) {
+          originalImageIds.delete(img.id)
+        }
+      }
+    }
+
+    // Mark deleted images as inactive
+    originalImageIds.forEach((id) => {
+      const deletedImage = originalImages.find((img) => img.id === id)
+      if (deletedImage) {
+        processedImages.push({
+          id,
+          fileUrl: deletedImage.fileUrl,
+          status: StatusEnum.INACTIVE
+        })
+      }
+    })
+
+    return processedImages
+  }
+
+  const processCertificate = async (originalCertificate: string | undefined, newCertificate: File[] | undefined) => {
+    if (!newCertificate?.length) {
+      // If no new certificate and there was an original, mark it as inactive
+      if (originalCertificate) {
+        return [{ fileUrl: originalCertificate, status: StatusEnum.INACTIVE }]
+      }
+      return []
+    }
+
+    // If there's a new certificate file, upload it
+    if (newCertificate[0] instanceof File) {
+      const uploadedUrls = await convertFileToUrl([newCertificate[0]])
+      return [{ fileUrl: uploadedUrls[0] }]
+    }
+
+    // Keep existing certificate if no changes
+    return originalCertificate ? [{ fileUrl: originalCertificate }] : []
+  }
+
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
       setIsLoading(true)
       if (isValid) {
-        const processImages = async (originalImages: Array<IImage>, currentImages: (File | IImage)[]) => {
-          const processedImages: Array<IImage> = []
-
-          // Track original image IDs to check for deletions
-          const originalImageIds = new Set(originalImages.filter((img) => img.id).map((img) => img.id))
-
-          // Process current images
-          for (const img of currentImages) {
-            if (img instanceof File) {
-              // New file upload
-              const uploadedUrls = await convertFileToUrl([img])
-              processedImages.push({ fileUrl: uploadedUrls[0] })
-            } else if (typeof img === 'object' && img.fileUrl) {
-              // Existing image
-              processedImages.push({
-                id: img.id,
-                fileUrl: img.fileUrl
-              })
-
-              // Remove from tracked original images
-              if (img.id) {
-                originalImageIds.delete(img.id)
-              }
-            }
-          }
-
-          // Mark deleted images as inactive
-          originalImageIds.forEach((id) => {
-            const deletedImage = originalImages.find((img) => img.id === id)
-            if (deletedImage) {
-              processedImages.push({
-                id,
-                fileUrl: deletedImage.fileUrl,
-                status: StatusEnum.INACTIVE
-              })
-            }
-          })
-
-          return processedImages
-        }
-
         // Process product images
-        const processedMainImages = await processImages(productData?.data?.[0]?.images ?? [], values.images)
+        const processedMainImages = await processImages(productData?.data?.images ?? [], values.images)
 
-        // Process classification images
-        const processedClassifications = await Promise.all(
-          (values.productClassifications ?? []).map(async (classification, index) => {
-            const originalClassImages = productData?.data?.[0]?.productClassifications?.[index]?.images ?? []
+        // Process certificate
+        const processedCertificate = await processCertificate(productData?.data?.certificate, values.certificate)
 
-            const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
+        // // Process classification images
+        // const processedClassifications = await Promise.all(
+        //   (values.productClassifications ?? []).map(async (classification, index) => {
+        //     const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
 
-            return {
+        //     const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
+
+        //     return {
+        //       ...classification,
+        //       images: processedClassImages
+        //     }
+        //   })
+        // )
+
+        // Get original classifications from BE
+        const originalClassifications = productData?.data?.productClassifications ?? []
+        // Track IDs of classifications in form values
+        // const formClassificationIds = new Set(
+        //   values.productClassifications
+        //     ?.map((classification) => classification.id)
+        //     .filter((id): id is string => id !== undefined)
+        // )
+
+        // Process classifications
+        // const processedClassifications = await Promise.all(
+        //   (values.productClassifications ?? []).map(async (classification, index) => {
+        //     const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
+        //     const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
+
+        //     // Include the original ID if it exists
+        //     const originalClassification = originalClassifications.find((oc) => oc.id === classification.id)
+
+        //     return {
+        //       ...classification,
+        //       id: originalClassification?.id, // Keep the original ID
+        //       images: processedClassImages
+        //     }
+        //   })
+        // )
+
+        // Add inactive status to classifications that are not in form values
+        // const inactiveClassifications = originalClassifications
+        //   .filter(
+        //     (original) =>
+        //       original.id && !formClassificationIds.has(original.id) && original.status !== StatusEnum.INACTIVE
+        //   )
+        //   .map((classification) => ({
+        //     ...classification,
+        //     status: StatusEnum.INACTIVE
+        //   }))
+
+        let processedClassifications: IServerProductClassification[] = []
+
+        // Handle case when form has no product classifications but has price, quantity, and sku
+        if (
+          (!values.productClassifications || values.productClassifications.length === 0) &&
+          values.price !== undefined &&
+          values.price > 0 &&
+          values.quantity !== undefined &&
+          values.quantity > 0 &&
+          values.sku !== undefined &&
+          values.sku.length > 0
+        ) {
+          // Find existing default classification
+          const defaultClassification = originalClassifications.find(
+            (classification) => classification.type === ProductClassificationTypeEnum.DEFAULT
+          )
+
+          if (defaultClassification) {
+            // Update existing default classification
+            processedClassifications = originalClassifications.map((classification) => {
+              if (classification.type === ProductClassificationTypeEnum.DEFAULT) {
+                return {
+                  ...classification,
+                  price: values.price,
+                  quantity: values.quantity,
+                  sku: values.sku,
+                  status: StatusEnum.ACTIVE
+                }
+              }
+              return {
+                ...classification,
+                status: StatusEnum.INACTIVE
+              }
+            })
+          } else {
+            // Create new default classification
+            processedClassifications = [
+              ...originalClassifications.map((classification) => ({
+                ...classification,
+                status: StatusEnum.INACTIVE
+              })),
+              {
+                title: 'Default',
+                images: [],
+                price: values.price,
+                quantity: values.quantity,
+                type: ProductClassificationTypeEnum.DEFAULT,
+                sku: values.sku,
+                status: StatusEnum.ACTIVE
+              }
+            ]
+          }
+        } else {
+          // Track IDs of classifications in form values
+          const formClassificationIds = new Set(
+            values.productClassifications
+              ?.map((classification) => classification.id)
+              .filter((id): id is string => id !== undefined)
+          )
+
+          // Process classifications
+          const activeClassifications = await Promise.all(
+            (values.productClassifications ?? []).map(async (classification, index) => {
+              const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
+              const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
+
+              // Include the original ID if it exists
+              const originalClassification = originalClassifications.find((oc) => oc.id === classification.id)
+
+              return {
+                ...classification,
+                id: originalClassification?.id,
+                images: processedClassImages,
+                status: StatusEnum.ACTIVE
+              }
+            })
+          )
+
+          // Add inactive status to classifications that are not in form values
+          const inactiveClassifications = originalClassifications
+            .filter(
+              (original) =>
+                original.id && !formClassificationIds.has(original.id) && original.status !== StatusEnum.INACTIVE
+            )
+            .map((classification) => ({
               ...classification,
-              images: processedClassImages
-            }
-          })
-        )
+              status: StatusEnum.INACTIVE
+            }))
+
+          processedClassifications = [...activeClassifications, ...inactiveClassifications]
+        }
 
         const transformedData: IServerCreateProduct = {
           name: values?.name,
-          brand: productData?.data?.[0]?.brand?.id ?? '',
+          brand: productData?.data?.brand?.id ?? '',
           category: values?.category,
           status: values?.status,
           images: processedMainImages,
-
+          certificate: processedCertificate[0]?.fileUrl ?? '',
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
-          productClassifications:
-            processedClassifications.length > 0
-              ? processedClassifications
-              : [
-                  {
-                    title: 'Default',
-                    images: [],
-                    price: values.price ?? 1000,
-                    quantity: values.quantity ?? 1,
-                    type: ProductClassificationTypeEnum.DEFAULT,
-                    sku: values.sku ?? ''
-                  }
-                ]
+          // productClassifications:
+          //   processedClassifications.length > 0
+          //     ? processedClassifications
+          //     : [
+          // {
+          //   title: 'Default',
+          //   images: [],
+          //   price: values.price ?? 1000,
+          //   quantity: values.quantity ?? 1,
+          //   type: ProductClassificationTypeEnum.DEFAULT,
+          //   sku: values.sku ?? ''
+          // }
+          //       ]
+          // productClassifications: [...processedClassifications, ...inactiveClassifications].map((classification) => ({
+          //   ...classification,
+          //   type: classification.type ?? ProductClassificationTypeEnum.DEFAULT,
+          //   price: classification.price ?? 1000,
+          //   quantity: classification.quantity ?? 1,
+          //   sku: classification.sku ?? values.sku ?? ''
+          // }))
+          productClassifications: processedClassifications.map((classification) => ({
+            ...classification,
+            type: classification.type ?? ProductClassificationTypeEnum.DEFAULT,
+            price: classification.price ?? 1000,
+            quantity: classification.quantity ?? 1,
+            sku: classification.sku ?? values.sku ?? ''
+          }))
         }
         await updateProductFn({ productId: id ?? '', data: transformedData })
         setIsLoading(false)
@@ -239,9 +416,19 @@ const UpdateProduct = () => {
       return []
     }
   }
+  const convertUrlToFile = async (url: string) => {
+    try {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      return new File([blob], url.split('/').pop() || 'file', { type: blob.type })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+      return null
+    }
+  }
   useEffect(() => {
     if (productData && productData?.data) {
-      const productClassifications = productData?.data?.[0]?.productClassifications ?? []
+      const productClassifications = productData?.data?.productClassifications ?? []
 
       // Check for type === CUSTOM
       const hasCustomType = productClassifications.some(
@@ -252,19 +439,26 @@ const UpdateProduct = () => {
 
       // Determine productClassifications and fallback price/quantity
       const updatedProductClassifications = hasCustomType
-        ? productClassifications.map((classification) => ({
-            ...classification,
-            images: classification.images?.filter((img) => img.status === StatusEnum.ACTIVE || !img.status) || []
-          }))
+        ? productClassifications
+            .filter((classification) => classification.status === StatusEnum.ACTIVE)
+            .map((classification) => ({
+              ...classification,
+              color: classification?.color || '',
+              size: classification?.size || '',
+              other: classification?.other || '',
+              images: classification.images?.filter((img) => img.status === StatusEnum.ACTIVE || !img.status) || []
+            }))
         : []
       const fallbackPrice = !hasCustomType ? productClassifications[0]?.price : undefined
       const fallbackQuantity = !hasCustomType ? productClassifications[0]?.quantity : undefined
 
       const processFormValue = async () => {
-        const mainImages = productData?.data?.[0]?.images
+        const mainImages = productData?.data?.images
           ?.filter((image) => image.status === StatusEnum.ACTIVE || !image.status)
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
+
+        const certificateUrl = productData?.data?.certificate
 
         const classificationImages = updatedProductClassifications?.map(
           (classification) =>
@@ -273,29 +467,30 @@ const UpdateProduct = () => {
               .filter((fileUrl): fileUrl is string => fileUrl !== undefined) ?? []
         )
 
-        const [convertedMainImages, convertedClassificationImages] = await Promise.all([
+        const [convertedMainImages, convertedClassificationImages, convertedCertificate] = await Promise.all([
           convertUrlsToFiles(mainImages),
-          Promise.all(classificationImages.map(convertUrlsToFiles))
+          Promise.all(classificationImages.map(convertUrlsToFiles)),
+          certificateUrl ? convertUrlToFile(certificateUrl) : null
         ])
 
         const formValue: ICreateProduct = {
-          id: productData?.data?.[0]?.id,
-          name: productData?.data?.[0]?.name,
-          brand: productData?.data?.[0]?.brand?.id,
-          category: productData?.data?.[0]?.category?.id,
+          id: productData?.data?.id,
+          name: productData?.data?.name,
+          brand: productData?.data?.brand?.id,
+          category: productData?.data?.category?.id,
           images: convertedMainImages,
-          description: productData?.data?.[0]?.description,
-          detail: JSON?.parse(productData?.data?.[0]?.detail ?? ''),
+          description: productData?.data?.description,
+          detail: JSON?.parse(productData?.data?.detail ?? ''),
+          certificate: convertedCertificate ? [convertedCertificate] : [],
           productClassifications: updatedProductClassifications?.map((classification, index) => ({
             ...classification,
             images: convertedClassificationImages[index] || []
           })),
-          status: productData?.data?.[0]?.status ?? '',
+          status: productData?.data?.status ?? '',
           price: fallbackPrice,
           quantity: fallbackQuantity,
-          sku: productData?.data?.[0]?.sku ?? ''
+          sku: productData?.data?.sku ?? ''
         }
-
         form.reset(formValue)
         setDefineFormSignal((prev) => !prev)
       }
@@ -347,10 +542,10 @@ const UpdateProduct = () => {
                 />
                 <div className='w-full flex flex-row-reverse justify-start gap-3'>
                   <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                    Submit and Show
+                    {t('button.submitAndShow')}
                   </Button>
                   <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
-                    Submit and Hide
+                    {t('button.submitAndHide')}
                   </Button>
                   <Button
                     variant='outline'
@@ -360,7 +555,7 @@ const UpdateProduct = () => {
                       navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
                     }}
                   >
-                    Hủy
+                    {t('button.cancel')}
                   </Button>
                 </div>
               </form>
@@ -369,7 +564,7 @@ const UpdateProduct = () => {
           <div className='lg:w-[28%] md:w-[30%] sm:w-[15%] w-0 sm:block hidden'>
             <div className='fixed right-8'>
               <StepTrackingVertical
-                steps={steps}
+                steps={getSteps()}
                 setActiveStep={setActiveStep}
                 activeStep={activeStep}
                 completeSteps={completeSteps}
@@ -379,7 +574,7 @@ const UpdateProduct = () => {
         </div>
       ) : (
         <div className='h-[600px] w-full flex justify-center items-center'>
-          <Empty title={productPageMessage.emptyProductTitle} description={productPageMessage.emptyProductMessage} />
+          <Empty title={t('empty.productDetail.title')} description={t('empty.productDetail.description')} />
         </div>
       )}
     </>

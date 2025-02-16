@@ -6,7 +6,7 @@ import { privateRequest } from '@/utils/request'
 export const getAllProductApi = toQueryFetcher<void, TServerResponse<TProduct[]>>('getAllProductApi', async () => {
   return privateRequest('/products')
 })
-export const getProductApi = toQueryFetcher<string, TServerResponse<IResponseProduct[]>>(
+export const getProductApi = toQueryFetcher<string, TServerResponse<IResponseProduct>>(
   'getProductApi',
   async (productId) => {
     return privateRequest(`/products/get-by-id/${productId}`)

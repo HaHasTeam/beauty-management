@@ -123,9 +123,9 @@ export default function UpdateOrderStatus({ order, setIsTrigger, setOpenCancelOr
       alertTitle: t('order.shipping'),
       buttonText: t('order.delivering'),
       alertDescription: t('order.statusDescription.shipping'),
-      nextStatus: ShippingStatusEnum.TO_RECEIVED
+      nextStatus: ShippingStatusEnum.SHIPPING
     },
-    [ShippingStatusEnum.TO_RECEIVED]: {
+    [ShippingStatusEnum.SHIPPING]: {
       borderColor: 'border-cyan-300',
       bgColor: 'bg-cyan-100',
       bgTagColor: 'bg-cyan-300',

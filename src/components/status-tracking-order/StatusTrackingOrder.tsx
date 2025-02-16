@@ -29,7 +29,7 @@ export const StatusTrackingIcon = (status: string) => {
       return <PackageOpen className='w-5 h-5' />
     case ShippingStatusEnum.TO_SHIP:
       return <Grab className='w-5 h-5' />
-    case ShippingStatusEnum.TO_RECEIVED:
+    case ShippingStatusEnum.SHIPPING:
       return <Truck className='w-5 h-5' />
     case ShippingStatusEnum.DELIVERED:
       return <BadgeCheck className='w-5 h-5' />
@@ -64,7 +64,7 @@ export const StatusTrackingText = (status: string) => {
       return t('order.preparingOrder')
     case ShippingStatusEnum.TO_SHIP:
       return t('order.shipping')
-    case ShippingStatusEnum.TO_RECEIVED:
+    case ShippingStatusEnum.SHIPPING:
       return t('order.delivering')
     case ShippingStatusEnum.DELIVERED:
       return t('order.delivered')

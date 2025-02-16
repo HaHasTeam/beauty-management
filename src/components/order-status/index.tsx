@@ -47,7 +47,7 @@ export default function OrderStatus({ tag, text, size = 'medium' }: OrderStatusP
       bgColorClass = 'bg-purple-100'
       tagText = t('order.preparingOrder')
       break
-    case ShippingStatusEnum.TO_RECEIVED:
+    case ShippingStatusEnum.SHIPPING:
       tagColorClass = 'text-cyan-600'
       bgColorClass = 'bg-cyan-100'
       tagText = t('order.delivering')
