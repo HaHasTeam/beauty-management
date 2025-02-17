@@ -147,3 +147,8 @@ export enum CancelOrderRequestStatusEnum {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
 }
+
+export enum ServiceTypeEnum {
+  STANDARD = 'STANDARD',
+  PREMIUM = 'PREMIUM'
+}
