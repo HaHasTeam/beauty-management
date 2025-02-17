@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CircleChevronRight, Siren } from 'lucide-react'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -8,7 +8,7 @@ import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { updateOrderStatusApi } from '@/network/apis/order'
+import { getOrderByIdApi, getStatusTrackingByIdApi, updateOrderStatusApi } from '@/network/apis/order'
 import { UpdateOrderStatusSchema } from '@/schemas/order.schema'
 import { ShippingStatusEnum } from '@/types/enum'
 import { IOrderItem } from '@/types/order'
@@ -18,15 +18,15 @@ import { AlertDescription } from '../ui/alert'
 
 interface UpdateOrderStatusProps {
   order: IOrderItem
-  setIsTrigger: Dispatch<SetStateAction<boolean>>
   setOpenCancelOrderDialog: Dispatch<SetStateAction<boolean>>
 }
 
-export default function UpdateOrderStatus({ order, setIsTrigger, setOpenCancelOrderDialog }: UpdateOrderStatusProps) {
+export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: UpdateOrderStatusProps) {
   const { t } = useTranslation()
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const queryClient = useQueryClient()
 
   const defaultOrderValues = {
     status: ''
@@ -41,11 +41,14 @@ export default function UpdateOrderStatus({ order, setIsTrigger, setOpenCancelOr
   const { mutateAsync: updateOrderStatusFn } = useMutation({
     mutationKey: [updateOrderStatusApi.mutationKey],
     mutationFn: updateOrderStatusApi.fn,
-    onSuccess: () => {
+    onSuccess: async () => {
       successToast({
         message: t('order.updateOrderStatusSuccess')
       })
-      setIsTrigger((prev) => !prev)
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [getOrderByIdApi.queryKey] }),
+        queryClient.invalidateQueries({ queryKey: [getStatusTrackingByIdApi.queryKey] })
+      ])
       handleReset()
     }
   })

@@ -40,7 +40,6 @@ const OrderDetails = () => {
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
-  const [isTrigger, setIsTrigger] = useState<boolean>(false)
   const [isTriggerCancelRequest, setIsTriggerCancelRequest] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
@@ -70,17 +69,6 @@ const OrderDetails = () => {
     enabled: !!id,
     staleTime: 0
   })
-
-  useEffect(() => {
-    if (isTrigger) {
-      queryClient.invalidateQueries({
-        queryKey: [getOrderByIdApi.queryKey]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [getStatusTrackingByIdApi.queryKey]
-      })
-    }
-  }, [isTrigger, queryClient])
 
   const { mutateAsync: getBrandCancelRequestOrderFn } = useMutation({
     mutationKey: [getBrandCancelRequestApi.mutationKey],
@@ -173,11 +161,7 @@ const OrderDetails = () => {
           <>
             <div className='space-y-6 w-full'>
               {/* alert update order status */}
-              <UpdateOrderStatus
-                order={useOrderData?.data}
-                setIsTrigger={setIsTrigger}
-                setOpenCancelOrderDialog={setOpenCancelOrderDialog}
-              />
+              <UpdateOrderStatus order={useOrderData?.data} setOpenCancelOrderDialog={setOpenCancelOrderDialog} />
 
               {/* handle cancel request for brand and system role */}
               {!isLoading &&
@@ -378,7 +362,6 @@ const OrderDetails = () => {
             open={openCancelOrderDialog}
             setOpen={setOpenCancelOrderDialog}
             onOpenChange={setOpenCancelOrderDialog}
-            setIsTrigger={setIsTrigger}
             orderId={useOrderData?.data?.id ?? ''}
           />
         )}
