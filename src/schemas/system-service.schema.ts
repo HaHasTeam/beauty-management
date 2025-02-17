@@ -25,7 +25,9 @@ export const getSystemServiceSchema = () => {
     type: z.enum([ServiceTypeEnum.STANDARD, ServiceTypeEnum.PREMIUM]),
     resultSheetData: z.object({
       title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
-      resultSheetSections: z.array(ResultSheetSectionSchema)
+      resultSheetSections: z
+        .array(ResultSheetSectionSchema)
+        .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
     }),
     status: z.enum([StatusEnum.ACTIVE, StatusEnum.INACTIVE])
   })

@@ -844,16 +844,17 @@
     "createSuccessMessage": "Service created successfully!",
     "status": "Trạng thái",
     "serviceImages": "Hình Ảnh Dịch Vụ",
-    "serviceNameRequired": "Service name is required.",
-    "descriptionRequired": "Service description is required.",
-    "imagesRequired": "Please select at least one image.",
-    "categoryRequired": "Please select a category.",
-    "typeRequired": "Please select a type.",
-    "standardOrPremiumRequired": "Please select a standard or premium type.",
-    "sectionNameRequired": "Section name is required.",
-    "sectionsRequired": "Please add at least one section.",
-    "resultSheetTitleRequired": "Result sheet title is required.",
-    "orderIndexRequired": "Order index is required.",
-    "sectionDescriptionRequired": "Section description is required."
+    "serviceNameRequired": "Tên dịch vụ là bắt buộc.",
+    "descriptionRequired": "Mô tả dịch vụ là bắt buộc.",
+    "imagesRequired": "Vui lòng chọn ít nhất một hình ảnh.",
+    "categoryRequired": "Vui lòng chọn một danh mục.",
+    "typeRequired": "Vui lòng chọn một loại.",
+    "standardOrPremiumRequired": "Vui lòng chọn loại tiêu chuẩn hoặc cao cấp.",
+    "sectionNameRequired": "Tên mục là bắt buộc.",
+    "sectionsRequired": "Vui lòng thêm ít nhất một mục.",
+    "resultSheetTitleRequired": "Tiêu đề bảng kết quả là bắt buộc.",
+    "orderIndexRequired": "Chỉ số thứ tự là bắt buộc.",
+    "sectionDescriptionRequired": "Mô tả mục là bắt buộc.",
+    "resultSheetSectionsRequired": "Các mục bảng kết quả là bắt buộc."
   }
 }

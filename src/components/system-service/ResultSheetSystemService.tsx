@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -16,6 +17,21 @@ interface ResultSheetSystemServiceProps {
 }
 const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
   const { t } = useTranslation()
+  const handleDeleteSection = (index: number) => {
+    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+
+    // Remove the section at the specified index
+    const updatedSections = currentSections.filter((_, i) => i !== index)
+
+    // Update the orderIndex for remaining sections
+    const reorderedSections = updatedSections.map((section, i) => ({
+      ...section,
+      orderIndex: i + 1
+    }))
+
+    // Update the form value
+    form.setValue('resultSheetData.resultSheetSections', reorderedSections)
+  }
   return (
     <div className='space-y-4'>
       {/* Result Sheet Title */}
@@ -97,25 +113,33 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name={`resultSheetData.resultSheetSections.${index}.mandatory`}
-              render={({ field }) => (
-                <FormItem>
-                  <div className='flex gap-2'>
-                    <div className='w-[15%] flex items-center'>
-                      <FormLabel>{t('systemService.required')}</FormLabel>
+            <div className='w-full flex flex-1 justify-between'>
+              <FormField
+                control={form.control}
+                name={`resultSheetData.resultSheetSections.${index}.mandatory`}
+                render={({ field }) => (
+                  <FormItem className='w-full'>
+                    <div className='flex gap-2'>
+                      <div className='w-[15%] flex items-center'>
+                        <FormLabel>{t('systemService.required')}</FormLabel>
+                      </div>
+                      <div className='w-full space-y-1'>
+                        <FormControl>
+                          <Switch checked={field.value} onCheckedChange={field.onChange} size='medium' />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
                     </div>
-                    <div className='w-full space-y-1'>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} size='medium' />
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </div>
-                </FormItem>
+                  </FormItem>
+                )}
+              />
+              {form.watch('resultSheetData.resultSheetSections').length > 1 && (
+                <Trash2
+                  className='text-destructive hover:text-destructive/80 cursor-pointer'
+                  onClick={() => handleDeleteSection(index)}
+                />
               )}
-            />
+            </div>
           </div>
         ))}
         <Button
