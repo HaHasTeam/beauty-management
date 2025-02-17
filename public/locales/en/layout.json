@@ -10,6 +10,7 @@
     "shoppingCart": "Shopping Cart",
     "notification": "Notifications"
   },
+  "profile": {},
   "home": {
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
@@ -263,7 +264,12 @@
     "view": "View",
     "images": "Images",
     "viewProductImages": "View Product Images",
-    "viewClassificationImages": "View Classification Images"
+    "viewClassificationImages": "View Classification Images",
+    "safeCertificate": "Certified For Safety",
+    "qualityService": "Guaranteed Quality & Service",
+    "verified": "Inspection Upon Receipt",
+    "official": "100% Authentic Products",
+    "certificateOfProduct": "Certificate of {{name}}"
   },
   "event": {
     "finishIn": "Finish In"
