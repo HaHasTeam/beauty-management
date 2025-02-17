@@ -10,6 +10,7 @@
     "shoppingCart": "Giỏ hàng",
     "notification": "Thông báo"
   },
+  "profile": {},
   "home": {
     "consultantTitle": "Tư vấn sắc đẹp",
     "standardConsultantTitle": "Tư vấn tiêu chuẩn",
@@ -263,7 +264,12 @@
     "view": "Xem",
     "images": "Hình Ảnh",
     "viewProductImages": "Xem Hình Ảnh Sản Phẩm",
-    "viewClassificationImages": "Xem Hình Ảnh Của Phân Loại"
+    "viewClassificationImages": "Xem Hình Ảnh Của Phân Loại",
+    "safeCertificate": "Chứng Nhận An Toàn",
+    "qualityService": "Cam Kết Chất Lượng & Dịch Vụ",
+    "verified": "Được đồng kiểm khi nhận hàng",
+    "official": "100% Hàng chính hãng",
+    "certificateOfProduct": "Chứng Nhận của {{name}}"
   },
   "event": {
     "finishIn": "Kết thúc trong"
