@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle } from 'lucide-react'
 import { Dispatch, SetStateAction, useId, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,7 +10,7 @@ import Label from '@/components/form-label'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { cancelOrderApi } from '@/network/apis/order'
+import { cancelOrderApi, getOrderByIdApi, getStatusTrackingByIdApi } from '@/network/apis/order'
 import { CancelOrderSchema } from '@/schemas/order.schema'
 
 import AlertMessage from '../alert/AlertMessage'
@@ -24,22 +24,16 @@ interface CancelOrderDialogProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   onOpenChange: (open: boolean) => void
-  setIsTrigger: Dispatch<SetStateAction<boolean>>
 }
 
-export default function CancelOrderDialog({
-  orderId,
-  open,
-  setOpen,
-  onOpenChange,
-  setIsTrigger
-}: CancelOrderDialogProps) {
+export default function CancelOrderDialog({ orderId, open, setOpen, onOpenChange }: CancelOrderDialogProps) {
   const { t } = useTranslation()
   const { successToast } = useToast()
   const formId = useId()
   const handleServerError = useHandleServerError()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isOtherReason, setIsOtherReason] = useState<boolean>(false)
+  const queryClient = useQueryClient()
 
   const reasons: { value: string }[] = useMemo(
     () => [
@@ -73,11 +67,15 @@ export default function CancelOrderDialog({
   const { mutateAsync: cancelOrderFn } = useMutation({
     mutationKey: [cancelOrderApi.mutationKey],
     mutationFn: cancelOrderApi.fn,
-    onSuccess: () => {
+    onSuccess: async () => {
       successToast({
         message: t('order.cancelSuccess')
       })
-      setIsTrigger((prev) => !prev)
+
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [getOrderByIdApi.queryKey] }),
+        queryClient.invalidateQueries({ queryKey: [getStatusTrackingByIdApi.queryKey] })
+      ])
       handleReset()
     }
   })
