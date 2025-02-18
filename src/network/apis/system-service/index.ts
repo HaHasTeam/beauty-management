@@ -1,5 +1,5 @@
 import { TServerResponse } from '@/types/request'
-import { IResponseSystemService, ISystemService } from '@/types/system-service'
+import { ICreateSystemService, IResponseSystemService, ISystemService } from '@/types/system-service'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
@@ -17,7 +17,7 @@ export const getSystemServiceByIdApi = toQueryFetcher<string, TServerResponse<IR
   }
 )
 
-export const createSystemServiceApi = toMutationFetcher<ISystemService, TServerResponse<ISystemService>>(
+export const createSystemServiceApi = toMutationFetcher<ICreateSystemService, TServerResponse<ICreateSystemService>>(
   'createSystemServiceApi',
   async (data) => {
     return privateRequest('/system-services', {

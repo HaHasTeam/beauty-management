@@ -856,6 +856,12 @@
     "orderIndexRequired": "Order index is required.",
     "sectionDescriptionRequired": "Section description is required.",
     "resultSheetSectionsRequired": "Result sheet sections is required.",
-    "section": "Section"
+    "section": "Section",
+    "updateSuccessMessage": "",
+    "eitherResultSheetOrDataRequired": "",
+    "createNew": "Create new result sheet",
+    "selectOrCreateNew": "Select or create new",
+    "selectResultSheet": "Select result sheet",
+    "preview": "Preview"
   }
 }

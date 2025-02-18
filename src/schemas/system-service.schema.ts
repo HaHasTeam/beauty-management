@@ -3,36 +3,46 @@ import { z } from 'zod'
 
 import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
 
-// Schema for result sheet section
-export const getResultSheetSectionSchema = () => {
-  return z.object({
-    section: z.string().min(1, { message: i18next.t('systemService.sectionNameRequired') }),
-    orderIndex: z.number().min(1, { message: i18next.t('systemService.orderIndexRequired') }),
-    mandatory: z.boolean(),
-    description: z.string().min(1, { message: i18next.t('systemService.sectionDescriptionRequired') })
-  })
-}
+import { resultSheetDataSchema } from './result-sheet.schema'
 
 // Schema for the entire form
 export const getSystemServiceSchema = () => {
-  const ResultSheetSectionSchema = getResultSheetSectionSchema()
+  // const ResultSheetSectionSchema = getResultSheetSectionSchema()
   const fileArray = z.array(z.instanceof(File))
-  return z.object({
-    name: z.string().min(1, { message: i18next.t('systemService.serviceNameRequired') }),
-    description: z.string().min(1, { message: i18next.t('systemService.descriptionRequired') }),
-    images: fileArray.min(1, { message: i18next.t('systemService.imagesRequired') }),
-    category: z.string().min(1, { message: i18next.t('systemService.categoryRequired') }),
-    type: z.enum([ServiceTypeEnum.STANDARD, ServiceTypeEnum.PREMIUM]),
-    resultSheetData: z.object({
-      title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
-      resultSheetSections: z
-        .array(ResultSheetSectionSchema)
-        .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
-    }),
-    status: z.enum([StatusEnum.ACTIVE, StatusEnum.INACTIVE])
-  })
+
+  // const resultSheetDataSchema = z
+  //   .object({
+  //     title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
+  //     resultSheetSections: z
+  //       .array(ResultSheetSectionSchema)
+  //       .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
+  //   })
+  //   .optional()
+
+  return z
+    .object({
+      name: z.string().min(1, { message: i18next.t('systemService.serviceNameRequired') }),
+      description: z.string().min(1, { message: i18next.t('systemService.descriptionRequired') }),
+      images: fileArray.min(1, { message: i18next.t('systemService.imagesRequired') }),
+      category: z.string().min(1, { message: i18next.t('systemService.categoryRequired') }),
+      type: z.enum([ServiceTypeEnum.STANDARD, ServiceTypeEnum.PREMIUM]),
+      resultSheet: z.string().optional(),
+      resultSheetData: resultSheetDataSchema,
+      status: z.enum([StatusEnum.ACTIVE, StatusEnum.INACTIVE])
+    })
+    .refine(
+      (data) => {
+        // Check if either resultSheet or resultSheetData is provided
+        return !!(data.resultSheet || data.resultSheetData)
+      },
+      {
+        message: i18next.t('systemService.eitherResultSheetOrDataRequired'),
+        path: ['resultSheetData']
+      }
+    )
 }
 
 export const SystemServiceSchema = getSystemServiceSchema()
 
 export type ISystemServiceFormData = z.infer<typeof SystemServiceSchema>
+export type IResultSheetDataFormData = z.infer<typeof SystemServiceSchema>['resultSheetData']
