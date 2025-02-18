@@ -855,6 +855,7 @@
     "resultSheetTitleRequired": "Result sheet title is required.",
     "orderIndexRequired": "Order index is required.",
     "sectionDescriptionRequired": "Section description is required.",
-    "resultSheetSectionsRequired": "Result sheet sections is required."
+    "resultSheetSectionsRequired": "Result sheet sections is required.",
+    "section": "Section"
   }
 }

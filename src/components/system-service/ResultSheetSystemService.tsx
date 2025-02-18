@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -32,6 +32,28 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
     // Update the form value
     form.setValue('resultSheetData.resultSheetSections', reorderedSections)
   }
+
+  const moveSection = (fromIndex: number, direction: 'up' | 'down') => {
+    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+    const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1
+
+    if (toIndex < 0 || toIndex >= currentSections.length) return
+
+    const newSections = [...currentSections]
+    const [movedItem] = newSections.splice(fromIndex, 1)
+    newSections.splice(toIndex, 0, movedItem)
+
+    // Update orderIndex for all items
+    const reorderedSections = newSections.map((section, index) => ({
+      ...section,
+      orderIndex: index + 1
+    }))
+
+    form.setValue('resultSheetData.resultSheetSections', reorderedSections)
+  }
+
+  const sections = form.watch('resultSheetData.resultSheetSections')
+  const sortedSections = [...sections].sort((a, b) => a.orderIndex - b.orderIndex)
   return (
     <div className='space-y-4'>
       {/* Result Sheet Title */}
@@ -63,8 +85,29 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
         <div className='flex gap-2'>
           <h4 className='text-base font-semibold'>{t('systemService.sections')}</h4>
         </div>
-        {form.watch('resultSheetData.resultSheetSections').map((_, index) => (
+        {sortedSections.map((section, index) => (
           <div key={index} className='space-y-4 p-4 border rounded-lg'>
+            <div className='flex justify-between items-center mb-4'>
+              <div className='flex items-center gap-2'>
+                <span className='font-medium text-primary text-base'>
+                  {t('systemService.section')}: {section.orderIndex}
+                </span>
+              </div>
+              <div className='flex items-center gap-2'>
+                {index > 0 && (
+                  <ArrowUpCircle
+                    className='w-5 h-5 text-primary cursor-pointer hover:text-primary/80'
+                    onClick={() => moveSection(index, 'up')}
+                  />
+                )}
+                {index < sections.length - 1 && (
+                  <ArrowDownCircle
+                    className='w-5 h-5 text-primary cursor-pointer hover:text-primary/80'
+                    onClick={() => moveSection(index, 'down')}
+                  />
+                )}
+              </div>
+            </div>
             <FormField
               control={form.control}
               name={`resultSheetData.resultSheetSections.${index}.section`}

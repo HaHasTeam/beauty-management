@@ -855,6 +855,7 @@
     "resultSheetTitleRequired": "Tiêu đề bảng kết quả là bắt buộc.",
     "orderIndexRequired": "Chỉ số thứ tự là bắt buộc.",
     "sectionDescriptionRequired": "Mô tả mục là bắt buộc.",
-    "resultSheetSectionsRequired": "Các mục bảng kết quả là bắt buộc."
+    "resultSheetSectionsRequired": "Các mục bảng kết quả là bắt buộc.",
+    "section": "Mục"
   }
 }
