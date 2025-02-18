@@ -80,11 +80,5 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.PRODUCT_LIST].path,
     icon: <Package className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: true
-  },
-  {
-    name: routesConfig[Routes.CREATE_PRODUCT].name,
-    path: routesConfig[Routes.CREATE_PRODUCT].path,
-    icon: <Package className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
-    collapse: true
   }
 ]

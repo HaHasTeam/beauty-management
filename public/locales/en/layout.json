@@ -269,7 +269,8 @@
     "qualityService": "Guaranteed Quality & Service",
     "verified": "Inspection Upon Receipt",
     "official": "100% Authentic Products",
-    "certificateOfProduct": "Certificate of {{name}}"
+    "certificateOfProduct": "Certificate of {{name}}",
+    "name": "Name"
   },
   "event": {
     "finishIn": "Finish In"
@@ -297,6 +298,8 @@
       "title": "Reviews",
       "count": "{{count}}k"
     },
+    "establishmentDate": "Establishment date",
+    "businessTaxCode": "Business Tax Code",
     "responseRate": {
       "title": "Response Rate",
       "value": "{{rate}}%"
@@ -397,6 +400,7 @@
     "state": "State",
     "country": "Country",
     "postalCode": "Postal Code",
+    "email": "Email",
     "phoneNumber": "Phone Number",
     "save": "Save",
     "cancel": "Cancel",
@@ -789,6 +793,7 @@
     "uniqueNameClassification": "Each option in the same classification must have a unique name.",
     "classificationInformation": "Pricing & Inventory",
     "skuProduct": "Product SKU",
+    "sku": "SKU",
     "skuProductPlaceholder": "Enter product SKU",
     "skuClassification": "Product classification SKU",
     "productClassification": "Product Classification",
@@ -817,6 +822,16 @@
     "copy": "Copy",
     "downloadCertificate": "Download Certificate",
     "viewCertificate": "View Certificate",
-    "download": "Download"
+    "download": "Download",
+    "duplicated": "This item already exists!"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "DRAFT": "Draft",
+    "PUBLIC": "Public",
+    "DENIED": "Denied",
+    "BAN": "Baned",
+    "PENDING": "Pending"
   }
 }

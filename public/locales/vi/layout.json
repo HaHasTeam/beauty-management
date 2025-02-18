@@ -269,7 +269,8 @@
     "qualityService": "Cam Kết Chất Lượng & Dịch Vụ",
     "verified": "Được đồng kiểm khi nhận hàng",
     "official": "100% Hàng chính hãng",
-    "certificateOfProduct": "Chứng Nhận của {{name}}"
+    "certificateOfProduct": "Chứng Nhận của {{name}}",
+    "name": "Tên"
   },
   "event": {
     "finishIn": "Kết thúc trong"
@@ -297,6 +298,8 @@
       "title": "Đánh giá",
       "count": "{{count}}k"
     },
+    "establishmentDate": "Ngày thành lập",
+    "businessTaxCode": "Mã số thuế",
     "responseRate": {
       "title": "Tỉ lệ phản hồi",
       "value": "{{rate}}%"
@@ -397,6 +400,7 @@
     "state": "Tỉnh/Thành phố",
     "country": "Quốc gia",
     "postalCode": "Mã bưu điện",
+    "email": "Email",
     "phoneNumber": "Số điện thoại",
     "save": "Lưu",
     "cancel": "Hủy",
@@ -789,6 +793,7 @@
     "uniqueNameClassification": "Mỗi tùy chọn trong cùng một phân loại phải có tên duy nhất.",
     "classificationInformation": "Giá & Kho Hàng",
     "skuProduct": "SKU Sản Phẩm",
+    "sku": "SKU",
     "skuProductPlaceholder": "Nhập SKU sản phẩm",
     "skuClassification": "SKU phân loại sản phẩm",
     "productClassification": "Phân Loại Hàng",
@@ -818,5 +823,14 @@
     "downloadCertificate": "Tải chứng nhận",
     "viewCertificate": "Xem chứng nhận",
     "download": "Tải xuống"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "DRAFT": "Draft",
+    "PUBLIC": "Public",
+    "DENIED": "Denied",
+    "BAN": "Baned",
+    "PENDING": "Pending"
   }
 }

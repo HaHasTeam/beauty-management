@@ -19,7 +19,7 @@ export enum Routes {
   FLASH_SALE = 'flash-sale',
   ADD_FLASH_SALE = 'add-flash-sale',
   FLASH_SALE_DETAILS = 'flash-sale-details',
-  PRODUCT_LIST = 'product-list',
+  PRODUCT_LIST = 'products',
   CREATE_PRODUCT = 'create-product',
   CATEGORY = 'category',
   ADD_CATEGORY = 'add-category',
@@ -221,15 +221,15 @@ export const routesConfig: TRoutes = {
     name: 'Product List',
     title: 'Product List',
     description: 'Manage your beauty products',
-    path: '/dashboard/products/list',
-    getPath: () => '/dashboard/products/list'
+    path: '/dashboard/products',
+    getPath: () => '/dashboard/products'
   },
   [Routes.CREATE_PRODUCT]: {
     name: 'Create Product',
     title: 'Create Product',
     description: 'Create a new beauty product',
-    path: '/dashboard/products/create',
-    getPath: () => '/dashboard/products/create'
+    path: '/dashboard/products/add',
+    getPath: () => '/dashboard/products/add'
   },
   [Routes.UPDATE_PRODUCT]: {
     name: 'Update Product',
