@@ -856,6 +856,12 @@
     "orderIndexRequired": "Chỉ số thứ tự là bắt buộc.",
     "sectionDescriptionRequired": "Mô tả mục là bắt buộc.",
     "resultSheetSectionsRequired": "Các mục bảng kết quả là bắt buộc.",
-    "section": "Mục"
+    "section": "Mục",
+    "updateSuccessMessage": "Update system service successfully!",
+    "eitherResultSheetOrDataRequired": "Choose exits result sheet or create new",
+    "createNew": "Create new result sheet",
+    "selectOrCreateNew": "Select or create new",
+    "selectResultSheet": "Select result sheet",
+    "preview": "Preview"
   }
 }

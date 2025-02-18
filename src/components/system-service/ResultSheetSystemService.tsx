@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, Pencil, Trash2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -7,8 +7,10 @@ import { z } from 'zod'
 import FormLabel from '@/components/form-label'
 import { getAllResultSheetApi } from '@/network/apis/result-sheet'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
+import { StatusEnum } from '@/types/enum'
 
 import Button from '../button'
+import ResultSheet from '../result-sheet/ResultSheet'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
@@ -19,6 +21,7 @@ interface ResultSheetSystemServiceProps {
   form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
 }
 const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
+  const CREATE_NEW_RESULT_VALUE = 'createNewResultSheetData'
   const { t } = useTranslation()
 
   const { data: resultSheets } = useQuery({
@@ -63,13 +66,9 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
 
   // Handle result sheet selection
   const handleResultSheetChange = (resultSheetId: string) => {
-    if (resultSheetId) {
-      // If an existing result sheet is selected
+    if (resultSheetId === CREATE_NEW_RESULT_VALUE) {
+      // If "Create New" is selected, initialize resultSheetData
       form.setValue('resultSheet', resultSheetId)
-      form.setValue('resultSheetData', undefined)
-    } else {
-      // If "Create New" is selected
-      form.setValue('resultSheet', undefined)
       form.setValue('resultSheetData', {
         title: '',
         resultSheetSections: [
@@ -81,12 +80,16 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
           }
         ]
       })
+    } else if (resultSheetId) {
+      // If an existing result sheet is selected
+      form.setValue('resultSheet', resultSheetId)
+      form.setValue('resultSheetData', undefined)
     }
   }
 
   const selectedResultSheet = form.watch('resultSheet')
 
-  const sections = form.watch('resultSheetData.resultSheetSections')
+  const sections = form.watch('resultSheetData.resultSheetSections') || []
   const sortedSections = [...sections].sort((a, b) => a.orderIndex - b.orderIndex)
 
   // Find the selected result sheet data for preview
@@ -102,7 +105,7 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
           <FormItem>
             <div className='flex gap-2'>
               <div className='w-[15%] flex items-center'>
-                <FormLabel>{t('systemService.selectResultSheet')}</FormLabel>
+                <FormLabel required>{t('systemService.selectResultSheet')}</FormLabel>
               </div>
               <div className='w-full space-y-1'>
                 <Select value={field.value} onValueChange={handleResultSheetChange}>
@@ -112,12 +115,14 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='new'>{t('systemService.createNew')}</SelectItem>
-                    {resultSheets?.data.map((sheet) => (
-                      <SelectItem key={sheet.id} value={sheet.id}>
-                        {sheet.title}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value={CREATE_NEW_RESULT_VALUE}>{t('systemService.createNew')}</SelectItem>
+                    {resultSheets?.data
+                      .filter((resultSheet) => resultSheet.status === StatusEnum.ACTIVE)
+                      .map((sheet) => (
+                        <SelectItem key={sheet.id} value={sheet.id}>
+                          {sheet.title}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -129,36 +134,16 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
 
       {/* Show Preview if existing result sheet is selected */}
       {selectedResultSheet && selectedResultSheetData && (
-        <div className='space-y-4 p-4 border rounded-lg'>
-          <h4 className='text-base font-semibold'>{t('systemService.preview')}</h4>
-          <div className='space-y-2'>
-            <p className='font-medium'>
-              {t('systemService.title')}: {selectedResultSheetData.title}
-            </p>
-            <div className='space-y-4'>
-              {selectedResultSheetData.resultSheetSections.map((section, index) => (
-                <div key={index} className='p-4 border rounded-lg'>
-                  <p className='font-medium'>
-                    {t('systemService.section')}: {section.orderIndex}
-                  </p>
-                  <p>
-                    {t('systemService.sectionName')}: {section.section}
-                  </p>
-                  <p>
-                    {t('systemService.description')}: {section.description}
-                  </p>
-                  <p>
-                    {t('systemService.required')}: {section.mandatory ? 'Yes' : 'No'}
-                  </p>
-                </div>
-              ))}
-            </div>
+        <div className='relative w-full flex justify-center bg-primary/10 rounded-lg p-4'>
+          <div className='max-w-xl'>
+            <ResultSheet resultSheet={selectedResultSheetData} />
           </div>
+          <Pencil onClick={() => {}} className='cursor-pointer text-primary absolute right-3 top-3' />
         </div>
       )}
 
       {/* Show form fields if creating new result sheet */}
-      {!selectedResultSheet && (
+      {selectedResultSheet === CREATE_NEW_RESULT_VALUE && (
         <>
           {/* Result Sheet Title */}
           <FormField
@@ -294,16 +279,19 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
               variant='outline'
               className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
               onClick={() => {
-                const sections = form.getValues('resultSheetData.resultSheetSections')
-                form.setValue('resultSheetData.resultSheetSections', [
-                  ...sections,
-                  {
-                    section: '',
-                    orderIndex: sections.length + 1,
-                    mandatory: true,
-                    description: ''
-                  }
-                ])
+                const currentSections = form.getValues('resultSheetData.resultSheetSections') || []
+                const newSection = {
+                  section: '',
+                  orderIndex: (currentSections?.length || 0) + 1,
+                  mandatory: true,
+                  description: ''
+                }
+
+                form.setValue('resultSheetData.resultSheetSections', [...currentSections, newSection], {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: true
+                })
               }}
             >
               {t('button.addSection')}

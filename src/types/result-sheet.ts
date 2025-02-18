@@ -22,4 +22,5 @@ export type IResponseResultSheetData = {
   id: string
   title: string
   resultSheetSections: IResponseResultSheetSection[]
+  status: StatusEnum
 }
