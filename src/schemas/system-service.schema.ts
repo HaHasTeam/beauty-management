@@ -3,21 +3,22 @@ import { z } from 'zod'
 
 import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
 
-import { resultSheetDataSchema } from './result-sheet.schema'
+import { getResultSheetSectionSchema } from './result-sheet.schema'
 
 // Schema for the entire form
 export const getSystemServiceSchema = () => {
   // const ResultSheetSectionSchema = getResultSheetSectionSchema()
   const fileArray = z.array(z.instanceof(File))
+  const ResultSheetSectionSchema = getResultSheetSectionSchema()
 
-  // const resultSheetDataSchema = z
-  //   .object({
-  //     title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
-  //     resultSheetSections: z
-  //       .array(ResultSheetSectionSchema)
-  //       .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
-  //   })
-  //   .optional()
+  const resultSheetDataSchema = z
+    .object({
+      title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
+      resultSheetSections: z
+        .array(ResultSheetSectionSchema)
+        .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
+    })
+    .optional()
 
   return z
     .object({

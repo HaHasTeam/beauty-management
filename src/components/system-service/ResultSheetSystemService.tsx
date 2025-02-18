@@ -175,8 +175,8 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
               <h4 className='text-base font-semibold'>{t('systemService.sections')}</h4>
             </div>
             {sortedSections.map((section, index) => (
-              <div key={index} className='space-y-4 p-4 border rounded-lg'>
-                <div className='flex justify-between items-center mb-4'>
+              <div key={index} className='space-y-3 p-4 border rounded-lg'>
+                <div className='flex justify-between items-center'>
                   <div className='flex items-center gap-2'>
                     <span className='font-medium text-primary text-base'>
                       {t('systemService.section')}: {section.orderIndex}

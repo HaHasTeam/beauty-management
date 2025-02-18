@@ -858,9 +858,9 @@
     "resultSheetSectionsRequired": "Result sheet sections is required.",
     "section": "Section",
     "updateSuccessMessage": "Update system service successfully!",
-    "eitherResultSheetOrDataRequired": "Choose exits result sheet or create new",
+    "eitherResultSheetOrDataRequired": "Please select an existing result sheet or create a new one.",
     "createNew": "Create new result sheet",
-    "selectOrCreateNew": "Select an exit result sheet or create new",
+    "selectOrCreateNew": "Select an existing result sheet or create a new one",
     "selectResultSheet": "Select result sheet",
     "preview": "Preview"
   }

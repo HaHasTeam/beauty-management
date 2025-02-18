@@ -841,7 +841,7 @@
     "enterSectionName": "Nhập tên mục",
     "enterResultSheetTitle": "Nhập tiêu đề bảng kết quả",
     "enterSectionDescription": "Nhập mô tả mục",
-    "createSuccessMessage": "Service created successfully!",
+    "createSuccessMessage": "Tạo dịch vụ thành công!",
     "status": "Trạng thái",
     "serviceImages": "Hình Ảnh Dịch Vụ",
     "serviceNameRequired": "Tên dịch vụ là bắt buộc.",
@@ -857,11 +857,11 @@
     "sectionDescriptionRequired": "Mô tả mục là bắt buộc.",
     "resultSheetSectionsRequired": "Các mục bảng kết quả là bắt buộc.",
     "section": "Mục",
-    "updateSuccessMessage": "Update system service successfully!",
-    "eitherResultSheetOrDataRequired": "Choose exits result sheet or create new",
-    "createNew": "Create new result sheet",
-    "selectOrCreateNew": "Select or create new",
-    "selectResultSheet": "Select result sheet",
-    "preview": "Preview"
+    "updateSuccessMessage": "Thay đổi dịch vụ thành công!",
+    "eitherResultSheetOrDataRequired": "Vui lòng chọn một bảng kết quả hiện có hoặc tạo bảng mới.",
+    "createNew": "Tạo bảng kết quả mới",
+    "selectOrCreateNew": "Chọn một bảng kết quả hiện có hoặc tạo bảng mới",
+    "selectResultSheet": "Chọn bảng kết quả",
+    "preview": "Xem trước"
   }
 }
