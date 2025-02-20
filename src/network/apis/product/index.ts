@@ -31,7 +31,7 @@ export const getProductFilterApi = toQueryFetcher<
 export const updateProductStatusApi = toMutationFetcher<{ id: string; status: string }, TServerResponse<IProduct>>(
   'updateProductStatusApi',
   async ({ id, status }) => {
-    return privateRequest(`/orders/update-status/${id}`, {
+    return privateRequest(`/products/update-status/${id}`, {
       method: 'PUT',
       data: { status: status }
     })

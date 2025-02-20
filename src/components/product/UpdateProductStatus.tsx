@@ -8,7 +8,8 @@ import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getProductByIdApi, updateProductStatusApi } from '@/network/apis/product'
+import { updateProductStatusApi } from '@/network/apis/product'
+import { getProductApi } from '@/network/product'
 import { getUpdateProductStatusSchema } from '@/schemas/product.schema'
 import { ProductEnum } from '@/types/enum'
 import { IResponseProduct } from '@/types/product'
@@ -45,7 +46,7 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
       successToast({
         message: t('createProduct.updateProductStatusSuccess')
       })
-      await Promise.all([queryClient.invalidateQueries({ queryKey: [getProductByIdApi.queryKey] })])
+      await Promise.all([queryClient.invalidateQueries({ queryKey: [getProductApi.queryKey] })])
       handleReset()
     }
   })
@@ -102,11 +103,11 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
       nextStatus: ''
     },
     [ProductEnum.INACTIVE]: {
-      borderColor: 'border-gray-300',
-      bgColor: 'bg-gray-100',
+      borderColor: 'border-gray-400',
+      bgColor: 'bg-gray-200',
       bgTagColor: 'bg-gray-300',
       titleColor: 'text-gray-600',
-      alertVariant: 'bg-gray-100 rounded-lg p-3 border',
+      alertVariant: 'bg-gray-200 rounded-lg p-3 border',
       buttonBg: 'bg-green-500 hover:bg-green-400',
       alertTitle: t(`status.${ProductEnum.INACTIVE}`),
       buttonText: t(`status.${ProductEnum.OFFICIAL}`),
