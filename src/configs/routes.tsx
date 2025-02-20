@@ -236,14 +236,14 @@ export const routesConfig: TRoutes = {
     title: 'Update Product',
     description: 'Update beauty product',
     path: '/dashboard/products/update/:id',
-    getPath: () => '/dashboard/products/update/:id'
+    getPath: (params) => `/dashboard/products/update/${params.id}`
   },
   [Routes.PRODUCT_DETAILS]: {
     name: 'Product Details',
     title: 'Product Details',
     description: 'Beauty product',
     path: '/dashboard/products/:id',
-    getPath: () => '/dashboard/products/:id'
+    getPath: (params) => `/dashboard/products/${params.id}`
   },
   [Routes.GROUP_PRODUCT]: {
     name: 'Group Product',
@@ -278,6 +278,6 @@ export const routesConfig: TRoutes = {
     title: 'Order Details',
     description: 'Beauty order',
     path: '/dashboard/orders/:id',
-    getPath: () => '/dashboard/orders/:id'
+    getPath: (params) => `/dashboard/orders/${params.id}`
   }
 }

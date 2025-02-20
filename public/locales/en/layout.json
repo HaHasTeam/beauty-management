@@ -69,6 +69,8 @@
     "seeAll": "See All",
     "viewAll": "View All",
     "cancel": "Cancel",
+    "create": "Create",
+    "addSection": "Add section",
     "ok": "Confirm",
     "save": "Save",
     "submit": "Submit",
@@ -78,7 +80,8 @@
     "submitAndShow": "Submit and Show",
     "submitAndHide": "Submit and Hide",
     "deselect": "Deselect",
-    "select": "Select"
+    "select": "Select",
+    "edit": "Edit"
   },
   "noData": "No matching data found",
   "sell": {
@@ -823,7 +826,17 @@
     "downloadCertificate": "Download Certificate",
     "viewCertificate": "View Certificate",
     "download": "Download",
-    "duplicated": "This item already exists!"
+    "duplicated": "This item already exists!",
+    "createdAt": "Created At",
+    "productId": "Product ID",
+    "updateProductStatusSuccess": "Update product status successfully!",
+    "statusDescription": {
+      "ACTIVE": "The product is available for purchase and ready to be ordered.",
+      "INACTIVE": "The product is currently unavailable for purchase and not visible to customers.",
+      "PRE_ORDER": "The product is not yet released or out of stock but can be ordered in advance.",
+      "OFFICIAL": "The product is an officially verified item from the brand or manufacturer and has been reviewed by the platform moderator.",
+      "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock."
+    }
   },
   "status": {
     "ACTIVE": "Active",
@@ -832,6 +845,9 @@
     "PUBLIC": "Public",
     "DENIED": "Denied",
     "BAN": "Baned",
-    "PENDING": "Pending"
+    "PENDING": "Pending",
+    "PRE_ORDER": "Pre-Order",
+    "OFFICIAL": "Official",
+    "OUT_OF_STOCK": "Out of stock"
   }
 }

@@ -1,6 +1,6 @@
-import { IResponseProduct, TProduct } from '@/types/product'
+import { IProduct, IResponseProduct, TProduct } from '@/types/product'
 import { TServerResponse } from '@/types/request'
-import { toQueryFetcher } from '@/utils/query'
+import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
 import { TGetProductByBrandIdRequestParams, TGetProductFilterRequestParams } from './type'
@@ -27,3 +27,13 @@ export const getProductFilterApi = toQueryFetcher<
     params: params
   })
 })
+
+export const updateProductStatusApi = toMutationFetcher<{ id: string; status: string }, TServerResponse<IProduct>>(
+  'updateProductStatusApi',
+  async ({ id, status }) => {
+    return privateRequest(`/orders/update-status/${id}`, {
+      method: 'PUT',
+      data: { status: status }
+    })
+  }
+)
