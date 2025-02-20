@@ -566,7 +566,7 @@ export default function SalesInformation({
                                 <TableHeader>
                                   <TableRow>
                                     <TableHead>
-                                      <FormLabel required className='justify-center'>
+                                      <FormLabel required className='justify-center text-center'>
                                         {classificationsOptions[0]?.title &&
                                           t(`createProduct.${classificationsOptions[0]?.title}`)}
                                       </FormLabel>
@@ -588,83 +588,87 @@ export default function SalesInformation({
                                       </TableHead>
                                     )}
                                     <TableHead>
-                                      <FormLabel required className='justify-center'>
+                                      <FormLabel required className='justify-center text-center'>
                                         {t('createProduct.price')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel required className='justify-center'>
+                                      <FormLabel required className='justify-center text-center'>
                                         {t('createProduct.quantity')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel required className='justify-center'>
+                                      <FormLabel required className='justify-center text-center'>
                                         {t('createProduct.skuProduct')}
                                       </FormLabel>
                                     </TableHead>
                                     <TableHead>
-                                      <FormLabel className='justify-center'>{t('createProduct.action')}</FormLabel>
+                                      <FormLabel className='justify-center text-center'>
+                                        {t('createProduct.action')}
+                                      </FormLabel>
                                     </TableHead>
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                   {combinations.map((combo, index) => (
                                     <TableRow key={index}>
-                                      <TableCell className='space-y-2'>
-                                        <FormLabel className='justify-center'>
-                                          {combo?.title?.split('-')[0]?.trim()}
-                                        </FormLabel>
-                                        <FormField
-                                          control={form.control}
-                                          name={`productClassifications.${index}.images`}
-                                          render={({ field }) => (
-                                            <FormItem className='w-full'>
-                                              <div className='flex w-full'>
-                                                <FormControl>
-                                                  <div className='w-full space-y-1 flex flex-col justify-center items-center'>
-                                                    <UploadProductImages
-                                                      field={field}
-                                                      vertical={false}
-                                                      centerItem
-                                                      setIsImagesUpload={setIsImagesUpload}
-                                                      dropZoneConfigOptions={{ maxFiles: 4 }}
-                                                      renderFileItemUI={(file) => {
-                                                        return (
-                                                          <div
-                                                            key={file?.name}
-                                                            className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
-                                                          >
-                                                            <img
-                                                              src={URL?.createObjectURL(file)}
-                                                              alt={file?.name}
-                                                              className='object-contain w-full h-full rounded-lg'
-                                                              onLoad={() =>
-                                                                URL?.revokeObjectURL(URL?.createObjectURL(file))
-                                                              }
-                                                            />
-                                                          </div>
-                                                        )
-                                                      }}
-                                                      renderInputUI={(_isDragActive, files, maxFiles) => {
-                                                        return (
-                                                          <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
-                                                            <ImagePlus className='w-12 h-12 text-primary' />
+                                      <TableCell>
+                                        <div className='flex flex-col justify-center align-middle space-y-2'>
+                                          <FormLabel className='justify-center'>
+                                            {combo?.title?.split('-')[0]?.trim()}
+                                          </FormLabel>
+                                          <FormField
+                                            control={form.control}
+                                            name={`productClassifications.${index}.images`}
+                                            render={({ field }) => (
+                                              <FormItem className='w-full'>
+                                                <div className='flex w-full'>
+                                                  <FormControl>
+                                                    <div className='w-full space-y-1 flex flex-col justify-center items-center'>
+                                                      <UploadProductImages
+                                                        field={field}
+                                                        vertical={false}
+                                                        centerItem
+                                                        setIsImagesUpload={setIsImagesUpload}
+                                                        dropZoneConfigOptions={{ maxFiles: 4 }}
+                                                        renderFileItemUI={(file) => {
+                                                          return (
+                                                            <div
+                                                              key={file?.name}
+                                                              className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
+                                                            >
+                                                              <img
+                                                                src={URL?.createObjectURL(file)}
+                                                                alt={file?.name}
+                                                                className='object-contain w-full h-full rounded-lg'
+                                                                onLoad={() =>
+                                                                  URL?.revokeObjectURL(URL?.createObjectURL(file))
+                                                                }
+                                                              />
+                                                            </div>
+                                                          )
+                                                        }}
+                                                        renderInputUI={(_isDragActive, files, maxFiles) => {
+                                                          return (
+                                                            <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                                              <ImagePlus className='w-12 h-12 text-primary' />
 
-                                                            <p className='text-sm text-primary'>
-                                                              {t('createProduct.dragOrBrowse')} ({files?.length ?? 0}/
-                                                              {maxFiles})
-                                                            </p>
-                                                          </div>
-                                                        )
-                                                      }}
-                                                    />
-                                                    <FormMessage />
-                                                  </div>
-                                                </FormControl>
-                                              </div>
-                                            </FormItem>
-                                          )}
-                                        />
+                                                              <p className='text-sm text-primary'>
+                                                                {t('createProduct.dragOrBrowse')} ({files?.length ?? 0}/
+                                                                {maxFiles})
+                                                              </p>
+                                                            </div>
+                                                          )
+                                                        }}
+                                                      />
+                                                      <FormMessage />
+                                                    </div>
+                                                  </FormControl>
+                                                </div>
+                                              </FormItem>
+                                            )}
+                                          />
+                                        </div>
                                       </TableCell>
                                       {classificationCount >= 2 && (
                                         <TableCell className='align-middle'>

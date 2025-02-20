@@ -43,21 +43,32 @@ const ClassificationDetails = ({ classifications }: ClassificationDetailsProps) 
             <Table className='w-full hover:bg-transparent items-center'>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('productDetail.images')}</TableHead>
+                  <TableHead>{t('createProduct.sku')}</TableHead>
+                  <TableHead>
+                    <div className='flex justify-center'>{t('productDetail.images')}</div>
+                  </TableHead>
                   {hasColor && <TableHead>{t('createProduct.color')}</TableHead>}
                   {hasSize && <TableHead>{t('createProduct.size')}</TableHead>}
                   {hasOther && <TableHead>{t('createProduct.other')}</TableHead>}
-                  <TableHead>{t('cart.price')}</TableHead>
-                  <TableHead>{t('productDetail.quantity')}</TableHead>
-                  <TableHead>{t('createProduct.sku')}</TableHead>
-                  <TableHead>{t('orderDetail.status')}</TableHead>
+                  <TableHead>
+                    <div className='flex justify-end'>{t('cart.price')}</div>
+                  </TableHead>
+                  <TableHead>
+                    <div className='flex justify-end'>{t('productDetail.quantity')}</div>
+                  </TableHead>
+                  <TableHead>
+                    <div className='flex justify-center'>{t('orderDetail.status')}</div>
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {customClassifications.map((variant, index) => (
                   <TableRow key={index}>
+                    <TableCell>{variant.sku === '' ? '-' : variant.sku}</TableCell>
                     <TableCell>
-                      <div className={`grid ${variant.images.length > 1 && 'sm:grid-cols-2'} grid-cols-1 gap-1`}>
+                      <div
+                        className={`grid ${variant.images.length > 1 && 'sm:grid-cols-2'} grid-cols-1 gap-1 place-items-center`}
+                      >
                         {variant.images.map((image: IImage) => (
                           <div key={image.id} className='relative aspect-square w-32 h-32 rounded-lg overflow-hidden'>
                             <img className='object-cover w-full h-full' src={image.fileUrl} alt={variant.title} />
@@ -68,11 +79,16 @@ const ClassificationDetails = ({ classifications }: ClassificationDetailsProps) 
                     {hasColor && <TableCell>{variant.color}</TableCell>}
                     {hasSize && <TableCell>{variant.size}</TableCell>}
                     {hasOther && <TableCell>{variant.other}</TableCell>}
-                    <TableCell>{t('productCard.price', { price: variant.price })}</TableCell>
-                    <TableCell>{variant.quantity}</TableCell>
-                    <TableCell>{variant.sku === '' ? '-' : variant.sku}</TableCell>
                     <TableCell>
-                      <State state={variant.status ?? StatusEnum.INACTIVE} />
+                      <div className='flex justify-end'>{t('productCard.price', { price: variant.price })}</div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex justify-end'>{variant.quantity}</div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex justify-center'>
+                        <State state={variant.status ?? StatusEnum.INACTIVE} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
