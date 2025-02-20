@@ -27,14 +27,14 @@ const ProductDetails = () => {
       {!isGettingProduct && productData && (
         <div className='container mx-auto p-6 space-y-4'>
           {/* Header Section */}
-          <div className='flex justify-between items-center'>
-            <h3 className='text-xl font-bold line-clamp-1 overflow-visible'>{productData.data.name}</h3>
+          <div className='flex justify-between items-center gap-2'>
+            <h3 className='md:text-xl sm:text-sm text-xs font-bold'>{productData.data.name}</h3>
             <Link
               to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
-              className='px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'
+              className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'
             >
               {t('button.edit')}
-              <Pencil className='w-5 h-5' />
+              <Pencil className='w-5 h-5 sm:block hidden' />
             </Link>
           </div>
 

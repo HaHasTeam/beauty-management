@@ -189,11 +189,11 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
       nextStatus: ''
     },
     [ShippingStatusEnum.REFUNDED]: {
-      borderColor: 'border-gray-300',
-      bgColor: 'bg-gray-100',
+      borderColor: 'border-gray-400',
+      bgColor: 'bg-gray-200',
       bgTagColor: 'bg-gray-300',
       titleColor: 'text-gray-600',
-      alertVariant: 'bg-gray-100 rounded-lg p-3 border',
+      alertVariant: 'bg-gray-200 rounded-lg p-3 border',
       buttonBg: '',
       alertTitle: t('order.refunded'),
       buttonText: '',

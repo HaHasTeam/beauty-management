@@ -57,7 +57,7 @@ const ClassificationDetails = ({ classifications }: ClassificationDetailsProps) 
                 {customClassifications.map((variant, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <div className='grid sm:grid-cols-2 grid-cols-1 gap-1'>
+                      <div className={`grid ${variant.images.length > 1 && 'sm:grid-cols-2'} grid-cols-1 gap-1`}>
                         {variant.images.map((image: IImage) => (
                           <div key={image.id} className='relative aspect-square w-32 h-32 rounded-lg overflow-hidden'>
                             <img className='object-cover w-full h-full' src={image.fileUrl} alt={variant.title} />
@@ -70,7 +70,7 @@ const ClassificationDetails = ({ classifications }: ClassificationDetailsProps) 
                     {hasOther && <TableCell>{variant.other}</TableCell>}
                     <TableCell>{t('productCard.price', { price: variant.price })}</TableCell>
                     <TableCell>{variant.quantity}</TableCell>
-                    <TableCell>{variant.sku}</TableCell>
+                    <TableCell>{variant.sku === '' ? '-' : variant.sku}</TableCell>
                     <TableCell>
                       <State state={variant.status ?? StatusEnum.INACTIVE} />
                     </TableCell>
