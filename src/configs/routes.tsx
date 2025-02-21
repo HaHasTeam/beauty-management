@@ -36,7 +36,12 @@ export enum Routes {
   ADD_GROUP_PRODUCT = 'add-group-product',
   GROUP_PRODUCT_DETAILS = 'group-product-details',
   ORDER_DETAILS = 'order-details',
-  ORDER_LIST = 'order-list'
+  ORDER_LIST = 'order-list',
+  SYSTEM_SERVICE_LIST = 'system-services',
+  SYSTEM_SERVICE_DETAILS = 'system-services-details',
+  CREATE_SYSTEM_SERVICE = 'system-services/create',
+  UPDATE_SYSTEM_SERVICE = 'system-services/update',
+  SELECT_INTERVIEW_SLOT = 'select-interview'
 }
 
 export const routesConfig: TRoutes = {
@@ -90,6 +95,13 @@ export const routesConfig: TRoutes = {
     description: 'Update Brand',
     path: '/dashboard/brand/update/[id]',
     getPath: (id) => `/dashboard/brand/update/${id}`
+  },
+  [Routes.SELECT_INTERVIEW_SLOT]: {
+    name: 'Schedule Meeting',
+    title: 'Schedule Meeting',
+    description: 'Schedule Meeting',
+    path: '/dashboard/select-interview',
+    getPath: () => '/dashboard/select-interview'
   },
   [Routes.VOUCHER]: {
     name: 'Voucher Management',
@@ -278,6 +290,34 @@ export const routesConfig: TRoutes = {
     title: 'Order Details',
     description: 'Beauty order',
     path: '/dashboard/orders/:id',
-    getPath: () => '/dashboard/orders/:id'
+    getPath: (params) => `/dashboard/orders/${params}`
+  },
+  [Routes.SYSTEM_SERVICE_LIST]: {
+    name: 'System Service List',
+    title: 'System Service List',
+    description: 'System Service List',
+    path: '/dashboard/system-services',
+    getPath: () => '/dashboard/system-services'
+  },
+  [Routes.SYSTEM_SERVICE_DETAILS]: {
+    name: 'System Service Details',
+    title: 'System Service Details',
+    description: 'System Service Details',
+    path: '/dashboard/system-services/:id',
+    getPath: (params) => `/dashboard/system-services/${params.id}`
+  },
+  [Routes.CREATE_SYSTEM_SERVICE]: {
+    name: 'Create System Service',
+    title: 'Create System Service',
+    description: 'Create a system service',
+    path: '/dashboard/system-services/add',
+    getPath: () => '/dashboard/system-services/add'
+  },
+  [Routes.UPDATE_SYSTEM_SERVICE]: {
+    name: 'Update System Service',
+    title: 'Update System Service',
+    description: 'Update system service',
+    path: '/dashboard/system-services/update/:id',
+    getPath: (params) => `/dashboard/system-services/update/${params.id}`
   }
 }

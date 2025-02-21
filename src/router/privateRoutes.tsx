@@ -26,7 +26,12 @@ import AddPreOrder from '@/views/dashboard/pre-order/AddPreOrder'
 import ProductList from '@/views/dashboard/product-list'
 import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
+import ScheduleMeeting from '@/views/dashboard/schedule-meeting'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
+import SystemService from '@/views/dashboard/system-service'
+import CreateSystemService from '@/views/dashboard/system-service/CreateSystemService'
+import SystemServiceDetail from '@/views/dashboard/system-service/SystemServiceDetail'
+import UpdateSystemService from '@/views/dashboard/system-service/UpdateSystemService'
 import UpdateProduct from '@/views/dashboard/update-product'
 import Vouchers from '@/views/dashboard/voucher-management'
 import ViewVoucherDetail from '@/views/dashboard/voucher-management/ViewVoucherDetail'
@@ -154,6 +159,10 @@ export const privateRoutes: RouteObject[] = [
         element: <ProductList />
       },
       {
+        path: routesConfig[Routes.SELECT_INTERVIEW_SLOT].path.replace('/dashboard/', ''),
+        element: <ScheduleMeeting />
+      },
+      {
         path: routesConfig[Routes.CREATE_PRODUCT].path.replace('/dashboard/', ''),
         element: <CreateProduct />
       },
@@ -180,13 +189,25 @@ export const privateRoutes: RouteObject[] = [
       },
       {
         path: routesConfig[Routes.ORDER_LIST].path.replace('/dashboard/', ''),
-
         children: [
           {
             index: true,
             element: <OrderList />
           },
           { path: ':id', element: <OrderDetails /> }
+        ]
+      },
+      {
+        path: routesConfig[Routes.SYSTEM_SERVICE_LIST].path.replace('/dashboard/', ''),
+
+        children: [
+          {
+            index: true,
+            element: <SystemService />
+          },
+          { path: ':id', element: <SystemServiceDetail /> },
+          { path: 'add', element: <CreateSystemService /> },
+          { path: 'update/:id', element: <UpdateSystemService /> }
         ]
       },
       {

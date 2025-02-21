@@ -18,7 +18,7 @@ export const brandCreateSchema = z.object({
   document: fileArray.min(1, 'You must upload at least 1 document for your license details'),
   description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
   email: z.string().email('Invalid email address'),
-  phone: z.string().refine(phoneRegex.pattern, phoneRegex.message).optional(),
+  phone: z.string().refine(phoneRegex.pattern, 'Phone is invalid').optional(),
 
   address: z.string().max(255, 'Address cannot exceed 255 characters').optional(),
   province: z.string().max(255),
@@ -29,7 +29,29 @@ export const brandCreateSchema = z.object({
   businessRegistrationCode: z.string().max(100),
   establishmentDate: z.string().max(255).optional(),
   businessRegistrationAddress: z.string().max(255).optional(),
-  status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING)
+  status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING),
+
+  selectedDate: z.date({
+    required_error: 'Please select a date',
+    invalid_type_error: "That's not a valid date"
+  }),
+  selectedSlot: z
+    .string({
+      required_error: 'Please select a time slot'
+    })
+    .refine(
+      (val) => {
+        const [start, end] = val.split('-')
+        return start && end && start < end
+      },
+      {
+        message: 'Invalid time slot format'
+      }
+    ),
+
+  slotId: z.string().optional(),
+  startTime: z.string().optional(),
+  endTime: z.string().optional()
 })
 
 export const voucherCreateSchema = z.object({

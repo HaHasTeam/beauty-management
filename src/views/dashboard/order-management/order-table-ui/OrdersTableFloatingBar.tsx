@@ -1,7 +1,8 @@
 import { SelectTrigger } from '@radix-ui/react-select'
 import { type Table } from '@tanstack/react-table'
-import { ArrowUp, CheckCircle2, Download, Loader, Trash2, X } from 'lucide-react'
+import { CheckCircle2, Download, FileText, Loader, Trash2, X } from 'lucide-react'
 import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Kbd } from '@/components/ui/kbd'
@@ -9,19 +10,21 @@ import { Portal } from '@/components/ui/portal'
 import { Select, SelectContent, SelectGroup, SelectItem } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
-import { ProductStatusEnum, TProduct } from '@/types/product'
-import { RoleStatusEnum } from '@/types/role'
+import { ShippingStatusEnum } from '@/types/enum'
+import { IOrder } from '@/types/order'
 
-interface ProductsTableFloatingBarProps {
-  table: Table<TProduct>
+interface OrdersTableFloatingBarProps {
+  table: Table<IOrder>
 }
 
-export function ProductsTableFloatingBar({ table }: ProductsTableFloatingBarProps) {
+export function OrdersTableFloatingBar({ table }: OrdersTableFloatingBarProps) {
   const rows = table.getFilteredSelectedRowModel().rows
+  const navigate = useNavigate()
 
   const [isPending, startTransition] = React.useTransition()
-  const [action, setAction] = React.useState<'update-status' | 'update-priority' | 'export' | 'delete'>()
+  const [action, setAction] = React.useState<'update-status' | 'export' | 'delete' | 'view-details'>()
 
   // Clear selection on Escape key press
   React.useEffect(() => {
@@ -34,6 +37,14 @@ export function ProductsTableFloatingBar({ table }: ProductsTableFloatingBarProp
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [table])
+
+  const handleViewDetails = () => {
+    if (rows.length === 1) {
+      const orderId = rows[0].original.id
+
+      navigate(routesConfig[Routes.ORDER_DETAILS].getPath(orderId))
+    }
+  }
 
   return (
     <Portal>
@@ -88,49 +99,11 @@ export function ProductsTableFloatingBar({ table }: ProductsTableFloatingBarProp
                 </Tooltip>
                 <SelectContent align='center'>
                   <SelectGroup>
-                    {Object.keys(ProductStatusEnum).map((status) => {
-                      const value = ProductStatusEnum[status as keyof typeof ProductStatusEnum]
-                      return (
-                        <SelectItem key={value} value={value} className='capitalize'>
-                          {value}
-                        </SelectItem>
-                      )
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select>
-                <Tooltip>
-                  <SelectTrigger asChild>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant='secondary'
-                        size='icon'
-                        className='size-7 border data-[state=open]:bg-accent data-[state=open]:text-accent-foreground'
-                        disabled={isPending}
-                      >
-                        {isPending && action === 'update-priority' ? (
-                          <Loader className='size-3.5 animate-spin' aria-hidden='true' />
-                        ) : (
-                          <ArrowUp className='size-3.5' aria-hidden='true' />
-                        )}
-                      </Button>
-                    </TooltipTrigger>
-                  </SelectTrigger>
-                  <TooltipContent className='border bg-accent font-semibold text-foreground dark:bg-zinc-900'>
-                    <p>Update Role</p>
-                  </TooltipContent>
-                </Tooltip>
-                <SelectContent align='center'>
-                  <SelectGroup>
-                    {Object.keys(RoleStatusEnum).map((key) => {
-                      const value = RoleStatusEnum[key as keyof typeof RoleStatusEnum]
-                      return (
-                        <SelectItem key={value} value={value} className='capitalize'>
-                          {value}
-                        </SelectItem>
-                      )
-                    })}
+                    {Object.values(ShippingStatusEnum).map((status) => (
+                      <SelectItem key={status} value={status} className='capitalize'>
+                        {status}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -159,7 +132,30 @@ export function ProductsTableFloatingBar({ table }: ProductsTableFloatingBarProp
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className='border bg-accent font-semibold text-foreground dark:bg-zinc-900'>
-                  <p>Export tasks</p>
+                  <p>Export orders</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant='secondary'
+                    size='icon'
+                    className='size-7 border'
+                    onClick={() => {
+                      setAction('view-details')
+                      handleViewDetails()
+                    }}
+                    disabled={isPending || rows.length !== 1}
+                  >
+                    {isPending && action === 'view-details' ? (
+                      <Loader className='size-3.5 animate-spin' aria-hidden='true' />
+                    ) : (
+                      <FileText className='size-3.5' aria-hidden='true' />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className='border bg-accent font-semibold text-foreground dark:bg-zinc-900'>
+                  <p>View order details</p>
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
@@ -181,7 +177,7 @@ export function ProductsTableFloatingBar({ table }: ProductsTableFloatingBarProp
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className='border bg-accent font-semibold text-foreground dark:bg-zinc-900'>
-                  <p>Delete tasks</p>
+                  <p>Cancel orders</p>
                 </TooltipContent>
               </Tooltip>
             </div>

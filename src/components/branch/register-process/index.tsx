@@ -1,4 +1,4 @@
-import { CircleCheckBig, ShieldCheck, Store, User } from 'lucide-react'
+import { Calendar, CircleCheckBig, ShieldCheck, Store, User } from 'lucide-react'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,18 +7,24 @@ import { Routes, routesConfig } from '@/configs/routes'
 import { cn } from '@/lib/utils'
 import { BrandStatusEnum } from '@/types/brand'
 import { RoleEnum } from '@/types/enum'
-import { TUser } from '@/types/user'
+import type { TUser } from '@/types/user'
 
 function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
   const navigate = useNavigate()
-  const { isEmailVerify, isBrandVerify, isRegisterBrand } = useMemo(() => {
+  const { isEmailVerify, isBrandVerify, isRegisterBrand, isInterviewSlotSelected } = useMemo(() => {
     let isEmailVerify = false,
       isBrandVerify = false,
-      isRegisterBrand = false
+      isRegisterBrand = false,
+      isInterviewSlotSelected = false
+
     if (userProfileData?.brands && userProfileData?.brands?.length > 0) {
       isRegisterBrand = true
       if (userProfileData.brands[0].status === BrandStatusEnum.ACTIVE) {
         isBrandVerify = true
+      }
+      // Assuming you have a field to track if an interview slot is selected
+      if (userProfileData.brands[0].status === BrandStatusEnum.ACTIVE) {
+        isInterviewSlotSelected = true
       }
     }
     if (userProfileData && userProfileData.isEmailVerify) {
@@ -28,31 +34,32 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
     return {
       isEmailVerify,
       isRegisterBrand,
-      isBrandVerify
+      isBrandVerify,
+      isInterviewSlotSelected
     }
   }, [userProfileData])
+
   function calculateCompletionPercentage({
     isEmailVerify,
     isRegisterBrand,
-    isBrandVerify
+    isBrandVerify,
+    isInterviewSlotSelected
   }: {
     isEmailVerify: boolean
     isRegisterBrand: boolean
     isBrandVerify: boolean
+    isInterviewSlotSelected: boolean
   }): number {
     // Define the total number of steps
-    const totalSteps = 4
+    const totalSteps = 5
 
     // Calculate the current step based on the status of each variable
     let currentStep = 1
 
     if (isEmailVerify) currentStep++ // Step 1: Email verified
     if (isRegisterBrand) currentStep++ // Step 2: Brand registered
-    if (isBrandVerify) currentStep++ // Step 3: Brand verified
-
-    // Add steps for remaining process
-    // if (isEmailVerify && isRegisterBrand) currentStep++ // Step 4: Confirmed brand registration
-    // if (isEmailVerify && isRegisterBrand && isBrandVerify) currentStep++ // Step 5: Process completed
+    if (isInterviewSlotSelected) currentStep++ // Step 3: Interview slot selected
+    if (isBrandVerify) currentStep++ // Step 4: Brand verified
 
     // Calculate percentage
     return Math.round((currentStep / totalSteps) * 100)
@@ -60,13 +67,15 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
 
   // Example Usage
   const completionPercentage = calculateCompletionPercentage({
-    isEmailVerify: isEmailVerify,
-    isRegisterBrand: isRegisterBrand,
-    isBrandVerify: isBrandVerify
+    isEmailVerify,
+    isRegisterBrand,
+    isBrandVerify,
+    isInterviewSlotSelected
   })
+
   return (
     <>
-      {completionPercentage == 100 || !(userProfileData?.role === RoleEnum.MANAGER) ? (
+      {completionPercentage === 100 || !(userProfileData?.role === RoleEnum.MANAGER) ? (
         <></>
       ) : (
         <>
@@ -77,16 +86,8 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             </span>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-4 relative'>
-            {/* <div className='hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-primary -translate-y-1/2 -z-1' /> */}
-
-            <Card
-              // className='relative p-4'
-              className={
-                " bg-primary/10 shadow-sm after:-right-4 after:absolute after:top-1/2  p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:border-primary after:content-['']  "
-              }
-            >
-              {/* <div className='absolute top-1/2 -right-5 h-0.5 border border-1 w-5 z-0  bg-primary' /> */}
+          <div className='grid grid-cols-1 md:grid-cols-5 gap-4 relative'>
+            <Card className="bg-primary/10 shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:border-primary after:content-['']">
               <User className='w-8 h-8 text-primary mb-3' />
               <h3 className='font-medium mb-1'>Đăng ký tài khoản</h3>
               <p className='text-sm text-primary'>Hoàn thành!</p>
@@ -94,21 +95,18 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             <Card
               className={cn(
                 isEmailVerify && 'bg-primary/10 after:border-primary',
-
-                "shadow-sm after:-right-4 after:absolute after:top-1/2  p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b  after:content-['']  "
+                "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']"
               )}
             >
-              <ShieldCheck className={cn(isEmailVerify && 'text-primary', 'w-8 h-8   mb-3')} />
-
+              <ShieldCheck className={cn(isEmailVerify && 'text-primary', 'w-8 h-8 mb-3')} />
               <h3 className='font-medium mb-1'>Kích hoạt tài khoản</h3>
-
               {isEmailVerify ? (
-                <p className='text-sm text-primary'>Hoàn thành! </p>
+                <p className='text-sm text-primary'>Hoàn thành!</p>
               ) : (
                 <p className='text-sm text-muted-foreground'>
                   Vui lòng xác thực tài khoản email{' '}
-                  <a className=' cursor-pointer ' href='https://mail.google.com/mail/u/0/#inbox'>
-                    <span className='text-sm p-1 px-2 text-primary '>link</span>
+                  <a className='cursor-pointer' href='https://mail.google.com/mail/u/0/#inbox'>
+                    <span className='text-sm p-1 px-2 text-primary'>link</span>
                   </a>
                 </p>
               )}
@@ -120,30 +118,45 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
               className={cn(
                 isRegisterBrand && 'bg-primary/10 after:border-primary',
                 !isRegisterBrand && 'cursor-pointer',
-                "shadow-sm after:-right-4 after:absolute after:top-1/2  p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b  after:content-['']  "
+                "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']"
               )}
             >
-              {/* <div className='absolute top-4 right-4 w-2 h-2 rounded-full bg-primary' /> */}
-              <Store className={cn(isEmailVerify && 'text-primary', 'w-8 h-8   mb-3')} />
-              <h3 className='font-medium mb-1'>Đăng ký Thương hiệu </h3>
-              {isEmailVerify ? (
-                <p className='text-sm text-primary'>Hoàn thành! </p>
+              <Store className={cn(isRegisterBrand && 'text-primary', 'w-8 h-8 mb-3')} />
+              <h3 className='font-medium mb-1'>Đăng ký Thương hiệu</h3>
+              {isRegisterBrand ? (
+                <p className='text-sm text-primary'>Hoàn thành!</p>
               ) : (
                 <p className='text-sm text-muted-foreground'>Vui lòng cung cấp thông tin</p>
               )}
             </Card>
             <Card
+              onClick={() => {
+                navigate(routesConfig[Routes.SELECT_INTERVIEW_SLOT].path)
+              }}
               className={cn(
-                isBrandVerify && 'bg-primary/10 after:border-primary',
-                "shadow-sm after:-right-4 after:absolute after:top-1/2  p-4 relative z-10 after:inline-block after:h-0 after:w-4    after:content-['']  "
+                isInterviewSlotSelected && 'bg-primary/10 after:border-primary',
+                !isInterviewSlotSelected && 'cursor-pointer',
+                "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']"
               )}
             >
-              {/* <div className='absolute top-4 right-4 w-2 h-2 rounded-full bg-primary' /> */}
-              <CircleCheckBig className={cn(isBrandVerify && 'text-primary', 'w-8 h-8   mb-3')} />
-
+              <Calendar className={cn(isInterviewSlotSelected && 'text-primary', 'w-8 h-8 mb-3')} />
+              <h3 className='font-medium mb-1'>Chọn lịch phỏng vấn</h3>
+              {isInterviewSlotSelected ? (
+                <p className='text-sm text-primary'>Hoàn thành!</p>
+              ) : (
+                <p className='text-sm text-muted-foreground'>Vui lòng chọn lịch phỏng vấn</p>
+              )}
+            </Card>
+            <Card
+              className={cn(
+                isBrandVerify && 'bg-primary/10 after:border-primary',
+                "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:content-['']"
+              )}
+            >
+              <CircleCheckBig className={cn(isBrandVerify && 'text-primary', 'w-8 h-8 mb-3')} />
               <h3 className='font-medium mb-1'>Kiểm duyệt hồ sơ đăng ký</h3>
               {isBrandVerify ? (
-                <p className='text-sm text-primary'>Hoàn thành! </p>
+                <p className='text-sm text-primary'>Hoàn thành!</p>
               ) : (
                 <p className='text-sm text-muted-foreground'>Xác thực thông tin thương hiệu</p>
               )}

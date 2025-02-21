@@ -29,6 +29,7 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
           <IconRight /> <h1 className='text-center text-2xl font-bold uppercase'>Images Uploader</h1>
         </span>
       </div>
+      {/* content start */}
       <div className='grid grid-cols-1 gap-4'>
         <div className='grid grid-cols-2'>
           <FormField
@@ -128,6 +129,7 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
           />
         </div>
       </div>
+      {/* end content  */}
 
       <div className='mt-10 w-full flex justify-between items-center'>
         <Button

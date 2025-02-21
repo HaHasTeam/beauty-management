@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getAllProductApi, updateProductApi } from '@/network/product'
+import { getAllProductApi, updateProductApi } from '@/network/apis/product'
 import { IServerCreateProduct, ProductEnum } from '@/types/product'
 
 function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; id: string; currentStatus: string }) {
