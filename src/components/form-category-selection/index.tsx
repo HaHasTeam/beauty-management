@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Check, ChevronDown, ChevronRight, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Path, UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { ICategory } from '@/types/category'
 import { FormProductSchema } from '@/variables/productFormDetailFields'
 
@@ -13,26 +14,27 @@ import { FormControl } from '../ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { ScrollArea } from '../ui/scroll-area'
 
-interface FormCategorySelectionProps {
+type FormSchemaType = z.infer<typeof FormProductSchema> | z.infer<typeof SystemServiceSchema>
+interface FormCategorySelectionProps<T extends FormSchemaType> {
   categories: ICategory[]
   onSelect?: (selectedCategories: string) => void
   resetSignal?: boolean
   defineFormSignal?: boolean
-  form: UseFormReturn<z.infer<typeof FormProductSchema>>
+  form: UseFormReturn<T>
 }
-export default function FormCategorySelection({
+export default function FormCategorySelection<T extends FormSchemaType>({
   categories,
   onSelect,
   resetSignal,
   defineFormSignal,
   form
-}: FormCategorySelectionProps) {
+}: FormCategorySelectionProps<T>) {
   const { t } = useTranslation()
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([])
   const [chosenCategories, setChosenCategories] = useState<ICategory[]>([])
   const [open, setOpen] = useState(false)
   const [categoryError, setCategoryError] = useState<string>('')
-  const currentSelectedCategory = form.watch('category')
+  const currentSelectedCategory = form.watch('category' as Path<T>)
 
   // Get root level categories (those with no parent)
   const rootCategories = categories
@@ -123,7 +125,7 @@ export default function FormCategorySelection({
 
       return path
     }
-    if (currentSelectedCategory) {
+    if (currentSelectedCategory && typeof currentSelectedCategory === 'string' && currentSelectedCategory) {
       const categoryPath = buildCategoryPath(currentSelectedCategory)
       if (
         categoryPath.length !== selectedCategories.length ||

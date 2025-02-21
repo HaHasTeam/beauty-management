@@ -1,5 +1,5 @@
 // Auth Imports
-import { Boxes, Layers2Icon, Package } from 'lucide-react'
+import { Boxes, Brush, Layers2Icon, Package } from 'lucide-react'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
@@ -85,6 +85,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.CREATE_PRODUCT].name,
     path: routesConfig[Routes.CREATE_PRODUCT].path,
     icon: <Package className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: true
+  },
+  {
+    name: routesConfig[Routes.SYSTEM_SERVICE_LIST].name,
+    path: routesConfig[Routes.SYSTEM_SERVICE_LIST].path,
+    icon: <Brush className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: true
   }
 ]
