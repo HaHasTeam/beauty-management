@@ -8,6 +8,7 @@ import SystemServiceForm from '@/components/system-service/SystemServiceForm'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { uploadFilesApi } from '@/network/apis/file'
+import { getAllResultSheetApi } from '@/network/apis/result-sheet'
 import { createSystemServiceApi, getAllSystemServiceApi } from '@/network/apis/system-service'
 import { getSystemServiceSchema, ISystemServiceFormData } from '@/schemas/system-service.schema'
 import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
@@ -49,14 +50,20 @@ const CreateSystemService = () => {
   const { mutateAsync: createServiceFn } = useMutation({
     mutationKey: [createSystemServiceApi.mutationKey],
     mutationFn: createSystemServiceApi.fn,
-    onSuccess: () => {
+    onSuccess: async () => {
       successToast({
         message: t('systemService.createSuccessMessage')
       })
       form.reset()
-      queryClient.invalidateQueries({
-        queryKey: [getAllSystemServiceApi]
-      })
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [getAllSystemServiceApi]
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [getAllResultSheetApi]
+        })
+      ])
     }
   })
 

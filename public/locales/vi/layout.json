@@ -862,6 +862,7 @@
     "createNew": "Tạo bảng kết quả mới",
     "selectOrCreateNew": "Chọn một bảng kết quả hiện có hoặc tạo bảng mới",
     "selectResultSheet": "Chọn bảng kết quả",
-    "preview": "Xem trước"
+    "preview": "Xem trước",
+    "alsoUsedFor": "Bảng kết quả này cũng được áp dụng cho các dịch vụ sau của hệ thống"
   }
 }

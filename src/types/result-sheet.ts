@@ -2,6 +2,7 @@ import { IResultSheetSectionFormData } from '@/schemas/result-sheet.schema'
 
 import { StatusEnum } from './enum'
 import { TMetaData } from './request'
+import { IResponseSystemService } from './system-service'
 
 export type IUpdateResultSheetSection = IResultSheetSectionFormData & {
   id?: string
@@ -23,4 +24,5 @@ export type IResponseResultSheetData = {
   title: string
   resultSheetSections: IResponseResultSheetSection[]
   status: StatusEnum
+  systemServices: IResponseSystemService[]
 }
