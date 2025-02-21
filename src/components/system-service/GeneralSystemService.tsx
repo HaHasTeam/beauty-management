@@ -23,7 +23,7 @@ interface GeneralSystemServiceProps {
   defineFormSignal?: boolean
 }
 const GeneralSystemService = ({ form, categories, resetSignal, defineFormSignal }: GeneralSystemServiceProps) => {
-  const MAX_PRODUCT_IMAGES = 7
+  const MAX_PRODUCT_IMAGES = 1
   const { t } = useTranslation()
   const serviceTypes = [
     { value: ServiceTypeEnum.STANDARD, text: t('systemService.standard') },

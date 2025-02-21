@@ -202,7 +202,7 @@ export const privateRoutes: RouteObject[] = [
             element: <SystemService />
           },
           { path: ':id', element: <SystemServiceDetail /> },
-          { path: 'create', element: <CreateSystemService /> },
+          { path: 'add', element: <CreateSystemService /> },
           { path: 'update/:id', element: <UpdateSystemService /> }
         ]
       },

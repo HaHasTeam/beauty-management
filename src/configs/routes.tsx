@@ -296,20 +296,20 @@ export const routesConfig: TRoutes = {
     title: 'System Service Details',
     description: 'System Service Details',
     path: '/dashboard/system-services/:id',
-    getPath: () => '/dashboard/system-services/:id'
+    getPath: (params) => `/dashboard/system-services/${params.id}`
   },
   [Routes.CREATE_SYSTEM_SERVICE]: {
     name: 'Create System Service',
     title: 'Create System Service',
     description: 'Create a system service',
-    path: '/dashboard/system-services/create',
-    getPath: () => '/dashboard/system-services/create'
+    path: '/dashboard/system-services/add',
+    getPath: () => '/dashboard/system-services/add'
   },
   [Routes.UPDATE_SYSTEM_SERVICE]: {
     name: 'Update System Service',
     title: 'Update System Service',
     description: 'Update system service',
     path: '/dashboard/system-services/update/:id',
-    getPath: () => '/dashboard/system-services/update/:id'
+    getPath: (params) => `/dashboard/system-services/update/${params.id}`
   }
 }
