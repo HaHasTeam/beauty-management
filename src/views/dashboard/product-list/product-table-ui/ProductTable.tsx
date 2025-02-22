@@ -24,7 +24,7 @@ interface ProductTableProps {
 
 export function ProductTable({ data, pageCount, queryStates }: ProductTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TProduct> | null>(null)
-  const columns = React.useMemo(() => getColumns(), [])
+  const columns = React.useMemo(() => getColumns({ setRowAction }), [])
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.

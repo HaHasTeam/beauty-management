@@ -26,6 +26,8 @@ import AddPreOrder from '@/views/dashboard/pre-order/AddPreOrder'
 import ProductList from '@/views/dashboard/product-list'
 import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
+import ScheduleBooking from '@/views/dashboard/schedule-booking'
+import ScheduleMeeting from '@/views/dashboard/schedule-meeting'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
 import SystemService from '@/views/dashboard/system-service'
 import CreateSystemService from '@/views/dashboard/system-service/CreateSystemService'
@@ -158,6 +160,15 @@ export const privateRoutes: RouteObject[] = [
         element: <ProductList />
       },
       {
+        path: routesConfig[Routes.SELECT_INTERVIEW_SLOT].path.replace('/dashboard/', ''),
+        element: <ScheduleMeeting />
+      },
+
+      {
+        path: routesConfig[Routes.SCHEDULE_BOOKING].path.replace('/dashboard/', ''),
+        element: <ScheduleBooking />
+      },
+      {
         path: routesConfig[Routes.CREATE_PRODUCT].path.replace('/dashboard/', ''),
         element: <CreateProduct />
       },
@@ -184,7 +195,6 @@ export const privateRoutes: RouteObject[] = [
       },
       {
         path: routesConfig[Routes.ORDER_LIST].path.replace('/dashboard/', ''),
-
         children: [
           {
             index: true,

@@ -534,6 +534,7 @@
     "loading": "Đang tải đơn hàng...",
     "viewDetail": "Xem chi tiết",
     "buyAgain": "Mua lại",
+    "totalPrice": "{{price, currency}}",
     "classification": "Phân loại",
     "all": "Tất cả",
     "created": "Đơn Hàng Đã Tạo",

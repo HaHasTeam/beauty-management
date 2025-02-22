@@ -536,6 +536,7 @@
     "buyAgain": "Buy Again",
     "classification": "Classification",
     "all": "All",
+    "totalPrice": "{{price, currency}}",
     "created": "Order Created",
     "pending": "Pending Payment",
     "waitConfirm": "Waiting For Confirmation",

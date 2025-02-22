@@ -40,7 +40,9 @@ export enum Routes {
   SYSTEM_SERVICE_LIST = 'system-services',
   SYSTEM_SERVICE_DETAILS = 'system-services-details',
   CREATE_SYSTEM_SERVICE = 'system-services/create',
-  UPDATE_SYSTEM_SERVICE = 'system-services/update'
+  UPDATE_SYSTEM_SERVICE = 'system-services/update',
+  SELECT_INTERVIEW_SLOT = 'select-interview',
+  SCHEDULE_BOOKING = 'schedule-booking'
 }
 
 export const routesConfig: TRoutes = {
@@ -94,6 +96,20 @@ export const routesConfig: TRoutes = {
     description: 'Update Brand',
     path: '/dashboard/brand/update/[id]',
     getPath: (id) => `/dashboard/brand/update/${id}`
+  },
+  [Routes.SCHEDULE_BOOKING]: {
+    name: 'Schedule Booking',
+    title: 'Schedule Booking',
+    description: 'Schedule',
+    path: '/dashboard/Schedule',
+    getPath: () => `/dashboard/Schedule`
+  },
+  [Routes.SELECT_INTERVIEW_SLOT]: {
+    name: 'Schedule Meeting',
+    title: 'Schedule Meeting',
+    description: 'Schedule Meeting',
+    path: '/dashboard/select-interview',
+    getPath: () => '/dashboard/select-interview'
   },
   [Routes.VOUCHER]: {
     name: 'Voucher Management',
@@ -282,7 +298,7 @@ export const routesConfig: TRoutes = {
     title: 'Order Details',
     description: 'Beauty order',
     path: '/dashboard/orders/:id',
-    getPath: () => '/dashboard/orders/:id'
+    getPath: (params) => `/dashboard/orders/${params}`
   },
   [Routes.SYSTEM_SERVICE_LIST]: {
     name: 'System Service List',
