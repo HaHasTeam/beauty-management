@@ -41,7 +41,8 @@ export enum Routes {
   SYSTEM_SERVICE_DETAILS = 'system-services-details',
   CREATE_SYSTEM_SERVICE = 'system-services/create',
   UPDATE_SYSTEM_SERVICE = 'system-services/update',
-  SELECT_INTERVIEW_SLOT = 'select-interview'
+  SELECT_INTERVIEW_SLOT = 'select-interview',
+  SCHEDULE_BOOKING = 'schedule-booking'
 }
 
 export const routesConfig: TRoutes = {
@@ -95,6 +96,13 @@ export const routesConfig: TRoutes = {
     description: 'Update Brand',
     path: '/dashboard/brand/update/[id]',
     getPath: (id) => `/dashboard/brand/update/${id}`
+  },
+  [Routes.SCHEDULE_BOOKING]: {
+    name: 'Schedule Booking',
+    title: 'Schedule Booking',
+    description: 'Schedule',
+    path: '/dashboard/Schedule',
+    getPath: () => `/dashboard/Schedule`
   },
   [Routes.SELECT_INTERVIEW_SLOT]: {
     name: 'Schedule Meeting',

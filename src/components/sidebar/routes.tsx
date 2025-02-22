@@ -1,5 +1,5 @@
 // Auth Imports
-import { Boxes, Brush, Layers2Icon, Package, ReceiptText } from 'lucide-react'
+import { Boxes, Brush, CalendarClock, Layers2Icon, Package, ReceiptText, TicketPercent } from 'lucide-react'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
@@ -66,13 +66,19 @@ export const routes: IRoute[] = [
   {
     name: routesConfig[Routes.SERVICES_CATALOG].name,
     path: routesConfig[Routes.SERVICES_CATALOG].path,
-    icon: <PiCompassToolBold className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.SCHEDULE_BOOKING].name,
+    path: routesConfig[Routes.SCHEDULE_BOOKING].path,
+    icon: <CalendarClock className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {
     name: routesConfig[Routes.VOUCHER].name,
     path: routesConfig[Routes.VOUCHER].path,
-    icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    icon: <TicketPercent className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

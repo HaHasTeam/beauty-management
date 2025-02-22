@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { addDays, format } from 'date-fns'
 import { CalendarIcon, ChevronRight, Clock, HelpCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
@@ -17,7 +18,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
+import { createBookingApi } from '@/network/apis/booking'
 import { getAllSlotsApi } from '@/network/apis/slots'
+import { useStore } from '@/stores/store'
 import { BookingStatusEnum, BookingTypeEnum, WeekDay } from '@/types/enum'
 
 const formSchema = z.object({
@@ -35,12 +38,28 @@ export const url = import.meta.env.VITE_SITE_URL
 function ScheduleMeeting() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const handleServerError = useHandleServerError()
-  const { errorToast } = useToast()
-
+  const { errorToast, successToast } = useToast()
+  const { user } = useStore(
+    useShallow((state) => {
+      return {
+        user: state.user
+      }
+    })
+  )
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       notes: ''
+    }
+  })
+
+  const { mutateAsync: mutateCreateBooking } = useMutation({
+    mutationKey: [createBookingApi.mutationKey],
+    mutationFn: createBookingApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Your appointment is confirmed! See you soon.'
+      })
     }
   })
 
@@ -85,9 +104,9 @@ function ScheduleMeeting() {
         meetUrl: meetUrl,
         status: BookingStatusEnum.WAIT_FOR_CONFIRMATION,
         slot: data.slotId,
-        account: 'b44291b2-4184-49ac-b1f8-7eff26548d8e' // This should be dynamically set based on the logged-in user
+        account: user.id
       }
-
+      await mutateCreateBooking(payload)
       // Reset the form or navigate to another page
       form.reset()
     } catch (error) {

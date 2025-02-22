@@ -29,29 +29,7 @@ export const brandCreateSchema = z.object({
   businessRegistrationCode: z.string().max(100),
   establishmentDate: z.string().max(255).optional(),
   businessRegistrationAddress: z.string().max(255).optional(),
-  status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING),
-
-  selectedDate: z.date({
-    required_error: 'Please select a date',
-    invalid_type_error: "That's not a valid date"
-  }),
-  selectedSlot: z
-    .string({
-      required_error: 'Please select a time slot'
-    })
-    .refine(
-      (val) => {
-        const [start, end] = val.split('-')
-        return start && end && start < end
-      },
-      {
-        message: 'Invalid time slot format'
-      }
-    ),
-
-  slotId: z.string().optional(),
-  startTime: z.string().optional(),
-  endTime: z.string().optional()
+  status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING)
 })
 
 export const voucherCreateSchema = z.object({
