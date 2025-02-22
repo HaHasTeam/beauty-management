@@ -13,13 +13,15 @@ export const getResultSheetSectionSchema = () => {
 
 export const ResultSheetSectionSchema = getResultSheetSectionSchema()
 
-export const resultSheetDataSchema = z
-  .object({
+export const getResultSheetDataSchema = () => {
+  return z.object({
     title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
     resultSheetSections: z
       .array(ResultSheetSectionSchema)
       .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
   })
-  .optional()
+}
 
+export const ResultSheetDataSchema = getResultSheetDataSchema()
 export type IResultSheetSectionFormData = z.infer<typeof ResultSheetSectionSchema>
+export type IResultSheetDataFormData = z.infer<typeof ResultSheetDataSchema>

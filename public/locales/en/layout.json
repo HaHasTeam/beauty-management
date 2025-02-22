@@ -863,6 +863,8 @@
     "selectOrCreateNew": "Select an existing result sheet or create a new one",
     "selectResultSheet": "Select result sheet",
     "preview": "Preview",
-    "alsoUsedFor": "This result sheet also used for the following system services"
+    "alsoUsedFor": "This result sheet also used for the following system services",
+    "updateResultSheet": "Update Result Sheet",
+    "updateResultSheetSuccess": "Update result sheet successfully!"
   }
 }

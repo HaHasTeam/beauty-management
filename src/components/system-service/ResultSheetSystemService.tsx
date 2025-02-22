@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowDownCircle, ArrowUpCircle, Pencil, Trash2 } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -135,10 +135,7 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
       {/* Show Preview if existing result sheet is selected */}
       {selectedResultSheet && selectedResultSheetData && (
         <div className='relative w-full flex justify-center bg-primary/10 rounded-lg p-4'>
-          <div className='max-w-xl'>
-            <ResultSheet resultSheet={selectedResultSheetData} />
-          </div>
-          <Pencil onClick={() => {}} className='cursor-pointer text-primary absolute right-3 top-3' />
+          <ResultSheet resultSheet={selectedResultSheetData} />
         </div>
       )}
 

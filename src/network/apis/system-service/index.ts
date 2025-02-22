@@ -3,6 +3,8 @@ import { ICreateSystemService, IResponseSystemService, ISystemService } from '@/
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
+import { UpdateSystemServiceParams } from './type'
+
 export const getAllSystemServiceApi = toQueryFetcher<void, TServerResponse<IResponseSystemService[]>>(
   'getAllSystemServiceApi',
   async () => {
@@ -26,8 +28,6 @@ export const createSystemServiceApi = toMutationFetcher<ICreateSystemService, TS
     })
   }
 )
-
-type UpdateSystemServiceParams = { params: string; data: ISystemService }
 
 export const updateSystemServiceApi = toMutationFetcher<UpdateSystemServiceParams, TServerResponse<ISystemService>>(
   'updateSystemServiceApi',
