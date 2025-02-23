@@ -8,6 +8,8 @@ export const findCurrentRoute = (routes: IRoute[], pathname: string): IRoute | u
       const found = findCurrentRoute(route.items, pathname)
       if (found) return found
     }
+
+    //fdsafsdafjlsdjaflk
     if (pathname?.match(route.path) && route) {
       return route
     }
