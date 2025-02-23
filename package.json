@@ -17,6 +17,7 @@
     "log:tree": "tree -N -I \"node_modules|.git|.idea\" -a"
   },
   "dependencies": {
+    "@cyntler/react-doc-viewer": "^1.17.0",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/modifiers": "^8.0.0",
     "@dnd-kit/sortable": "^9.0.0",
@@ -115,6 +116,7 @@
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "caniuse-lite": "^1.0.30001687",
+    "cz-git": "^1.11.0",
     "eslint": "^8.57.1",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.31.0",

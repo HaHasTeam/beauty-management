@@ -9,6 +9,13 @@ export type TBrand = TMetaData & {
   phone: string
   address: string
   star?: number
+  businessTaxCode: string
+  businessRegistrationCode: string
+  establishmentDate: string
+  province: string
+  district: string
+  ward: string
+  businessRegistrationAddress: string
   status: BrandStatusEnum
 }
 
