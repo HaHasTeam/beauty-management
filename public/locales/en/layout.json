@@ -750,7 +750,8 @@
     "stringOrArrayRequired": "Field value must be a string or an array",
     "sizeFileValid": "Each file must be under {{size}}MB.",
     "fileFormat": "Accepted file formats are",
-    "fileCountValid": "You can upload up to {{count}} files"
+    "fileCountValid": "You can upload up to {{count}} files",
+    "tooLong": "Message too long."
   },
   "role": {
     "ADMIN": "Admin",
@@ -945,5 +946,25 @@
     "blog": "Blog",
     "privacyPolicy": "Privacy Policy",
     "termsAndConditions": "Terms And Conditions"
+  },
+  "contact": {
+    "contactUs": "Contact Us",
+    "getInTouch": "Get In Touch With Us",
+    "description": "We're here to help! Whether you have questions about our beauty consulting services, need support with an order, or are interested in joining our platform as a beauty consultant, our team is ready to assist.",
+    "location": "Our Location",
+    "address": "99 S.t Jomblo Park Pekanbaru 28292, Indonesia",
+    "phone": "Phone Number",
+    "phoneNumber": "(+62)81 414 257 9980",
+    "email": "Email Address",
+    "emailAddress": "info@yourdomain.com",
+    "yourInformation": "Your Information",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your Full Name",
+    "emailPlaceholder": "Your Email",
+    "phonePlaceholder": "Your Phone",
+    "message": "Your Message",
+    "messagePlaceholder": "Your Message",
+    "sendMessage": "Send Message",
+    "sendSuccess": "Send message successfully!"
   }
 }

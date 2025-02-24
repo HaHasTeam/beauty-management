@@ -750,7 +750,8 @@
     "stringOrArrayRequired": "Trường này phải là một chuỗi hoặc một mảng",
     "sizeFileValid": "Mỗi tệp phải nhỏ hơn {{size}}MB.",
     "fileFormat": "Các định dạng tệp được chấp nhận là",
-    "fileCountValid": "Bạn có thể tải lên tối đa {{count}} tệp"
+    "fileCountValid": "Bạn có thể tải lên tối đa {{count}} tệp",
+    "tooLong": "Tin nhắn quá dài."
   },
   "role": {
     "ADMIN": "Quản trị viên",
@@ -945,5 +946,25 @@
     "blog": "Blog",
     "privacyPolicy": "Chính sách quyền riêng tư",
     "termsAndConditions": "Điều khoản & Điều kiện"
+  },
+  "contact": {
+    "contactUs": "Liên Hệ",
+    "getInTouch": "Liên Hệ Với Chúng Tôi",
+    "description": "Chúng tôi ở đây để giúp đỡ! Cho dù bạn có câu hỏi về dịch vụ tư vấn làm đẹp, cần hỗ trợ đơn hàng hay muốn tham gia nền tảng của chúng tôi với tư cách là chuyên gia làm đẹp, đội ngũ của chúng tôi sẵn sàng hỗ trợ.",
+    "location": "Địa Điểm Của Chúng Tôi",
+    "address": "99 S.t Jomblo Park Pekanbaru 28292, Indonesia",
+    "phone": "Số Điện Thoại",
+    "phoneNumber": "(+62)81 414 257 9980",
+    "email": "Địa Chỉ Email",
+    "emailAddress": "info@yourdomain.com",
+    "yourInformation": "Thông Tin Của Bạn",
+    "fullName": "Họ Và Tên",
+    "fullNamePlaceholder": "Nhập Họ Và Tên",
+    "emailPlaceholder": "Nhập Email",
+    "phonePlaceholder": "Nhập Số Điện Thoại",
+    "message": "Tin Nhắn Của Bạn",
+    "messagePlaceholder": "Nhập Tin Nhắn",
+    "sendMessage": "Gửi Tin Nhắn",
+    "sendSuccess": "Gửi tin nhắn thành công!"
   }
 }
