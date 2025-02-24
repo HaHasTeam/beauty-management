@@ -84,7 +84,8 @@ export const discountTypeEnumArray = enumToArray(DiscountTypeEnum)
 export enum PaymentMethod {
   CASH = 'CASH',
   CARD = 'CARD',
-  WALLET = 'WALLET'
+  WALLET = 'WALLET',
+  BANK_TRANSFER = 'BANK_TRANSFER'
 }
 
 export enum ShippingStatusEnum {
@@ -146,4 +147,33 @@ export enum CancelOrderRequestStatusEnum {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
+}
+
+export enum ServiceTypeEnum {
+  STANDARD = 'STANDARD',
+  PREMIUM = 'PREMIUM'
+}
+export enum WeekDay {
+  MONDAY = 2,
+  TUESDAY = 3,
+  WEDNESDAY = 4,
+  THURSDAY = 5,
+  FRIDAY = 6,
+  SATURDAY = 7,
+  SUNDAY = 8
+}
+
+export enum BookingTypeEnum {
+  SERVICE = 'SERVICE',
+  INTERVIEW = 'INTERVIEW'
+}
+export enum BookingStatusEnum {
+  TO_PAY = 'TO_PAY',
+  WAIT_FOR_CONFIRMATION = 'WAIT_FOR_CONFIRMATION',
+  BOOKING_CONFIRMED = 'BOOKING_CONFIRMED',
+  SERVICE_BOOKING_FORM_SUBMITED = 'SERVICE_BOOKING_FORM_SUBMITED',
+  SENDED_RESULT_SHEET = 'SENDED_RESULT_SHEET',
+  COMPLETED = 'COMPLETED',
+  REFUNDED = 'REFUNDED',
+  CANCELLED = 'CANCELLED'
 }

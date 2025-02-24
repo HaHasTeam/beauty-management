@@ -10,7 +10,7 @@ import BasicInformationDetails from '@/components/product/BasicInformationDetail
 import ClassificationDetails from '@/components/product/ClassificationDetails'
 import UpdateProductStatus from '@/components/product/UpdateProductStatus'
 import { Routes, routesConfig } from '@/configs/routes'
-import { getProductApi } from '@/network/product'
+import { getProductApi } from '@/network/apis/product'
 
 const ProductDetails = () => {
   const { t } = useTranslation()
