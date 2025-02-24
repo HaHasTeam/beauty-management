@@ -839,7 +839,8 @@
       "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho."
     },
     "brandInformation": "Thông Tin Thương Hiệu",
-    "noCertificates": "Không có chứng nhận"
+    "noCertificates": "Không có chứng nhận",
+    "file": "Tệp tin"
   },
   "status": {
     "ACTIVE": "Đang hoạt động",

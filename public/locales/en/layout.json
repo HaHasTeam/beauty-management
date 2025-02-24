@@ -839,7 +839,8 @@
       "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock."
     },
     "brandInformation": "Brand Information",
-    "noCertificates": "No Certificate"
+    "noCertificates": "No Certificate",
+    "file": "File"
   },
   "status": {
     "ACTIVE": "Active",

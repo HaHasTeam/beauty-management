@@ -101,10 +101,7 @@ const BasicInformationDetails = ({ product }: BasicInformationDetailsProps) => {
                   </button>
                   <button
                     onClick={() =>
-                      handleDownload(
-                        certificate,
-                        product.certificates.length > 1 ? `${product.name} (${index + 1})` : product.name
-                      )
+                      handleDownload(certificate, product.name, product.certificates.length > 1 ? `${index + 1}` : '')
                     }
                     className='flex items-center gap-2 text-gray-500 hover:text-gray-800'
                     title='Download'
