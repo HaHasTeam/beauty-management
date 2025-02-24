@@ -10,7 +10,31 @@
     "shoppingCart": "Shopping Cart",
     "notification": "Notifications"
   },
-  "profile": {},
+  "profile": {
+    "myProfile": "My Profile",
+    "profileDescription": "Manage your profile information to secure your account",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "usernameNote": "Username can only be changed once",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "change": "Change",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "birthday": "Date of Birth",
+    "birthdayPlaceholder": "Enter your date of birth",
+    "save": "Save",
+    "avatar": "Avatar",
+    "chooseImage": "Choose Image",
+    "fileSizeLimit": "Max file size: 1 MB",
+    "fileFormat": "Format: .JPEG, .PNG"
+  },
   "home": {
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
@@ -39,7 +63,9 @@
     "groupBuying": "Group Buying",
     "hidden": "Hidden",
     "outOfStock": "Sold old",
-    "waiting": "Upcoming"
+    "waiting": "Upcoming",
+    "cancelled": "Cancelled",
+    "inactive": "Inactive"
   },
   "statusTag": {
     "default": "Default"
@@ -80,7 +106,8 @@
     "submitAndShow": "Submit and Show",
     "submitAndHide": "Submit and Hide",
     "deselect": "Deselect",
-    "select": "Select"
+    "select": "Select",
+    "edit": "Edit"
   },
   "noData": "No matching data found",
   "sell": {
@@ -276,7 +303,8 @@
     "qualityService": "Guaranteed Quality & Service",
     "verified": "Inspection Upon Receipt",
     "official": "100% Authentic Products",
-    "certificateOfProduct": "Certificate of {{name}}"
+    "certificateOfProduct": "Product certificate of {{name}}",
+    "name": "Name"
   },
   "event": {
     "finishIn": "Finish In"
@@ -304,6 +332,8 @@
       "title": "Reviews",
       "count": "{{count}}k"
     },
+    "establishmentDate": "Establishment date",
+    "businessTaxCode": "Business Tax Code",
     "responseRate": {
       "title": "Response Rate",
       "value": "{{rate}}%"
@@ -404,6 +434,7 @@
     "state": "State",
     "country": "Country",
     "postalCode": "Postal Code",
+    "email": "Email",
     "phoneNumber": "Phone Number",
     "save": "Save",
     "cancel": "Cancel",
@@ -541,6 +572,7 @@
     "buyAgain": "Buy Again",
     "classification": "Classification",
     "all": "All",
+    "totalPrice": "{{price, currency}}",
     "created": "Order Created",
     "pending": "Pending Payment",
     "waitConfirm": "Waiting For Confirmation",
@@ -796,6 +828,7 @@
     "uniqueNameClassification": "Each option in the same classification must have a unique name.",
     "classificationInformation": "Pricing & Inventory",
     "skuProduct": "Product SKU",
+    "sku": "SKU",
     "skuProductPlaceholder": "Enter product SKU",
     "skuClassification": "Product classification SKU",
     "productClassification": "Product Classification",
@@ -824,7 +857,33 @@
     "copy": "Copy",
     "downloadCertificate": "Download Certificate",
     "viewCertificate": "View Certificate",
-    "download": "Download"
+    "download": "Download",
+    "duplicated": "This item already exists!",
+    "createdAt": "Created At",
+    "productId": "Product ID",
+    "updateProductStatusSuccess": "Update product status successfully!",
+    "statusDescription": {
+      "ACTIVE": "The product is available for purchase and ready to be ordered.",
+      "INACTIVE": "The product is currently unavailable for purchase and not visible to customers.",
+      "PRE_ORDER": "The product is not yet released or out of stock but can be ordered in advance.",
+      "OFFICIAL": "The product is an officially verified item from the brand or manufacturer and has been reviewed by the platform moderator.",
+      "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock."
+    },
+    "brandInformation": "Brand Information",
+    "noCertificates": "No Certificate",
+    "file": "File"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "DRAFT": "Draft",
+    "PUBLIC": "Public",
+    "DENIED": "Denied",
+    "BAN": "Baned",
+    "PENDING": "Pending",
+    "PRE_ORDER": "Pre-Order",
+    "OFFICIAL": "Official",
+    "OUT_OF_STOCK": "Out of stock"
   },
   "systemService": {
     "generalInformation": "General Information",
@@ -871,5 +930,20 @@
     "alsoUsedFor": "This consultation criteria also used for the following system services",
     "updateResultSheet": "Update Consultation Criteria",
     "updateResultSheetSuccess": "Update consultation criteria successfully!"
+  },
+  "layout": {
+    "help": "HELP",
+    "contactUs": "Contact us",
+    "faq": "FAQ",
+    "shippingReturns": "Shipping & Returns",
+    "myAccount": "MY ACCOUNT",
+    "addresses": "Addresses",
+    "orders": "Orders",
+    "vouchers": "Vouchers",
+    "customerCare": "CUSTOMER CARE",
+    "aboutUs": "About us",
+    "blog": "Blog",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms And Conditions"
   }
 }
