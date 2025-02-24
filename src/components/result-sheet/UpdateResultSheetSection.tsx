@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Dispatch, SetStateAction, useId, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useId, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getResultSheetByIdApi, updateResultSheetApi } from '@/network/apis/result-sheet'
+import { getAllResultSheetApi, getResultSheetByIdApi, updateResultSheetApi } from '@/network/apis/result-sheet'
 import { getResultSheetDataSchema } from '@/schemas/result-sheet.schema'
 import { IResponseResultSheetData } from '@/types/result-sheet'
 
@@ -29,18 +29,26 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
   const queryClient = useQueryClient()
   const ResultSheetDataSchema = getResultSheetDataSchema()
 
-  const defaultValues: IResponseResultSheetData = {
-    id: resultSheet.id ?? '',
-    title: resultSheet.title ?? '',
-    resultSheetSections: resultSheet.resultSheetSections ?? [],
-    status: resultSheet.status ?? '',
-    systemServices: resultSheet.systemServices ?? []
-  }
+  const defaultValues: IResponseResultSheetData = useMemo(() => {
+    return {
+      id: resultSheet.id ?? '',
+      title: resultSheet.title ?? '',
+      resultSheetSections: resultSheet.resultSheetSections ?? [],
+      status: resultSheet.status ?? '',
+      systemServices: resultSheet.systemServices ?? []
+    }
+  }, [resultSheet])
 
   const form = useForm<z.infer<typeof ResultSheetDataSchema>>({
     resolver: zodResolver(ResultSheetDataSchema),
     defaultValues
   })
+
+  useEffect(() => {
+    // Reset form with new values
+    form.reset(defaultValues)
+  }, [form, defaultValues])
+
   const handleReset = () => {
     form.reset()
     setOpen(false)
@@ -55,10 +63,32 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       queryClient.invalidateQueries({
         queryKey: [getResultSheetByIdApi.queryKey, resultSheet.id as string]
       })
+      queryClient.invalidateQueries({
+        queryKey: [getAllResultSheetApi.queryKey]
+      })
       handleReset()
     }
   })
-  async function onSubmit(values: z.infer<typeof ResultSheetDataSchema>) {
+  // async function onSubmit(values: z.infer<typeof ResultSheetDataSchema>, e: FormEvent) {
+  //   try {
+  //     e.preventDefault()
+  //     setIsLoading(true)
+  //     const transformedValues = {
+  //       ...values,
+  //       id: resultSheet.id ?? ''
+  //     }
+
+  //     await updateResultSheetFn({ params: resultSheet.id ?? '', data: transformedValues })
+  //     setIsLoading(false)
+  //   } catch (error) {
+  //     setIsLoading(false)
+  //     handleServerError({
+  //       error,
+  //       form
+  //     })
+  //   }
+  // }
+  const onSubmit = form.handleSubmit(async (values) => {
     try {
       setIsLoading(true)
       const transformedValues = {
@@ -66,7 +96,10 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
         id: resultSheet.id ?? ''
       }
 
-      await updateResultSheetFn({ params: resultSheet.id ?? '', data: transformedValues })
+      await updateResultSheetFn({
+        params: resultSheet.id ?? '',
+        data: transformedValues
+      })
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
@@ -74,6 +107,13 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
         error,
         form
       })
+    }
+  })
+
+  // Prevent form submission on enter key
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
     }
   }
   return (
@@ -85,16 +125,38 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       </div>
 
       <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full' id={`form-${id}`}>
+        <form
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault()
+            onSubmit(e)
+          }}
+          onKeyDown={handleKeyDown}
+          className='w-full'
+          id={`form-${id}`}
+        >
           <div>
             {/* Form Result Sheet */}
             <FormResultSheet form={form} />
           </div>
           <div className='flex justify-end gap-2 w-full'>
-            <Button type='button' variant='outline' onClick={() => setOpen(false)}>
+            <Button
+              type='button'
+              variant='outline'
+              className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
+              onClick={() => setOpen(false)}
+            >
               {t('dialog.cancel')}
             </Button>
-            <Button type='submit' loading={isLoading}>
+            <Button
+              form={`form-${id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                onSubmit(e)
+              }}
+              type='button'
+              loading={isLoading}
+            >
               {t('dialog.ok')}
             </Button>
           </div>

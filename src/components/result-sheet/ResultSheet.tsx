@@ -18,7 +18,7 @@ const ResultSheet = ({ resultSheet }: ResultSheetProps) => {
   if (!resultSheet) return null
   return (
     <div
-      className={`px-6 py-4 border border-primary/40 rounded-lg flex flex-col gap-3 bg-card ${isEditing && 'w-full'}`}
+      className={`px-6 py-4 border border-primary/40 rounded-lg flex flex-col gap-3 bg-card ${isEditing ? 'w-full' : 'max-w-xl'}`}
     >
       {!isEditing && (
         <Pencil

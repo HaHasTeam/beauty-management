@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
+import { useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -93,7 +94,9 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
   const sortedSections = [...sections].sort((a, b) => a.orderIndex - b.orderIndex)
 
   // Find the selected result sheet data for preview
-  const selectedResultSheetData = resultSheets?.data.find((sheet) => sheet.id === selectedResultSheet)
+  const selectedResultSheetData = useMemo(() => {
+    return resultSheets?.data.find((sheet) => sheet.id === selectedResultSheet)
+  }, [resultSheets?.data, selectedResultSheet])
 
   return (
     <div className='space-y-4'>

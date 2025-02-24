@@ -86,7 +86,9 @@ const SystemServiceForm = ({
               >
                 {t('button.cancel')}
               </Button>
-              <Button type='submit'>{t('button.create')}</Button>
+              <Button form={formId} type='submit'>
+                {t('button.create')}
+              </Button>
             </div>
           </form>
         </Form>

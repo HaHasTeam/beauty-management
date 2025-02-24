@@ -14,10 +14,17 @@ export const getResultSheetSectionSchema = () => {
 export const ResultSheetSectionSchema = getResultSheetSectionSchema()
 
 export const getResultSheetDataSchema = () => {
+  const ResultSheetSectionSchemaData = z.object({
+    section: z.string().min(1, { message: i18next.t('systemService.sectionNameRequired') }),
+    orderIndex: z.number().min(1, { message: i18next.t('systemService.orderIndexRequired') }),
+    mandatory: z.boolean(),
+    description: z.string().min(1, { message: i18next.t('systemService.sectionDescriptionRequired') })
+  })
+
   return z.object({
     title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
     resultSheetSections: z
-      .array(ResultSheetSectionSchema)
+      .array(ResultSheetSectionSchemaData)
       .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
   })
 }
