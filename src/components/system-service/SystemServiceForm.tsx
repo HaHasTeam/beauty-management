@@ -23,6 +23,7 @@ interface SystemServiceFormProps {
   formId?: string
   resetSignal?: boolean
   defineFormSignal?: boolean
+  mode?: 'create' | 'update'
 }
 const SystemServiceForm = ({
   form,
@@ -30,7 +31,8 @@ const SystemServiceForm = ({
   onSubmit,
   formId,
   resetSignal,
-  defineFormSignal
+  defineFormSignal,
+  mode = 'create'
 }: SystemServiceFormProps) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -70,7 +72,7 @@ const SystemServiceForm = ({
                     <h2 className='font-bold text-xl'>{t('systemService.resultSheetInformation')}</h2>
                   </div>
                 }
-                content={<ResultSheetSystemService form={form} />}
+                content={<ResultSheetSystemService form={form} mode={mode} />}
               />
             </div>
 

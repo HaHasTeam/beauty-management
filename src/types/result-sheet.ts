@@ -6,7 +6,7 @@ import { IResponseSystemService } from './system-service'
 
 export type IUpdateResultSheetSection = IResultSheetSectionFormData & {
   id?: string
-  status: StatusEnum
+  status?: StatusEnum
 }
 export type IResponseResultSheetSection = IResultSheetSectionFormData &
   TMetaData & {
@@ -15,6 +15,11 @@ export type IResponseResultSheetSection = IResultSheetSectionFormData &
 
 export type IUpdateResultSheetData = {
   id: string
+  title: string
+  resultSheetSections: IUpdateResultSheetSection[]
+}
+export type IUpdateServerResultSheetData = {
+  id?: string
   title: string
   resultSheetSections: IUpdateResultSheetSection[]
 }

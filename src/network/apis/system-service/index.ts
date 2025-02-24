@@ -15,7 +15,7 @@ export const getAllSystemServiceApi = toQueryFetcher<void, TServerResponse<IResp
 export const getSystemServiceByIdApi = toQueryFetcher<string, TServerResponse<IResponseSystemService>>(
   'getSystemServiceByIdApi',
   async (params) => {
-    return privateRequest(`/products/system-services/${params}`)
+    return privateRequest(`/system-services/get-by-id/${params}`)
   }
 )
 

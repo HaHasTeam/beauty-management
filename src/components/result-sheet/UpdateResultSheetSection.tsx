@@ -69,25 +69,6 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       handleReset()
     }
   })
-  // async function onSubmit(values: z.infer<typeof ResultSheetDataSchema>, e: FormEvent) {
-  //   try {
-  //     e.preventDefault()
-  //     setIsLoading(true)
-  //     const transformedValues = {
-  //       ...values,
-  //       id: resultSheet.id ?? ''
-  //     }
-
-  //     await updateResultSheetFn({ params: resultSheet.id ?? '', data: transformedValues })
-  //     setIsLoading(false)
-  //   } catch (error) {
-  //     setIsLoading(false)
-  //     handleServerError({
-  //       error,
-  //       form
-  //     })
-  //   }
-  // }
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       setIsLoading(true)

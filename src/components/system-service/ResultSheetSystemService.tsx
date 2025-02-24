@@ -20,8 +20,9 @@ import { Textarea } from '../ui/textarea'
 
 interface ResultSheetSystemServiceProps {
   form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
+  mode?: 'create' | 'update'
 }
-const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
+const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemServiceProps) => {
   const CREATE_NEW_RESULT_VALUE = 'createNewResultSheetData'
   const { t } = useTranslation()
 
@@ -43,7 +44,11 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
     }))
 
     // Update the form value
-    form.setValue('resultSheetData.resultSheetSections', reorderedSections)
+    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
   }
 
   const moveSection = (fromIndex: number, direction: 'up' | 'down') => {
@@ -62,29 +67,53 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
       orderIndex: index + 1
     }))
 
-    form.setValue('resultSheetData.resultSheetSections', reorderedSections)
+    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
   }
 
   // Handle result sheet selection
   const handleResultSheetChange = (resultSheetId: string) => {
     if (resultSheetId === CREATE_NEW_RESULT_VALUE) {
       // If "Create New" is selected, initialize resultSheetData
-      form.setValue('resultSheet', resultSheetId)
-      form.setValue('resultSheetData', {
-        title: '',
-        resultSheetSections: [
-          {
-            section: '',
-            orderIndex: 1,
-            mandatory: true,
-            description: ''
-          }
-        ]
+      form.setValue('resultSheet', resultSheetId, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true
       })
+      form.setValue(
+        'resultSheetData',
+        {
+          title: '',
+          resultSheetSections: [
+            {
+              section: '',
+              orderIndex: 1,
+              mandatory: true,
+              description: ''
+            }
+          ]
+        },
+        {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true
+        }
+      )
     } else if (resultSheetId) {
       // If an existing result sheet is selected
-      form.setValue('resultSheet', resultSheetId)
-      form.setValue('resultSheetData', undefined)
+      form.setValue('resultSheet', resultSheetId, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true
+      })
+      form.setValue('resultSheetData', undefined, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true
+      })
     }
   }
 
@@ -138,7 +167,7 @@ const ResultSheetSystemService = ({ form }: ResultSheetSystemServiceProps) => {
       {/* Show Preview if existing result sheet is selected */}
       {selectedResultSheet && selectedResultSheetData && (
         <div className='relative w-full flex justify-center bg-primary/10 rounded-lg p-4'>
-          <ResultSheet resultSheet={selectedResultSheetData} />
+          <ResultSheet resultSheet={selectedResultSheetData} mode={mode} form={form} />
         </div>
       )}
 

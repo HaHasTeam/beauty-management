@@ -1,19 +1,29 @@
 import { Pencil } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { z } from 'zod'
 
+import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { IResponseResultSheetData } from '@/types/result-sheet'
 
 import { Separator } from '../ui/separator'
+import FormResultSheetInSystemService from './FormResultSheetInSystemService'
 import ResultSheetSection from './ResultSheetSection'
 import UpdateResultSheetSection from './UpdateResultSheetSection'
 
 export interface ResultSheetProps {
   resultSheet: IResponseResultSheetData
+  mode?: 'create' | 'update'
+  form?: UseFormReturn<z.infer<typeof SystemServiceSchema>>
 }
-const ResultSheet = ({ resultSheet }: ResultSheetProps) => {
+const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) => {
   const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
+
+  useEffect(() => {
+    setIsEditing(mode === 'update')
+  }, [mode])
 
   if (!resultSheet) return null
   return (
@@ -29,7 +39,11 @@ const ResultSheet = ({ resultSheet }: ResultSheetProps) => {
         />
       )}
       {isEditing ? (
-        <UpdateResultSheetSection resultSheet={resultSheet} setOpen={setIsEditing} />
+        mode === 'update' ? (
+          form && <FormResultSheetInSystemService form={form} />
+        ) : (
+          <UpdateResultSheetSection resultSheet={resultSheet} setOpen={setIsEditing} />
+        )
       ) : (
         <>
           <p className='font-semibold text-xl flex justify-center text-center'>{resultSheet.title}</p>

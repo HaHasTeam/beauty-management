@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
-import { ResultSheetDataSchema } from '@/schemas/result-sheet.schema'
+import { SystemServiceSchema } from '@/schemas/system-service.schema'
 
 import Button from '../button'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
@@ -12,14 +12,14 @@ import { Input } from '../ui/input'
 import { Switch } from '../ui/switch'
 import { Textarea } from '../ui/textarea'
 
-interface FormResultSheetContentProps {
-  form: UseFormReturn<z.infer<typeof ResultSheetDataSchema>>
+interface FormResultSheetInSystemServiceContentProps {
+  form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
 }
 
-const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
+const FormResultSheetInSystemService = ({ form }: FormResultSheetInSystemServiceContentProps) => {
   const { t } = useTranslation()
   const handleDeleteSection = (index: number) => {
-    const currentSections = form.getValues('resultSheetSections')
+    const currentSections = form.getValues('resultSheetData.resultSheetSections')
 
     // Remove the section at the specified index
     const updatedSections = currentSections.filter((_, i) => i !== index)
@@ -31,7 +31,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
     }))
 
     // Update the form value
-    form.setValue('resultSheetSections', reorderedSections, {
+    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true
@@ -39,7 +39,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
   }
 
   const moveSection = (fromIndex: number, direction: 'up' | 'down') => {
-    const currentSections = form.getValues('resultSheetSections')
+    const currentSections = form.getValues('resultSheetData.resultSheetSections')
     const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1
 
     if (toIndex < 0 || toIndex >= currentSections.length) return
@@ -54,13 +54,13 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
       orderIndex: index + 1
     }))
 
-    form.setValue('resultSheetSections', reorderedSections, {
+    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true
     })
   }
-  const sections = form.watch('resultSheetSections') || []
+  const sections = form.watch('resultSheetData.resultSheetSections') || []
   const sortedSections = [...sections].sort((a, b) => a.orderIndex - b.orderIndex)
 
   // Find the selected result sheet data for preview
@@ -69,7 +69,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
       {/* Result Sheet Title */}
       <FormField
         control={form.control}
-        name='title'
+        name='resultSheetData.title'
         render={({ field }) => (
           <FormItem>
             <div className='flex gap-2'>
@@ -120,7 +120,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
             </div>
             <FormField
               control={form.control}
-              name={`resultSheetSections.${index}.section`}
+              name={`resultSheetData.resultSheetSections.${index}.section`}
               render={({ field }) => (
                 <FormItem>
                   <div className='flex gap-2'>
@@ -144,7 +144,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
 
             <FormField
               control={form.control}
-              name={`resultSheetSections.${index}.description`}
+              name={`resultSheetData.resultSheetSections.${index}.description`}
               render={({ field }) => (
                 <FormItem>
                   <div className='flex gap-2'>
@@ -169,7 +169,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
             <div className='w-full flex flex-1 justify-between'>
               <FormField
                 control={form.control}
-                name={`resultSheetSections.${index}.mandatory`}
+                name={`resultSheetData.resultSheetSections.${index}.mandatory`}
                 render={({ field }) => (
                   <FormItem className='w-full'>
                     <div className='flex gap-2'>
@@ -186,7 +186,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
                   </FormItem>
                 )}
               />
-              {form.watch('resultSheetSections').length > 1 && (
+              {form.watch('resultSheetData.resultSheetSections').length > 1 && (
                 <Trash2
                   className='text-destructive hover:text-destructive/80 cursor-pointer'
                   onClick={() => handleDeleteSection(index)}
@@ -200,7 +200,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
           variant='outline'
           className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
           onClick={() => {
-            const currentSections = form.getValues('resultSheetSections') || []
+            const currentSections = form.getValues('resultSheetData.resultSheetSections') || []
             const newSection = {
               section: '',
               orderIndex: (currentSections?.length || 0) + 1,
@@ -208,7 +208,7 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
               description: ''
             }
 
-            form.setValue('resultSheetSections', [...currentSections, newSection], {
+            form.setValue('resultSheetData.resultSheetSections', [...currentSections, newSection], {
               shouldDirty: true,
               shouldTouch: true,
               shouldValidate: true
@@ -222,4 +222,4 @@ const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
   )
 }
 
-export default FormResultSheet
+export default FormResultSheetInSystemService

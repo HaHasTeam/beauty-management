@@ -238,7 +238,12 @@
     "productDetail": {
       "title": "Product Not Found",
       "description": "The product you're looking for either does not exist, has been removed, or is currently unavailable.",
-      "button": "Browse Other Products"
+      "button": "Browse Other Product"
+    },
+    "systemServiceDetail": {
+      "title": "System Service Not Found",
+      "description": "The system service you're looking for either does not exist, has been removed, or is currently unavailable.",
+      "button": "Browse Other System Service"
     }
   },
   "productDetail": {

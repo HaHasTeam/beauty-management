@@ -1,3 +1,3 @@
-import { ISystemService } from '@/types/system-service'
+import { IUpdateServerSystemServiceFormData } from '@/types/system-service'
 
-export type UpdateSystemServiceParams = { params: string; data: ISystemService }
+export type UpdateSystemServiceParams = { params: string; data: IUpdateServerSystemServiceFormData }
