@@ -1,16 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
-import { Pencil } from 'lucide-react'
+import { Info, List, Pencil, Store } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 
 import BrandSection from '@/components/branch/BrandSection'
 import Empty from '@/components/empty/Empty'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import BasicInformationDetails from '@/components/product/BasicInformationDetails'
 import ClassificationDetails from '@/components/product/ClassificationDetails'
+import ProductDetailInfoSection from '@/components/product/ProductDetailInfoSection'
 import UpdateProductStatus from '@/components/product/UpdateProductStatus'
+import SectionCollapsable from '@/components/section-collapsable'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getProductApi } from '@/network/apis/product'
+import { useStore } from '@/stores/store'
+import { RoleEnum } from '@/types/enum'
 
 const ProductDetails = () => {
   const { t } = useTranslation()
@@ -20,7 +25,17 @@ const ProductDetails = () => {
     queryFn: getProductApi.fn,
     enabled: !!id
   })
-
+  const { user } = useStore(
+    useShallow((state) => ({
+      // addProduct: state.addProduct,
+      // removeProduct: state.removeProduct,
+      // incQty: state.incQty,
+      // decQty: state.decQty,
+      // setTotal: state.setTotal,
+      // reset: state.reset,
+      user: state.user
+    }))
+  )
   return (
     <>
       {isGettingProduct && <LoadingLayer />}
@@ -42,10 +57,48 @@ const ProductDetails = () => {
           <UpdateProductStatus product={productData.data} />
 
           {/* Basic Information Section */}
-          <BasicInformationDetails product={productData.data} />
+          <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+            <SectionCollapsable
+              header={
+                <div className='flex gap-2 items-center text-primary'>
+                  <Info className='w-5 h-5' />
+                  <h2 className='font-bold text-xl'>{t('createProduct.basicInformation')}</h2>
+                </div>
+              }
+              content={<BasicInformationDetails product={productData.data} />}
+            />
+          </div>
+          {/* Product Detail Information Section */}
+          <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+            <SectionCollapsable
+              header={
+                <div className='flex gap-2 items-center text-primary'>
+                  <List className='w-5 h-5' />
+                  <h2 className='font-bold text-xl'>{t('createProduct.detailInformation')}</h2>
+                </div>
+              }
+              content={
+                <ProductDetailInfoSection
+                  detail={productData.data?.detail ?? ''}
+                  detailCategoryObject={productData.data?.category?.detail}
+                />
+              }
+            />
+          </div>
           {/* Brand Information Section */}
-          <BrandSection brand={productData.data.brand || null} />
-
+          {user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR ? (
+            <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+              <SectionCollapsable
+                header={
+                  <div className='flex gap-2 items-center text-primary'>
+                    <Store className='w-5 h-5' />
+                    <h2 className='font-bold text-xl'>{t('createProduct.brandInformation')}</h2>
+                  </div>
+                }
+                content={<BrandSection brand={productData.data.brand || null} />}
+              />
+            </div>
+          ) : null}
           {/* Product Variants Section */}
           <ClassificationDetails classifications={productData.data.productClassifications ?? []} />
         </div>

@@ -11,7 +11,6 @@
     "notification": "Thông báo"
   },
   "profile": {},
-  "profile": {},
   "home": {
     "consultantTitle": "Tư vấn sắc đẹp",
     "standardConsultantTitle": "Tư vấn tiêu chuẩn",
@@ -273,7 +272,7 @@
     "qualityService": "Cam Kết Chất Lượng & Dịch Vụ",
     "verified": "Được đồng kiểm khi nhận hàng",
     "official": "100% Hàng chính hãng",
-    "certificateOfProduct": "Chứng Nhận của {{name}}",
+    "certificateOfProduct": "Chứng nhận sản phẩm của {{name}}",
     "name": "Tên"
   },
   "event": {
@@ -838,7 +837,9 @@
       "PRE_ORDER": "Sản phẩm chưa được phát hành nhưng có thể đặt trước.",
       "OFFICIAL": "Sản phẩm được xác nhận chính thức từ thương hiệu hoặc nhà sản xuất và được kiểm duyệt bởi kiểm duyệt viên của nền tảng.",
       "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho."
-    }
+    },
+    "brandInformation": "Thông Tin Thương Hiệu",
+    "noCertificates": "Không có chứng nhận"
   },
   "status": {
     "ACTIVE": "Đang hoạt động",

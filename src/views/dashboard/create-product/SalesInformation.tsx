@@ -371,8 +371,8 @@ export default function SalesInformation({
       >
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
-            <div className='flex gap-2 items-center'>
-              <Package />
+            <div className='flex gap-2 items-center text-primary'>
+              <Package className='w-5 h-5' />
               <h2 className='font-bold text-xl'>{t('createProduct.classificationInformation')}</h2>
             </div>
           </AccordionTrigger>

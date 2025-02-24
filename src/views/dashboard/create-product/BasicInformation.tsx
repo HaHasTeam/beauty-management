@@ -40,7 +40,7 @@ const BasicInformation = ({
   setCompleteSteps
 }: BasicInformationProps) => {
   const MAX_PRODUCT_IMAGES = 7
-  const MAX_CERTIFICATES_FILES = 1
+  const MAX_CERTIFICATES_FILES = 7
   const MAX_PRODUCT_NAME_LENGTH = 120
   const { t } = useTranslation()
   const basicInfoRef = useRef<HTMLDivElement>(null)
@@ -86,8 +86,8 @@ const BasicInformation = ({
       <Accordion type='single' collapsible className='w-full' defaultValue='description'>
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
-            <div className='flex gap-2 items-center'>
-              <Info />
+            <div className='flex gap-2 items-center text-primary'>
+              <Info className='w-5 h-5' />
               <h2 className='font-bold text-xl'>{t('createProduct.basicInformation')}</h2>
             </div>
           </AccordionTrigger>
@@ -275,7 +275,9 @@ const BasicInformation = ({
                                       <img src={docFile} alt='doc' className='w-10 h-10' />
                                     ) : null}
                                     <div className='text-start'>
-                                      <p className='text-sm font-medium truncate overflow-visible'>{file.name}</p>
+                                      <span className='text-sm font-medium overflow-ellipsis line-clamp-2'>
+                                        {file.name}
+                                      </span>
                                       <p className='text-xs text-gray-500'>{formatFileSize(file.size)}</p>
                                     </div>
                                   </div>

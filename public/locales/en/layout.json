@@ -11,7 +11,6 @@
     "notification": "Notifications"
   },
   "profile": {},
-  "profile": {},
   "home": {
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
@@ -72,14 +71,10 @@
     "cancel": "Cancel",
     "create": "Create",
     "addSection": "Add section",
-    "create": "Create",
-    "addSection": "Add section",
     "ok": "Confirm",
     "save": "Save",
     "submit": "Submit",
     "backToHome": "Back to Home",
-    "approved": "Approve",
-    "rejected": "Reject",
     "approved": "Approve",
     "rejected": "Reject",
     "submitAndShow": "Submit and Show",
@@ -277,7 +272,7 @@
     "qualityService": "Guaranteed Quality & Service",
     "verified": "Inspection Upon Receipt",
     "official": "100% Authentic Products",
-    "certificateOfProduct": "Certificate of {{name}}",
+    "certificateOfProduct": "Product certificate of {{name}}",
     "name": "Name"
   },
   "event": {
@@ -842,7 +837,9 @@
       "PRE_ORDER": "The product is not yet released or out of stock but can be ordered in advance.",
       "OFFICIAL": "The product is an officially verified item from the brand or manufacturer and has been reviewed by the platform moderator.",
       "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock."
-    }
+    },
+    "brandInformation": "Brand Information",
+    "noCertificates": "No Certificate"
   },
   "status": {
     "ACTIVE": "Active",
