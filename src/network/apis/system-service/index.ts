@@ -38,3 +38,13 @@ export const updateSystemServiceApi = toMutationFetcher<UpdateSystemServiceParam
     })
   }
 )
+
+export const updateSystemServiceStatusApi = toMutationFetcher<{ id: string; status: string }, TServerResponse<string>>(
+  'updateSystemServiceStatusApi',
+  async ({ id, status }) => {
+    return privateRequest(`/system-services/update-status/${id}`, {
+      method: 'PUT',
+      data: { status: status }
+    })
+  }
+)

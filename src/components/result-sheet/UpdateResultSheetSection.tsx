@@ -40,7 +40,9 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       title: resultSheet.title ?? '',
       resultSheetSections: resultSheet.resultSheetSections ?? [],
       status: resultSheet.status ?? '',
-      systemServices: resultSheet.systemServices ?? []
+      systemServices: resultSheet.systemServices ?? [],
+      createdAt: resultSheet.createdAt ?? '',
+      updatedAt: resultSheet.updatedAt ?? ''
     }
   }, [resultSheet])
 
@@ -107,7 +109,7 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       {isLoading && <LoadingLayer />}
 
       <div className='flex justify-center items-center'>
-        <h3 className='text-lg font-semibold text-center'>{t('systemService.updateResultSheet')}</h3>
+        <h3 className='text-lg font-semibold text-center text-primary'>{t('systemService.updateResultSheet')}</h3>
       </div>
 
       <Form {...form}>

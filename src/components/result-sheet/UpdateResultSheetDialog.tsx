@@ -37,7 +37,9 @@ const UpdateResultSheetDialog = ({ resultSheet, triggerComponent }: UpdateResult
     title: resultSheet.title ?? '',
     resultSheetSections: resultSheet.resultSheetSections ?? [],
     status: resultSheet.status ?? '',
-    systemServices: resultSheet.systemServices ?? []
+    systemServices: resultSheet.systemServices ?? [],
+    createdAt: resultSheet.createdAt ?? '',
+    updatedAt: resultSheet.updatedAt ?? ''
   }
 
   const form = useForm<z.infer<typeof ResultSheetDataSchema>>({

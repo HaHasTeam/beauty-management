@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { FileSpreadsheet, Sheet } from 'lucide-react'
+import { BadgeInfo, FileSpreadsheet } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -49,8 +49,8 @@ const SystemServiceForm = ({
             <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
               <SectionCollapsable
                 header={
-                  <div className='flex gap-2 items-center'>
-                    <Sheet />
+                  <div className='flex gap-2 items-center text-primary'>
+                    <BadgeInfo />
                     <h2 className='font-bold text-xl'>{t('systemService.generalInformation')}</h2>
                   </div>
                 }
@@ -67,7 +67,7 @@ const SystemServiceForm = ({
             <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
               <SectionCollapsable
                 header={
-                  <div className='flex gap-2 items-center'>
+                  <div className='flex gap-2 items-center text-primary'>
                     <FileSpreadsheet />
                     <h2 className='font-bold text-xl'>{t('systemService.resultSheetInformation')}</h2>
                   </div>

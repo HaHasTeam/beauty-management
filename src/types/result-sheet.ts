@@ -30,4 +30,6 @@ export type IResponseResultSheetData = {
   resultSheetSections: IResponseResultSheetSection[]
   status: StatusEnum
   systemServices: IResponseSystemService[]
+  createdAt: string
+  updatedAt: string
 }

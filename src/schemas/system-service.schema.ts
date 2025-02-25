@@ -44,6 +44,12 @@ export const getSystemServiceSchema = () => {
     )
 }
 
+export const getUpdateSystemServiceStatusSchema = () => {
+  return z.object({
+    status: z.string().min(1, i18next.t('validation.statusRequired'))
+  })
+}
+
 export const SystemServiceSchema = getSystemServiceSchema()
 
 export type ISystemServiceFormData = z.infer<typeof SystemServiceSchema>

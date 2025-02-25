@@ -107,7 +107,8 @@
     "submitAndHide": "Gửi và ẩn sản phẩm",
     "deselect": "Bỏ chọn",
     "select": "Chọn",
-    "edit": "Chỉnh sửa"
+    "edit": "Chỉnh sửa",
+    "backToList": "Quay lại danh sách"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -931,7 +932,17 @@
     "alsoUsedFor": "Tiêu chí tư vấn này cũng được áp dụng cho các dịch vụ sau của hệ thống",
     "updateResultSheet": "Cập Nhật Tiêu Chí Tư Vấn",
     "updateResultSheetSuccess": "Cập nhật tiêu chí tư vấn thành công!",
-    "deleteSectionSuccess": "Xóa mục tiêu chí tư vấn thành công!"
+    "deleteSectionSuccess": "Xóa mục tiêu chí tư vấn thành công!",
+    "createdAt": "Ngày tạo",
+    "lastUpdated": "Cập nhật lần cuối",
+    "updateSystemServiceStatusSuccess": "Cập nhật trạng thái dịch vụ hệ thống thành công!",
+    "statusDescription": {
+      "ACTIVE": "Dịch vụ hệ thống hiện đang hiển thị trong hệ thống và tư vấn viên có thể đăng ký.",
+      "INACTIVE": "Dịch vụ hệ thống hiện đang ẩn trong hệ thống và tư vấn viên không thể đăng ký."
+    },
+    "consultantCriteriaDetails": "Chi Tiết Tiêu Chí Tư Vấn",
+    "ID": "ID",
+    "applicableServices": "Dịch vụ áp dụng"
   },
   "layout": {
     "help": "TRỢ GIÚP",
@@ -967,5 +978,9 @@
     "messagePlaceholder": "Nhập Tin Nhắn",
     "sendMessage": "Gửi Tin Nhắn",
     "sendSuccess": "Gửi tin nhắn thành công!"
+  },
+  "systemServiceType": {
+    "PREMIUM": "Cao cấp",
+    "STANDARD": "Tiêu chuẩn"
   }
 }

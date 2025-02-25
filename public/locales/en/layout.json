@@ -107,7 +107,8 @@
     "submitAndHide": "Submit and Hide",
     "deselect": "Deselect",
     "select": "Select",
-    "edit": "Edit"
+    "edit": "Edit",
+    "backToList": "Back to List"
   },
   "noData": "No matching data found",
   "sell": {
@@ -931,7 +932,17 @@
     "alsoUsedFor": "This consultation criteria also used for the following system services",
     "updateResultSheet": "Update Consultation Criteria",
     "updateResultSheetSuccess": "Update consultation criteria successfully!",
-    "deleteSectionSuccess": "Delete consultant criteria section successfully!"
+    "deleteSectionSuccess": "Delete consultant criteria section successfully!",
+    "createdAt": "Created At",
+    "lastUpdated": "Last updated",
+    "updateSystemServiceStatusSuccess": "Update system service status successfully!",
+    "statusDescription": {
+      "ACTIVE": "The system service is currently visible in the system, and consultants can register.",
+      "INACTIVE": "The system service is currently hidden from the system, and consultant registration is disabled."
+    },
+    "consultantCriteriaDetails": "Consultation Criteria Details",
+    "ID": "ID",
+    "applicableServices": "Applicable Services"
   },
   "layout": {
     "help": "HELP",
@@ -967,5 +978,9 @@
     "messagePlaceholder": "Your Message",
     "sendMessage": "Send Message",
     "sendSuccess": "Send message successfully!"
+  },
+  "systemServiceType": {
+    "PREMIUM": "Premium",
+    "STANDARD": "Standard"
   }
 }

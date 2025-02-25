@@ -1,6 +1,6 @@
 import 'react-quill-new/dist/quill.snow.css'
 
-import { ImagePlus, Info, Upload } from 'lucide-react'
+import { BadgeInfo, ImagePlus, Upload } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -87,7 +87,7 @@ const BasicInformation = ({
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
             <div className='flex gap-2 items-center'>
-              <Info />
+              <BadgeInfo />
               <h2 className='font-bold text-xl'>{t('createProduct.basicInformation')}</h2>
             </div>
           </AccordionTrigger>
