@@ -103,7 +103,7 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
   if (!config) return null
   return (
     <div className={`${config.alertVariant} ${config.borderColor}`}>
-      <div className='flex items-center gap-2 justify-between'>
+      <div className='flex md:items-center gap-2 md:justify-between md:flex-row flex-col justify-start items-start'>
         <div className='flex items-center gap-2'>
           <Siren className='size-4' />
           <div className='flex flex-col gap-1'>
@@ -124,7 +124,7 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
             <AlertDescription>{config.alertDescription}</AlertDescription>
           </div>
         </div>
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-2 items-center md:m-0 ml-3'>
           {config.nextStatus && (
             <Button
               onClick={() => {
