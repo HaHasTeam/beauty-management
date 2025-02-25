@@ -1,4 +1,4 @@
-import { IResponseProduct, IServerCreateProduct, TProduct } from '@/types/product'
+import { IProduct, IResponseProduct, IServerCreateProduct, TProduct } from '@/types/product'
 import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
@@ -59,3 +59,13 @@ export const getProductFilterApi = toQueryFetcher<
     params: params
   })
 })
+
+export const updateProductStatusApi = toMutationFetcher<{ id: string; status: string }, TServerResponse<IProduct>>(
+  'updateProductStatusApi',
+  async ({ id, status }) => {
+    return privateRequest(`/products/update-status/${id}`, {
+      method: 'PUT',
+      data: { status: status }
+    })
+  }
+)
