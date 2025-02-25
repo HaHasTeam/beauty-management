@@ -13,6 +13,7 @@ export const getSystemServiceSchema = () => {
 
   const resultSheetDataSchema = z
     .object({
+      id: z.string().optional(),
       title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
       resultSheetSections: z
         .array(ResultSheetSectionSchema)

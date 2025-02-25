@@ -1,5 +1,5 @@
 import { Pencil } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -25,6 +25,10 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
     setIsEditing(mode === 'update')
   }, [mode])
 
+  const originalSections = useMemo(() => {
+    return resultSheet.resultSheetSections || []
+  }, [resultSheet])
+
   if (!resultSheet) return null
   return (
     <div
@@ -40,7 +44,7 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
       )}
       {isEditing ? (
         mode === 'update' ? (
-          form && <FormResultSheetInSystemService form={form} />
+          form && <FormResultSheetInSystemService form={form} originalSections={originalSections} />
         ) : (
           <UpdateResultSheetSection resultSheet={resultSheet} setOpen={setIsEditing} />
         )

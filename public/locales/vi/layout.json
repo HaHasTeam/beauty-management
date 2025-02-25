@@ -930,7 +930,8 @@
     "preview": "Xem trước",
     "alsoUsedFor": "Tiêu chí tư vấn này cũng được áp dụng cho các dịch vụ sau của hệ thống",
     "updateResultSheet": "Cập Nhật Tiêu Chí Tư Vấn",
-    "updateResultSheetSuccess": "Cập nhật tiêu chí tư vấn thành công!"
+    "updateResultSheetSuccess": "Cập nhật tiêu chí tư vấn thành công!",
+    "deleteSectionSuccess": "Xóa mục tiêu chí tư vấn thành công!"
   },
   "layout": {
     "help": "TRỢ GIÚP",

@@ -4,6 +4,7 @@ import { z } from 'zod'
 // Schema for result sheet section
 export const getResultSheetSectionSchema = () => {
   return z.object({
+    id: z.string().optional(),
     section: z.string().min(1, { message: i18next.t('systemService.sectionNameRequired') }),
     orderIndex: z.number().min(1, { message: i18next.t('systemService.orderIndexRequired') }),
     mandatory: z.boolean(),
@@ -15,6 +16,7 @@ export const ResultSheetSectionSchema = getResultSheetSectionSchema()
 
 export const getResultSheetDataSchema = () => {
   const ResultSheetSectionSchemaData = z.object({
+    id: z.string().optional(),
     section: z.string().min(1, { message: i18next.t('systemService.sectionNameRequired') }),
     orderIndex: z.number().min(1, { message: i18next.t('systemService.orderIndexRequired') }),
     mandatory: z.boolean(),
@@ -22,6 +24,7 @@ export const getResultSheetDataSchema = () => {
   })
 
   return z.object({
+    id: z.string().optional(),
     title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
     resultSheetSections: z
       .array(ResultSheetSectionSchemaData)

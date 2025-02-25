@@ -930,7 +930,8 @@
     "preview": "Preview",
     "alsoUsedFor": "This consultation criteria also used for the following system services",
     "updateResultSheet": "Update Consultation Criteria",
-    "updateResultSheetSuccess": "Update consultation criteria successfully!"
+    "updateResultSheetSuccess": "Update consultation criteria successfully!",
+    "deleteSectionSuccess": "Delete consultant criteria section successfully!"
   },
   "layout": {
     "help": "HELP",

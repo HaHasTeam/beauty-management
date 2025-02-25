@@ -1,10 +1,16 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
+import useHandleServerError from '@/hooks/useHandleServerError'
+import { useToast } from '@/hooks/useToast'
+import { getAllResultSheetApi, getResultSheetByIdApi } from '@/network/apis/result-sheet'
+import { deleteResultSheetByIdApi } from '@/network/apis/result-sheet-section'
 import { ResultSheetDataSchema } from '@/schemas/result-sheet.schema'
+import { IResponseResultSheetSection } from '@/types/result-sheet'
 
 import Button from '../button'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
@@ -14,11 +20,61 @@ import { Textarea } from '../ui/textarea'
 
 interface FormResultSheetContentProps {
   form: UseFormReturn<z.infer<typeof ResultSheetDataSchema>>
+  originalSections?: IResponseResultSheetSection[]
 }
 
-const FormResultSheet = ({ form }: FormResultSheetContentProps) => {
+const FormResultSheet = ({ form, originalSections = [] }: FormResultSheetContentProps) => {
   const { t } = useTranslation()
-  const handleDeleteSection = (index: number) => {
+  const { successToast } = useToast()
+  const queryClient = useQueryClient()
+  const handleServerError = useHandleServerError()
+
+  // Delete section API mutation
+  const { mutateAsync: deleteResultSheetSectionFn } = useMutation({
+    mutationKey: [deleteResultSheetByIdApi?.mutationKey],
+    mutationFn: deleteResultSheetByIdApi?.fn,
+    onSuccess: () => {
+      successToast({
+        message: `${t('systemService.deleteSectionSuccess')}`
+      })
+    }
+  })
+
+  const handleDeleteSection = async (index: number) => {
+    const currentSections = form.getValues('resultSheetSections')
+    const sectionToDelete = currentSections[index]
+
+    // Check if section exists in originalSections (was part of defaultValues)
+    const isExistingSection = sectionToDelete.id && originalSections.some((s) => s.id === sectionToDelete.id)
+
+    if (isExistingSection) {
+      // Case 1: Section exists in database, call API to delete
+      try {
+        await deleteResultSheetSectionFn({
+          params: sectionToDelete.id ?? ''
+        })
+
+        // After successful API call, remove from form state
+        removeSectionFromForm(index)
+        queryClient.invalidateQueries({
+          queryKey: [getResultSheetByIdApi.queryKey, form.getValues('id') as string]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [getAllResultSheetApi.queryKey]
+        })
+      } catch (error) {
+        handleServerError({
+          error,
+          form
+        })
+      }
+    } else {
+      // Case 2: Just added during current session, just remove from form state
+      removeSectionFromForm(index)
+    }
+  }
+
+  const removeSectionFromForm = (index: number) => {
     const currentSections = form.getValues('resultSheetSections')
 
     // Remove the section at the specified index

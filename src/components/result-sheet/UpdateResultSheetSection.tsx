@@ -29,6 +29,11 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
   const queryClient = useQueryClient()
   const ResultSheetDataSchema = getResultSheetDataSchema()
 
+  // Store original sections for comparison
+  const originalSections = useMemo(() => {
+    return resultSheet.resultSheetSections || []
+  }, [resultSheet])
+
   const defaultValues: IResponseResultSheetData = useMemo(() => {
     return {
       id: resultSheet.id ?? '',
@@ -118,7 +123,7 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
         >
           <div>
             {/* Form Result Sheet */}
-            <FormResultSheet form={form} />
+            <FormResultSheet form={form} originalSections={originalSections} />
           </div>
           <div className='flex justify-end gap-2 w-full'>
             <Button
