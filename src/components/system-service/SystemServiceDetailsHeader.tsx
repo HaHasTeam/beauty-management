@@ -32,7 +32,7 @@ const SystemServiceDetailsHeader = ({ serviceData }: SystemServiceDetailsHeaderP
           </Link>
         </div>
       </div>
-      <div className='text-base flex justify-between items-center w-full text-muted-foreground'>
+      <div className='text-base flex md:justify-between md:items-center md:flex-row flex-col justify-start items-start w-full text-muted-foreground'>
         <div className='flex items-center gap-1'>
           <Clock size={14} className='text-gray-400' />
           <span className='text-muted-foreground'>{t('systemService.createdAt')}:</span>

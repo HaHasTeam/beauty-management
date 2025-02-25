@@ -135,15 +135,18 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
         name='resultSheet'
         render={({ field }) => (
           <FormItem>
-            <div className='flex gap-2'>
-              <div className='w-[15%] flex items-center'>
+            <div className='flex gap-2 md:flex-row flex-col'>
+              <div className='md:w-[15%] w-full flex items-center'>
                 <FormLabel required>{t('systemService.selectResultSheet')}</FormLabel>
               </div>
               <div className='w-full space-y-1'>
                 <Select value={field.value} onValueChange={handleResultSheetChange}>
                   <FormControl>
                     <SelectTrigger className='border-primary/40'>
-                      <SelectValue placeholder={t('systemService.selectOrCreateNew')} />
+                      <SelectValue
+                        className='line-clamp-1 overflow-ellipsis w-fit'
+                        placeholder={t('systemService.selectOrCreateNew')}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
