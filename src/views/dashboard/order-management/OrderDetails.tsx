@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
+import BrandSection from '@/components/branch/BrandSection'
 import Button from '@/components/button'
 import CancelOrderDialog from '@/components/dialog/CancelOrderDialog'
 import UpdateOrderStatus from '@/components/dialog/UpdateOrderStatusDialog'
@@ -26,7 +27,6 @@ import { useStore } from '@/stores/store'
 import { CancelOrderRequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 import { ICancelRequestOrder } from '@/types/order'
 
-import BrandOrderInformation from './order-detail/BrandOrderInformation'
 import OrderDetailItems from './order-detail/OrderDetailItems'
 import OrderGeneral from './order-detail/OrderGeneral'
 import OrderStatusTracking from './order-detail/OrderStatusTracking'
@@ -300,20 +300,13 @@ const OrderDetails = () => {
               <div className='space-y-2'>
                 {/* brand */}
                 {user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR ? (
-                  <BrandOrderInformation
-                    brandId={
+                  <BrandSection
+                    brand={
                       (
                         useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
                         useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
                         useOrderData?.data?.orderDetails?.[0]?.productClassification
-                      )?.product?.brand?.id ?? ''
-                    }
-                    brandName={
-                      (
-                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
-                        useOrderData?.data?.orderDetails?.[0]?.productClassification
-                      )?.product?.brand?.name ?? t('brand.title')
+                      )?.product?.brand || null
                     }
                   />
                 ) : null}

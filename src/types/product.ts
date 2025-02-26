@@ -99,7 +99,7 @@ export type IServerCreateProduct = {
   price?: number
   quantity?: number
   sku?: string
-  certificate?: string
+  certificate?: IImage[]
 }
 export type IResponseProduct = {
   id?: string
@@ -117,7 +117,7 @@ export type IResponseProduct = {
   menu?: string
   updatedAt?: string
   createdAt: string
-  certificate: string
+  certificates: string[]
 }
 
 export type IProductTable = {
@@ -130,7 +130,7 @@ export type IProductTable = {
   updatedAt?: string
   description: string
   productClassifications: IServerProductClassification[]
-  certificate: string
+  certificates: string[]
 
   detail?: string
   brand?: IBrand

@@ -169,11 +169,18 @@ const UpdateProduct = () => {
     return processedImages
   }
 
-  const processCertificate = async (originalCertificate: string | undefined, newCertificate: File[] | undefined) => {
+  const processCertificate = async (
+    originalCertificates: string[] | undefined,
+    newCertificate: File[] | undefined
+  ): Promise<(File | IImage)[]> => {
+    // If no new certificate is provided
     if (!newCertificate?.length) {
-      // If no new certificate and there was an original, mark it as inactive
-      if (originalCertificate) {
-        return [{ fileUrl: originalCertificate, status: StatusEnum.INACTIVE }]
+      // If there were original certificates, mark them all as inactive
+      if (originalCertificates?.length) {
+        return originalCertificates.map((cert) => ({
+          fileUrl: cert,
+          status: StatusEnum.INACTIVE
+        }))
       }
       return []
     }
@@ -184,10 +191,9 @@ const UpdateProduct = () => {
       return [{ fileUrl: uploadedUrls[0] }]
     }
 
-    // Keep existing certificate if no changes
-    return originalCertificate ? [{ fileUrl: originalCertificate }] : []
+    // Keep existing certificates if no changes
+    return originalCertificates?.length ? originalCertificates.map((cert) => ({ fileUrl: cert })) : []
   }
-
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
       setIsLoading(true)
@@ -196,7 +202,7 @@ const UpdateProduct = () => {
         const processedMainImages = await processImages(productData?.data?.images ?? [], values.images)
 
         // Process certificate
-        const processedCertificate = await processCertificate(productData?.data?.certificate, values.certificate)
+        const processedCertificates = await processCertificate(productData?.data?.certificates, values.certificate)
 
         // // Process classification images
         // const processedClassifications = await Promise.all(
@@ -347,7 +353,7 @@ const UpdateProduct = () => {
           category: values?.category,
           status: values?.status,
           images: processedMainImages,
-          certificate: processedCertificate[0]?.fileUrl ?? '',
+          certificate: processedCertificates,
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
@@ -416,16 +422,16 @@ const UpdateProduct = () => {
       return []
     }
   }
-  const convertUrlToFile = async (url: string) => {
-    try {
-      const response = await fetch(url)
-      const blob = await response.blob()
-      return new File([blob], url.split('/').pop() || 'file', { type: blob.type })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error) {
-      return null
-    }
-  }
+  // const convertUrlToFile = async (url: string) => {
+  //   try {
+  //     const response = await fetch(url)
+  //     const blob = await response.blob()
+  //     return new File([blob], url.split('/').pop() || 'file', { type: blob.type })
+  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   } catch (_error) {
+  //     return null
+  //   }
+  // }
   useEffect(() => {
     if (productData && productData?.data) {
       const productClassifications = productData?.data?.productClassifications ?? []
@@ -458,7 +464,7 @@ const UpdateProduct = () => {
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
 
-        const certificateUrl = productData?.data?.certificate
+        const certificateUrls = productData?.data?.certificates
 
         const classificationImages = updatedProductClassifications?.map(
           (classification) =>
@@ -470,7 +476,7 @@ const UpdateProduct = () => {
         const [convertedMainImages, convertedClassificationImages, convertedCertificate] = await Promise.all([
           convertUrlsToFiles(mainImages),
           Promise.all(classificationImages.map(convertUrlsToFiles)),
-          certificateUrl ? convertUrlToFile(certificateUrl) : null
+          certificateUrls ? convertUrlsToFiles(certificateUrls) : null
         ])
 
         const formValue: ICreateProduct = {
@@ -481,7 +487,7 @@ const UpdateProduct = () => {
           images: convertedMainImages,
           description: productData?.data?.description,
           detail: JSON?.parse(productData?.data?.detail ?? ''),
-          certificate: convertedCertificate ? [convertedCertificate] : [],
+          certificate: convertedCertificate ? convertedCertificate : [],
           productClassifications: updatedProductClassifications?.map((classification, index) => ({
             ...classification,
             images: convertedClassificationImages[index] || []

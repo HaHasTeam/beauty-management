@@ -54,7 +54,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
       id: 'index',
       accessorKey: 'STT',
       cell: ({ row }) => {
-        return <span className='text-center'>{row.index}</span>
+        return <span className='text-center'>{row.index + 1}</span>
       },
       size: 1
     },

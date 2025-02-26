@@ -29,6 +29,32 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* mới thêm vào biến mới nè  */
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    --success: 142 71% 45%;
+    --success-foreground: 144 70% 96%;
+
+    /* Warning colors */
+    --warning-light: 48 100% 91%;
+    --warning-dark: 48 100% 26%;
+    --warning-border: 48 100% 86%;
+
+    /* Success colors */
+    --success-light: 134 41% 88%;
+    --success-dark: 134 61% 21%;
+    --success-border: 134 41% 83%;
+
+    /* Destructive colors */
+    --destructive-light: 354 100% 91%;
+    --destructive-dark: 354 61% 28%;
+    --destructive-border: 354 100% 86%;
+
+    /* Neutral colors */
+    --neutral-light: 210 3% 89%;
+    --neutral-dark: 210 3% 24%;
+    --neutral-border: 210 3% 84%;
   }
 
   .dark {
@@ -56,55 +82,34 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    /* mới thêm vào biến mới nè  */
+
+    --warning: 48 96% 89%;
+    --warning-foreground: 38 92% 50%;
+    --success: 144 70% 96%;
+    --success-foreground: 142 71% 45%;
+    /* Warning colors */
+    --warning-light: 48 100% 91%;
+    --warning-dark: 48 100% 26%;
+    --warning-border: 48 100% 86%;
+
+    /* Success colors */
+    --success-light: 134 41% 88%;
+    --success-dark: 134 61% 21%;
+    --success-border: 134 41% 83%;
+
+    /* Destructive colors */
+    --destructive-light: 354 100% 91%;
+    --destructive-dark: 354 61% 28%;
+    --destructive-border: 354 100% 86%;
+
+    /* Neutral colors */
+    --neutral-light: 210 3% 89%;
+    --neutral-dark: 210 3% 24%;
+    --neutral-border: 210 3% 84%;
   }
 }
 
-/* @layer base {
-  :root {
-    --background: 345 60% 98%;
-    --foreground: 345 57% 0%;
-    --muted: 345 24% 91%;
-    --muted-foreground: 0 0% 39.22%;
-    --popover: 345 60% 98%;
-    --popover-foreground: 345 57% 0%;
-    --card: 345 60% 98%;
-    --card-foreground: 345 57% 0%;
-    --border: 345 9% 89%;
-    --input: 345 9% 89%;
-    --primary: 345 82% 69%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 345 18% 90%;
-    --secondary-foreground: 345 18% 30%;
-    --accent: 345 26% 81%;
-    --accent-foreground: 345 26% 21%;
-    --destructive: 7.08 97.99% 39.02%;
-    --destructive-foreground: 0 19.05% 94.3%;
-    --ring: 345 82% 69%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 345 40% 2%;
-    --foreground: 345 24% 98%;
-    --muted: 345 24% 9%;
-    --muted-foreground: 345 9% 71%;
-    --popover: 345 40% 2%;
-    --popover-foreground: 345 24% 98%;
-    --card: 345 40% 2%;
-    --card-foreground: 345 24% 98%;
-    --border: 345 9% 13%;
-    --input: 345 9% 13%;
-    --primary: 345 82% 69%;
-    --primary-foreground: 345 82% 9%;
-    --secondary: 345 15% 17%;
-    --secondary-foreground: 345 15% 77%;
-    --accent: 345 22% 23%;
-    --accent-foreground: 345 22% 83%;
-    --destructive: 0 90% 48%;
-    --destructive-foreground: 0 0% 100%;
-    --ring: 345 82% 69%;
-  }
-} */
 @layer base {
   * {
     @apply border-border;
@@ -342,4 +347,79 @@ video {
   font-size: 14px;
   color: #888;
   margin-top: 20px;
+}
+
+.rbc-header {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 10px 0 !important;
+  font-weight: bold !important;
+}
+
+.rbc-btn-group button {
+  color: hsl(var(--primary));
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--primary));
+}
+
+.rbc-btn-group button.rbc-active {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground));
+}
+
+.rbc-event {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.rbc-today {
+  background-color: hsl(var(--accent));
+}
+
+.rbc-off-range-bg {
+  background-color: hsl(var(--muted));
+}
+
+.rbc-day-bg + .rbc-day-bg {
+  border-left: 1px solid hsl(var(--border));
+}
+
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid hsl(var(--border));
+}
+
+.rbc-toolbar-label {
+  color: hsl(var(--foreground));
+}
+
+.rbc-time-content,
+.rbc-time-header-content {
+  background-color: hsl(var(--background));
+}
+
+.rbc-time-view,
+.rbc-month-view {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+.rbc-day-slot .rbc-time-slot {
+  border-top: 1px solid hsl(var(--border));
+}
+
+.rbc-timeslot-group {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.rbc-time-view-resources .rbc-time-gutter,
+.rbc-time-view-resources .rbc-time-header-gutter {
+  background-color: hsl(var(--muted));
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+  border-top: 1px solid hsl(var(--border));
+}
+
+.rbc-agenda-view table.rbc-agenda-table {
+  border: 1px solid hsl(var(--border));
 }

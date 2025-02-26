@@ -24,8 +24,11 @@ import PreOrder from '@/views/dashboard/pre-order'
 import PreOrderDetailById from '@/views/dashboard/pre-order/[id]'
 import AddPreOrder from '@/views/dashboard/pre-order/AddPreOrder'
 import ProductList from '@/views/dashboard/product-list'
+import ProductDetails from '@/views/dashboard/product-list/ProductDetails'
 import ProfileSettings from '@/views/dashboard/profile-settings'
 import RequestsQueue from '@/views/dashboard/requests-queue'
+import ScheduleBooking from '@/views/dashboard/schedule-booking'
+import ScheduleMeeting from '@/views/dashboard/schedule-meeting'
 import ServicesCatalog from '@/views/dashboard/service-catalog'
 import SystemService from '@/views/dashboard/system-service'
 import CreateSystemService from '@/views/dashboard/system-service/CreateSystemService'
@@ -130,7 +133,7 @@ export const privateRoutes: RouteObject[] = [
             index: true,
             element: <Category />
           },
-          { path: 'add-category', element: <AddCategory /> },
+          { path: 'add', element: <AddCategory /> },
           {
             path: ':id',
             element: <CategoryDetailById />
@@ -155,15 +158,33 @@ export const privateRoutes: RouteObject[] = [
       },
       {
         path: routesConfig[Routes.PRODUCT_LIST].path.replace('/dashboard/', ''),
-        element: <ProductList />
+        children: [
+          {
+            index: true,
+            element: <ProductList />
+          },
+          {
+            path: 'add',
+            element: <CreateProduct />
+          },
+          {
+            path: ':id',
+            element: <ProductDetails />
+          },
+          {
+            path: 'update/:id',
+            element: <UpdateProduct />
+          }
+        ]
       },
       {
-        path: routesConfig[Routes.CREATE_PRODUCT].path.replace('/dashboard/', ''),
-        element: <CreateProduct />
+        path: routesConfig[Routes.SELECT_INTERVIEW_SLOT].path.replace('/dashboard/', ''),
+        element: <ScheduleMeeting />
       },
+
       {
-        path: routesConfig[Routes.UPDATE_PRODUCT].path.replace('/dashboard/', ''),
-        element: <UpdateProduct />
+        path: routesConfig[Routes.SCHEDULE_BOOKING].path.replace('/dashboard/', ''),
+        element: <ScheduleBooking />
       },
       {
         path: routesConfig[Routes.GROUP_PRODUCT].path.replace('/dashboard/', ''),
@@ -184,7 +205,6 @@ export const privateRoutes: RouteObject[] = [
       },
       {
         path: routesConfig[Routes.ORDER_LIST].path.replace('/dashboard/', ''),
-
         children: [
           {
             index: true,

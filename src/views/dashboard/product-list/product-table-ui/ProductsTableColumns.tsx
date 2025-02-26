@@ -1,9 +1,22 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
+import { Ellipsis, EyeIcon, Pen, SettingsIcon } from 'lucide-react'
+import { GrRevert } from 'react-icons/gr'
+import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
+import { StatusEnum } from '@/types/enum'
 import { ProductStatusEnum, TProduct } from '@/types/product'
 import { getDisplayString } from '@/utils/string'
 
@@ -11,12 +24,12 @@ import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
-  type: 'ban' | 'view' | 'unbanned'
+  type: 'ban' | 'view' | 'unbanned' | 'update-status-active' | 'update-status-inactive' | 'deny'
 }
-// interface GetColumnsProps {
-//   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TProduct> | null>>
-// }
-export function getColumns(): ColumnDef<TProduct>[] {
+interface GetColumnsProps {
+  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TProduct> | null>>
+}
+export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TProduct>[] {
   return [
     {
       id: 'select',
@@ -40,11 +53,20 @@ export function getColumns(): ColumnDef<TProduct>[] {
       size: 100
     },
     {
+      id: 'index',
+      accessorKey: 'STT',
+      cell: ({ row }) => {
+        return <span className='text-center'>{row.index}</span>
+      },
+      size: 1
+    },
+    {
       id: 'displayName',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name
         const image =
+          row.original.images[0].fileUrl ||
           'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg'
         return (
           <div className='flex space-x-2 items-center'>
@@ -56,6 +78,14 @@ export function getColumns(): ColumnDef<TProduct>[] {
           </div>
         )
       }
+    },
+    {
+      accessorKey: 'sku',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Sku' />,
+      cell: ({ cell }) => <div>{cell.row.original.sku}</div>,
+      size: 10,
+      enableSorting: false,
+      enableHiding: false
     },
     {
       accessorKey: 'status',
@@ -101,6 +131,74 @@ export function getColumns(): ColumnDef<TProduct>[] {
           hour: 'numeric',
           minute: 'numeric'
         })
+    },
+    {
+      id: 'actions',
+      header: () => <SettingsIcon className='-translate-x-1' />,
+      cell: function Cell({ row }) {
+        return (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button aria-label='Open menu' variant='ghost' className='flex size-8 p-0 data-[state=open]:bg-muted'>
+                <Ellipsis className='size-4' aria-hidden='true' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end' className='w-40'>
+              <DropdownMenuItem
+                onClick={() => {
+                  setRowAction({ row: row, type: 'view' })
+                }}
+              >
+                <span className='w-full flex gap-2 items-center cursor-pointer'>
+                  <EyeIcon />
+                  View Details
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={routesConfig[Routes.UPDATE_PRODUCT].getPath(row.original.id)}>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <Pen />
+                    Update
+                  </span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
+              {(row.original.status == ProductStatusEnum.OFFICIAL ||
+                row.original.status == ProductStatusEnum.PENDING) && (
+                <DropdownMenuItem
+                  className='bg-red-500/30 text-white '
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'update-status-inactive' })
+                  }}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <GrRevert />
+                    Inactive
+                  </span>
+                </DropdownMenuItem>
+              )}
+
+              {row.original.status == StatusEnum.INACTIVE && (
+                <DropdownMenuItem
+                  className='bg-green-500/10 text-white mb-2'
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'update-status-active' })
+                  }}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <GrRevert />
+                    Active
+                  </span>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+      size: 40,
+      enableSorting: false,
+      enableHiding: false
     }
   ]
 }

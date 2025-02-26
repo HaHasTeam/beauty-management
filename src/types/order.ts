@@ -1,28 +1,30 @@
 import { IClassification } from './classification'
-import { PaymentMethod, ShippingStatusEnum } from './enum'
+import { OrderEnum, PaymentMethod, ShippingStatusEnum } from './enum'
 import { TUser } from './user'
 import { TVoucher } from './voucher'
 
+// Order detail interface
 export interface IOrderDetail {
-  platformVoucherDiscount: number
-  shopVoucherDiscount: number
   id: string
   createdAt: string
   updatedAt: string
+  unitPriceBeforeDiscount: number
+  unitPriceAfterDiscount: number
   subTotal: number
   totalPrice: number
   quantity: number
-  type: string | null
+  productName: string
+  classificationName: string
+  type: OrderEnum
   isFeedback: boolean
+  platformVoucherDiscount: number
+  shopVoucherDiscount: number
   productClassification: IClassification
   productClassificationPreOrder: null | IClassification
-  unitPriceAfterDiscount: number
-  unitPriceBeforeDiscount: number
 }
 
+// Order item interface
 export interface IOrderItem {
-  platformVoucherDiscount: number
-  shopVoucherDiscount: number
   id: string
   createdAt: string
   updatedAt: string
@@ -30,19 +32,20 @@ export interface IOrderItem {
   totalPrice: number
   shippingAddress: string
   phone: string
+  recipientName: string
   paymentMethod: PaymentMethod
   notes: string
-  type: string
+  message: string | null
+  type: OrderEnum
   status: ShippingStatusEnum
-  orderDetails: IOrderDetail[]
-  voucher: null | TVoucher
-  message: string
-  recipientName: string
-}
-
-export type IOrder = {
   platformVoucherDiscount: number
   shopVoucherDiscount: number
+  orderDetails: IOrderDetail[]
+  voucher: TVoucher | null
+}
+
+// Main order interface
+export interface IOrder {
   id: string
   createdAt: string
   updatedAt: string
@@ -50,38 +53,43 @@ export type IOrder = {
   totalPrice: number
   shippingAddress: string
   phone: string
-  paymentMethod: string
+  recipientName: string
+  paymentMethod: PaymentMethod
   notes: string
-  type: string
-  status: string
+  message: string | null
+  type: OrderEnum
+  status: ShippingStatusEnum
+  platformVoucherDiscount: number
+  shopVoucherDiscount: number
   account: TUser
   children: IOrderItem[]
 }
 
-export type IOrderFilter = {
+// Other interfaces (kept as they were, assuming they're still needed)
+export interface IOrderFilter {
   search?: string
   status?: string
 }
 
-export type IOrderCheckoutItem = {
+export interface IOrderCheckoutItem {
   productClassificationId: string
   quantity?: number
 }
 
-export type ICreateOrderItem = {
+export interface ICreateOrderItem {
   shopVoucherId?: string
   items: IOrderCheckoutItem[]
   message?: string
 }
 
-export type ICreateOrder = {
+export interface ICreateOrder {
   orders: ICreateOrderItem[]
   addressId: string
   paymentMethod: string
   platformVoucherId?: string
 }
 
-export type ICreatePreOrder = {
+export interface ICreatePreOrder {
   productClassificationId: string
   quantity: number
   addressId: string
@@ -89,7 +97,7 @@ export type ICreatePreOrder = {
   notes: string
 }
 
-export type ICancelOrder = {
+export interface ICancelOrder {
   orderId: string
   reason: string
 }

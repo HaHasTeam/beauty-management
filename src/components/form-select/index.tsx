@@ -1,6 +1,7 @@
 import { Check, ChevronDown, PlusCircle, X, XCircle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import EmptyInbox from '@/assets/images/EmptyInbox.png'
@@ -46,6 +47,7 @@ const FormSelect = ({
   required,
   setIsValid
 }: FormSelectProps) => {
+  const { t } = useTranslation()
   const [items, setItems] = useState(initialItems)
   const [hidden, setHidden] = useState(true)
   const [inputValue, setInputValue] = useState('')
@@ -53,7 +55,6 @@ const FormSelect = ({
   const [errorText, setErrorText] = useState('')
   const [fieldErrorText, setFieldErrorText] = useState('')
   const [selectedItems, setSelectedItems] = useState<IOption[]>([])
-
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowCommandDialog = () => {
@@ -102,7 +103,7 @@ const FormSelect = ({
       const isDuplicate = items.some((item) => item.label.toLowerCase() === inputValue.trim().toLowerCase())
 
       if (isDuplicate) {
-        setErrorText('This item already exists!')
+        setErrorText(t('createProduct.duplicated'))
       } else {
         // Proceed to add the new item if it's not a duplicate
         const newItem = { value: inputValue.trim(), label: inputValue.trim() }
@@ -148,20 +149,26 @@ const FormSelect = ({
 
   useEffect(() => {
     const backendValues: string | number | string[] = form.getValues(`detail.${fieldId}`) || []
+
     const backendValuesArray = Array.isArray(backendValues) ? backendValues : [backendValues]
 
-    // Map backend values to corresponding items in the `items` list
-    const updatedSelectedItems = items.filter((item) => backendValuesArray?.includes(item?.value))
+    // Find matching items from the `items` list
+    const updatedSelectedItems = items.filter((item) => backendValuesArray.includes(item.value))
 
-    // Update the selectedItems state
-    setSelectedItems(updatedSelectedItems)
+    // Add missing values from backendValues to updatedSelectedItems
+    const missingItems = backendValuesArray
+      .filter((value) => !items.some((item) => item.value === value))
+      .map((value) => ({ label: value.toString(), value: value.toString() }))
+
+    // Update state with both existing and missing items
+    setSelectedItems([...updatedSelectedItems, ...missingItems])
   }, [defineFormSignal, form, fieldId, items])
 
   useEffect(() => {
     if (required) {
       if (selectedItems === undefined || selectedItems?.length === 0) {
         setIsValid(false)
-        setFieldErrorText(`Vui lòng chọn ${fieldLabel}`)
+        setFieldErrorText(`${t('createProduct.pleaseSelect')} ${fieldLabel}`)
         return
       } else {
         setIsValid(true)
@@ -169,7 +176,7 @@ const FormSelect = ({
     } else {
       setIsValid(true)
     }
-  }, [form, required, setIsValid, fieldId, selectedItems, fieldLabel])
+  }, [form, required, setIsValid, fieldId, selectedItems, fieldLabel, t])
   return (
     <div className='relative overflow-visible' ref={dropdownRef}>
       <div>

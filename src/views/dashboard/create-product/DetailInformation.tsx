@@ -122,8 +122,8 @@ export default function DetailInformation({
       >
         <AccordionItem value='description' className='last:overflow-visible'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline overflow-visible'>
-            <div className='flex gap-2 items-center'>
-              <List />
+            <div className='flex gap-2 items-center text-primary'>
+              <List className='w-5 h-5' />
               <h2 className='font-bold text-xl'>{t('createProduct.detailInformation')}</h2>
             </div>
           </AccordionTrigger>
