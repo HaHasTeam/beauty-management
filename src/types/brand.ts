@@ -48,4 +48,10 @@ export type IBrand = {
   address: string
   star: number
   status: BrandStatusEnum
+  businessTaxCode: string
+  businessRegistrationCode: string
+  establishmentDate: string
+  ward: string
+  district: string
+  province: string
 }

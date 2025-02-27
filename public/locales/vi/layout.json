@@ -71,7 +71,7 @@
     "viewAll": "Xem tất cả",
     "cancel": "Hủy",
     "create": "Tạo",
-    "addSection": "Thêm mục",
+    "addSection": "Thêm Mục",
     "ok": "Đồng ý",
     "save": "Lưu",
     "submit": "Gửi",
@@ -81,7 +81,8 @@
     "submitAndShow": "Gửi và hiện sản phẩm",
     "submitAndHide": "Gửi và ẩn sản phẩm",
     "deselect": "Bỏ chọn",
-    "select": "Chọn"
+    "select": "Chọn",
+    "edit": "Chỉnh sửa"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -272,7 +273,8 @@
     "qualityService": "Cam Kết Chất Lượng & Dịch Vụ",
     "verified": "Được đồng kiểm khi nhận hàng",
     "official": "100% Hàng chính hãng",
-    "certificateOfProduct": "Chứng Nhận của {{name}}"
+    "certificateOfProduct": "Chứng nhận sản phẩm của {{name}}",
+    "name": "Tên"
   },
   "event": {
     "finishIn": "Kết thúc trong"
@@ -300,6 +302,8 @@
       "title": "Đánh giá",
       "count": "{{count}}k"
     },
+    "establishmentDate": "Ngày thành lập",
+    "businessTaxCode": "Mã số thuế",
     "responseRate": {
       "title": "Tỉ lệ phản hồi",
       "value": "{{rate}}%"
@@ -400,6 +404,7 @@
     "state": "Tỉnh/Thành phố",
     "country": "Quốc gia",
     "postalCode": "Mã bưu điện",
+    "email": "Email",
     "phoneNumber": "Số điện thoại",
     "save": "Lưu",
     "cancel": "Hủy",
@@ -793,6 +798,7 @@
     "uniqueNameClassification": "Mỗi tùy chọn trong cùng một phân loại phải có tên duy nhất.",
     "classificationInformation": "Giá & Kho Hàng",
     "skuProduct": "SKU Sản Phẩm",
+    "sku": "SKU",
     "skuProductPlaceholder": "Nhập SKU sản phẩm",
     "skuClassification": "SKU phân loại sản phẩm",
     "productClassification": "Phân Loại Hàng",
@@ -821,7 +827,33 @@
     "copy": "Sao chép",
     "downloadCertificate": "Tải chứng nhận",
     "viewCertificate": "Xem chứng nhận",
-    "download": "Tải xuống"
+    "download": "Tải xuống",
+    "duplicated": "Mục này đã tồn tại!",
+    "createdAt": "Ngày tạo",
+    "productId": "ID Sản Phẩm",
+    "updateProductStatusSuccess": "Thay đổi trạng thái sản phẩm thành công!",
+    "statusDescription": {
+      "ACTIVE": "Sản phẩm có sẵn để mua và sẵn sàng để đặt hàng.",
+      "INACTIVE": "Sản phẩm hiện không có sẵn để mua và không hiển thị với khách hàng.",
+      "PRE_ORDER": "Sản phẩm chưa được phát hành nhưng có thể đặt trước.",
+      "OFFICIAL": "Sản phẩm được xác nhận chính thức từ thương hiệu hoặc nhà sản xuất và được kiểm duyệt bởi kiểm duyệt viên của nền tảng.",
+      "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho."
+    },
+    "brandInformation": "Thông Tin Thương Hiệu",
+    "noCertificates": "Không có chứng nhận",
+    "file": "Tệp tin"
+  },
+  "status": {
+    "ACTIVE": "Đang hoạt động",
+    "INACTIVE": "Không hoạt động",
+    "DRAFT": "Bản nháp",
+    "PUBLIC": "Công khai",
+    "DENIED": "Từ chối",
+    "BAN": "Bị cấm",
+    "PENDING": "Đang chờ duyệt",
+    "PRE_ORDER": "Đặt trước",
+    "OFFICIAL": "Chính hãng",
+    "OUT_OF_STOCK": "Hết hàng"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",

@@ -134,7 +134,9 @@ const CreateProduct = () => {
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
-          certificate: certUrl[0],
+          certificate: certUrl.map((cert) => ({
+            fileUrl: cert
+          })),
           productClassifications:
             (values?.productClassifications ?? [])?.length > 0
               ? (values?.productClassifications ?? []).map((classification, index) => ({
