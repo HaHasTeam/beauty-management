@@ -4,7 +4,7 @@ export type IBranch = {
   id?: string
   name: string
   logo?: string
-  document: string
+  documents: string[]
   description?: string
   email: string
   phone?: string

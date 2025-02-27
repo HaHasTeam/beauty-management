@@ -50,8 +50,8 @@ function ViewBrandForm() {
     async function convertBrandData() {
       if (brandData && brandId) {
         const brandImages = brandData.logo
-          ? await createFiles([brandData?.logo, brandData.document])
-          : await createFiles([brandData.document])
+          ? await createFiles([brandData?.logo, ...brandData.documents])
+          : await createFiles(brandData.documents)
         const formatData = {
           id: brandId,
           name: brandData.name,

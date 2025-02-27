@@ -11,7 +11,7 @@ export default () => {
   const userProfileData = data?.data
 
   return (
-    <div className='w-full max-w-5xl mx-auto p-4'>
+    <div className='w-full max-w-7xl mx-auto '>
       <RegisterProcess userProfileData={userProfileData} />
     </div>
   )

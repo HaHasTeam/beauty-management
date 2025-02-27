@@ -1,6 +1,4 @@
-'use client'
-
-import { Calendar, CircleCheckBig, ShieldCheck, Store, User } from 'lucide-react'
+import { Calendar, FileCheck, ShieldCheck, Store, ThumbsUp, User } from 'lucide-react'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,17 +14,19 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
 
   const {
     isEmailVerify,
-    isBrandVerify,
+    brandStatus,
     isRegisterBrand,
     isInterviewSlotSelected,
+    isRegistrationComplete,
     hasBrands,
     isAdminOrOperator,
     completionPercentage
   } = useMemo(() => {
     let isEmailVerify = false
-    let isBrandVerify = false
+    let brandStatus: BrandStatusEnum | 'ACTIVE' | null = null
     let isRegisterBrand = false
     let isInterviewSlotSelected = false
+    let isRegistrationComplete = false
     let hasBrands = false
     let isAdminOrOperator = false
 
@@ -36,30 +36,52 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
       if (userProfileData.brands && userProfileData.brands.length > 0) {
         isRegisterBrand = true
         hasBrands = true
-        if (userProfileData.brands[0].status === BrandStatusEnum.ACTIVE) {
-          isBrandVerify = true
-          isInterviewSlotSelected = true
-        }
+
+        // Get brand status
+        brandStatus = userProfileData.brands[0].status
+
+        // Check if interview slot is selected (PRE_APPROVED_FOR_MEETING means they've booked a meeting)
+        isInterviewSlotSelected = brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING
+
+        // Check if registration is complete (ACTIVE status)
+        isRegistrationComplete = brandStatus === 'ACTIVE'
       }
+
       if (userProfileData.isEmailVerify) {
         isEmailVerify = true
       }
     }
 
     // Calculate completion percentage
-    const totalSteps = 5
-    let currentStep = 1
-    if (isEmailVerify) currentStep++
-    if (isRegisterBrand) currentStep++
-    if (isInterviewSlotSelected) currentStep++
-    if (isBrandVerify) currentStep++
-    const completionPercentage = Math.round((currentStep / totalSteps) * 100)
+    const totalSteps = 6
+    let completedSteps = 0
+
+    // Step 1: Register account is always completed if we have user data
+    completedSteps++
+
+    // Step 2: Activate account
+    if (isEmailVerify) completedSteps++
+
+    // Step 3: Register brand
+    if (isRegisterBrand) completedSteps++
+
+    // Step 4: Verify information
+    if (brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING || brandStatus === 'ACTIVE') completedSteps++
+
+    // Step 5: Booking meeting
+    if (isInterviewSlotSelected) completedSteps++
+
+    // Step 6: Registration complete
+    if (isRegistrationComplete) completedSteps++
+
+    const completionPercentage = Math.round((completedSteps / totalSteps) * 100)
 
     return {
       isEmailVerify,
-      isBrandVerify,
+      brandStatus,
       isRegisterBrand,
       isInterviewSlotSelected,
+      isRegistrationComplete,
       hasBrands,
       isAdminOrOperator,
       completionPercentage
@@ -83,12 +105,15 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
         <span className='bg-primary text-white px-2 py-0.5 rounded text-sm font-medium'>{completionPercentage}%</span>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-5 gap-4 relative'>
+      <div className='grid grid-cols-1 md:grid-cols-6 gap-4 relative'>
+        {/* Step 1: Register account */}
         <Card className="bg-primary/10 shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:border-primary after:content-['']">
           <User className='w-8 h-8 text-primary mb-3' />
           <h3 className='font-medium mb-1'>Đăng ký tài khoản</h3>
           <p className='text-sm text-primary'>Hoàn thành!</p>
         </Card>
+
+        {/* Step 2: Activate account */}
         <Card
           className={cn(
             isEmailVerify && 'bg-primary/10 after:border-primary',
@@ -108,9 +133,11 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             </p>
           )}
         </Card>
+
+        {/* Step 3: Register brand */}
         <Card
           onClick={() => {
-            if (isEmailVerify) {
+            if (isEmailVerify && !isRegisterBrand) {
               navigate(routesConfig[Routes.REGISTER_BRAND].path)
             }
           }}
@@ -131,43 +158,85 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             </p>
           )}
         </Card>
+
+        {/* Step 4: Verify information */}
+        <Card
+          className={cn(
+            (brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING || brandStatus === 'ACTIVE') &&
+              'bg-primary/10 after:border-primary',
+            !hasBrands && 'opacity-50',
+            "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']"
+          )}
+        >
+          <FileCheck
+            className={cn(
+              (brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING || brandStatus === 'ACTIVE') && 'text-primary',
+              'w-8 h-8 mb-3'
+            )}
+          />
+          <h3 className='font-medium mb-1'>Xác thực thông tin</h3>
+          {brandStatus === BrandStatusEnum.PENDING_REVIEW && (
+            <p className='text-sm text-amber-500'>Đang chờ xét duyệt</p>
+          )}
+          {brandStatus === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS && (
+            <p className='text-sm text-red-500'>Cần bổ sung hồ sơ</p>
+          )}
+          {brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING || brandStatus === 'ACTIVE' ? (
+            <p className='text-sm text-primary'>Hoàn thành!</p>
+          ) : (
+            <p className='text-sm text-muted-foreground'>
+              {hasBrands ? 'Đang xét duyệt hồ sơ' : 'Đăng ký thương hiệu trước'}
+            </p>
+          )}
+        </Card>
+
+        {/* Step 5: Booking meeting */}
         <Card
           onClick={() => {
-            if (hasBrands) {
+            if (hasBrands && brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING && !isInterviewSlotSelected) {
               navigate(routesConfig[Routes.SELECT_INTERVIEW_SLOT].path)
             }
           }}
           className={cn(
             isInterviewSlotSelected && 'bg-primary/10 after:border-primary',
-            hasBrands && !isInterviewSlotSelected && 'cursor-pointer',
-            !hasBrands && 'opacity-50',
+            hasBrands &&
+              brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING &&
+              !isInterviewSlotSelected &&
+              'cursor-pointer',
+            (!hasBrands || brandStatus !== BrandStatusEnum.PRE_APPROVED_FOR_MEETING) &&
+              !isInterviewSlotSelected &&
+              'opacity-50',
             "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']"
           )}
         >
           <Calendar className={cn(isInterviewSlotSelected && 'text-primary', 'w-8 h-8 mb-3')} />
-          <h3 className='font-medium mb-1'>Chọn lịch phỏng vấn</h3>
+          <h3 className='font-medium mb-1'>Đặt lịch phỏng vấn</h3>
           {isInterviewSlotSelected ? (
             <p className='text-sm text-primary'>Hoàn thành!</p>
           ) : (
             <p className='text-sm text-muted-foreground'>
-              {hasBrands ? 'Vui lòng chọn lịch phỏng vấn' : 'Đăng ký thương hiệu trước'}
+              {hasBrands && brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING
+                ? 'Vui lòng chọn lịch phỏng vấn'
+                : 'Chờ xét duyệt hồ sơ'}
             </p>
           )}
         </Card>
+
+        {/* Step 6: Registration complete */}
         <Card
           className={cn(
-            isBrandVerify && 'bg-primary/10 after:border-primary',
-            !hasBrands && 'opacity-50',
-            "shadow-sm after:-right-4 after:absolute after:top-1/2 p-4 relative z-10 after:inline-block after:h-0 after:w-4 after:content-['']"
+            isRegistrationComplete && 'bg-primary/10',
+            !isInterviewSlotSelected && 'opacity-50',
+            'shadow-sm p-4 relative z-10'
           )}
         >
-          <CircleCheckBig className={cn(isBrandVerify && 'text-primary', 'w-8 h-8 mb-3')} />
-          <h3 className='font-medium mb-1'>Kiểm duyệt hồ sơ đăng ký</h3>
-          {isBrandVerify ? (
+          <ThumbsUp className={cn(isRegistrationComplete && 'text-primary', 'w-8 h-8 mb-3')} />
+          <h3 className='font-medium mb-1'>Đăng ký thành công</h3>
+          {isRegistrationComplete ? (
             <p className='text-sm text-primary'>Hoàn thành!</p>
           ) : (
             <p className='text-sm text-muted-foreground'>
-              {hasBrands ? 'Xác thực thông tin thương hiệu' : 'Đăng ký thương hiệu trước'}
+              {isInterviewSlotSelected ? 'Chờ xác nhận' : 'Đặt lịch phỏng vấn trước'}
             </p>
           )}
         </Card>

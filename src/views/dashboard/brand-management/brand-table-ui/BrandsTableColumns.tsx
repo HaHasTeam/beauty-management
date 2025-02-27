@@ -176,21 +176,22 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {row.original.status !== BrandStatusEnum.BANNED && row.original.status !== BrandStatusEnum.PENDING && (
-                <DropdownMenuItem
-                  className='bg-red-500 text-white mb-2'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'ban' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <XIcon />
-                    ban
-                  </span>
-                </DropdownMenuItem>
-              )}
+              {row.original.status !== BrandStatusEnum.BANNED &&
+                row.original.status !== BrandStatusEnum.PENDING_REVIEW && (
+                  <DropdownMenuItem
+                    className='bg-red-500 text-white mb-2'
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'ban' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <XIcon />
+                      ban
+                    </span>
+                  </DropdownMenuItem>
+                )}
 
-              {row.original.status == BrandStatusEnum.PENDING && (
+              {row.original.status == BrandStatusEnum.PENDING_REVIEW && (
                 <>
                   <DropdownMenuItem
                     className='bg-green-500 text-white mb-2'

@@ -10,7 +10,7 @@ export function getStatusIcon(status: BrandStatusEnum) {
       textColor: 'text-green-500',
       bgColor: 'bg-green-100'
     },
-    [BrandStatusEnum.PENDING]: {
+    [BrandStatusEnum.PENDING_REVIEW]: {
       icon: CircleDashed,
       iconColor: 'text-yellow-500',
       textColor: 'text-yellow-500',
@@ -33,6 +33,18 @@ export function getStatusIcon(status: BrandStatusEnum) {
       iconColor: 'text-red-400',
       textColor: 'text-red-400',
       bgColor: 'bg-red-100'
+    },
+    [BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS]: {
+      icon: X,
+      iconColor: 'text-slate-400',
+      textColor: 'text-slate-400',
+      bgColor: 'bg-slate-100'
+    },
+    [BrandStatusEnum.PRE_APPROVED_FOR_MEETING]: {
+      icon: X,
+      iconColor: 'text-green-300',
+      textColor: 'text-green-300',
+      bgColor: 'bg-green-100'
     }
   }
   return statusIcons[status] || CircleIcon

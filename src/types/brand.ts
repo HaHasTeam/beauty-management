@@ -20,11 +20,13 @@ export type TBrand = TMetaData & {
 }
 
 export enum BrandStatusEnum {
-  PENDING = 'PENDING',
+  PENDING_REVIEW = 'PENDING_REVIEW', // chờ xét duyệt hồ sơ
+  NEED_ADDITIONAL_DOCUMENTS = 'NEED_ADDITIONAL_DOCUMENTS', // cần bổ sung hồ sơ
+  PRE_APPROVED_FOR_MEETING = 'PRE_APPROVED_FOR_MEETING', // Được chấp thuận hồ sơ trước khi xác nhận lại trong buổi meeting
+  DENIED = 'DENIED', // từ chối
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
-  BANNED = 'BANNED',
-  DENIED = 'DENIED'
+  BANNED = 'BANNED'
 }
 export enum StatusEnum {
   PENDING = 'PENDING',

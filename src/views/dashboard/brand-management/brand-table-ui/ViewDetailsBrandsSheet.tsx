@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import type { TBrand } from '@/types/brand'
+import { BrandStatusEnum, type TBrand } from '@/types/brand'
 
 interface ViewDetailsBrandsSheetProps extends React.ComponentPropsWithRef<typeof Dialog> {
   TBrand?: TBrand
@@ -57,7 +57,10 @@ export function ViewDetailsBrandsSheet({ TBrand, ...props }: ViewDetailsBrandsSh
               }
             >
               <div className='grid grid-cols-1 gap-2'>
-                <Badge variant={TBrand.status === 'PENDING' ? 'secondary' : 'default'} className='w-fit'>
+                <Badge
+                  variant={TBrand.status === BrandStatusEnum.PENDING_REVIEW ? 'secondary' : 'default'}
+                  className='w-fit'
+                >
                   {TBrand.status ?? 'UNKNOWN'}
                 </Badge>
                 <InfoItem icon={<Mail className='w-5 h-5 text-primary' />} label='Email' value={TBrand.email} />
