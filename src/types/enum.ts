@@ -177,3 +177,8 @@ export enum BookingStatusEnum {
   REFUNDED = 'REFUNDED',
   CANCELLED = 'CANCELLED'
 }
+
+export enum ProductQuantityWarningEnum {
+  SOLD_OUT = 'SOLD_OUT',
+  ALMOST_OUT = 'ALMOST_OUT'
+}

@@ -1,7 +1,10 @@
-import { Check, Package } from 'lucide-react'
+import { Check, Eye, Package } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ViewMediaDialog from '@/components/dialog/ViewMediaDialog'
 import { StatusTrackingIcon, StatusTrackingText } from '@/components/status-tracking-order/StatusTrackingOrder'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { CancelOrderRequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
 import { UserRoleEnum } from '@/types/role'
 import { IStatusTracking } from '@/types/status-tracking'
@@ -11,6 +14,7 @@ interface OrderStatusTrackingDetailProps {
 }
 const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDetailProps) => {
   const { t } = useTranslation()
+  const [openMedia, setOpenMedia] = useState<boolean>(false)
 
   const defaultTimeline = [
     {
@@ -19,13 +23,15 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
       text: t('order.created'),
       icon: <Package className='w-5 h-5' />,
       reason: '',
-      updatedBy: ''
+      updatedBy: '',
+      mediaFiles: []
     }
   ]
 
   const databaseTimeline = statusTrackingData.map((tracking) => ({
     status: tracking.status,
     createdAt: tracking.createdAt,
+    mediaFiles: tracking.mediaFiles,
     text: StatusTrackingText(tracking.status),
     icon: StatusTrackingIcon(tracking.status),
     reason: tracking.reason,
@@ -61,13 +67,29 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
               </div>
               <div className='flex flex-col'>
                 <div
-                  className={`text-sm font-medium ${currentIndex === index ? 'text-emerald-500' : 'text-muted-foreground'}`}
+                  className={`flex gap-1 items-center text-sm font-medium ${currentIndex === index ? 'text-emerald-500' : 'text-muted-foreground'}`}
                 >
                   {step.status === CancelOrderRequestStatusEnum.APPROVED
                     ? t('order.approvedCancelRequest')
                     : step.status === CancelOrderRequestStatusEnum.REJECTED
                       ? t('order.rejectedCancelRequest')
                       : StatusTrackingText(step.status)}
+                  {step.mediaFiles && step.mediaFiles.length > 0 && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Eye
+                            size={16}
+                            className='text-gray-500 hover:text-gray-800 cursor-pointer hover:bg-gray-100 transition-colors'
+                            onClick={() => setOpenMedia(true)}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t('media.viewMediaFiles')}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </div>
                 {(step.status === ShippingStatusEnum.CANCELLED ||
                   step.status === CancelOrderRequestStatusEnum.APPROVED ||
@@ -88,6 +110,9 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                 )}
               </div>
             </div>
+            {openMedia && (
+              <ViewMediaDialog mediaFiles={step.mediaFiles} open={openMedia} onOpenChange={() => setOpenMedia(false)} />
+            )}
           </div>
         ))}
       </div>

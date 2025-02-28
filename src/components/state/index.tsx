@@ -41,7 +41,9 @@ export default function State({ state, text, size = 'medium' }: StateProps) {
   }
 
   return (
-    <span className={`${sizeClasses[size]} cursor-default rounded-full font-medium ${tagColorClass}`}>
+    <span
+      className={`${sizeClasses[size]} cursor-default rounded-full font-medium line-clamp-1 overflow-ellipsis ${tagColorClass}`}
+    >
       {text ? text : t(`status.${state}`)}
     </span>
   )

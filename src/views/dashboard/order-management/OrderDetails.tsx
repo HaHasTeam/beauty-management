@@ -327,7 +327,8 @@ const OrderDetails = () => {
                 </div>
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
                   useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
-                  useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER) && (
+                  useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER ||
+                  useOrderData?.data?.status === ShippingStatusEnum.SHIPPING) && (
                   <div className='w-full'>
                     <Button
                       variant='outline'

@@ -15,6 +15,7 @@ import { IOrderItem } from '@/types/order'
 
 import Button from '../button'
 import { AlertDescription } from '../ui/alert'
+import { UploadOrderEvidenceDialog } from './UploadOrderEvidenceDialog'
 
 interface UpdateOrderStatusProps {
   order: IOrderItem
@@ -26,6 +27,7 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isOpenOrderEvidence, setIsOpenOrderEvidence] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
   const defaultOrderValues = {
@@ -228,11 +230,9 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
           </div>
         </div>
         <div className='flex gap-2 items-center'>
-          {config.nextStatus && config.nextStatus !== '' && (
+          {order.status === ShippingStatusEnum.TO_SHIP && (
             <Button
-              onClick={() => {
-                handleUpdateStatus({ status: config.nextStatus })
-              }}
+              onClick={() => setIsOpenOrderEvidence(true)}
               loading={isLoading}
               className={`${config.buttonBg} flex gap-2`}
             >
@@ -240,6 +240,31 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
               <CircleChevronRight />
             </Button>
           )}
+          {order.status === ShippingStatusEnum.SHIPPING && (
+            <Button
+              onClick={() => setIsOpenOrderEvidence(true)}
+              loading={isLoading}
+              className={`${config.buttonBg} flex gap-2`}
+            >
+              {config.buttonText}
+              <CircleChevronRight />
+            </Button>
+          )}
+          {config.nextStatus &&
+            config.nextStatus !== '' &&
+            order.status !== ShippingStatusEnum.TO_SHIP &&
+            order.status !== ShippingStatusEnum.SHIPPING && (
+              <Button
+                onClick={() => {
+                  handleUpdateStatus({ status: config.nextStatus })
+                }}
+                loading={isLoading}
+                className={`${config.buttonBg} flex gap-2`}
+              >
+                {config.buttonText}
+                <CircleChevronRight />
+              </Button>
+            )}
           {(order?.status === ShippingStatusEnum.TO_PAY ||
             order?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
             order?.status === ShippingStatusEnum.PREPARING_ORDER) && (
@@ -255,6 +280,22 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
           )}
         </div>
       </div>
+      <UploadOrderEvidenceDialog
+        isOpen={isOpenOrderEvidence}
+        onClose={() => setIsOpenOrderEvidence(false)}
+        order={order}
+        dialogTitle={t(`orderEvidence.${ShippingStatusEnum.TO_SHIP}`)}
+        dialogDescription={t(`orderEvidence.description.${ShippingStatusEnum.TO_SHIP}`)}
+        status={config.nextStatus}
+      />
+      <UploadOrderEvidenceDialog
+        isOpen={isOpenOrderEvidence}
+        onClose={() => setIsOpenOrderEvidence(false)}
+        order={order}
+        dialogTitle={t(`orderEvidence.${ShippingStatusEnum.SHIPPING}`)}
+        dialogDescription={t(`orderEvidence.description.${ShippingStatusEnum.SHIPPING}`)}
+        status={config.nextStatus}
+      />
     </div>
   )
 }

@@ -642,7 +642,9 @@
     "orderCancellationUpdate": "Order cancellation updated successfully!",
     "approvedCancelRequest": "Cancellation approved. Order is now canceled.",
     "rejectedCancelRequest": "Cancellation rejected. Order will proceed.",
-    "rejectedCancelRequestTitle": "Cancellation Rejected"
+    "rejectedCancelRequestTitle": "Cancellation Rejected",
+    "received": "Received",
+    "receivedOrderStatusSuccess": "Successfully confirmed order receipt!"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -758,7 +760,8 @@
     "successUpdateInactiveMessage": "Product updated successfully! It is currently inactive and will not be visible until activated.",
     "successStatusMessage": "Update product status successfully!",
     "categoryLastLevel": "Please select the last-level category.",
-    "certificateRequired": "Product certificate is required."
+    "certificateRequired": "Product certificate is required.",
+    "totalQuantityTooLow": "The total quantity is too low. Please increase the quantity to meet the required minimum ({{count}})."
   },
   "createProduct": {
     "successOfficial": "Product created successfully!",
@@ -836,11 +839,15 @@
       "INACTIVE": "The product is currently unavailable for purchase and not visible to customers.",
       "PRE_ORDER": "The product is not yet released or out of stock but can be ordered in advance.",
       "OFFICIAL": "The product is an officially verified item from the brand or manufacturer and has been reviewed by the platform moderator.",
-      "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock."
+      "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock.",
+      "SOLD_OUT": "This product is currently out of stock. Restock now so customers can continue purchasing!",
+      "ALMOST_OUT": "Running low on stock—restock soon!"
     },
     "brandInformation": "Brand Information",
     "noCertificates": "No Certificate",
-    "file": "File"
+    "file": "File",
+    "restockNow": "Restock now",
+    "updateProductClassificationQuantitySuccess": "Product quantity have been successfully updated!"
   },
   "status": {
     "ACTIVE": "Active",
@@ -852,7 +859,9 @@
     "PENDING": "Pending",
     "PRE_ORDER": "Pre-Order",
     "OFFICIAL": "Official",
-    "OUT_OF_STOCK": "Out of stock"
+    "OUT_OF_STOCK": "Out of stock",
+    "SOLD_OUT": "Out of stock",
+    "ALMOST_OUT": "Almost out of stock"
   },
   "systemService": {
     "generalInformation": "General Information",
@@ -897,5 +906,51 @@
     "selectResultSheet": "Select result sheet",
     "preview": "Preview",
     "alsoUsedFor": "This result sheet also used for the following system services"
+  },
+  "feedback": {
+    "successTitle": "Review submitted successfully!",
+    "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "content": "Share Your Experiences",
+    "contentPlaceholder": "Enter your message here...",
+    "mediaFiles": "Upload video and images",
+    "mediaFilesHint": "You can upload up to {{videoCount}} video(s) and {{imageCount}} image(s), ensuring the total file size does not exceed {{size}}MB. \nSupports the following formats: {{format}}.",
+    "imagesHint": {
+      "TO_SHIP": "Show order contents, packaging, shipping label.",
+      "SHIPPING": "Provide proof of handing the package to the shipping carrier.",
+      "DELIVERED": "Show outer package, product inside, any visible damage (if any).",
+      "RETURNING": "Provide evidence of the return process.",
+      "REFUNDED": "Upload proof of return completion and refund."
+    },
+    "videosHint": {
+      "TO_SHIP": "A 360° view of the package to confirm it’s properly sealed.",
+      "SHIPPING": "Record handover moment or a short clip of the sealed package before shipping.",
+      "DELIVERED": "Unboxing video to capture package condition & item accuracy.",
+      "RETURNING": "Record defect/missing parts/issues clearly for verification.",
+      "REFUNDED": "Upload video of return completion and refund."
+    },
+    "uploadVideos": "Upload videos",
+    "uploadImages": "Upload images"
+  },
+  "media": {
+    "previewImage": "Preview Image/Video",
+    "viewMediaFiles": "View videos/images",
+    "images": "Images",
+    "videos": "Videos"
+  },
+  "orderEvidence": {
+    "description": {
+      "TO_SHIP": "Please upload images or videos of the packaged order before shipping. This helps ensure accurate order fulfillment and reduce disputes.",
+      "SHIPPING": "Upload images or videos of the package as it is handed over to the shipping carrier. This helps track the shipment condition and prevent delivery issues.",
+      "DELIVERED": "Please upload images or videos of the received package if necessary. This helps confirm the product condition and support dispute resolution if needed.",
+      "RETURNING": "Upload images or videos showing the returned product’s condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
+      "REFUNDED": "Please upload images or videos confirming the successful return and refund process. This ensures proper documentation and avoids misunderstandings."
+    },
+    "TO_SHIP": "Upload Proof of Handover to Carrier",
+    "SHIPPING": "Upload Images & Videos for Order Preparation",
+    "DELIVERED": "Upload Delivery Confirmation",
+    "RETURNING": "Upload Return Request Evidence",
+    "REFUNDED": "Upload Refund Completion Proof"
   }
 }
