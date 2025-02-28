@@ -10,7 +10,31 @@
     "shoppingCart": "Giỏ hàng",
     "notification": "Thông báo"
   },
-  "profile": {},
+  "profile": {
+    "myProfile": "Hồ Sơ Của Tôi",
+    "profileDescription": "Quản lý thông tin hồ sơ để bảo mật tài khoản",
+    "username": "Tên đăng nhập",
+    "usernamePlaceholder": "Nhập tên đăng nhập của bạn",
+    "usernameNote": "Tên đăng nhập chỉ có thể thay đổi một lần",
+    "name": "Tên",
+    "namePlaceholder": "Nhập tên của bạn",
+    "email": "Email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "phone": "Số điện thoại",
+    "phonePlaceholder": "Nhập số điện thoại của bạn",
+    "change": "Thay Đổi",
+    "gender": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "birthday": "Ngày sinh",
+    "birthdayPlaceholder": "Nhập ngày sinh của bạn",
+    "save": "Lưu",
+    "avatar": "Ảnh đại diện",
+    "chooseImage": "Chọn Ảnh",
+    "fileSizeLimit": "Dung lượng file tối đa 1 MB",
+    "fileFormat": "Định dạng: .JPEG, .PNG"
+  },
   "home": {
     "consultantTitle": "Tư vấn sắc đẹp",
     "standardConsultantTitle": "Tư vấn tiêu chuẩn",
@@ -39,7 +63,9 @@
     "groupBuying": "Mua nhóm",
     "hidden": "Đã ẩn",
     "outOfStock": "Hết hàng",
-    "waiting": "Sắp diễn ra"
+    "waiting": "Sắp diễn ra",
+    "cancelled": "Đã hủy",
+    "inactive": "Đã ẩn"
   },
   "statusTag": {
     "default": "Mặc định"
@@ -81,7 +107,8 @@
     "submitAndHide": "Gửi và ẩn sản phẩm",
     "deselect": "Bỏ chọn",
     "select": "Chọn",
-    "edit": "Chỉnh sửa"
+    "edit": "Chỉnh sửa",
+    "backToList": "Quay lại danh sách"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -240,6 +267,11 @@
       "title": "Không tìm thấy sản phẩm",
       "description": "Sản phẩm bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
       "button": "Xem các sản phẩm khác"
+    },
+    "systemServiceDetail": {
+      "title": "Không tìm thấy dịch vụ hệ thống",
+      "description": "Dịch vụ hệ thống bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
+      "button": "Xem các dịch vụ hệ thống khác"
     }
   },
   "productDetail": {
@@ -539,9 +571,9 @@
     "loading": "Đang tải đơn hàng...",
     "viewDetail": "Xem chi tiết",
     "buyAgain": "Mua lại",
-    "totalPrice": "{{price, currency}}",
     "classification": "Phân loại",
     "all": "Tất cả",
+    "totalPrice": "{{price, currency}}",
     "created": "Đơn Hàng Đã Tạo",
     "pending": "Chờ Thanh Toán",
     "waitConfirm": "Chờ Xác Nhận",
@@ -719,7 +751,20 @@
     "stringOrArrayRequired": "Trường này phải là một chuỗi hoặc một mảng",
     "sizeFileValid": "Mỗi tệp phải nhỏ hơn {{size}}MB.",
     "fileFormat": "Các định dạng tệp được chấp nhận là",
-    "fileCountValid": "Bạn có thể tải lên tối đa {{count}} tệp"
+    "fileCountValid": "Bạn có thể tải lên tối đa {{count}} tệp",
+    "tooLong": "Tin nhắn quá dài.",
+    "ratingFeedback": "Vui lòng chọn điểm đánh giá từ 1 đến 5",
+    "contentFeedback": "Nội dung đánh giá phải có ít nhất 25 ký tự và không quá 500 ký tự",
+    "maxImagesExceeded": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
+    "maxVideosExceeded": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
+    "inputMedia": "Vui lòng tải lên ít nhất một hình ảnh hoặc video.",
+    "imageCount": "Bạn đã chọn {{count}} hình ảnh.",
+    "videoCount": "Bạn đã chọn {{count}} video.",
+    "files": "Tệp phải có định dạng được hỗ trợ và trong giới hạn kích thước cho phép.",
+    "videoBrowser": "Trình duyệt của bạn không hỗ trợ video.",
+    "fileTypeLimits": "Bạn có thể tải lên tối đa {{imageCount}} hình ảnh và {{videoCount}} video.",
+    "maxImages": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
+    "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video."
   },
   "role": {
     "ADMIN": "Quản trị viên",
@@ -840,7 +885,7 @@
     },
     "brandInformation": "Thông Tin Thương Hiệu",
     "noCertificates": "Không có chứng nhận",
-    "file": "Tệp tin"
+    "file": "Tệp tin"
   },
   "status": {
     "ACTIVE": "Đang hoạt động",
@@ -851,12 +896,12 @@
     "BAN": "Bị cấm",
     "PENDING": "Đang chờ duyệt",
     "PRE_ORDER": "Đặt trước",
-    "OFFICIAL": "Chính hãng",
+    "OFFICIAL": "Chính thức",
     "OUT_OF_STOCK": "Hết hàng"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",
-    "resultSheetInformation": "Thông Tin Bảng Kết Quả",
+    "resultSheetInformation": "Tiêu Chí Tư Vấn",
     "name": "Tên Dịch Vụ",
     "description": "Mô Tả",
     "category": "Danh Mục",
@@ -872,7 +917,7 @@
     "enterServiceDescription": "Nhập mô tả dịch vụ",
     "selectServiceCategory": "Chọn danh mục dịch vụ",
     "enterSectionName": "Nhập tên mục",
-    "enterResultSheetTitle": "Nhập tiêu đề bảng kết quả",
+    "enterResultSheetTitle": "Nhập tiêu đề tiêu chí tư vấn",
     "enterSectionDescription": "Nhập mô tả mục",
     "createSuccessMessage": "Tạo dịch vụ thành công!",
     "status": "Trạng thái",
@@ -885,17 +930,83 @@
     "standardOrPremiumRequired": "Vui lòng chọn loại tiêu chuẩn hoặc cao cấp.",
     "sectionNameRequired": "Tên mục là bắt buộc.",
     "sectionsRequired": "Vui lòng thêm ít nhất một mục.",
-    "resultSheetTitleRequired": "Tiêu đề bảng kết quả là bắt buộc.",
+    "resultSheetTitleRequired": "Tiêu đề tiêu chí tư vấn là bắt buộc.",
     "orderIndexRequired": "Chỉ số thứ tự là bắt buộc.",
     "sectionDescriptionRequired": "Mô tả mục là bắt buộc.",
-    "resultSheetSectionsRequired": "Các mục bảng kết quả là bắt buộc.",
+    "resultSheetSectionsRequired": "Các mục tiêu chí tư vấn là bắt buộc.",
     "section": "Mục",
     "updateSuccessMessage": "Thay đổi dịch vụ thành công!",
-    "eitherResultSheetOrDataRequired": "Vui lòng chọn một bảng kết quả hiện có hoặc tạo bảng mới.",
-    "createNew": "Tạo bảng kết quả mới",
-    "selectOrCreateNew": "Chọn một bảng kết quả hiện có hoặc tạo bảng mới",
-    "selectResultSheet": "Chọn bảng kết quả",
+    "eitherResultSheetOrDataRequired": "Vui lòng chọn một tiêu chí tư vấn hiện có hoặc tạo bảng mới.",
+    "createNew": "Tạo tiêu chí tư vấn mới",
+    "selectOrCreateNew": "Chọn một tiêu chí tư vấn hiện có hoặc tạo bảng mới",
+    "selectResultSheet": "Chọn tiêu chí tư vấn",
     "preview": "Xem trước",
-    "alsoUsedFor": "Bảng kết quả này cũng được áp dụng cho các dịch vụ sau của hệ thống"
+    "alsoUsedFor": "Tiêu chí tư vấn này cũng được áp dụng cho các dịch vụ sau của hệ thống",
+    "updateResultSheet": "Cập Nhật Tiêu Chí Tư Vấn",
+    "updateResultSheetSuccess": "Cập nhật tiêu chí tư vấn thành công!",
+    "deleteSectionSuccess": "Xóa mục tiêu chí tư vấn thành công!",
+    "createdAt": "Ngày tạo",
+    "lastUpdated": "Cập nhật lần cuối",
+    "updateSystemServiceStatusSuccess": "Cập nhật trạng thái dịch vụ hệ thống thành công!",
+    "statusDescription": {
+      "ACTIVE": "Dịch vụ hệ thống hiện đang hiển thị trong hệ thống và tư vấn viên có thể đăng ký.",
+      "INACTIVE": "Dịch vụ hệ thống hiện đang ẩn trong hệ thống và tư vấn viên không thể đăng ký."
+    },
+    "consultantCriteriaDetails": "Chi Tiết Tiêu Chí Tư Vấn",
+    "ID": "ID",
+    "applicableServices": "Dịch vụ áp dụng",
+    "files": "tệp tin"
+  },
+  "layout": {
+    "help": "TRỢ GIÚP",
+    "contactUs": "Liên hệ chúng tôi",
+    "faq": "Câu hỏi thường gặp",
+    "shippingReturns": "Vận chuyển & Trả hàng",
+    "myAccount": "TÀI KHOẢN CỦA TÔI",
+    "addresses": "Địa chỉ",
+    "orders": "Đơn hàng",
+    "vouchers": "Mã giảm giá",
+    "customerCare": "CHĂM SÓC KHÁCH HÀNG",
+    "aboutUs": "Về chúng tôi",
+    "blog": "Blog",
+    "privacyPolicy": "Chính sách quyền riêng tư",
+    "termsAndConditions": "Điều khoản & Điều kiện"
+  },
+  "contact": {
+    "contactUs": "Liên Hệ",
+    "getInTouch": "Liên Hệ Với Chúng Tôi",
+    "description": "Chúng tôi ở đây để giúp đỡ! Cho dù bạn có câu hỏi về dịch vụ tư vấn làm đẹp, cần hỗ trợ đơn hàng hay muốn tham gia nền tảng của chúng tôi với tư cách là chuyên gia làm đẹp, đội ngũ của chúng tôi sẵn sàng hỗ trợ.",
+    "location": "Địa Điểm Của Chúng Tôi",
+    "address": "99 S.t Jomblo Park Pekanbaru 28292, Indonesia",
+    "phone": "Số Điện Thoại",
+    "phoneNumber": "(+62)81 414 257 9980",
+    "email": "Địa Chỉ Email",
+    "emailAddress": "info@yourdomain.com",
+    "yourInformation": "Thông Tin Của Bạn",
+    "fullName": "Họ Và Tên",
+    "fullNamePlaceholder": "Nhập Họ Và Tên",
+    "emailPlaceholder": "Nhập Email",
+    "phonePlaceholder": "Nhập Số Điện Thoại",
+    "message": "Tin Nhắn Của Bạn",
+    "messagePlaceholder": "Nhập Tin Nhắn",
+    "sendMessage": "Gửi Tin Nhắn",
+    "sendSuccess": "Gửi tin nhắn thành công!"
+  },
+  "systemServiceType": {
+    "PREMIUM": "Cao cấp",
+    "STANDARD": "Tiêu chuẩn"
+  },
+  "feedback": {
+    "successTitle": "Gửi đánh giá thành công",
+    "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "content": "Share Your Experiences",
+    "contentPlaceholder": "Enter your message here...",
+    "mediaFiles": "Upload video and images",
+    "mediaFilesHint": "Upload maximum 1 video and 4 images"
+  },
+  "media": {
+    "previewImage": "Xem trước hình ảnh/video"
   }
 }

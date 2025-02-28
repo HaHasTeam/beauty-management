@@ -10,13 +10,17 @@ const ResultSheetSection = ({ resultSheetSection }: ResultSheetSectionProps) => 
 
   if (!resultSheetSection) return null
   return (
-    <div className='text-base'>
-      <div className='flex items-center gap-1 font-medium'>
-        {resultSheetSection.mandatory && <span className='text-destructive'>*</span>}
-        {t('systemService.section')} {resultSheetSection.orderIndex}
-        {':'} {resultSheetSection.section}
+    <div className='flex items-start gap-2'>
+      <div className='bg-primary/80 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1'>
+        {resultSheetSection.orderIndex}
       </div>
-      <p className='text-muted-foreground'>{resultSheetSection.description}</p>
+      <div className='flex-1'>
+        <h4 className='font-medium text-gray-800'>{resultSheetSection.section}</h4>
+        <p className='text-gray-600 mt-1'>{resultSheetSection.description}</p>
+        {resultSheetSection.mandatory && (
+          <span className='text-xs text-red-600 mt-1 block'>* {t('systemService.required')}</span>
+        )}
+      </div>
     </div>
   )
 }

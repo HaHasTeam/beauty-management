@@ -13,6 +13,7 @@ export const getSystemServiceSchema = () => {
 
   const resultSheetDataSchema = z
     .object({
+      id: z.string().optional(),
       title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
       resultSheetSections: z
         .array(ResultSheetSectionSchema)
@@ -41,6 +42,12 @@ export const getSystemServiceSchema = () => {
         path: ['resultSheetData']
       }
     )
+}
+
+export const getUpdateSystemServiceStatusSchema = () => {
+  return z.object({
+    status: z.string().min(1, i18next.t('validation.statusRequired'))
+  })
 }
 
 export const SystemServiceSchema = getSystemServiceSchema()

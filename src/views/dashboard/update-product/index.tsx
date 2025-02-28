@@ -550,11 +550,17 @@ const UpdateProduct = () => {
                   <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
                     {t('button.submitAndShow')}
                   </Button>
-                  <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
+                  <Button
+                    variant='outline'
+                    type='submit'
+                    className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
+                    onClick={() => form.setValue('status', ProductEnum.INACTIVE)}
+                  >
                     {t('button.submitAndHide')}
                   </Button>
                   <Button
                     variant='outline'
+                    className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
                     type='submit'
                     onClick={() => {
                       handleReset()

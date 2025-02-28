@@ -44,7 +44,7 @@ const CreateProduct = () => {
 
   const defaultProductValues = {
     name: '',
-    brand: 'd84d8d78-d48d-41eb-ab19-dbacea083415',
+    brand: '',
     category: '',
     images: [],
     certificate: [],
@@ -220,11 +220,17 @@ const CreateProduct = () => {
                 <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
                   {t('button.submitAndShow')}
                 </Button>
-                <Button variant='outline' type='submit' onClick={() => form.setValue('status', ProductEnum.INACTIVE)}>
+                <Button
+                  variant='outline'
+                  className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
+                  type='submit'
+                  onClick={() => form.setValue('status', ProductEnum.INACTIVE)}
+                >
                   {t('button.submitAndHide')}
                 </Button>
                 <Button
                   variant='outline'
+                  className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
                   type='submit'
                   onClick={() => {
                     handleReset()

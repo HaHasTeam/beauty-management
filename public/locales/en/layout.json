@@ -10,7 +10,31 @@
     "shoppingCart": "Shopping Cart",
     "notification": "Notifications"
   },
-  "profile": {},
+  "profile": {
+    "myProfile": "My Profile",
+    "profileDescription": "Manage your profile information to secure your account",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "usernameNote": "Username can only be changed once",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "change": "Change",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "birthday": "Date of Birth",
+    "birthdayPlaceholder": "Enter your date of birth",
+    "save": "Save",
+    "avatar": "Avatar",
+    "chooseImage": "Choose Image",
+    "fileSizeLimit": "Max file size: 1 MB",
+    "fileFormat": "Format: .JPEG, .PNG"
+  },
   "home": {
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
@@ -39,7 +63,9 @@
     "groupBuying": "Group Buying",
     "hidden": "Hidden",
     "outOfStock": "Sold old",
-    "waiting": "Upcoming"
+    "waiting": "Upcoming",
+    "cancelled": "Cancelled",
+    "inactive": "Inactive"
   },
   "statusTag": {
     "default": "Default"
@@ -81,7 +107,8 @@
     "submitAndHide": "Submit and Hide",
     "deselect": "Deselect",
     "select": "Select",
-    "edit": "Edit"
+    "edit": "Edit",
+    "backToList": "Back to List"
   },
   "noData": "No matching data found",
   "sell": {
@@ -239,7 +266,12 @@
     "productDetail": {
       "title": "Product Not Found",
       "description": "The product you're looking for either does not exist, has been removed, or is currently unavailable.",
-      "button": "Browse Other Products"
+      "button": "Browse Other Product"
+    },
+    "systemServiceDetail": {
+      "title": "System Service Not Found",
+      "description": "The system service you're looking for either does not exist, has been removed, or is currently unavailable.",
+      "button": "Browse Other System Service"
     }
   },
   "productDetail": {
@@ -719,7 +751,20 @@
     "stringOrArrayRequired": "Field value must be a string or an array",
     "sizeFileValid": "Each file must be under {{size}}MB.",
     "fileFormat": "Accepted file formats are",
-    "fileCountValid": "You can upload up to {{count}} files"
+    "fileCountValid": "You can upload up to {{count}} files",
+    "tooLong": "Message too long.",
+    "ratingFeedback": "The rating must be between 1 and 5",
+    "contentFeedback": "The feedback content must be at least 25 characters long but no more than 500 characters",
+    "maxImagesExceeded": "You can upload a maximum of {{count}} images.",
+    "maxVideosExceeded": "You can upload a maximum of {{count}} videos.",
+    "inputMedia": "Please upload at least one image or video.",
+    "imageCount": "You have selected {{count}} images.",
+    "videoCount": "You have selected {{count}} videos.",
+    "files": "Files must be in a supported format and within the allowed size limit.",
+    "videoBrowser": "Your browser does not support the video tag.",
+    "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
+    "maxImages": "You can only upload up to {{count}} images.",
+    "maxVideos": "You can only upload up to {{count}} videos."
   },
   "role": {
     "ADMIN": "Admin",
@@ -856,7 +901,7 @@
   },
   "systemService": {
     "generalInformation": "General Information",
-    "resultSheetInformation": "Result Sheet Information",
+    "resultSheetInformation": "Consultation Criteria",
     "name": "Service Name",
     "description": "Description",
     "category": "Category",
@@ -872,7 +917,7 @@
     "enterServiceDescription": "Enter service description",
     "selectServiceCategory": "Select service category",
     "enterSectionName": "Enter section name",
-    "enterResultSheetTitle": "Enter result sheet's title",
+    "enterResultSheetTitle": "Enter consultation criteria's title",
     "enterSectionDescription": "Enter section description",
     "createSuccessMessage": "Service created successfully!",
     "status": "Status",
@@ -885,17 +930,83 @@
     "standardOrPremiumRequired": "Please select a standard or premium type.",
     "sectionNameRequired": "Section name is required.",
     "sectionsRequired": "Please add at least one section.",
-    "resultSheetTitleRequired": "Result sheet title is required.",
+    "resultSheetTitleRequired": "Consultation criteria title is required.",
     "orderIndexRequired": "Order index is required.",
     "sectionDescriptionRequired": "Section description is required.",
-    "resultSheetSectionsRequired": "Result sheet sections is required.",
+    "resultSheetSectionsRequired": "Consultation criteria sections is required.",
     "section": "Section",
     "updateSuccessMessage": "Update system service successfully!",
-    "eitherResultSheetOrDataRequired": "Please select an existing result sheet or create a new one.",
-    "createNew": "Create new result sheet",
-    "selectOrCreateNew": "Select an existing result sheet or create a new one",
-    "selectResultSheet": "Select result sheet",
+    "eitherResultSheetOrDataRequired": "Please select an existing consultation criteria or create a new one.",
+    "createNew": "Create new consultation criteria",
+    "selectOrCreateNew": "Select an existing consultation criteria or create a new one",
+    "selectResultSheet": "Select consultation criteria",
     "preview": "Preview",
-    "alsoUsedFor": "This result sheet also used for the following system services"
+    "alsoUsedFor": "This consultation criteria also used for the following system services",
+    "updateResultSheet": "Update Consultation Criteria",
+    "updateResultSheetSuccess": "Update consultation criteria successfully!",
+    "deleteSectionSuccess": "Delete consultant criteria section successfully!",
+    "createdAt": "Created At",
+    "lastUpdated": "Last updated",
+    "updateSystemServiceStatusSuccess": "Update system service status successfully!",
+    "statusDescription": {
+      "ACTIVE": "The system service is currently visible in the system, and consultants can register.",
+      "INACTIVE": "The system service is currently hidden from the system, and consultant registration is disabled."
+    },
+    "consultantCriteriaDetails": "Consultation Criteria Details",
+    "ID": "ID",
+    "applicableServices": "Applicable Services",
+    "files": "files"
+  },
+  "layout": {
+    "help": "HELP",
+    "contactUs": "Contact us",
+    "faq": "FAQ",
+    "shippingReturns": "Shipping & Returns",
+    "myAccount": "MY ACCOUNT",
+    "addresses": "Addresses",
+    "orders": "Orders",
+    "vouchers": "Vouchers",
+    "customerCare": "CUSTOMER CARE",
+    "aboutUs": "About us",
+    "blog": "Blog",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms And Conditions"
+  },
+  "contact": {
+    "contactUs": "Contact Us",
+    "getInTouch": "Get In Touch With Us",
+    "description": "We're here to help! Whether you have questions about our beauty consulting services, need support with an order, or are interested in joining our platform as a beauty consultant, our team is ready to assist.",
+    "location": "Our Location",
+    "address": "99 S.t Jomblo Park Pekanbaru 28292, Indonesia",
+    "phone": "Phone Number",
+    "phoneNumber": "(+62)81 414 257 9980",
+    "email": "Email Address",
+    "emailAddress": "info@yourdomain.com",
+    "yourInformation": "Your Information",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your Full Name",
+    "emailPlaceholder": "Your Email",
+    "phonePlaceholder": "Your Phone",
+    "message": "Your Message",
+    "messagePlaceholder": "Your Message",
+    "sendMessage": "Send Message",
+    "sendSuccess": "Send message successfully!"
+  },
+  "systemServiceType": {
+    "PREMIUM": "Premium",
+    "STANDARD": "Standard"
+  },
+  "feedback": {
+    "successTitle": "Review submitted successfully!",
+    "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "content": "Share Your Experiences",
+    "contentPlaceholder": "Enter your message here...",
+    "mediaFiles": "Upload video and images",
+    "mediaFilesHint": "Upload maximum 1 video and 4 images"
+  },
+  "media": {
+    "previewImage": "Preview Image/Video"
   }
 }
