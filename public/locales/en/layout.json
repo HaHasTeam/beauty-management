@@ -937,7 +937,9 @@
     "previewImage": "Preview Image/Video",
     "viewMediaFiles": "View videos/images",
     "images": "Images",
-    "videos": "Videos"
+    "imagesFile": "images",
+    "videos": "Videos",
+    "videosFile": "videos"
   },
   "orderEvidence": {
     "description": {

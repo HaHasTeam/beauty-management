@@ -937,7 +937,9 @@
     "previewImage": "Xem trước hình ảnh/video",
     "viewMediaFiles": "Xem video/hình ảnh",
     "images": "Hình Ảnh",
-    "videos": "Videos"
+    "imagesFile": "hình ảnh",
+    "videos": "Videos",
+    "videosFile": "video"
   },
   "orderEvidence": {
     "description": {
