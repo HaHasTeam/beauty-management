@@ -44,7 +44,7 @@ const CreateProduct = () => {
 
   const defaultProductValues = {
     name: '',
-    brand: 'd84d8d78-d48d-41eb-ab19-dbacea083415',
+    brand: '',
     category: '',
     images: [],
     certificate: [],

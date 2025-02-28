@@ -752,7 +752,19 @@
     "sizeFileValid": "Each file must be under {{size}}MB.",
     "fileFormat": "Accepted file formats are",
     "fileCountValid": "You can upload up to {{count}} files",
-    "tooLong": "Message too long."
+    "tooLong": "Message too long.",
+    "ratingFeedback": "The rating must be between 1 and 5",
+    "contentFeedback": "The feedback content must be at least 25 characters long but no more than 500 characters",
+    "maxImagesExceeded": "You can upload a maximum of {{count}} images.",
+    "maxVideosExceeded": "You can upload a maximum of {{count}} videos.",
+    "inputMedia": "Please upload at least one image or video.",
+    "imageCount": "You have selected {{count}} images.",
+    "videoCount": "You have selected {{count}} videos.",
+    "files": "Files must be in a supported format and within the allowed size limit.",
+    "videoBrowser": "Your browser does not support the video tag.",
+    "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
+    "maxImages": "You can only upload up to {{count}} images.",
+    "maxVideos": "You can only upload up to {{count}} videos."
   },
   "role": {
     "ADMIN": "Admin",
@@ -942,7 +954,8 @@
     },
     "consultantCriteriaDetails": "Consultation Criteria Details",
     "ID": "ID",
-    "applicableServices": "Applicable Services"
+    "applicableServices": "Applicable Services",
+    "files": "files"
   },
   "layout": {
     "help": "HELP",
@@ -982,5 +995,18 @@
   "systemServiceType": {
     "PREMIUM": "Premium",
     "STANDARD": "Standard"
+  },
+  "feedback": {
+    "successTitle": "Review submitted successfully!",
+    "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "content": "Share Your Experiences",
+    "contentPlaceholder": "Enter your message here...",
+    "mediaFiles": "Upload video and images",
+    "mediaFilesHint": "Upload maximum 1 video and 4 images"
+  },
+  "media": {
+    "previewImage": "Preview Image/Video"
   }
 }

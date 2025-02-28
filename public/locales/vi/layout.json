@@ -752,7 +752,19 @@
     "sizeFileValid": "Mỗi tệp phải nhỏ hơn {{size}}MB.",
     "fileFormat": "Các định dạng tệp được chấp nhận là",
     "fileCountValid": "Bạn có thể tải lên tối đa {{count}} tệp",
-    "tooLong": "Tin nhắn quá dài."
+    "tooLong": "Tin nhắn quá dài.",
+    "ratingFeedback": "Vui lòng chọn điểm đánh giá từ 1 đến 5",
+    "contentFeedback": "Nội dung đánh giá phải có ít nhất 25 ký tự và không quá 500 ký tự",
+    "maxImagesExceeded": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
+    "maxVideosExceeded": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
+    "inputMedia": "Vui lòng tải lên ít nhất một hình ảnh hoặc video.",
+    "imageCount": "Bạn đã chọn {{count}} hình ảnh.",
+    "videoCount": "Bạn đã chọn {{count}} video.",
+    "files": "Tệp phải có định dạng được hỗ trợ và trong giới hạn kích thước cho phép.",
+    "videoBrowser": "Trình duyệt của bạn không hỗ trợ video.",
+    "fileTypeLimits": "Bạn có thể tải lên tối đa {{imageCount}} hình ảnh và {{videoCount}} video.",
+    "maxImages": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
+    "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video."
   },
   "role": {
     "ADMIN": "Quản trị viên",
@@ -942,7 +954,8 @@
     },
     "consultantCriteriaDetails": "Chi Tiết Tiêu Chí Tư Vấn",
     "ID": "ID",
-    "applicableServices": "Dịch vụ áp dụng"
+    "applicableServices": "Dịch vụ áp dụng",
+    "files": "tệp tin"
   },
   "layout": {
     "help": "TRỢ GIÚP",
@@ -982,5 +995,18 @@
   "systemServiceType": {
     "PREMIUM": "Cao cấp",
     "STANDARD": "Tiêu chuẩn"
+  },
+  "feedback": {
+    "successTitle": "Gửi đánh giá thành công",
+    "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "content": "Share Your Experiences",
+    "contentPlaceholder": "Enter your message here...",
+    "mediaFiles": "Upload video and images",
+    "mediaFilesHint": "Upload maximum 1 video and 4 images"
+  },
+  "media": {
+    "previewImage": "Xem trước hình ảnh/video"
   }
 }
