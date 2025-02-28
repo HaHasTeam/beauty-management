@@ -3,6 +3,8 @@ import { ICreateSystemService, IResponseSystemService, ISystemService } from '@/
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
+import { UpdateSystemServiceParams } from './type'
+
 export const getAllSystemServiceApi = toQueryFetcher<void, TServerResponse<IResponseSystemService[]>>(
   'getAllSystemServiceApi',
   async () => {
@@ -13,7 +15,7 @@ export const getAllSystemServiceApi = toQueryFetcher<void, TServerResponse<IResp
 export const getSystemServiceByIdApi = toQueryFetcher<string, TServerResponse<IResponseSystemService>>(
   'getSystemServiceByIdApi',
   async (params) => {
-    return privateRequest(`/products/system-services/${params}`)
+    return privateRequest(`/system-services/get-by-id/${params}`)
   }
 )
 
@@ -27,14 +29,22 @@ export const createSystemServiceApi = toMutationFetcher<ICreateSystemService, TS
   }
 )
 
-type UpdateSystemServiceParams = { params: string; data: ISystemService }
-
 export const updateSystemServiceApi = toMutationFetcher<UpdateSystemServiceParams, TServerResponse<ISystemService>>(
   'updateSystemServiceApi',
   async ({ params, data }: UpdateSystemServiceParams) => {
     return privateRequest(`/system-services/${params}`, {
       method: 'PUT',
       data
+    })
+  }
+)
+
+export const updateSystemServiceStatusApi = toMutationFetcher<{ id: string; status: string }, TServerResponse<string>>(
+  'updateSystemServiceStatusApi',
+  async ({ id, status }) => {
+    return privateRequest(`/system-services/update-status/${id}`, {
+      method: 'PUT',
+      data: { status: status }
     })
   }
 )
