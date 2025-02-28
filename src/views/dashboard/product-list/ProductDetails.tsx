@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Info, List, Pencil, Store } from 'lucide-react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
@@ -10,6 +11,7 @@ import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import BasicInformationDetails from '@/components/product/BasicInformationDetails'
 import ClassificationDetails from '@/components/product/ClassificationDetails'
 import ProductDetailInfoSection from '@/components/product/ProductDetailInfoSection'
+import UpdateProductQuantity from '@/components/product/UpdateProductQuantity'
 import UpdateProductStatus from '@/components/product/UpdateProductStatus'
 import SectionCollapsable from '@/components/section-collapsable'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -18,6 +20,8 @@ import { useStore } from '@/stores/store'
 import { RoleEnum } from '@/types/enum'
 
 const ProductDetails = () => {
+  const PRODUCT_QUANTITY_WARNING = 15
+
   const { t } = useTranslation()
   const { id } = useParams()
   const { data: productData, isFetching: isGettingProduct } = useQuery({
@@ -36,6 +40,11 @@ const ProductDetails = () => {
       user: state.user
     }))
   )
+
+  const productQuantity = useMemo(() => {
+    return productData?.data?.productClassifications?.reduce((total, item) => total + (item.quantity || 0), 0) ?? 0
+  }, [productData])
+
   return (
     <>
       {isGettingProduct && <LoadingLayer />}
@@ -55,6 +64,11 @@ const ProductDetails = () => {
 
           {/* Update product status */}
           <UpdateProductStatus product={productData.data} />
+
+          {/* Update product quantity */}
+          {productQuantity <= PRODUCT_QUANTITY_WARNING && (
+            <UpdateProductQuantity product={productData.data} productQuantityWarning={PRODUCT_QUANTITY_WARNING} />
+          )}
 
           {/* Basic Information Section */}
           <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>

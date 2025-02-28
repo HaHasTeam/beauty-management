@@ -674,7 +674,9 @@
     "orderCancellationUpdate": "Cập nhật hủy đơn hàng thành công!",
     "approvedCancelRequest": "Yêu cầu hủy được chấp nhận. Đơn hàng đã bị hủy.",
     "rejectedCancelRequest": "Yêu cầu hủy bị từ chối. Đơn hàng tiếp tục xử lý.",
-    "rejectedCancelRequestTitle": "Yêu Cầu Hủy Bị Từ Chối"
+    "rejectedCancelRequestTitle": "Yêu Cầu Hủy Bị Từ Chối",
+    "received": "Đã nhận hàng",
+    "receivedOrderStatusSuccess": "Xác nhận nhận hàng thành công!"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -803,7 +805,8 @@
     "successUpdateInactiveMessage": "Cập nhật sản phẩm thành công! Sản phẩm hiện đang không hoạt động và sẽ không được hiển thị cho đến khi được kích hoạt.",
     "successStatusMessage": "Cập nhật trạng thái sản phẩm thành công!",
     "categoryLastLevel": "Vui lòng chọn danh mục cấp cuối.",
-    "certificateRequired": "Chứng nhận sản phẩm là bắt buộc."
+    "certificateRequired": "Chứng nhận sản phẩm là bắt buộc.",
+    "totalQuantityTooLow": "Tổng số lượng quá thấp. Vui lòng tăng số lượng để đáp ứng mức tối thiểu yêu cầu ({{count}})."
   },
   "createProduct": {
     "successOfficial": "Tạo sản phẩm thành công!",
@@ -881,11 +884,15 @@
       "INACTIVE": "Sản phẩm hiện không có sẵn để mua và không hiển thị với khách hàng.",
       "PRE_ORDER": "Sản phẩm chưa được phát hành nhưng có thể đặt trước.",
       "OFFICIAL": "Sản phẩm được xác nhận chính thức từ thương hiệu hoặc nhà sản xuất và được kiểm duyệt bởi kiểm duyệt viên của nền tảng.",
-      "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho."
+      "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho.",
+      "SOLD_OUT": "Sản phẩm đã hết hàng do không còn trong kho. Hãy bổ sung ngay để khách hàng có thể tiếp tục mua sắm!",
+      "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!"
     },
     "brandInformation": "Thông Tin Thương Hiệu",
     "noCertificates": "Không có chứng nhận",
-    "file": "Tệp tin"
+    "file": "Tệp tin",
+    "restockNow": "Bổ sung ngay",
+    "updateProductClassificationQuantitySuccess": "Cập nhật số lượng sản phẩm thành công!"
   },
   "status": {
     "ACTIVE": "Đang hoạt động",
@@ -897,7 +904,9 @@
     "PENDING": "Đang chờ duyệt",
     "PRE_ORDER": "Đặt trước",
     "OFFICIAL": "Chính thức",
-    "OUT_OF_STOCK": "Hết hàng"
+    "OUT_OF_STOCK": "Hết hàng",
+    "SOLD_OUT": "Hết hàng",
+    "ALMOST_OUT": "Sắp hết hàng"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",
@@ -999,14 +1008,49 @@
   "feedback": {
     "successTitle": "Gửi đánh giá thành công",
     "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
-    "writeReview": "Write a Review",
-    "rating": "Rating",
-    "content": "Share Your Experiences",
-    "contentPlaceholder": "Enter your message here...",
-    "mediaFiles": "Upload video and images",
-    "mediaFilesHint": "Upload maximum 1 video and 4 images"
+    "writeReview": "Viết đánh giá",
+    "rating": "Đánh giá",
+    "content": "Chia sẻ trải nghiệm của bạn",
+    "contentPlaceholder": "Nhập nội dung tại đây...",
+    "mediaFiles": "Tải lên video và hình ảnh",
+    "mediaFilesHint": "Bạn có thể tải lên tối đa {{videoCount}} video và {{imageCount}} hình ảnh, đảm bảo tổng dung lượng tệp không vượt quá {{size}}MB. \nHỗ trợ những định dạng sau: {{format}}.",
+    "imagesHint": {
+      "TO_SHIP": "Hiển thị nội dung đơn hàng, cách đóng gói, nhãn vận chuyển.",
+      "SHIPPING": "Cung cấp bằng chứng bàn giao kiện hàng cho đơn vị vận chuyển.",
+      "DELIVERED": "Hiển thị bao bì bên ngoài, sản phẩm bên trong, bất kỳ hư hại nào (nếu có).",
+      "RETURNING": "Cung cấp bằng chứng về quá trình hoàn trả.",
+      "REFUNDED": "Tải lên bằng chứng hoàn tất trả hàng và hoàn tiền."
+    },
+    "videosHint": {
+      "TO_SHIP": "Quay video 360° gói hàng để xác nhận được niêm phong đúng cách.",
+      "SHIPPING": "Quay lại khoảnh khắc bàn giao hoặc đoạn clip ngắn về kiện hàng đã niêm phong trước khi vận chuyển.",
+      "DELIVERED": "Video mở hộp để ghi lại tình trạng kiện hàng & độ chính xác của sản phẩm.",
+      "RETURNING": "Ghi lại rõ ràng lỗi, phần bị thiếu hoặc vấn đề để xác minh.",
+      "REFUNDED": "Tải lên video xác nhận hoàn tất trả hàng và hoàn tiền."
+    },
+    "uploadVideos": "Tải lên video",
+    "uploadImages": "Tải lên hình ảnh"
   },
   "media": {
-    "previewImage": "Xem trước hình ảnh/video"
+    "previewImage": "Xem trước hình ảnh/video",
+    "viewMediaFiles": "Xem video/hình ảnh",
+    "images": "Hình Ảnh",
+    "imagesFile": "hình ảnh",
+    "videos": "Videos",
+    "videosFile": "video"
+  },
+  "orderEvidence": {
+    "description": {
+      "TO_SHIP": "Vui lòng tải lên hình ảnh hoặc video của đơn hàng đã được đóng gói trước khi vận chuyển. Điều này giúp đảm bảo đơn hàng được xử lý chính xác và giảm tranh chấp.",
+      "SHIPPING": "Tải lên hình ảnh hoặc video về kiện hàng khi bàn giao cho đơn vị vận chuyển. Điều này giúp theo dõi tình trạng lô hàng và ngăn ngừa các vấn đề giao nhận.",
+      "DELIVERED": "Vui lòng tải lên hình ảnh hoặc video của kiện hàng đã nhận nếu cần. Điều này giúp xác nhận tình trạng sản phẩm và hỗ trợ giải quyết tranh chấp nếu có.",
+      "RETURNING": "Tải lên hình ảnh hoặc video thể hiện tình trạng sản phẩm hoàn trả và cách đóng gói. Điều này giúp đảm bảo quy trình hoàn trả suôn sẻ và xác minh điều kiện hoàn tiền.",
+      "REFUNDED": "Vui lòng tải lên hình ảnh hoặc video xác nhận quá trình hoàn trả và hoàn tiền thành công. Điều này giúp đảm bảo tài liệu đầy đủ và tránh hiểu lầm."
+    },
+    "TO_SHIP": "Tải lên bằng chứng bàn giao cho đơn vị vận chuyển",
+    "SHIPPING": "Tải lên hình ảnh & video chuẩn bị đơn hàng",
+    "DELIVERED": "Tải lên xác nhận giao hàng",
+    "RETURNING": "Tải lên bằng chứng yêu cầu hoàn trả",
+    "REFUNDED": "Tải lên bằng chứng hoàn tiền hoàn tất"
   }
 }
