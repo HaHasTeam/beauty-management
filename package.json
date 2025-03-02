@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsc && vite",
-    "build": "tsc && vite build --mode develop",
+    "build": "tsc && vite  --mode development build",
+    "build:production": "tsc && vite --mode production build",
+    "build:staging": "tsc && vite --mode staging build",
     "build:docker": "tsc && vite build --mode docker",
     "lint": "eslint . --max-warnings=0 --fix",
     "format": "prettier . --write",

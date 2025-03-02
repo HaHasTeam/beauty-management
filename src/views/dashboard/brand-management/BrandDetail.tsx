@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/useToast'
 import { getAllBrandsApi, getBrandByIdApi, requestCreateBrandApi, updateBrandByIdApi } from '@/network/apis/brand'
 import { uploadFilesApi } from '@/network/apis/file'
 import { brandCreateSchema } from '@/schemas'
-import { IBranch } from '@/types/Branch'
+import { IBranch2 } from '@/types/Branch'
 import { StatusEnum } from '@/types/brand'
 
 const BrandDetail = ({
@@ -30,7 +30,7 @@ const BrandDetail = ({
   brandData
 }: {
   form: UseFormReturn<z.infer<typeof brandCreateSchema>>
-  brandData?: IBranch
+  brandData?: IBranch2
 }) => {
   const queryClient = useQueryClient()
   const id = useId()

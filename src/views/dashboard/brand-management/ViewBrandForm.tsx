@@ -49,9 +49,11 @@ function ViewBrandForm() {
   useEffect(() => {
     async function convertBrandData() {
       if (brandData && brandId) {
+        const getFileUrl = (brandData.documents ?? []).map((item) => item.fileUrl)
+
         const brandImages = brandData.logo
-          ? await createFiles([brandData?.logo, ...brandData.documents])
-          : await createFiles(brandData.documents)
+          ? await createFiles([brandData?.logo, ...getFileUrl])
+          : await createFiles(getFileUrl)
         const formatData = {
           id: brandId,
           name: brandData.name,
