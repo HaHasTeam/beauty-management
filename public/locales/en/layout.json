@@ -857,8 +857,10 @@
     "other": "Other",
     "classification": "Classification",
     "addOption": "Add option",
+    "option": "Options",
+    "classificationTitleInformation": "Classification Attributes",
     "classificationEg": "e.g., Red etc.",
-    "inputPriceAndQuantity": "Set price and quantity",
+    "inputPriceAndQuantity": "Classification Details",
     "price": "Price",
     "quantity": "Quantity",
     "action": "Action",
@@ -906,7 +908,10 @@
     "OFFICIAL": "Official",
     "OUT_OF_STOCK": "Out of stock",
     "SOLD_OUT": "Out of stock",
-    "ALMOST_OUT": "Almost out of stock"
+    "ALMOST_OUT": "Almost out of stock",
+    "button_INACTIVE": "Inactive",
+    "button_ACTIVE": "Active",
+    "button_OFFICIAL": "Active"
   },
   "systemService": {
     "generalInformation": "General Information",
@@ -1052,5 +1057,13 @@
     "DELIVERED": "Upload Delivery Confirmation",
     "RETURNING": "Upload Return Request Evidence",
     "REFUNDED": "Upload Refund Completion Proof"
+  },
+  "confirm": {
+    "productClassification": {
+      "title": "Confirm Changes to Product Classification Attributes",
+      "description": "You are modifying important classification attributes such as color, size, or other factors. To ensure accurate inventory management, ordering, and order processing, the current classification will be deactivated. A new classification will be created with the updated attributes once you submit the form. Are you sure you want to proceed? You can cancel before submitting to retain the current classification. Note: This action cannot be undone after submission.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
   }
 }

@@ -857,8 +857,10 @@
     "other": "Khác",
     "classification": "Phân Loại",
     "addOption": "Thêm tùy chọn",
+    "option": "Tùy chọn",
+    "classificationTitleInformation": "Thuộc Tính Phân Loại",
     "classificationEg": "Ví dụ: Đỏ, v.v.",
-    "inputPriceAndQuantity": "Tùy Chọn Giá Và Số Lượng",
+    "inputPriceAndQuantity": "Chi Tiết Phân Loại Sản Phẩm",
     "price": "Giá",
     "quantity": "Số lượng",
     "action": "Thao tác",
@@ -896,17 +898,20 @@
   },
   "status": {
     "ACTIVE": "Đang hoạt động",
-    "INACTIVE": "Không hoạt động",
+    "INACTIVE": "Đang ẩn",
     "DRAFT": "Bản nháp",
     "PUBLIC": "Công khai",
     "DENIED": "Từ chối",
     "BAN": "Bị cấm",
     "PENDING": "Đang chờ duyệt",
     "PRE_ORDER": "Đặt trước",
-    "OFFICIAL": "Chính thức",
+    "OFFICIAL": "Đang hiển thị",
     "OUT_OF_STOCK": "Hết hàng",
     "SOLD_OUT": "Hết hàng",
-    "ALMOST_OUT": "Sắp hết hàng"
+    "ALMOST_OUT": "Sắp hết hàng",
+    "button_INACTIVE": "Ngừng hiển thị",
+    "button_ACTIVE": "Kích hoạt",
+    "button_OFFICIAL": "Kích hoạt"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",
@@ -1052,5 +1057,13 @@
     "DELIVERED": "Tải lên xác nhận giao hàng",
     "RETURNING": "Tải lên bằng chứng yêu cầu hoàn trả",
     "REFUNDED": "Tải lên bằng chứng hoàn tiền hoàn tất"
+  },
+  "confirm": {
+    "productClassification": {
+      "title": "Xác nhận Thay đổi Thuộc tính Phân loại Sản Phẩm",
+      "description": "Bạn đang chỉnh sửa các thuộc tính quan trọng của phân loại sản phẩm, như màu sắc, kích thước hoặc các yếu tố khác. Để đảm bảo quản lý tồn kho, đặt hàng và đơn hàng chính xác, phân loại hiện tại sẽ bị vô hiệu hóa. Một phân loại mới sẽ được tạo với các thuộc tính cập nhật sau khi bạn gửi biểu mẫu. Bạn có chắc chắn muốn tiếp tục? Bạn có thể hủy trước khi gửi để giữ nguyên phân loại hiện tại. Lưu ý: Sau khi gửi, thay đổi này không thể hoàn tác.",
+      "cancel": "Hủy",
+      "confirm": "Xác Nhận"
+    }
   }
 }

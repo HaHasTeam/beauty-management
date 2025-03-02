@@ -8,8 +8,8 @@ export const updateProductClassificationsQuantityApi = toMutationFetcher<
   IUpdateProductClassificationQuantity[],
   TServerResponse<string>
 >('updateProductClassificationsQuantityApi', async (data) => {
-  return privateRequest(`/product-classifications`, {
-    method: 'PUT',
-    data
+  return privateRequest(`/product-classification/update-classifications-quantity`, {
+    method: 'POST',
+    data: { data }
   })
 })

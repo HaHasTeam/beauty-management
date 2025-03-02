@@ -40,7 +40,9 @@ const StepTracking = ({
           key={step.id}
           className={cn(
             `flex hover:text-primary ${index !== steps?.length - 1 ? `w-${stepWidth}` : `w-${stepWidth}`}`,
-            activeStep === index + 1 && 'text-primary hover:text-primary/80',
+            activeStep === index + 1
+              ? 'text-primary hover:text-primary/80'
+              : completeSteps?.includes(step?.id) && 'text-green-400 hover:text-green-500',
             orientation === 'vertical'
               ? 'flex-row md:items-start items-center md:gap-3 gap-0'
               : 'flex-row items-center justify-between'
@@ -54,8 +56,10 @@ const StepTracking = ({
                 `flex justify-center items-center ${index !== steps?.length - 1 ? (orientation === 'vertical' ? 'w-[50px]' : `w-[110px]`) : 'w-[50px]'} h-[50px] rounded-full cursor-pointer ${
                   activeStep === index + 1
                     ? 'bg-primary hover:bg-primary/80 text-white'
-                    : 'bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/70 '
-                }`
+                    : completeSteps?.includes(step?.id)
+                      ? 'bg-green-400 text-white'
+                      : 'bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/70 '
+                } `
               )}
             >
               {completeSteps?.includes(step?.id) ? (
@@ -68,13 +72,17 @@ const StepTracking = ({
             {index < steps.length - 1 && (
               <div
                 className={cn(
-                  `w-full ${index !== steps?.length - 1 ? `w-${stepWidth}` : 'w-[60px]'}`,
+                  `w-full ${index !== steps?.length - 1 ? `w-${stepWidth}` : 'w-[60px]'} `,
                   orientation === 'vertical' ? 'flex justify-center my-3' : 'mx-3'
                 )}
               >
                 <Separator
                   orientation={orientation}
-                  className={cn(orientation === 'horizontal' ? 'h-[2px]' : 'h-6 w-[2px]', 'bg-gray-300')}
+                  className={cn(
+                    orientation === 'horizontal' ? 'h-[2px]' : 'h-6 w-[2px]',
+                    'bg-gray-300',
+                    `${completeSteps?.includes(step?.id) && 'bg-green-400 text-white'}`
+                  )}
                 />
               </div>
             )}

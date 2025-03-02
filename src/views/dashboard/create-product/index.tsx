@@ -47,7 +47,7 @@ const CreateProduct = () => {
     brand: '',
     category: '',
     images: [],
-    certificate: [],
+    certificates: [],
     description: '',
     detail: {},
     productClassifications: [],
@@ -113,7 +113,7 @@ const CreateProduct = () => {
       setIsLoading(true)
       if (isValid) {
         const imgUrls = await convertFileToUrl(values.images)
-        const certUrl = await convertFileToUrl(values.certificate)
+        const certUrl = await convertFileToUrl(values.certificates)
         const classificationImgUrls = await Promise.all(
           (values?.productClassifications ?? []).map(async (classification) => {
             if (classification.images && classification.images.length > 0) {
@@ -134,7 +134,7 @@ const CreateProduct = () => {
           description: values?.description,
           sku: values?.sku ?? '',
           detail: JSON.stringify(values.detail), // Convert detail object to a string
-          certificate: certUrl.map((cert) => ({
+          certificates: certUrl.map((cert) => ({
             fileUrl: cert
           })),
           productClassifications:
@@ -218,16 +218,16 @@ const CreateProduct = () => {
               />
               <div className='w-full flex flex-row-reverse justify-start gap-3'>
                 <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                  {t('button.submitAndShow')}
+                  {t('button.submit')}
                 </Button>
-                <Button
+                {/* <Button
                   variant='outline'
                   className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
                   type='submit'
                   onClick={() => form.setValue('status', ProductEnum.INACTIVE)}
                 >
                   {t('button.submitAndHide')}
-                </Button>
+                </Button> */}
                 <Button
                   variant='outline'
                   className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'

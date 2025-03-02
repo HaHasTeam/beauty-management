@@ -248,7 +248,7 @@ const BasicInformation = ({
               </div>
               <FormField
                 control={form.control}
-                name='certificate'
+                name='certificates'
                 render={({ field }) => (
                   <FormItem className='w-full'>
                     <div className='flex w-full gap-2'>

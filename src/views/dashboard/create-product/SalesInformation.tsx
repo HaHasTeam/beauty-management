@@ -1,8 +1,9 @@
-import { ImagePlus, Package, Plus, Trash2, X } from 'lucide-react'
+import { ImagePlus, Package, Pencil, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertCustom from '@/components/alert'
+import ConfirmDialog from '@/components/dialog/ConfirmDialog'
 import FormLabel from '@/components/form-label'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
@@ -30,11 +31,14 @@ export default function SalesInformation({
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
   const [combinations, setCombinations] = useState<ICombination[]>([])
+  const [originalCombinations, setOriginalCombinations] = useState<ICombination[]>([])
   const [errorOption, setErrorOption] = useState<string>('')
   const [errorSKUMessage, setErrorSKUMessage] = useState<string>('')
   const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
   const [duplicatedSKUIndex, setDuplicatedSKUIndex] = useState<number[]>([])
   const [isImagesUpload, setIsImagesUpload] = useState<boolean>(false)
+  const [isAllowEditing, setIsAllowEditing] = useState<boolean>(false)
+  const [openDialog, setOpenDialog] = useState(false)
   const [usedClassificationTypes, setUsedClassificationTypes] = useState<{ [key: number]: string }>({})
   const selectedCategory = form.watch('category')
   const saleInfoRef = useRef<HTMLDivElement>(null)
@@ -66,58 +70,181 @@ export default function SalesInformation({
     )
   }
 
+  // const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
+  //   const [options1 = [], options2 = [''], options3 = ['']] = updatedOptions.map((c) => c.options)
+  //   const newCombinations: ICombination[] = []
+
+  //   options1.forEach((o1) => {
+  //     if (options2[0] === '') {
+  //       // Only one classification level
+  //       const existingCombination = combinations.find((combo) => combo?.title === o1)
+  //       const classification1Type = updatedOptions[0]?.title.toLowerCase()
+
+  //       newCombinations.push({
+  //         title: o1,
+  //         price: existingCombination?.price ?? undefined,
+  //         quantity: existingCombination?.quantity ?? undefined,
+  //         images: existingCombination?.images ?? [],
+  //         type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
+  //         sku: existingCombination?.sku ?? '',
+  //         [classification1Type]: o1
+  //       })
+  //     } else {
+  //       options2.forEach((o2) => {
+  //         if (options3[0] === '') {
+  //           // Two classification levels
+  //           const existingCombination = combinations.find((combo) => combo?.title === `${o1}-${o2}`)
+  //           const classification1Type = updatedOptions[0]?.title.toLowerCase()
+  //           const classification2Type = updatedOptions[1]?.title.toLowerCase()
+
+  //           newCombinations.push({
+  //             title: `${o1}-${o2}`,
+  //             price: existingCombination?.price ?? undefined,
+  //             quantity: existingCombination?.quantity ?? undefined,
+  //             images: existingCombination?.images ?? [],
+  //             type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
+  //             sku: existingCombination?.sku ?? '',
+  //             [classification1Type]: o1,
+  //             [classification2Type]: o2
+  //           })
+  //         } else {
+  //           // Three classification levels
+  //           options3.forEach((o3) => {
+  //             const existingCombination = combinations.find((combo) => combo?.title === `${o1}-${o2}-${o3}`)
+  //             const classification1Type = updatedOptions[0]?.title.toLowerCase()
+  //             const classification2Type = updatedOptions[1]?.title.toLowerCase()
+  //             const classification3Type = updatedOptions[2]?.title.toLowerCase()
+
+  //             newCombinations.push({
+  //               title: `${o1}-${o2}-${o3}`,
+  //               price: existingCombination?.price ?? undefined,
+  //               quantity: existingCombination?.quantity ?? undefined,
+  //               images: existingCombination?.images ?? [],
+  //               type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
+  //               sku: existingCombination?.sku ?? '',
+  //               [classification1Type]: o1,
+  //               [classification2Type]: o2,
+  //               [classification3Type]: o3
+  //             })
+  //           })
+  //         }
+  //       })
+  //     }
+  //   })
+
+  //   setCombinations(newCombinations)
+  //   form.setValue('productClassifications', newCombinations)
+  // }
   const regenerateCombinations = (updatedOptions: { title: string; options: string[] }[]) => {
     const [options1 = [], options2 = [''], options3 = ['']] = updatedOptions.map((c) => c.options)
     const newCombinations: ICombination[] = []
 
+    // Create a lookup map from the original combinations
+    const originalCombinationMap: Record<string, ICombination> = {}
+    originalCombinations.forEach((combo) => {
+      // Store the original combination with its unique ID
+      if (combo.id) {
+        originalCombinationMap[combo.id] = combo
+      }
+    })
+
     options1.forEach((o1) => {
       if (options2[0] === '') {
         // Only one classification level
-        const existingCombination = combinations.find((combo) => combo?.title === o1)
         const classification1Type = updatedOptions[0]?.title.toLowerCase()
 
+        // Look for an existing combination in both current and original combinations
+        const existingCombination = combinations.find(
+          (combo) => combo?.[classification1Type as keyof ICombination] === o1
+        )
+
+        // Find original combination that matches the same pattern
+        const originalCombo = originalCombinations.find(
+          (combo) => combo?.[classification1Type as keyof ICombination] === o1
+        )
+
+        // Use the ID from original if available, or from existing, or undefined for new
+        const id = originalCombo?.id || existingCombination?.id
+
         newCombinations.push({
+          id,
           title: o1,
-          price: existingCombination?.price ?? undefined,
-          quantity: existingCombination?.quantity ?? undefined,
-          images: existingCombination?.images ?? [],
-          type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
-          sku: existingCombination?.sku ?? '',
+          price: existingCombination?.price ?? originalCombo?.price ?? undefined,
+          quantity: existingCombination?.quantity ?? originalCombo?.quantity ?? undefined,
+          images: existingCombination?.images ?? originalCombo?.images ?? [],
+          type: existingCombination?.type ?? originalCombo?.type ?? ProductClassificationTypeEnum.CUSTOM,
+          sku: existingCombination?.sku ?? originalCombo?.sku ?? '',
           [classification1Type]: o1
         })
       } else {
         options2.forEach((o2) => {
           if (options3[0] === '') {
             // Two classification levels
-            const existingCombination = combinations.find((combo) => combo?.title === `${o1}-${o2}`)
             const classification1Type = updatedOptions[0]?.title.toLowerCase()
             const classification2Type = updatedOptions[1]?.title.toLowerCase()
 
+            // For two classifications, we need to match on both values
+            const existingCombination = combinations.find(
+              (combo) =>
+                combo?.[classification1Type as keyof ICombination] === o1 &&
+                combo?.[classification2Type as keyof ICombination] === o2
+            )
+
+            // Find in original combinations
+            const originalCombo = originalCombinations.find(
+              (combo) =>
+                combo?.[classification1Type as keyof ICombination] === o1 &&
+                combo?.[classification2Type as keyof ICombination] === o2
+            )
+
+            // Prioritize original ID
+            const id = originalCombo?.id || existingCombination?.id
+
             newCombinations.push({
+              id,
               title: `${o1}-${o2}`,
-              price: existingCombination?.price ?? undefined,
-              quantity: existingCombination?.quantity ?? undefined,
-              images: existingCombination?.images ?? [],
-              type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
-              sku: existingCombination?.sku ?? '',
+              price: existingCombination?.price ?? originalCombo?.price ?? undefined,
+              quantity: existingCombination?.quantity ?? originalCombo?.quantity ?? undefined,
+              images: existingCombination?.images ?? originalCombo?.images ?? [],
+              type: existingCombination?.type ?? originalCombo?.type ?? ProductClassificationTypeEnum.CUSTOM,
+              sku: existingCombination?.sku ?? originalCombo?.sku ?? '',
               [classification1Type]: o1,
               [classification2Type]: o2
             })
           } else {
             // Three classification levels
             options3.forEach((o3) => {
-              const existingCombination = combinations.find((combo) => combo?.title === `${o1}-${o2}-${o3}`)
               const classification1Type = updatedOptions[0]?.title.toLowerCase()
               const classification2Type = updatedOptions[1]?.title.toLowerCase()
               const classification3Type = updatedOptions[2]?.title.toLowerCase()
 
+              // For three classifications, match on all three values
+              const existingCombination = combinations.find(
+                (combo) =>
+                  combo?.[classification1Type as keyof ICombination] === o1 &&
+                  combo?.[classification2Type as keyof ICombination] === o2 &&
+                  combo?.[classification3Type as keyof ICombination] === o3
+              )
+
+              // Find in original combinations
+              const originalCombo = originalCombinations.find(
+                (combo) =>
+                  combo?.[classification1Type as keyof ICombination] === o1 &&
+                  combo?.[classification2Type as keyof ICombination] === o2 &&
+                  combo?.[classification3Type as keyof ICombination] === o3
+              )
+
+              // Prioritize original ID
+              const id = originalCombo?.id || existingCombination?.id
+
               newCombinations.push({
+                id,
                 title: `${o1}-${o2}-${o3}`,
-                price: existingCombination?.price ?? undefined,
-                quantity: existingCombination?.quantity ?? undefined,
-                images: existingCombination?.images ?? [],
-                type: existingCombination?.type ?? ProductClassificationTypeEnum.CUSTOM,
-                sku: existingCombination?.sku ?? '',
+                price: existingCombination?.price ?? originalCombo?.price ?? undefined,
+                quantity: existingCombination?.quantity ?? originalCombo?.quantity ?? undefined,
+                images: existingCombination?.images ?? originalCombo?.images ?? [],
+                type: existingCombination?.type ?? originalCombo?.type ?? ProductClassificationTypeEnum.CUSTOM,
+                sku: existingCombination?.sku ?? originalCombo?.sku ?? '',
                 [classification1Type]: o1,
                 [classification2Type]: o2,
                 [classification3Type]: o3
@@ -131,7 +258,6 @@ export default function SalesInformation({
     setCombinations(newCombinations)
     form.setValue('productClassifications', newCombinations)
   }
-
   const handleRemoveCombination = (index: number) => {
     // Create a copy of the existing combinations
     const updatedCombinations = [...combinations]
@@ -272,6 +398,7 @@ export default function SalesInformation({
     setClassificationCount(0)
     setClassificationsOptions([])
     setCombinations([])
+    setOriginalCombinations([])
     setUsedClassificationTypes({})
   }
   useEffect(() => {
@@ -288,6 +415,7 @@ export default function SalesInformation({
     setClassificationCount(newClassificationCount)
     setClassificationsOptions(classificationsOptions)
     setCombinations(newCombinations)
+    setOriginalCombinations(newCombinations)
 
     // Restore classification types in usedClassificationTypes state
     const newUsedTypes: { [key: number]: string } = {}
@@ -297,6 +425,9 @@ export default function SalesInformation({
       }
     })
     setUsedClassificationTypes(newUsedTypes)
+
+    // Prevent user edit title, color, size, other
+    setIsAllowEditing(false)
   }, [defineFormSignal, form])
 
   // Scroll to the BasicInformation section when activeStep is 1
@@ -430,16 +561,38 @@ export default function SalesInformation({
                             {t('createProduct.newProductClassification')}
                           </Button>
                         )}
+
                         {(classificationsOptions ?? []).length > 0 && (
-                          <>
+                          <div className='bg-primary/10 rounded-lg p-4 space-y-3'>
+                            <div className='flex items-center justify-between'>
+                              <h3 className='text-md font-semibold text-primary'>
+                                {t('createProduct.classificationTitleInformation')}
+                              </h3>
+                              {!isAllowEditing && (
+                                <Button
+                                  onClick={() => setOpenDialog(true)}
+                                  variant='outline'
+                                  size='sm'
+                                  type='button'
+                                  className='border-primary text-primary hover:text-primary/80 bg-white hover:bg-primary/10 flex gap-2 items-center'
+                                >
+                                  {t('button.edit')}
+                                  <Pencil className='text-primary cursor-pointer hover:text-primary/80' size={14} />
+                                </Button>
+                              )}
+                            </div>
                             {(classificationsOptions ?? []).map((classification, index) => (
                               <div
-                                className='relative bg-primary/5 rounded-lg p-4'
+                                className={`relative bg-primary/10 rounded-lg p-4 space-y-3 ${!isAllowEditing ? 'opacity-40' : 'opacity-100'}`}
                                 key={classification?.title || index}
                               >
                                 <X
-                                  onClick={() => handleRemoveClassification(index)}
-                                  className='text-destructive hover:cursor-pointer hover:text-destructive/80 absolute right-4 top-4'
+                                  onClick={() => {
+                                    if (isAllowEditing) {
+                                      handleRemoveClassification(index)
+                                    }
+                                  }}
+                                  className={`${isAllowEditing ? 'cursor-pointer' : 'cursor-default'} text-destructive hover:text-destructive/80 absolute right-4 top-2`}
                                 />
 
                                 <div className='space-y-2'>
@@ -452,6 +605,7 @@ export default function SalesInformation({
                                         <Select
                                           onValueChange={(value) => handleClassificationNameChange(value, index)}
                                           value={classification?.title || ''}
+                                          disabled={!isAllowEditing}
                                         >
                                           <SelectTrigger>
                                             <SelectValue
@@ -492,28 +646,29 @@ export default function SalesInformation({
                                       </FormControl>
                                       <FormMessage />
                                     </div>
-                                  </div>
-                                  <div className='flex gap-2 items-center'>
-                                    <div>
-                                      <FormLabel required={classificationCount > 0}>
-                                        {t('createProduct.classification')}{' '}
-                                        {classification?.title && (
-                                          <span className='text-primary'>
-                                            {t(`createProduct.${classification?.title}`)}
-                                          </span>
-                                        )}
-                                      </FormLabel>
-                                    </div>
                                     <Button
                                       type='button'
                                       variant='outline'
                                       size='sm'
                                       className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'
                                       onClick={() => handleAddOption(index)}
+                                      disabled={!isAllowEditing}
                                     >
                                       {t('createProduct.addOption')}
                                     </Button>
                                   </div>
+                                  {classification?.title && (
+                                    <div className='flex gap-2 items-center'>
+                                      <div>
+                                        <FormLabel required={classificationCount > 0}>
+                                          {t('createProduct.option')}{' '}
+                                          <span className='text-primary'>
+                                            {t(`createProduct.${classification?.title}`)}:
+                                          </span>
+                                        </FormLabel>
+                                      </div>
+                                    </div>
+                                  )}
                                   <div className='grid grid-cols-2 gap-x-5 gap-y-3 lg:gap-x-10'>
                                     {classification.options.map((option, optionIndex) => (
                                       <div key={optionIndex} className='flex flex-col gap-2'>
@@ -533,11 +688,16 @@ export default function SalesInformation({
                                                         handleUpdateOption(index, optionIndex, e.target.value)
                                                       }}
                                                       className='border-primary/40 w-full'
+                                                      disabled={!isAllowEditing}
                                                     />
                                                   </FormControl>
                                                   <Trash2
-                                                    onClick={() => handleRemoveOption(index, optionIndex)}
-                                                    className='text-destructive cursor-pointer hover:text-destructive/80'
+                                                    onClick={() => {
+                                                      if (isAllowEditing) {
+                                                        handleRemoveOption(index, optionIndex)
+                                                      }
+                                                    }}
+                                                    className={`${isAllowEditing ? 'cursor-pointer' : 'cursor-default'} text-destructive hover:text-destructive/80`}
                                                   />
                                                 </div>
                                                 <FormMessage>{fieldState.error?.message}</FormMessage>
@@ -556,11 +716,13 @@ export default function SalesInformation({
                                 </div>
                               </div>
                             ))}
-                          </>
+                          </div>
                         )}
                         {combinations.length > 0 && (
-                          <div className='mt-4 bg-primary/5 rounded-lg p-4 space-y-2'>
-                            <h3 className='text-md font-semibold'>{t('createProduct.inputPriceAndQuantity')}</h3>
+                          <div className='mt-4 bg-primary/10 rounded-lg p-4 space-y-2'>
+                            <h3 className='text-md font-semibold text-primary'>
+                              {t('createProduct.inputPriceAndQuantity')}
+                            </h3>
                             <div>
                               <Table className='hover:bg-transparent items-center'>
                                 <TableHeader>
@@ -885,6 +1047,15 @@ export default function SalesInformation({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+      <ConfirmDialog
+        open={openDialog}
+        onOpenChange={setOpenDialog}
+        onConfirm={() => {
+          setIsAllowEditing(true)
+          setOpenDialog(false)
+        }}
+        item={'productClassification'}
+      />
     </div>
   )
 }

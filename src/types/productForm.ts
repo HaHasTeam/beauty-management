@@ -12,6 +12,7 @@ export type IFormValues = {
 // sale information component
 export type IClassificationOption = { title: string; options: string[] }
 export type ICombination = {
+  id?: string
   title?: string
   price?: number
   quantity?: number
