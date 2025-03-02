@@ -78,11 +78,7 @@ const ConsultationCriteriaSystemService = ({ form, mode = 'create' }: Consultati
   const handleConsultationCriteriaChange = (consultationCriteriaId: string) => {
     if (consultationCriteriaId === CREATE_NEW_RESULT_VALUE) {
       // If "Create New" is selected, initialize consultationCriteriaData
-      form.setValue('consultationCriteria', consultationCriteriaId, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true
-      })
+      form.setValue('consultationCriteria', consultationCriteriaId)
       form.setValue(
         'consultationCriteriaData',
         {
@@ -95,25 +91,17 @@ const ConsultationCriteriaSystemService = ({ form, mode = 'create' }: Consultati
               description: ''
             }
           ]
-        },
-        {
-          shouldDirty: true,
-          shouldTouch: true,
-          shouldValidate: true
         }
+        // {
+        //   shouldDirty: true,
+        //   shouldTouch: true,
+        //   shouldValidate: true
+        // }
       )
     } else if (consultationCriteriaId) {
       // If an existing result sheet is selected
-      form.setValue('consultationCriteria', consultationCriteriaId, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true
-      })
-      form.setValue('consultationCriteriaData', undefined, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true
-      })
+      form.setValue('consultationCriteria', consultationCriteriaId)
+      form.setValue('consultationCriteriaData', undefined)
     }
   }
 
