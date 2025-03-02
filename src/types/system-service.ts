@@ -1,14 +1,18 @@
 import { ISystemServiceFormData } from '@/schemas/system-service.schema'
 
 import { ICategory } from './category'
+import {
+  IResponseConsultationCriteriaData,
+  IUpdateConsultationCriteriaData,
+  IUpdateServerConsultationCriteriaData
+} from './consultation-criteria'
 import { ServiceTypeEnum, StatusEnum } from './enum'
 import { IImage } from './image'
 import { TMetaData } from './request'
-import { IResponseResultSheetData, IUpdateResultSheetData, IUpdateServerResultSheetData } from './result-sheet'
 
 export type IUpdateSystemServiceFormData = ISystemServiceFormData & {
   id: string
-  resultSheetData: IUpdateResultSheetData
+  consultationCriteriaData: IUpdateConsultationCriteriaData
 }
 export type IUpdateServerSystemServiceFormData = {
   id: string
@@ -16,10 +20,10 @@ export type IUpdateServerSystemServiceFormData = {
   description: string
   type: ServiceTypeEnum
   status: StatusEnum.ACTIVE | StatusEnum.INACTIVE
-  resultSheet?: string
+  consultationCriteria?: string
   images: IImage[]
   category: string
-  resultSheetData?: IUpdateServerResultSheetData
+  consultationCriteriaData?: IUpdateServerConsultationCriteriaData
 }
 
 export type ISystemService = {
@@ -27,7 +31,7 @@ export type ISystemService = {
   description: string
   type: ServiceTypeEnum
   status: StatusEnum.ACTIVE | StatusEnum.INACTIVE
-  resultSheet: IResponseResultSheetData
+  consultationCriteria: IResponseConsultationCriteriaData
   images: IImage[]
   category: ICategory
 }

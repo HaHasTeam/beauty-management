@@ -7,10 +7,10 @@ import { z } from 'zod'
 import FormLabel from '@/components/form-label'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getAllResultSheetApi, getResultSheetByIdApi } from '@/network/apis/result-sheet'
-import { deleteResultSheetByIdApi } from '@/network/apis/result-sheet-section'
+import { getAllConsultationCriteriaApi, getConsultationCriteriaByIdApi } from '@/network/apis/consultation-criteria'
+import { deleteConsultationCriteriaByIdApi } from '@/network/apis/consultation-criteria-section'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
-import { IResponseResultSheetSection } from '@/types/result-sheet'
+import { IResponseConsultationCriteriaSection } from '@/types/consultation-criteria'
 
 import Button from '../button'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
@@ -18,24 +18,24 @@ import { Input } from '../ui/input'
 import { Switch } from '../ui/switch'
 import { Textarea } from '../ui/textarea'
 
-interface FormResultSheetInSystemServiceContentProps {
+interface FormConsultationCriteriaInSystemServiceContentProps {
   form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
-  originalSections?: IResponseResultSheetSection[]
+  originalSections?: IResponseConsultationCriteriaSection[]
 }
 
-const FormResultSheetInSystemService = ({
+const FormConsultationCriteriaInSystemService = ({
   form,
   originalSections = []
-}: FormResultSheetInSystemServiceContentProps) => {
+}: FormConsultationCriteriaInSystemServiceContentProps) => {
   const { t } = useTranslation()
   const { successToast } = useToast()
   const queryClient = useQueryClient()
   const handleServerError = useHandleServerError()
 
   // Delete section API mutation
-  const { mutateAsync: deleteResultSheetSectionFn } = useMutation({
-    mutationKey: [deleteResultSheetByIdApi?.mutationKey],
-    mutationFn: deleteResultSheetByIdApi?.fn,
+  const { mutateAsync: deleteConsultationCriteriaSectionFn } = useMutation({
+    mutationKey: [deleteConsultationCriteriaByIdApi?.mutationKey],
+    mutationFn: deleteConsultationCriteriaByIdApi?.fn,
     onSuccess: () => {
       successToast({
         message: `${t('systemService.deleteSectionSuccess')}`
@@ -44,7 +44,7 @@ const FormResultSheetInSystemService = ({
   })
 
   const handleDeleteSection = async (index: number) => {
-    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+    const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
     const sectionToDelete = currentSections[index]
 
     // Check if section exists in originalSections (was part of defaultValues)
@@ -53,17 +53,17 @@ const FormResultSheetInSystemService = ({
     if (isExistingSection) {
       // Case 1: Section exists in database, call API to delete
       try {
-        await deleteResultSheetSectionFn({
+        await deleteConsultationCriteriaSectionFn({
           params: sectionToDelete.id ?? ''
         })
 
         // After successful API call, remove from form state
         removeSectionFromForm(index)
         queryClient.invalidateQueries({
-          queryKey: [getResultSheetByIdApi.queryKey, form.getValues('resultSheetData.id') as string]
+          queryKey: [getConsultationCriteriaByIdApi.queryKey, form.getValues('consultationCriteriaData.id') as string]
         })
         queryClient.invalidateQueries({
-          queryKey: [getAllResultSheetApi.queryKey]
+          queryKey: [getAllConsultationCriteriaApi.queryKey]
         })
       } catch (error) {
         handleServerError({
@@ -78,7 +78,7 @@ const FormResultSheetInSystemService = ({
   }
 
   const removeSectionFromForm = (index: number) => {
-    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+    const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
 
     // Remove the section at the specified index
     const updatedSections = currentSections.filter((_, i) => i !== index)
@@ -90,7 +90,7 @@ const FormResultSheetInSystemService = ({
     }))
 
     // Update the form value
-    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
+    form.setValue('consultationCriteriaData.consultationCriteriaSections', reorderedSections, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true
@@ -98,7 +98,7 @@ const FormResultSheetInSystemService = ({
   }
 
   const moveSection = (fromIndex: number, direction: 'up' | 'down') => {
-    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+    const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
     const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1
 
     if (toIndex < 0 || toIndex >= currentSections.length) return
@@ -113,13 +113,13 @@ const FormResultSheetInSystemService = ({
       orderIndex: index + 1
     }))
 
-    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
+    form.setValue('consultationCriteriaData.consultationCriteriaSections', reorderedSections, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true
     })
   }
-  const sections = form.watch('resultSheetData.resultSheetSections') || []
+  const sections = form.watch('consultationCriteriaData.consultationCriteriaSections') || []
   const sortedSections = [...sections].sort((a, b) => a.orderIndex - b.orderIndex)
 
   // Find the selected result sheet data for preview
@@ -128,7 +128,7 @@ const FormResultSheetInSystemService = ({
       {/* Result Sheet Title */}
       <FormField
         control={form.control}
-        name='resultSheetData.title'
+        name='consultationCriteriaData.title'
         render={({ field }) => (
           <FormItem>
             <div className='flex gap-2'>
@@ -140,7 +140,7 @@ const FormResultSheetInSystemService = ({
                   <Input
                     {...field}
                     className='border-primary/40'
-                    placeholder={t('systemService.enterResultSheetTitle')}
+                    placeholder={t('systemService.enterConsultationCriteriaTitle')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -179,7 +179,7 @@ const FormResultSheetInSystemService = ({
             </div>
             <FormField
               control={form.control}
-              name={`resultSheetData.resultSheetSections.${index}.section`}
+              name={`consultationCriteriaData.consultationCriteriaSections.${index}.section`}
               render={({ field }) => (
                 <FormItem>
                   <div className='flex gap-2'>
@@ -203,7 +203,7 @@ const FormResultSheetInSystemService = ({
 
             <FormField
               control={form.control}
-              name={`resultSheetData.resultSheetSections.${index}.description`}
+              name={`consultationCriteriaData.consultationCriteriaSections.${index}.description`}
               render={({ field }) => (
                 <FormItem>
                   <div className='flex gap-2'>
@@ -228,7 +228,7 @@ const FormResultSheetInSystemService = ({
             <div className='w-full flex flex-1 justify-between'>
               <FormField
                 control={form.control}
-                name={`resultSheetData.resultSheetSections.${index}.mandatory`}
+                name={`consultationCriteriaData.consultationCriteriaSections.${index}.mandatory`}
                 render={({ field }) => (
                   <FormItem className='w-full'>
                     <div className='flex gap-2'>
@@ -245,7 +245,7 @@ const FormResultSheetInSystemService = ({
                   </FormItem>
                 )}
               />
-              {form.watch('resultSheetData.resultSheetSections').length > 1 && (
+              {form.watch('consultationCriteriaData.consultationCriteriaSections').length > 1 && (
                 <Trash2
                   className='text-destructive hover:text-destructive/80 cursor-pointer'
                   onClick={() => handleDeleteSection(index)}
@@ -259,7 +259,7 @@ const FormResultSheetInSystemService = ({
           variant='outline'
           className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
           onClick={() => {
-            const currentSections = form.getValues('resultSheetData.resultSheetSections') || []
+            const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections') || []
             const newSection = {
               section: '',
               orderIndex: (currentSections?.length || 0) + 1,
@@ -267,7 +267,7 @@ const FormResultSheetInSystemService = ({
               description: ''
             }
 
-            form.setValue('resultSheetData.resultSheetSections', [...currentSections, newSection], {
+            form.setValue('consultationCriteriaData.consultationCriteriaSections', [...currentSections, newSection], {
               shouldDirty: true,
               shouldTouch: true,
               shouldValidate: true
@@ -281,4 +281,4 @@ const FormResultSheetInSystemService = ({
   )
 }
 
-export default FormResultSheetInSystemService
+export default FormConsultationCriteriaInSystemService

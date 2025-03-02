@@ -6,33 +6,33 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
-import { getAllResultSheetApi } from '@/network/apis/result-sheet'
+import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-criteria'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { StatusEnum } from '@/types/enum'
 
 import Button from '../button'
-import ResultSheet from '../result-sheet/ResultSheet'
+import ConsultationCriteria from '../consultation-criteria/ConsultationCriteria'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Switch } from '../ui/switch'
 import { Textarea } from '../ui/textarea'
 
-interface ResultSheetSystemServiceProps {
+interface ConsultationCriteriaSystemServiceProps {
   form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
   mode?: 'create' | 'update'
 }
-const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemServiceProps) => {
-  const CREATE_NEW_RESULT_VALUE = 'createNewResultSheetData'
+const ConsultationCriteriaSystemService = ({ form, mode = 'create' }: ConsultationCriteriaSystemServiceProps) => {
+  const CREATE_NEW_RESULT_VALUE = 'createNewConsultationCriteriaData'
   const { t } = useTranslation()
 
-  const { data: resultSheets } = useQuery({
-    queryKey: [getAllResultSheetApi.queryKey],
-    queryFn: getAllResultSheetApi.fn
+  const { data: consultationCriterias } = useQuery({
+    queryKey: [getAllConsultationCriteriaApi.queryKey],
+    queryFn: getAllConsultationCriteriaApi.fn
   })
 
   const handleDeleteSection = (index: number) => {
-    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+    const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
 
     // Remove the section at the specified index
     const updatedSections = currentSections.filter((_, i) => i !== index)
@@ -44,7 +44,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
     }))
 
     // Update the form value
-    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
+    form.setValue('consultationCriteriaData.consultationCriteriaSections', reorderedSections, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true
@@ -52,7 +52,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
   }
 
   const moveSection = (fromIndex: number, direction: 'up' | 'down') => {
-    const currentSections = form.getValues('resultSheetData.resultSheetSections')
+    const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
     const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1
 
     if (toIndex < 0 || toIndex >= currentSections.length) return
@@ -67,7 +67,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
       orderIndex: index + 1
     }))
 
-    form.setValue('resultSheetData.resultSheetSections', reorderedSections, {
+    form.setValue('consultationCriteriaData.consultationCriteriaSections', reorderedSections, {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true
@@ -75,19 +75,19 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
   }
 
   // Handle result sheet selection
-  const handleResultSheetChange = (resultSheetId: string) => {
-    if (resultSheetId === CREATE_NEW_RESULT_VALUE) {
-      // If "Create New" is selected, initialize resultSheetData
-      form.setValue('resultSheet', resultSheetId, {
+  const handleConsultationCriteriaChange = (consultationCriteriaId: string) => {
+    if (consultationCriteriaId === CREATE_NEW_RESULT_VALUE) {
+      // If "Create New" is selected, initialize consultationCriteriaData
+      form.setValue('consultationCriteria', consultationCriteriaId, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true
       })
       form.setValue(
-        'resultSheetData',
+        'consultationCriteriaData',
         {
           title: '',
-          resultSheetSections: [
+          consultationCriteriaSections: [
             {
               section: '',
               orderIndex: 1,
@@ -102,14 +102,14 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
           shouldValidate: true
         }
       )
-    } else if (resultSheetId) {
+    } else if (consultationCriteriaId) {
       // If an existing result sheet is selected
-      form.setValue('resultSheet', resultSheetId, {
+      form.setValue('consultationCriteria', consultationCriteriaId, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true
       })
-      form.setValue('resultSheetData', undefined, {
+      form.setValue('consultationCriteriaData', undefined, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true
@@ -117,30 +117,30 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
     }
   }
 
-  const selectedResultSheet = form.watch('resultSheet')
+  const selectedConsultationCriteria = form.watch('consultationCriteria')
 
-  const sections = form.watch('resultSheetData.resultSheetSections') || []
+  const sections = form.watch('consultationCriteriaData.consultationCriteriaSections') || []
   const sortedSections = [...sections].sort((a, b) => a.orderIndex - b.orderIndex)
 
   // Find the selected result sheet data for preview
-  const selectedResultSheetData = useMemo(() => {
-    return resultSheets?.data.find((sheet) => sheet.id === selectedResultSheet)
-  }, [resultSheets?.data, selectedResultSheet])
+  const selectedConsultationCriteriaData = useMemo(() => {
+    return consultationCriterias?.data.find((sheet) => sheet.id === selectedConsultationCriteria)
+  }, [consultationCriterias?.data, selectedConsultationCriteria])
 
   return (
     <div className='space-y-4'>
       {/* Result Sheet Selection */}
       <FormField
         control={form.control}
-        name='resultSheet'
+        name='consultationCriteria'
         render={({ field }) => (
           <FormItem>
             <div className='flex gap-2 md:flex-row flex-col'>
               <div className='md:w-[15%] w-full flex items-center'>
-                <FormLabel required>{t('systemService.selectResultSheet')}</FormLabel>
+                <FormLabel required>{t('systemService.selectConsultationCriteria')}</FormLabel>
               </div>
               <div className='w-full space-y-1'>
-                <Select value={field.value} onValueChange={handleResultSheetChange}>
+                <Select value={field.value} onValueChange={handleConsultationCriteriaChange}>
                   <FormControl>
                     <SelectTrigger className='border-primary/40'>
                       <SelectValue
@@ -151,8 +151,8 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
                   </FormControl>
                   <SelectContent>
                     <SelectItem value={CREATE_NEW_RESULT_VALUE}>{t('systemService.createNew')}</SelectItem>
-                    {resultSheets?.data
-                      .filter((resultSheet) => resultSheet.status === StatusEnum.ACTIVE)
+                    {consultationCriterias?.data
+                      .filter((consultationCriteria) => consultationCriteria.status === StatusEnum.ACTIVE)
                       .map((sheet) => (
                         <SelectItem key={sheet.id} value={sheet.id}>
                           {sheet.title}
@@ -168,19 +168,19 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
       />
 
       {/* Show Preview if existing result sheet is selected */}
-      {selectedResultSheet && selectedResultSheetData && (
+      {selectedConsultationCriteria && selectedConsultationCriteriaData && (
         <div className='relative w-full flex justify-center bg-primary/10 rounded-lg p-4'>
-          <ResultSheet resultSheet={selectedResultSheetData} mode={mode} form={form} />
+          <ConsultationCriteria consultationCriteria={selectedConsultationCriteriaData} mode={mode} form={form} />
         </div>
       )}
 
       {/* Show form fields if creating new result sheet */}
-      {selectedResultSheet === CREATE_NEW_RESULT_VALUE && (
+      {selectedConsultationCriteria === CREATE_NEW_RESULT_VALUE && (
         <>
           {/* Result Sheet Title */}
           <FormField
             control={form.control}
-            name='resultSheetData.title'
+            name='consultationCriteriaData.title'
             render={({ field }) => (
               <FormItem>
                 <div className='flex gap-2'>
@@ -192,7 +192,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
                       <Input
                         {...field}
                         className='border-primary/40'
-                        placeholder={t('systemService.enterResultSheetTitle')}
+                        placeholder={t('systemService.enterConsultationCriteriaTitle')}
                       />
                     </FormControl>
                     <FormMessage />
@@ -231,7 +231,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
                 </div>
                 <FormField
                   control={form.control}
-                  name={`resultSheetData.resultSheetSections.${index}.section`}
+                  name={`consultationCriteriaData.consultationCriteriaSections.${index}.section`}
                   render={({ field }) => (
                     <FormItem>
                       <div className='flex gap-2'>
@@ -255,7 +255,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
 
                 <FormField
                   control={form.control}
-                  name={`resultSheetData.resultSheetSections.${index}.description`}
+                  name={`consultationCriteriaData.consultationCriteriaSections.${index}.description`}
                   render={({ field }) => (
                     <FormItem>
                       <div className='flex gap-2'>
@@ -280,7 +280,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
                 <div className='w-full flex flex-1 justify-between'>
                   <FormField
                     control={form.control}
-                    name={`resultSheetData.resultSheetSections.${index}.mandatory`}
+                    name={`consultationCriteriaData.consultationCriteriaSections.${index}.mandatory`}
                     render={({ field }) => (
                       <FormItem className='w-full'>
                         <div className='flex gap-2'>
@@ -297,7 +297,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
                       </FormItem>
                     )}
                   />
-                  {form.watch('resultSheetData.resultSheetSections').length > 1 && (
+                  {form.watch('consultationCriteriaData.consultationCriteriaSections').length > 1 && (
                     <Trash2
                       className='text-destructive hover:text-destructive/80 cursor-pointer'
                       onClick={() => handleDeleteSection(index)}
@@ -311,7 +311,7 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
               variant='outline'
               className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
               onClick={() => {
-                const currentSections = form.getValues('resultSheetData.resultSheetSections') || []
+                const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections') || []
                 const newSection = {
                   section: '',
                   orderIndex: (currentSections?.length || 0) + 1,
@@ -319,11 +319,15 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
                   description: ''
                 }
 
-                form.setValue('resultSheetData.resultSheetSections', [...currentSections, newSection], {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                  shouldValidate: true
-                })
+                form.setValue(
+                  'consultationCriteriaData.consultationCriteriaSections',
+                  [...currentSections, newSection],
+                  {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true
+                  }
+                )
               }}
             >
               {t('button.addSection')}
@@ -335,4 +339,4 @@ const ResultSheetSystemService = ({ form, mode = 'create' }: ResultSheetSystemSe
   )
 }
 
-export default ResultSheetSystemService
+export default ConsultationCriteriaSystemService

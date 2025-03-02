@@ -3,9 +3,9 @@ import { BadgeInfo, FileSpreadsheet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
+import ConsultationCriteria from '@/components/consultation-criteria/ConsultationCriteria'
 import Empty from '@/components/empty/Empty'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
-import ResultSheet from '@/components/result-sheet/ResultSheet'
 import SectionCollapsable from '@/components/section-collapsable'
 import SystemServiceDetailsGeneral from '@/components/system-service/SystemServiceDetailsGeneral'
 import SystemServiceDetailsHeader from '@/components/system-service/SystemServiceDetailsHeader'
@@ -57,12 +57,12 @@ const SystemServiceDetail = () => {
               header={
                 <div className='flex gap-2 items-center text-primary'>
                   <FileSpreadsheet />
-                  <h2 className='font-bold text-xl'>{t('systemService.resultSheetInformation')}</h2>
+                  <h2 className='font-bold text-xl'>{t('systemService.consultationCriteriaInformation')}</h2>
                 </div>
               }
               content={
                 <div className='w-full bg-primary/10 rounded-lg p-4 flex justify-center'>
-                  <ResultSheet resultSheet={serviceData.data.resultSheet} mode='view' />
+                  <ConsultationCriteria consultationCriteria={serviceData.data.consultationCriteria} mode='view' />
                 </div>
               }
             />
