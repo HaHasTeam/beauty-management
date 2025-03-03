@@ -1,9 +1,12 @@
 import { ImageIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusEnum } from '@/types/enum'
 import { IImage } from '@/types/image'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface ProductImageDetailsProps {
   images: IImage[] | undefined | null
@@ -24,7 +27,8 @@ const ProductImageDetails = ({ images }: ProductImageDetailsProps) => {
             ?.filter((img) => img.status === StatusEnum.ACTIVE)
             ?.map((image, index) => (
               <div key={index} className='relative aspect-square rounded-lg overflow-hidden'>
-                <img
+                <ImageWithFallback
+                  fallback={fallBackImage}
                   src={image.fileUrl || '/api/placeholder/200/200'}
                   alt={`${index + 1}`}
                   className='object-cover w-full h-full'

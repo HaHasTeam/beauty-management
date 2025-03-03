@@ -1,11 +1,13 @@
 import { AlertTriangle, FilesIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { IImage } from '@/types/image'
 
 import { PreviewDialog } from '../file-input/PreviewImageDialog'
 import { VideoThumbnailServer } from '../file-input/VideoThumbnail'
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface ViewMediaDialogProps {
   open: boolean
@@ -98,7 +100,8 @@ export default function ViewMediaDialog({ mediaFiles, open, onOpenChange }: View
                     content={getPreviewContent(file)}
                     trigger={
                       <div className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'>
-                        <img
+                        <ImageWithFallback
+                          fallback={fallBackImage}
                           src={file.fileUrl}
                           alt={`Image ${file.id}`}
                           className='object-contain w-full h-full rounded-lg'

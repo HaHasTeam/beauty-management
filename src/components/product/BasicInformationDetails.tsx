@@ -4,11 +4,14 @@ import { Download, Eye, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import ReactQuill from 'react-quill-new'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { ICategory } from '@/types/category'
 import { StatusEnum } from '@/types/enum'
 import { IResponseProduct } from '@/types/product'
 import { handleDownload } from '@/utils/certificate/handleDownload'
 import { handleView } from '@/utils/certificate/handleView'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface BasicInformationDetailsProps {
   product: IResponseProduct
@@ -68,7 +71,8 @@ const BasicInformationDetails = ({ product }: BasicInformationDetailsProps) => {
               ?.filter((img) => img.status === StatusEnum.ACTIVE)
               ?.map((image, index) => (
                 <div key={index} className='relative aspect-square w-32 h-32 rounded-lg overflow-hidden'>
-                  <img
+                  <ImageWithFallback
+                    fallback={fallBackImage}
                     src={image.fileUrl || '/api/placeholder/200/200'}
                     alt={`${index + 1}`}
                     className='object-cover w-full h-full'

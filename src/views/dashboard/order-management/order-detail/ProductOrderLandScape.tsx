@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import ProductTag from '@/components/product-tag'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -39,7 +41,12 @@ const ProductOrderDetailLandscape = ({
         <div className='flex gap-1 items-center lg:w-[10%] md:w-[10%] sm:w-[14%] w-[16%]'>
           <Link to={routesConfig[Routes.PRODUCT_LIST].path + '/' + productId}>
             <div className='md:w-20 md:h-20 sm:w-20 sm:h-20 h-16 w-16'>
-              <img src={productImage} alt={productName} className='object-cover w-full h-full' />
+              <ImageWithFallback
+                fallback={fallBackImage}
+                src={productImage}
+                alt={productName}
+                className='object-cover w-full h-full'
+              />
             </div>
           </Link>
         </div>

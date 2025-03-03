@@ -2,9 +2,11 @@ import { ImagePlus, Package, Pencil, Plus, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import AlertCustom from '@/components/alert'
 import ConfirmDialog from '@/components/dialog/ConfirmDialog'
 import FormLabel from '@/components/form-label'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -799,7 +801,8 @@ export default function SalesInformation({
                                                               key={file?.name}
                                                               className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
                                                             >
-                                                              <img
+                                                              <ImageWithFallback
+                                                                fallback={fallBackImage}
                                                                 src={URL?.createObjectURL(file)}
                                                                 alt={file?.name}
                                                                 className='object-contain w-full h-full rounded-lg'

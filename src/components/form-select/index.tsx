@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import EmptyInbox from '@/assets/images/EmptyInbox.png'
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { cn } from '@/lib/utils'
 import { IOption } from '@/types/option'
 import { FormProductSchema, IFormProductFieldId } from '@/variables/productFormDetailFields'
 
 import Button from '../button'
+import ImageWithFallback from '../image/ImageWithFallback'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
 import { FormControl } from '../ui/form'
 import { Input } from '../ui/input'
@@ -239,7 +241,12 @@ const FormSelect = ({
               <CommandList>
                 <CommandEmpty className='space-y-2 flex flex-col gap-2 items-center p-3'>
                   <div className='h-10 w-10'>
-                    <img src={EmptyInbox} alt='No search result' className='w-full h-full object-cover' />
+                    <ImageWithFallback
+                      fallback={fallBackImage}
+                      src={EmptyInbox}
+                      alt='No search result'
+                      className='w-full h-full object-cover'
+                    />
                   </div>
                   {emptyText}
                 </CommandEmpty>

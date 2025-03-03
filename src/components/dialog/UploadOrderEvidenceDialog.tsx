@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import FormLabel from '@/components/form-label'
 import {
   Dialog,
@@ -26,6 +27,7 @@ import { IOrderItem } from '@/types/order'
 import Button from '../button'
 import UploadMediaFiles from '../file-input/UploadMediaFiles'
 import { VideoThumbnail } from '../file-input/VideoThumbnail'
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface UploadOrderEvidenceDialogProps {
   isOpen: boolean
@@ -170,9 +172,10 @@ export const UploadOrderEvidenceDialog: React.FC<UploadOrderEvidenceDialogProps>
                               className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'
                             >
                               {file.type.includes('image') ? (
-                                <img
+                                <ImageWithFallback
                                   src={URL.createObjectURL(file)}
                                   alt={file.name}
+                                  fallback={fallBackImage}
                                   className='object-contain w-full h-full rounded-lg'
                                   onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
                                 />
@@ -236,9 +239,10 @@ export const UploadOrderEvidenceDialog: React.FC<UploadOrderEvidenceDialogProps>
                               className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'
                             >
                               {file.type.includes('image') ? (
-                                <img
+                                <ImageWithFallback
                                   src={URL.createObjectURL(file)}
                                   alt={file.name}
+                                  fallback={fallBackImage}
                                   className='object-contain w-full h-full rounded-lg'
                                   onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
                                 />

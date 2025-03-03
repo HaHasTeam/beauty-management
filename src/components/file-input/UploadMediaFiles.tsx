@@ -5,10 +5,13 @@ import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '@/components/file-input'
 import { PreviewDialog } from '@/components/file-input/PreviewImageDialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 // import { useToast } from '@/hooks/useToast'
 // import { uploadFilesApi } from '@/network/apis/file'
 // import { createFiles } from '@/utils/files'
@@ -253,7 +256,8 @@ const UploadMediaFiles = <T extends FieldValues>({
   const getFilePreview = (file: File) => {
     if (file.type.includes('image')) {
       return (
-        <img
+        <ImageWithFallback
+          fallback={fallBackImage}
           src={URL.createObjectURL(file)}
           alt={file.name}
           className='object-contain w-full h-full rounded-lg'
