@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { cn } from '@/lib/utils'
-import { IImage } from '@/types/image'
+import { TServerFile } from '@/types/file'
 
 import ImageWithFallback from '../image/ImageWithFallback'
 
@@ -106,7 +106,7 @@ export function VideoThumbnailServer({
   className,
   onClick
 }: {
-  file: IImage
+  file: TServerFile
   className?: string
   onClick?: () => void
 }) {

@@ -108,7 +108,8 @@
     "deselect": "Bỏ chọn",
     "select": "Chọn",
     "edit": "Chỉnh sửa",
-    "backToList": "Quay lại danh sách"
+    "backToList": "Quay lại danh sách",
+    "close": "Đóng"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -604,7 +605,7 @@
     "viewFeedback": "Xem đánh giá",
     "cancelOrder": "Hủy đơn",
     "requestCancelOrder": "Yêu cầu hủy đơn",
-    "cancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với hủy tất cả sản phẩm trong đơn hàng và không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
+    "cancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với hủy tất cả sản phẩm trong đơn hàng và không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể{{brand}} áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
     "requestCancelOrderDescription": "Do đơn hàng đang được chuẩn bị, yêu cầu này sẽ cần được xét duyệt trước khi hủy. Nhấn nút \"Xác nhận\" đồng nghĩa với việc gửi yêu cầu hủy toàn bộ sản phẩm trong đơn hàng. Hành động này không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
     "cancelOrderReason": {
       "changeOfMind": "Thay đổi ý định",
@@ -676,7 +677,8 @@
     "rejectedCancelRequest": "Yêu cầu hủy bị từ chối. Đơn hàng tiếp tục xử lý.",
     "rejectedCancelRequestTitle": "Yêu Cầu Hủy Bị Từ Chối",
     "received": "Đã nhận hàng",
-    "receivedOrderStatusSuccess": "Xác nhận nhận hàng thành công!"
+    "receivedOrderStatusSuccess": "Xác nhận nhận hàng thành công!",
+    "cancelOrderAdditional": " được khách hàng"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -766,7 +768,8 @@
     "videoBrowser": "Trình duyệt của bạn không hỗ trợ video.",
     "fileTypeLimits": "Bạn có thể tải lên tối đa {{imageCount}} hình ảnh và {{videoCount}} video.",
     "maxImages": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
-    "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video."
+    "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
+    "contentReplyFeedback": "Nội dung phản hồi phải có ít nhất 25 ký tự và không quá 500 ký tự"
   },
   "role": {
     "ADMIN": "Quản trị viên",
@@ -1012,7 +1015,9 @@
   },
   "feedback": {
     "successTitle": "Gửi đánh giá thành công",
+    "successRepTitle": "Phản hồi đã gửi!",
     "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
+    "successRepDescription": "Phản hồi của bạn đã được gửi thành công. Cảm ơn bạn đã phản hồi ý kiến của khách hàng!",
     "writeReview": "Viết đánh giá",
     "rating": "Đánh giá",
     "content": "Chia sẻ trải nghiệm của bạn",
@@ -1034,7 +1039,14 @@
       "REFUNDED": "Tải lên video xác nhận hoàn tất trả hàng và hoàn tiền."
     },
     "uploadVideos": "Tải lên video",
-    "uploadImages": "Tải lên hình ảnh"
+    "uploadImages": "Tải lên hình ảnh",
+    "viewReview": "Xem đánh giá",
+    "images": "Hình Ảnh",
+    "ID": "ID",
+    "order": "Đơn hàng",
+    "reply": "Reply",
+    "writeYourRep": "Viết phản hồi của bạn...",
+    "yourReply": "Phản hồi của bạn"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",

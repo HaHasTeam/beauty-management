@@ -110,9 +110,8 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                 )}
               </div>
             </div>
-            {openMedia && (
-              <ViewMediaDialog mediaFiles={step.mediaFiles} open={openMedia} onOpenChange={() => setOpenMedia(false)} />
-            )}
+
+            <ViewMediaDialog mediaFiles={step.mediaFiles} open={openMedia} onOpenChange={() => setOpenMedia(false)} />
           </div>
         ))}
       </div>

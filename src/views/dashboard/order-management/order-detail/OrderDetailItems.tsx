@@ -1,13 +1,18 @@
 import { useTranslation } from 'react-i18next'
 
+import { IBrand } from '@/types/brand'
+import { ClassificationTypeEnum, StatusEnum } from '@/types/enum'
 import { IOrderDetail } from '@/types/order'
 
 import ProductOrderDetailLandscape from './ProductOrderLandScape'
 
 interface OrderDetailItemsProps {
   orderDetails: IOrderDetail[]
+  brand: IBrand | null
+  recipientAvatar: string
+  recipientName: string
 }
-const OrderDetailItems = ({ orderDetails }: OrderDetailItemsProps) => {
+const OrderDetailItems = ({ orderDetails, recipientAvatar, recipientName, brand }: OrderDetailItemsProps) => {
   const { t } = useTranslation()
   return (
     <div className='w-full'>
@@ -26,7 +31,15 @@ const OrderDetailItems = ({ orderDetails }: OrderDetailItemsProps) => {
         {orderDetails?.map((orderDetail) => (
           <ProductOrderDetailLandscape
             key={orderDetail?.id}
-            productImage={orderDetail?.productClassification?.images?.[0]?.fileUrl ?? ''}
+            productImage={
+              (orderDetail?.productClassification?.type === ClassificationTypeEnum.DEFAULT
+                ? (
+                    orderDetail?.productClassification?.preOrderProduct ??
+                    orderDetail?.productClassification?.productDiscount ??
+                    orderDetail?.productClassification
+                  )?.product?.images?.filter((img) => img?.status === StatusEnum.ACTIVE)[0]?.fileUrl
+                : orderDetail?.productClassification?.images?.[0]?.fileUrl) ?? ''
+            }
             productId={
               (
                 orderDetail?.productClassification?.preOrderProduct ??
@@ -47,7 +60,10 @@ const OrderDetailItems = ({ orderDetails }: OrderDetailItemsProps) => {
             subTotal={orderDetail?.subTotal}
             productQuantity={orderDetail?.productClassification?.quantity}
             productClassification={orderDetail?.productClassification}
-            isFeedback={orderDetail?.isFeedback}
+            feedback={orderDetail?.feedback}
+            brand={brand || null}
+            recipientAvatar={recipientAvatar}
+            recipientName={recipientName}
           />
         ))}
       </div>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { IImage } from '@/types/image'
+import { TServerFile } from '@/types/file'
 
 import { PreviewDialog } from '../file-input/PreviewImageDialog'
 import { VideoThumbnailServer } from '../file-input/VideoThumbnail'
@@ -12,19 +12,19 @@ import ImageWithFallback from '../image/ImageWithFallback'
 interface ViewMediaDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  mediaFiles: IImage[]
+  mediaFiles: TServerFile[]
 }
 
 export default function ViewMediaDialog({ mediaFiles, open, onOpenChange }: ViewMediaDialogProps) {
   const { t } = useTranslation()
 
   const imageFiles = mediaFiles.filter(
-    (file: IImage) =>
+    (file: TServerFile) =>
       file.fileUrl && (file.fileUrl.endsWith('.jpg') || file.fileUrl.endsWith('.jpeg') || file.fileUrl.endsWith('.png'))
   )
 
   const videoFiles = mediaFiles.filter(
-    (file: IImage) =>
+    (file: TServerFile) =>
       file.fileUrl &&
       (file.fileUrl.endsWith('.mp4') ||
         file.fileUrl.endsWith('.wmv') ||
@@ -35,7 +35,7 @@ export default function ViewMediaDialog({ mediaFiles, open, onOpenChange }: View
   )
 
   // Get file type based on file URL
-  const getFileContentType = (file: IImage) => {
+  const getFileContentType = (file: TServerFile) => {
     if (!file.fileUrl) return 'text'
     if (file.fileUrl.endsWith('.jpg') || file.fileUrl.endsWith('.jpeg') || file.fileUrl.endsWith('.png')) return 'image'
     if (
@@ -51,7 +51,7 @@ export default function ViewMediaDialog({ mediaFiles, open, onOpenChange }: View
   }
 
   // Preview content for dialog
-  const getPreviewContent = (file: IImage) => {
+  const getPreviewContent = (file: TServerFile) => {
     const contentType = getFileContentType(file)
 
     if (contentType === 'image') {

@@ -108,7 +108,8 @@
     "deselect": "Deselect",
     "select": "Select",
     "edit": "Edit",
-    "backToList": "Back to List"
+    "backToList": "Back to List",
+    "close": "Close"
   },
   "noData": "No matching data found",
   "sell": {
@@ -604,7 +605,7 @@
     "viewFeedback": "View review",
     "cancelOrder": "Cancel order",
     "requestCancelOrder": "Request cancel order",
-    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
+    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied{{brand}} to other orders after canceling this one.",
     "requestCancelOrderDescription": "Since the order is being prepared, this request will need to be reviewed before cancellation. Clicking \"Confirm\" button means submitting a request to cancel all items in this order. This action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
     "cancelOrderReason": {
       "changeOfMind": "Changed my mind",
@@ -676,7 +677,8 @@
     "rejectedCancelRequest": "Cancellation rejected. Order will proceed.",
     "rejectedCancelRequestTitle": "Cancellation Rejected",
     "received": "Received",
-    "receivedOrderStatusSuccess": "Successfully confirmed order receipt!"
+    "receivedOrderStatusSuccess": "Successfully confirmed order receipt!",
+    "cancelOrderAdditional": " by the customer"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -766,7 +768,8 @@
     "videoBrowser": "Your browser does not support the video tag.",
     "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
     "maxImages": "You can only upload up to {{count}} images.",
-    "maxVideos": "You can only upload up to {{count}} videos."
+    "maxVideos": "You can only upload up to {{count}} videos.",
+    "contentReplyFeedback": "The feedback reply must be at least 25 characters long but no more than 500 characters"
   },
   "role": {
     "ADMIN": "Admin",
@@ -1012,7 +1015,9 @@
   },
   "feedback": {
     "successTitle": "Review submitted successfully!",
+    "successRepTitle": "Response Sent!",
     "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
+    "successRepDescription": "Your response has been successfully submitted. Thank you for addressing customer feedback!",
     "writeReview": "Write a Review",
     "rating": "Rating",
     "content": "Share Your Experiences",
@@ -1034,7 +1039,14 @@
       "REFUNDED": "Upload video of return completion and refund."
     },
     "uploadVideos": "Upload videos",
-    "uploadImages": "Upload images"
+    "uploadImages": "Upload images",
+    "viewReview": "View Review",
+    "images": "Images",
+    "ID": "ID",
+    "order": "Order",
+    "reply": "Reply",
+    "writeYourRep": "Write your reply...",
+    "yourReply": "Your reply"
   },
   "media": {
     "previewImage": "Preview Image/Video",

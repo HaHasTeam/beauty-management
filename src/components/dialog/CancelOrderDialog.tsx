@@ -105,7 +105,10 @@ export default function CancelOrderDialog({ orderId, open, setOpen, onOpenChange
           </div>
         </DialogHeader>
 
-        <AlertMessage message={t('order.cancelOrderDescription')} textSize='medium' />
+        <AlertMessage
+          message={t('order.cancelOrderDescription', { brand: t('order.cancelOrderAdditional') })}
+          textSize='medium'
+        />
         <Form {...form}>
           <form
             noValidate

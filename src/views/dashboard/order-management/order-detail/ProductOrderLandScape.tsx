@@ -1,14 +1,18 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
+import { ViewFeedbackDialog } from '@/components/feedback/ViewFeedbackDialog'
 import ImageWithFallback from '@/components/image/ImageWithFallback'
 import ProductTag from '@/components/product-tag'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Routes, routesConfig } from '@/configs/routes'
+import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
 import { ClassificationTypeEnum, OrderEnum } from '@/types/enum'
+import { IResponseFeedback } from '@/types/feedback'
 
 interface ProductOrderDetailLandscapeProps {
   productImage: string
@@ -20,7 +24,10 @@ interface ProductOrderDetailLandscapeProps {
   subTotal: number
   productQuantity: number
   productClassification: IClassification | null
-  isFeedback: boolean
+  feedback: IResponseFeedback | null
+  brand: IBrand | null
+  recipientName: string
+  recipientAvatar: string
 }
 const ProductOrderDetailLandscape = ({
   productImage,
@@ -32,9 +39,14 @@ const ProductOrderDetailLandscape = ({
   unitPriceBeforeDiscount,
   subTotal,
   productClassification,
-  isFeedback
+  feedback,
+  brand,
+  recipientName,
+  recipientAvatar
 }: ProductOrderDetailLandscapeProps) => {
   const { t } = useTranslation()
+  const [openViewFbDialog, setOpenViewFbDialog] = useState(false)
+  const [, setOpenRepFbDialog] = useState(false)
   return (
     <div className='w-full py-4 border-b border-gray-200'>
       <div className='w-full flex gap-2 items-center p-2 md:p-3 lg:p-4'>
@@ -45,7 +57,7 @@ const ProductOrderDetailLandscape = ({
                 fallback={fallBackImage}
                 src={productImage}
                 alt={productName}
-                className='object-cover w-full h-full'
+                className='object-cover w-full h-full rounded-sm'
               />
             </div>
           </Link>
@@ -101,13 +113,26 @@ const ProductOrderDetailLandscape = ({
             </div>
           )}
 
-          <div className='order-4 flex gap-2 sm:hidden flex-wrap'>
-            {isFeedback && (
-              <Button variant='outline' size='sm' className='border border-primary text-primary'>
+          {feedback && (
+            <div className='order-4 flex gap-2 sm:hidden flex-wrap'>
+              <Button
+                variant='outline'
+                size='sm'
+                className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                onClick={() => setOpenViewFbDialog(true)}
+              >
                 {t('order.viewFeedback')}
               </Button>
-            )}
-          </div>
+              <Button
+                variant='outline'
+                size='sm'
+                className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                onClick={() => setOpenRepFbDialog(true)}
+              >
+                {t('feedback.reply')}
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className='w-[10%] md:w-[9%] sm:w-[8%] text-center'>
@@ -117,6 +142,18 @@ const ProductOrderDetailLandscape = ({
           {t('productCard.currentPrice', { price: subTotal })}
         </span>
       </div>
+      {feedback && (
+        <ViewFeedbackDialog
+          productQuantity={productQuantity}
+          productClassification={productClassification}
+          isOpen={openViewFbDialog}
+          onClose={() => setOpenViewFbDialog(false)}
+          feedback={feedback}
+          brand={brand}
+          recipientAvatar={recipientAvatar}
+          recipientName={recipientName}
+        />
+      )}
     </div>
   )
 }
