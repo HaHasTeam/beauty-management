@@ -809,7 +809,7 @@
     "successStatusMessage": "Update product status successfully!",
     "categoryLastLevel": "Please select the last-level category.",
     "certificateRequired": "Product certificate is required.",
-    "totalQuantityTooLow": "The total quantity is too low. Please increase the quantity to meet the required minimum ({{count}})."
+    "totalQuantityTooLow": "The total quantity is too low. Please increase the quantity to meet the required minimum: {{count}}."
   },
   "createProduct": {
     "successOfficial": "Product created successfully!",

@@ -31,7 +31,7 @@ const CustomerReview = ({
   return (
     <div className='flex flex-col gap-1'>
       <div>
-        <div className='flex gap-3'>
+        <div className='flex gap-3 items-center'>
           <Avatar>
             <AvatarImage src={authorAvatar} alt={authorName} />
             <AvatarFallback>{authorName?.charAt(0) ?? 'A'}</AvatarFallback>
@@ -71,7 +71,7 @@ const CustomerReview = ({
         <p>{description}</p>
       </div>
       <div className='flex gap-2 flex-wrap'>
-        <ViewMediaSection mediaFiles={mediaFiles} />
+        <div className='flex gap-2 flex-wrap'>{mediaFiles && <ViewMediaSection mediaFiles={mediaFiles} />}</div>
       </div>
     </div>
   )

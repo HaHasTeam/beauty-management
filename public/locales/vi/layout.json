@@ -809,7 +809,7 @@
     "successStatusMessage": "Cập nhật trạng thái sản phẩm thành công!",
     "categoryLastLevel": "Vui lòng chọn danh mục cấp cuối.",
     "certificateRequired": "Chứng nhận sản phẩm là bắt buộc.",
-    "totalQuantityTooLow": "Tổng số lượng quá thấp. Vui lòng tăng số lượng để đáp ứng mức tối thiểu yêu cầu ({{count}})."
+    "totalQuantityTooLow": "Tổng số lượng quá thấp. Vui lòng tăng số lượng để đáp ứng mức tối thiểu yêu cầu là: {{count}}."
   },
   "createProduct": {
     "successOfficial": "Tạo sản phẩm thành công!",

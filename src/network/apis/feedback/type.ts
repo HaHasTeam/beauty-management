@@ -13,5 +13,5 @@ export type IReplyFeedbackData = {
 }
 export type IReplyFeedback = {
   params: string
-  data: IReplyFeedbackData
+  content: string
 }

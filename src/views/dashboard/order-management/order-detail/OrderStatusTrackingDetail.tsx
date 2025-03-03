@@ -14,7 +14,7 @@ interface OrderStatusTrackingDetailProps {
 }
 const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDetailProps) => {
   const { t } = useTranslation()
-  const [openMedia, setOpenMedia] = useState<boolean>(false)
+  const [openMediaStep, setOpenMediaStep] = useState<number | null>(null)
 
   const defaultTimeline = [
     {
@@ -81,7 +81,7 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                           <Eye
                             size={16}
                             className='text-gray-500 hover:text-gray-800 cursor-pointer hover:bg-gray-100 transition-colors'
-                            onClick={() => setOpenMedia(true)}
+                            onClick={() => setOpenMediaStep(index)}
                           />
                         </TooltipTrigger>
                         <TooltipContent>
@@ -110,8 +110,13 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                 )}
               </div>
             </div>
-
-            <ViewMediaDialog mediaFiles={step.mediaFiles} open={openMedia} onOpenChange={() => setOpenMedia(false)} />
+            {openMediaStep !== null && timeline[openMediaStep]?.mediaFiles && (
+              <ViewMediaDialog
+                mediaFiles={timeline[openMediaStep].mediaFiles}
+                open={openMediaStep !== null}
+                onOpenChange={() => setOpenMediaStep(null)}
+              />
+            )}
           </div>
         ))}
       </div>

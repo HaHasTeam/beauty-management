@@ -28,6 +28,7 @@ interface ProductOrderDetailLandscapeProps {
   brand: IBrand | null
   recipientName: string
   recipientAvatar: string
+  orderDetailId: string
 }
 const ProductOrderDetailLandscape = ({
   productImage,
@@ -42,11 +43,11 @@ const ProductOrderDetailLandscape = ({
   feedback,
   brand,
   recipientName,
-  recipientAvatar
+  recipientAvatar,
+  orderDetailId
 }: ProductOrderDetailLandscapeProps) => {
   const { t } = useTranslation()
   const [openViewFbDialog, setOpenViewFbDialog] = useState(false)
-  const [, setOpenRepFbDialog] = useState(false)
   return (
     <div className='w-full py-4 border-b border-gray-200'>
       <div className='w-full flex gap-2 items-center p-2 md:p-3 lg:p-4'>
@@ -74,6 +75,18 @@ const ProductOrderDetailLandscape = ({
                   <ProductTag tag={eventType} size='small' />
                 )}
               </div>
+              {feedback && (
+                <div className='flex gap-1'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                    onClick={() => setOpenViewFbDialog(true)}
+                  >
+                    {t('order.viewFeedback')}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           <div className='order-3 sm:order-2 xl:w-[30%] lg:w-[30%] md:w-[30%] w-full'>
@@ -112,27 +125,6 @@ const ProductOrderDetailLandscape = ({
               </span>
             </div>
           )}
-
-          {feedback && (
-            <div className='order-4 flex gap-2 sm:hidden flex-wrap'>
-              <Button
-                variant='outline'
-                size='sm'
-                className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                onClick={() => setOpenViewFbDialog(true)}
-              >
-                {t('order.viewFeedback')}
-              </Button>
-              <Button
-                variant='outline'
-                size='sm'
-                className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                onClick={() => setOpenRepFbDialog(true)}
-              >
-                {t('feedback.reply')}
-              </Button>
-            </div>
-          )}
         </div>
 
         <div className='w-[10%] md:w-[9%] sm:w-[8%] text-center'>
@@ -152,6 +144,7 @@ const ProductOrderDetailLandscape = ({
           brand={brand}
           recipientAvatar={recipientAvatar}
           recipientName={recipientName}
+          orderDetailId={orderDetailId}
         />
       )}
     </div>

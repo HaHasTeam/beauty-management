@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Reply } from 'lucide-react'
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -33,6 +33,7 @@ interface ViewFeedbackDialogProps {
   brand: IBrand | null
   recipientAvatar: string
   recipientName: string
+  orderDetailId: string
 }
 
 export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
@@ -43,6 +44,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
   feedback,
   recipientAvatar,
   recipientName,
+  orderDetailId,
   brand
 }) => {
   const { t } = useTranslation()
@@ -79,19 +81,18 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
         queryKey: [getProductByIdApi.queryKey]
       })
       handleReset()
-      onClose()
     }
   })
 
   const handleReset = () => {
     form.reset()
+    setShowRep(false)
   }
 
   const handleSubmit = async (values: z.infer<typeof ReplyFeedbackSchema>) => {
     try {
       setIsLoading(true)
-
-      await submitFeedbackFn({ params: feedback.id, data: values })
+      await submitFeedbackFn({ params: feedback.id, content: values.content })
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
@@ -101,6 +102,11 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
       })
     }
   }
+  useEffect(() => {
+    if (!isOpen) {
+      setShowRep(false)
+    }
+  }, [isOpen])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -112,11 +118,13 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
         {/* Feedback ID */}
         <div className='flex items-center justify-between text-sm text-gray-500'>
           <div>
-            <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id}
+            <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8)}
           </div>
-          <div>
-            {t('feedback.order')}: {feedback.orderDetailId}
-          </div>
+          {orderDetailId && (
+            <div>
+              <span className='font-medium'> {t('feedback.order')}:</span> {orderDetailId.substring(0, 8)}
+            </div>
+          )}
         </div>
         <CustomerReview
           authorName={recipientName}
@@ -129,19 +137,21 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
           rating={feedback.rating}
         />
         {!showRep && (
-          <Button
-            variant='outline'
-            size='sm'
-            className='border border-primary text-primary hover:text-primary hover:bg-primary/10 flex gap-1'
-            onClick={() => setShowRep(true)}
-          >
-            <Reply />
-            {t('feedback.reply')}
-          </Button>
+          <div>
+            <Button
+              variant='outline'
+              size='sm'
+              className='border border-primary text-primary hover:text-primary hover:bg-primary/10 flex gap-1'
+              onClick={() => setShowRep(true)}
+            >
+              <Reply />
+              {t('feedback.reply')}
+            </Button>
+          </div>
         )}
         {showRep && (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6' id={`form-${id}`}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-3' id={`form-${id}`}>
               <FormField
                 control={form.control}
                 name='content'
@@ -156,6 +166,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
                       <div className='w-full space-y-1'>
                         <FormControl>
                           <Textarea
+                            id='content'
                             placeholder={t('feedback.writeYourRep')}
                             className='border-primary/40 min-h-32'
                             {...field}
@@ -171,31 +182,31 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
                   </FormItem>
                 )}
               />
-              <Button
-                variant='outline'
-                className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                size='sm'
-                type='button'
-                onClick={() => setShowRep(false)}
-              >
-                {t('button.cancel')}
-              </Button>
-              <Button
-                loading={isLoading}
-                size='sm'
-                type='submit'
-                onClick={() => {
-                  setShowRep(false)
-                }}
-              >
-                {t('button.submit')}
-              </Button>
+              <div className='flex gap-2 w-full items-center justify-end'>
+                <Button
+                  variant='outline'
+                  className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                  size='sm'
+                  type='button'
+                  onClick={() => setShowRep(false)}
+                >
+                  {t('button.cancel')}
+                </Button>
+                <Button loading={isLoading} size='sm' type='submit'>
+                  {t('button.submit')}
+                </Button>
+              </div>
             </form>
           </Form>
         )}
         <BrandAnswer brandName={brand?.name ?? ''} updatedAt={''} description={''} brandLogo={brand?.logo ?? ''} />
         <DialogFooter>
-          <Button variant='outline' onClick={onClose}>
+          <Button
+            variant='outline'
+            className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+            type='button'
+            onClick={onClose}
+          >
             {t('button.close')}
           </Button>
         </DialogFooter>

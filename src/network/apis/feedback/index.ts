@@ -48,10 +48,10 @@ export const filterFeedbackApi = toMutationFetcher<IFilterFeedback, TServerRespo
 )
 export const replyFeedbackApi = toMutationFetcher<IReplyFeedback, TServerResponse<string>>(
   'replyFeedbackApi',
-  async (params, data) => {
+  async ({ params, content }) => {
     return privateRequest(`/feedbacks/reply/${params}`, {
       method: 'POST',
-      data
+      data: { content }
     })
   }
 )
