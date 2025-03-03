@@ -273,6 +273,23 @@
       "title": "System Service Not Found",
       "description": "The system service you're looking for either does not exist, has been removed, or is currently unavailable.",
       "button": "Browse Other System Service"
+    },
+    "feedback": {
+      "title": "No Feedback Yet",
+      "description": "This product has no reviews yet{{filter}}. Please {{filterCallAction}}be the first to share your thoughts!",
+      "filter": " for the selected filter",
+      "filterCallAction": "try viewing all reviews or ",
+      "button": "Write a Review"
+    },
+    "myFeedbackList": {
+      "title": "You haven't written any reviews",
+      "description": "Share your experience with the products you've purchased.",
+      "button": "Write a review"
+    },
+    "feedbackDetail": {
+      "title": "Review not found",
+      "description": "This review may have been deleted or does not exist.",
+      "button": "Go back"
     }
   },
   "productDetail": {

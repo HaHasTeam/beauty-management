@@ -273,6 +273,23 @@
       "title": "Không tìm thấy dịch vụ hệ thống",
       "description": "Dịch vụ hệ thống bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
       "button": "Xem các dịch vụ hệ thống khác"
+    },
+    "feedback": {
+      "title": "Chưa có đánh giá nào",
+      "description": "Sản phẩm này hiện chưa có đánh giá nào{{filter}}. Hãy {{filterCallAction}}trở thành người đầu tiên chia sẻ nhận xét của bạn!",
+      "filter": " cho bộ lọc bạn đã chọn",
+      "filterCallAction": "thử xem tất cả đánh giá hoặc ",
+      "button": "Viết đánh giá"
+    },
+    "myFeedbackList": {
+      "title": "Bạn chưa có đánh giá nào",
+      "description": "Hãy chia sẻ trải nghiệm của bạn về các sản phẩm đã mua.",
+      "button": "Viết đánh giá"
+    },
+    "feedbackDetail": {
+      "title": "Không tìm thấy đánh giá",
+      "description": "Đánh giá này có thể đã bị xóa hoặc không tồn tại.",
+      "button": "Quay lại"
     }
   },
   "productDetail": {
