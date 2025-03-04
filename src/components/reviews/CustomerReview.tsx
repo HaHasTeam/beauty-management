@@ -1,6 +1,10 @@
 import { useTranslation } from 'react-i18next'
+import { useShallow } from 'zustand/react/shallow'
 
+import { useStore } from '@/stores/store'
+import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
+import { RoleEnum } from '@/types/enum'
 import { TServerFile } from '@/types/file'
 
 import ViewMediaSection from '../media/ViewMediaSection'
@@ -18,6 +22,7 @@ interface CustomerReviewProps {
   mediaFiles: TServerFile[]
   rating: number
   onReplyClick: () => void
+  brand: IBrand | null
 }
 const CustomerReview = ({
   authorName,
@@ -28,9 +33,15 @@ const CustomerReview = ({
   rating,
   description,
   mediaFiles,
-  onReplyClick
+  onReplyClick,
+  brand
 }: CustomerReviewProps) => {
   const { t } = useTranslation()
+  const { user } = useStore(
+    useShallow((state) => ({
+      user: state.user
+    }))
+  )
   return (
     <div className='flex flex-col gap-1'>
       <div>
@@ -49,7 +60,7 @@ const CustomerReview = ({
         {classification && (
           <div>
             <span>{t('createProduct.classification')}: </span>
-            <span>
+            <span className='text-primary font-medium'>
               {[
                 classification?.color && `${classification.color}`,
                 classification?.size && `${classification.size}`,
@@ -62,7 +73,7 @@ const CustomerReview = ({
         )}
         <div className='border-l border-gray-200 px-2'>
           <span>{t('createProduct.quantity')}: </span>
-          <span>{numberOfItem}</span>
+          <span className='text-primary font-medium'>{numberOfItem}</span>
         </div>
       </div>
       <div>
@@ -75,14 +86,16 @@ const CustomerReview = ({
         <span className='text-muted-foreground font-medium text-xs'>
           {t('date.toLocaleDateTimeString', { val: new Date(updatedAt) })}
         </span>
-        <Button
-          variant='ghost'
-          size='sm'
-          className='border-0 outline-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground/80'
-          onClick={onReplyClick}
-        >
-          {t('feedback.reply')}
-        </Button>
+        {(user?.brands?.find((b) => b.id === brand?.id) || user?.role === RoleEnum.CUSTOMER) && (
+          <Button
+            variant='ghost'
+            size='sm'
+            className='border-0 outline-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground/80'
+            onClick={onReplyClick}
+          >
+            {t('feedback.reply')}
+          </Button>
+        )}
       </div>
     </div>
   )

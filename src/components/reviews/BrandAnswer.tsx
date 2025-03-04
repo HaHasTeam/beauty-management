@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useStore } from '@/stores/store'
+import { IBrand } from '@/types/brand'
 import { RoleEnum } from '@/types/enum'
 import { IReplyFeedback, IResponseFeedback } from '@/types/feedback'
 import { UserRoleEnum } from '@/types/role'
@@ -20,6 +21,7 @@ interface BrandAnswerProps {
   setShowRep: Dispatch<SetStateAction<boolean>>
   replyFormRef: React.RefObject<HTMLDivElement>
   onReplyClick: () => void
+  brand: IBrand | null
 }
 const BrandAnswer = ({
   replies,
@@ -28,7 +30,8 @@ const BrandAnswer = ({
   showRep,
   setShowRep,
   replyFormRef,
-  onReplyClick
+  onReplyClick,
+  brand
 }: BrandAnswerProps) => {
   const { t } = useTranslation()
 
@@ -53,20 +56,17 @@ const BrandAnswer = ({
     <div className='pl-6 pr-2'>
       <div>
         {displayedReplies.map((reply) => {
-          const brandLogo = ''
-          const brandName = ''
           const updatedAt = reply.updatedAt
           const description = reply.content
-          const brand = null
           const account = reply.account
           return (
             <>
               <div className='rounded-md'>
                 <div className='flex gap-2 items-start'>
-                  {brand ? (
+                  {brand && (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) ? (
                     <Avatar>
-                      <AvatarImage src={brandLogo} alt={brandName} />
-                      <AvatarFallback>{brandName?.charAt(0) ?? 'A'}</AvatarFallback>
+                      <AvatarImage src={brand.logo} alt={brand.name} />
+                      <AvatarFallback>{brand.name?.charAt(0) ?? 'A'}</AvatarFallback>
                     </Avatar>
                   ) : (
                     <Avatar>
@@ -76,25 +76,32 @@ const BrandAnswer = ({
                   )}
                   <div className='space-y-1'>
                     <div className='flex gap-2 items-center'>
-                      {brand ? (
-                        <span className='font-semibold text-sm'>{brandName}</span>
+                      {brand &&
+                      (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) ? (
+                        <span className='font-semibold text-sm'>{brand.name}</span>
                       ) : (
                         (account.firstName || account.lastName) && (
                           <span className='font-semibold text-sm'>
-                            {[account?.firstName, account?.lastName].join(' ')}
+                            {[account?.lastName, account?.firstName].join(' ')}
                           </span>
                         )
                       )}
-                      {brand && <RoleTag role={UserRoleEnum.MANAGER} isBrand size='small' />}
+                      {brand &&
+                        (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) && (
+                          <RoleTag role={'BRAND'} size='small' />
+                        )}
                     </div>
                     {brand &&
-                      user.role !== RoleEnum.CUSTOMER &&
-                      user.role !== RoleEnum.CONSULTANT &&
-                      user.role !== RoleEnum.KOL && (
+                      (user?.role === RoleEnum.ADMIN ||
+                        user?.role === RoleEnum.OPERATOR ||
+                        user?.role === RoleEnum.MANAGER ||
+                        user?.role === RoleEnum.STAFF) &&
+                      (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) && (
                         <div className='flex items-center gap-1'>
-                          <span className='font-semibold text-sm'>
-                            {[account?.firstName, account?.lastName].join(' ')}
+                          <span className='font-medium text-muted-foreground text-xs'>
+                            {[account?.lastName, account?.firstName].join(' ')}
                           </span>
+                          <RoleTag role={account?.role?.role} size='small' />
                         </div>
                       )}
                     <p className='mt-2 text-sm text-gray-700'>{description}</p>
@@ -105,14 +112,16 @@ const BrandAnswer = ({
                 <span className='text-muted-foreground font-medium text-xs'>
                   {t('date.toLocaleDateTimeString', { val: new Date(updatedAt) })}
                 </span>
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  className='text-muted-foreground hover:bg-transparent hover:text-muted-foreground/80'
-                  onClick={onReplyClick}
-                >
-                  {t('feedback.reply')}
-                </Button>
+                {(user?.brands?.find((b) => b.id === brand?.id) || user?.role === RoleEnum.CUSTOMER) && (
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    className='border-0 outline-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground/80'
+                    onClick={onReplyClick}
+                  >
+                    {t('feedback.reply')}
+                  </Button>
+                )}
               </div>
             </>
           )

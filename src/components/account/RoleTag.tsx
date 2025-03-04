@@ -4,8 +4,7 @@ import { UserRoleEnum } from '@/types/role'
 import { getRoleIcon } from '@/views/dashboard/accounts-directory/account-table-ui/helper'
 
 interface RoleTagProps {
-  role: UserRoleEnum
-  isBrand?: boolean
+  role: UserRoleEnum | 'BRAND' | 'MODERATOR'
   size?: 'small' | 'medium' | 'large'
 }
 
@@ -15,7 +14,7 @@ const sizeClasses = {
   large: 'text-base px-4 py-2'
 }
 
-export default function RoleTag({ isBrand = false, role, size = 'medium' }: RoleTagProps) {
+export default function RoleTag({ role, size = 'medium' }: RoleTagProps) {
   const { t } = useTranslation()
   const roleData = getRoleIcon(role)
 
@@ -24,7 +23,8 @@ export default function RoleTag({ isBrand = false, role, size = 'medium' }: Role
       className={`flex items-center gap-1 rounded-full font-medium ${roleData.bgColor} ${roleData.textColor} ${sizeClasses[size]}`}
     >
       <roleData.icon className={roleData.iconColor} size={16} />
-      {isBrand ? t(`role.BRAND`) : t(`role.${role}`)}
+
+      {t(`role.${role}`)}
     </span>
   )
 }

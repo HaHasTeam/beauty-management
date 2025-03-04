@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
+import { useShallow } from 'zustand/react/shallow'
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/useToast'
@@ -11,8 +12,10 @@ import { replyFeedbackApi } from '@/network/apis/feedback'
 import { getOrderByIdApi } from '@/network/apis/order'
 import { getProductByIdApi } from '@/network/apis/product'
 import { getReplyFeedbackSchema } from '@/schemas/feedback.schema'
+import { useStore } from '@/stores/store'
 import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
+import { RoleEnum } from '@/types/enum'
 import { IResponseFeedback } from '@/types/feedback'
 
 import Button from '../button'
@@ -40,7 +43,8 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
   feedback,
   recipientAvatar,
   recipientName,
-  orderDetailId
+  orderDetailId,
+  brand
 }) => {
   const { t } = useTranslation()
   const [showRep, setShowRep] = useState(false)
@@ -48,6 +52,11 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
   const queryClient = useQueryClient()
   const ReplyFeedbackSchema = getReplyFeedbackSchema()
   const replyFormRef = useRef<HTMLDivElement>(null)
+  const { user } = useStore(
+    useShallow((state) => ({
+      user: state.user
+    }))
+  )
 
   const defaultValues = {
     content: ''
@@ -103,16 +112,21 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
               <DialogTitle className='text-primary'>{t('feedback.viewReview')}</DialogTitle>
             </DialogHeader>
             {/* Feedback ID */}
-            <div className='flex items-center justify-between text-sm text-gray-500'>
-              <div>
-                <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8)}
-              </div>
-              {orderDetailId && (
+            {(user?.role === RoleEnum.ADMIN ||
+              user?.role === RoleEnum.OPERATOR ||
+              user?.role === RoleEnum.MANAGER ||
+              user?.role === RoleEnum.STAFF) && (
+              <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
                 <div>
-                  <span className='font-medium'> {t('feedback.order')}:</span> {orderDetailId.substring(0, 8)}
+                  <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8)}
                 </div>
-              )}
-            </div>
+                {orderDetailId && (
+                  <div>
+                    <span className='font-medium'> {t('feedback.order')}:</span> {orderDetailId.substring(0, 8)}
+                  </div>
+                )}
+              </div>
+            )}
             <div className='space-y-1'>
               <CustomerReview
                 authorName={recipientName}
@@ -123,6 +137,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
                 description={feedback.content}
                 mediaFiles={feedback.mediaFiles}
                 rating={feedback.rating}
+                brand={brand}
                 onReplyClick={handleReplyClick}
               />
               {feedback.replies && feedback.replies.length > 0 && (
@@ -134,6 +149,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
                   setShowRep={setShowRep}
                   replyFormRef={replyFormRef}
                   onReplyClick={handleReplyClick}
+                  brand={brand}
                 />
               )}
             </div>

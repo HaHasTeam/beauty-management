@@ -798,7 +798,8 @@
     "STAFF": "Nhân viên thương hiệu",
     "KOL": "Người ảnh hưởng",
     "OPERATOR": "Người vận hành",
-    "BRAND": "Thương hiệu"
+    "BRAND": "Thương hiệu",
+    "MODERATOR": "Quản trị viên"
   },
   "productFormMessage": {
     "SKURequired": "SKU phân loại sản phẩm không thể trùng",
