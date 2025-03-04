@@ -54,13 +54,13 @@ const BrandAnswer = ({
 
   return (
     <div className='pl-6 pr-2'>
-      <div>
+      <div className='space-y-2'>
         {displayedReplies.map((reply) => {
           const updatedAt = reply.updatedAt
           const description = reply.content
           const account = reply.account
           return (
-            <>
+            <div className='space-y-1'>
               <div className='rounded-md'>
                 <div className='flex gap-2 items-start'>
                   {brand && (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) ? (
@@ -75,21 +75,36 @@ const BrandAnswer = ({
                     </Avatar>
                   )}
                   <div className='space-y-1'>
-                    <div className='flex gap-2 items-center'>
-                      {brand &&
-                      (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) ? (
-                        <span className='font-semibold text-sm'>{brand.name}</span>
-                      ) : (
-                        (account.firstName || account.lastName) && (
-                          <span className='font-semibold text-sm'>
-                            {[account?.lastName, account?.firstName].join(' ')}
-                          </span>
-                        )
-                      )}
-                      {brand &&
-                        (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) && (
-                          <RoleTag role={'BRAND'} size='small' />
+                    <div className='flex gap-2 items-center justify-between'>
+                      <div className='flex gap-2 items-center'>
+                        {brand &&
+                        (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) ? (
+                          <span className='font-semibold text-sm'>{brand.name}</span>
+                        ) : (
+                          (account.firstName || account.lastName) && (
+                            <span className='font-semibold text-sm'>
+                              {[account?.lastName, account?.firstName].join(' ')}
+                            </span>
+                          )
                         )}
+
+                        {brand &&
+                          (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) && (
+                            <RoleTag role={'BRAND'} size='small' />
+                          )}
+                      </div>
+                      <div>
+                        {(user?.role === RoleEnum.ADMIN ||
+                          user?.role === RoleEnum.OPERATOR ||
+                          user?.role === RoleEnum.MANAGER ||
+                          user?.role === RoleEnum.STAFF) && (
+                          <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
+                            <div>
+                              <span className='font-medium'>{t('feedback.ID')}:</span> {reply.id.substring(0, 8)}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     {brand &&
                       (user?.role === RoleEnum.ADMIN ||
@@ -123,7 +138,7 @@ const BrandAnswer = ({
                   </Button>
                 )}
               </div>
-            </>
+            </div>
           )
         })}
       </div>

@@ -127,7 +127,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
                 )}
               </div>
             )}
-            <div className='space-y-1'>
+            <div className='space-y-2'>
               <CustomerReview
                 authorName={recipientName}
                 authorAvatar={recipientAvatar}
