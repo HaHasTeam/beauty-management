@@ -109,7 +109,9 @@
     "select": "Select",
     "edit": "Edit",
     "backToList": "Back to List",
-    "close": "Close"
+    "close": "Close",
+    "showMore": "Show more {{count}} replies",
+    "showLess": "Show less"
   },
   "noData": "No matching data found",
   "sell": {

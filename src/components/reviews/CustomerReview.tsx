@@ -5,6 +5,7 @@ import { TServerFile } from '@/types/file'
 
 import ViewMediaSection from '../media/ViewMediaSection'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Button } from '../ui/button'
 import { Ratings } from '../ui/rating'
 
 interface CustomerReviewProps {
@@ -16,6 +17,7 @@ interface CustomerReviewProps {
   description: string
   mediaFiles: TServerFile[]
   rating: number
+  onReplyClick: () => void
 }
 const CustomerReview = ({
   authorName,
@@ -25,7 +27,8 @@ const CustomerReview = ({
   numberOfItem,
   rating,
   description,
-  mediaFiles
+  mediaFiles,
+  onReplyClick
 }: CustomerReviewProps) => {
   const { t } = useTranslation()
   return (
@@ -37,11 +40,6 @@ const CustomerReview = ({
             <AvatarFallback>{authorName?.charAt(0) ?? 'A'}</AvatarFallback>
           </Avatar>
           <span className='font-semibold'>{authorName}</span>
-        </div>
-        <div>
-          <span className='text-gray-500 text-sm'>
-            {t('date.toLocaleDateTimeString', { val: new Date(updatedAt) })}
-          </span>
         </div>
       </div>
       <div className='flex gap-3'>
@@ -72,6 +70,19 @@ const CustomerReview = ({
       </div>
       <div className='flex gap-2 flex-wrap'>
         <div className='flex gap-2 flex-wrap'>{mediaFiles && <ViewMediaSection mediaFiles={mediaFiles} />}</div>
+      </div>
+      <div className='flex items-center gap-2'>
+        <span className='text-muted-foreground font-medium text-xs'>
+          {t('date.toLocaleDateTimeString', { val: new Date(updatedAt) })}
+        </span>
+        <Button
+          variant='ghost'
+          size='sm'
+          className='border-0 outline-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground/80'
+          onClick={onReplyClick}
+        >
+          {t('feedback.reply')}
+        </Button>
       </div>
     </div>
   )

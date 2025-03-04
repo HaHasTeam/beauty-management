@@ -47,7 +47,7 @@ const ProductOrderDetailLandscape = ({
   orderDetailId
 }: ProductOrderDetailLandscapeProps) => {
   const { t } = useTranslation()
-  const [openViewFbDialog, setOpenViewFbDialog] = useState(false)
+  const [openViewFbDialog, setOpenViewFbDialog] = useState(true)
   return (
     <div className='w-full py-4 border-b border-gray-200'>
       <div className='w-full flex gap-2 items-center p-2 md:p-3 lg:p-4'>

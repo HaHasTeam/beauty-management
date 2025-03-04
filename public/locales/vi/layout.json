@@ -109,7 +109,9 @@
     "select": "Chọn",
     "edit": "Chỉnh sửa",
     "backToList": "Quay lại danh sách",
-    "close": "Đóng"
+    "close": "Đóng",
+    "showMore": "Xem thêm {{count}} phản hồi",
+    "showLess": "Thu gọn"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
