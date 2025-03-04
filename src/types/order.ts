@@ -44,6 +44,7 @@ export interface IOrderItem {
   shopVoucherDiscount: number
   orderDetails: IOrderDetail[]
   voucher: TVoucher | null
+  account: TUser
 }
 
 // Main order interface

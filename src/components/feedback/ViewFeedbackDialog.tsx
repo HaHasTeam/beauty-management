@@ -30,8 +30,8 @@ interface ViewFeedbackDialogProps {
   productQuantity: number
   productClassification: IClassification | null
   brand: IBrand | null
-  recipientAvatar: string
-  recipientName: string
+  accountAvatar: string
+  accountName: string
   orderDetailId: string
 }
 
@@ -41,8 +41,8 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
   isOpen,
   onClose,
   feedback,
-  recipientAvatar,
-  recipientName,
+  accountAvatar,
+  accountName,
   orderDetailId,
   brand
 }) => {
@@ -129,8 +129,8 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
             )}
             <div className='space-y-2'>
               <CustomerReview
-                authorName={recipientName}
-                authorAvatar={recipientAvatar}
+                authorName={accountName}
+                authorAvatar={accountAvatar}
                 updatedAt={feedback.updatedAt}
                 classification={productClassification}
                 numberOfItem={productQuantity}

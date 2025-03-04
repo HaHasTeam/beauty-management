@@ -9,10 +9,10 @@ import ProductOrderDetailLandscape from './ProductOrderLandScape'
 interface OrderDetailItemsProps {
   orderDetails: IOrderDetail[]
   brand: IBrand | null
-  recipientAvatar: string
-  recipientName: string
+  accountAvatar: string
+  accountName: string
 }
-const OrderDetailItems = ({ orderDetails, recipientAvatar, recipientName, brand }: OrderDetailItemsProps) => {
+const OrderDetailItems = ({ orderDetails, accountAvatar, accountName, brand }: OrderDetailItemsProps) => {
   const { t } = useTranslation()
 
   return (
@@ -63,8 +63,8 @@ const OrderDetailItems = ({ orderDetails, recipientAvatar, recipientName, brand 
             productClassification={orderDetail?.productClassification}
             feedback={orderDetail?.feedback}
             brand={brand || null}
-            recipientAvatar={recipientAvatar}
-            recipientName={recipientName}
+            accountAvatar={accountAvatar}
+            accountName={accountName}
             orderDetailId={orderDetail?.id}
           />
         ))}

@@ -26,8 +26,8 @@ interface ProductOrderDetailLandscapeProps {
   productClassification: IClassification | null
   feedback: IResponseFeedback | null
   brand: IBrand | null
-  recipientName: string
-  recipientAvatar: string
+  accountName: string
+  accountAvatar: string
   orderDetailId: string
 }
 const ProductOrderDetailLandscape = ({
@@ -42,8 +42,8 @@ const ProductOrderDetailLandscape = ({
   productClassification,
   feedback,
   brand,
-  recipientName,
-  recipientAvatar,
+  accountName,
+  accountAvatar,
   orderDetailId
 }: ProductOrderDetailLandscapeProps) => {
   const { t } = useTranslation()
@@ -142,8 +142,8 @@ const ProductOrderDetailLandscape = ({
           onClose={() => setOpenViewFbDialog(false)}
           feedback={feedback}
           brand={brand}
-          recipientAvatar={recipientAvatar}
-          recipientName={recipientName}
+          accountAvatar={accountAvatar}
+          accountName={accountName}
           orderDetailId={orderDetailId}
         />
       )}

@@ -323,8 +323,8 @@ const OrderDetails = () => {
                         useOrderData?.data?.orderDetails?.[0]?.productClassification
                       )?.product?.brand ?? null
                     }
-                    recipientAvatar=''
-                    recipientName={useOrderData?.data?.recipientName}
+                    accountAvatar={useOrderData?.data?.account?.avatar ?? ''}
+                    accountName={useOrderData?.data?.account?.username ?? ''}
                   />
 
                   {/* order summary */}
