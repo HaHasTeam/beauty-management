@@ -1,3 +1,4 @@
+import { IImage } from './image'
 import { IOrder } from './order'
 import { TUserUpdateStatusTracking } from './user'
 
@@ -9,4 +10,5 @@ export interface IStatusTracking {
   status: string
   updatedBy: TUserUpdateStatusTracking
   order: IOrder
+  mediaFiles: IImage[]
 }

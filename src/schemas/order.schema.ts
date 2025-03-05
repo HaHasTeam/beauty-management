@@ -29,7 +29,15 @@ export const getCancelOrderSchema = () => {
 }
 export const getUpdateOrderStatusSchema = () => {
   return z.object({
-    status: z.string().min(1, i18next.t('validation.statusRequired'))
+    status: z.string().min(1, i18next.t('validation.statusRequired')),
+    mediaFiles: z.array(z.instanceof(File)).optional()
+  })
+}
+export const getUpdateOrderStatusEvidenceSchema = () => {
+  return z.object({
+    status: z.string().min(1, i18next.t('validation.statusRequired')),
+    videos: z.array(z.instanceof(File)).min(1, i18next.t('validation.required')),
+    images: z.array(z.instanceof(File)).min(1, i18next.t('validation.required'))
   })
 }
 
