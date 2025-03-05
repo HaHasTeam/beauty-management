@@ -33,3 +33,10 @@ export type IResponseConsultationCriteriaData = {
   createdAt: string
   updatedAt: string
 }
+
+export type IImportConsultationCriteriaSection = {
+  section: string
+  orderIndex?: number
+  mandatory: boolean
+  description: string
+}

@@ -995,7 +995,8 @@
     "consultantCriteriaDetails": "Consultation Criteria Details",
     "ID": "ID",
     "applicableServices": "Applicable Services",
-    "files": "files"
+    "files": "files",
+    "index": "Index"
   },
   "layout": {
     "help": "HELP",

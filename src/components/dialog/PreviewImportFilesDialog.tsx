@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { uploadFilesConsultationCriteriaApi } from '@/network/apis/file'
 import { IConsultationCriteriaSectionFormData } from '@/schemas/consultation-criteria.schema'
+import { generateSequentialOrderIndices } from '@/utils/consultation-criteria'
 import { formatFileSize } from '@/utils/product-form/formatSize'
 
 import Button from '../button'
@@ -34,12 +35,10 @@ const PreviewImportFilesDialog = ({
     mutationFn: uploadFilesConsultationCriteriaApi.fn,
     onSuccess: (response) => {
       // Process and set imported files data
-      const importedSections = response.data.flatMap(
-        (file: { data: Array<{ section: string; orderIndex: number; mandatory: boolean; description: string }> }) =>
-          file.data
-      )
+      const importedSections = response.data.flatMap((file) => file.data)
+      const orderedSections = generateSequentialOrderIndices(importedSections)
 
-      onImportFiles(importedSections)
+      onImportFiles(orderedSections)
       onOpenChange(false)
     },
     onError: (error) => {

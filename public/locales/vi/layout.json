@@ -995,7 +995,8 @@
     "consultantCriteriaDetails": "Chi Tiết Tiêu Chí Tư Vấn",
     "ID": "ID",
     "applicableServices": "Dịch vụ áp dụng",
-    "files": "tệp tin"
+    "files": "tệp tin",
+    "index": "Chỉ mục"
   },
   "layout": {
     "help": "TRỢ GIÚP",
