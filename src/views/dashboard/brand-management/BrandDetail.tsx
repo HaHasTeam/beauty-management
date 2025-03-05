@@ -6,11 +6,13 @@ import { LuSaveAll } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import Button from '@/components/button'
 import CardSection from '@/components/card-section'
 import UploadFilePreview from '@/components/file-input/UploadFilePreview'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -197,7 +199,8 @@ const BrandDetail = ({
                             return (
                               <div key={file.name} className=' rounded-lg max-h-32 '>
                                 {file.type.includes('image') ? (
-                                  <img
+                                  <ImageWithFallback
+                                    fallback={fallBackImage}
                                     src={URL.createObjectURL(file)}
                                     alt={file.name}
                                     className='object-cover rounded-lg max-h-32 '

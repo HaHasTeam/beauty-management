@@ -5,13 +5,15 @@ import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '@/components/file-input'
-import { PreviewDialog } from '@/components/file-input/PreviewImageDialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import useHandleServerError from '@/hooks/useHandleServerError'
 // import { useToast } from '@/hooks/useToast'
 // import { uploadFilesApi } from '@/network/apis/file'
 // import { createFiles } from '@/utils/files'
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
+import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '@/components/file-input'
+import { PreviewDialog } from '@/components/file-input/PreviewImageDialog'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import useHandleServerError from '@/hooks/useHandleServerError'
 
 type UploadFileModalProps<T extends FieldValues> = {
   header?: ReactNode
@@ -257,7 +259,8 @@ const UploadProductImages = <T extends FieldValues>({
                                 ) : (
                                   <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300 p-0'>
                                     {file.type.includes('image') ? (
-                                      <img
+                                      <ImageWithFallback
+                                        fallback={fallBackImage}
                                         src={URL.createObjectURL(file)}
                                         alt={file.name}
                                         className='object-contain w-full h-full rounded-lg'
@@ -302,7 +305,8 @@ const UploadProductImages = <T extends FieldValues>({
                             ) : (
                               <div key={file.name} className='w-32 h-32 rounded-lg border border-gay-300 p-0'>
                                 {file?.type?.includes('image') ? (
-                                  <img
+                                  <ImageWithFallback
+                                    fallback={fallBackImage}
                                     src={URL.createObjectURL(file)}
                                     alt={file.name}
                                     className='object-contain w-full h-full rounded-lg'

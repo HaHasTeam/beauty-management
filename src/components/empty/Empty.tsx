@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
 
 import emptyInbox from '@/assets/images/EmptyInbox.png'
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 
 type EmptyProps = {
   title: string
@@ -13,7 +16,12 @@ const Empty = ({ title, description, icon, linkText, link }: EmptyProps) => {
   return (
     <div className='w-full h-1/2 flex flex-col space-y-4 justify-center align-middle'>
       <div className='flex justify-center align-middle'>
-        <img src={icon ? icon : emptyInbox} className='object-contain' alt='empty' />
+        <ImageWithFallback
+          fallback={fallBackImage}
+          src={icon ? icon : emptyInbox}
+          className='object-contain'
+          alt='empty'
+        />
       </div>
       <div className='space-y-4 flex flex-col items-center'>
         <div className='space-y-2'>

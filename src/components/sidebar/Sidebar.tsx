@@ -1,10 +1,12 @@
 import { PropsWithChildren, useContext } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { HiX } from 'react-icons/hi'
-import { HiBolt, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
+import { HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
 import { useNavigate } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
+import logo from '@/assets/images/logo.png'
 import { renderThumb, renderTrack, renderView } from '@/components/scrollbar/Scrollbar'
 import Links from '@/components/sidebar/components/Links'
 import SidebarCard from '@/components/sidebar/components/SidebarCard'
@@ -13,9 +15,11 @@ import { Card } from '@/components/ui/card'
 import { Routes, routesConfig } from '@/configs/routes'
 import { OpenContext } from '@/contexts/layout'
 import { useStore } from '@/stores/store'
+import { UserRoleEnum } from '@/types/role'
 import { IRoute } from '@/types/types'
 
-import { Badge } from '../ui/badge'
+import RoleTag from '../account/RoleTag'
+import ImageWithFallback from '../image/ImageWithFallback'
 import { Button } from '../ui/button'
 
 export interface SidebarProps extends PropsWithChildren {
@@ -56,23 +60,22 @@ function Sidebar(props: SidebarProps) {
           <div className='flex h-full flex-col justify-between'>
             <div>
               <span
-                className='absolute top-4 block cursor-pointer text-zinc-200 dark:text-white/40 xl:hidden'
+                className='absolute top-4 block cursor-pointer text-zinc-500 dark:text-white/40 xl:hidden'
                 onClick={() => setOpen(false)}
               >
                 <HiX />
               </span>
               <div className={`mt-8 flex items-center justify-center gap-1`}>
                 <div className='me-2 flex h-[40px] w-[40px] items-center justify-center rounded-md bg-primary text-white dark:bg-accent dark:text-zinc-950'>
-                  <HiBolt className='h-5 w-5' />
+                  {/* <HiBolt className='h-5 w-5' /> */}
+                  <ImageWithFallback src={logo} alt={'logo'} fallback={fallBackImage} className='' />
                 </div>
                 <h5 className='text-xl font-bold leading-5 text-primary dark:text-white'>Allure Portal</h5>
-                <Badge
-                  variant='outline'
-                  color='primary'
-                  className='my-auto w-max px-1 py-0.5 text-zinc-950 dark:border-none dark:bg-zinc-800 dark:text-white text-xs'
-                >
-                  {userProfile?.role}
-                </Badge>
+              </div>
+              <div className='w-full flex justify-center mt-2'>
+                <div className='w-fit'>
+                  <RoleTag role={userProfile?.role as UserRoleEnum} />
+                </div>
               </div>
               <div className='mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10' />
               {/* Nav item */}

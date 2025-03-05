@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, CircleX } from 'lucide-react'
+import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, CircleX, Star, Store } from 'lucide-react'
 import { FcManager } from 'react-icons/fc'
 import { GiHumanPyramid } from 'react-icons/gi'
 import { GrUserManager } from 'react-icons/gr'
@@ -40,7 +40,7 @@ export function getStatusIcon(status: UserStatusEnum) {
   return statusIcons[status] || CircleIcon
 }
 
-export const getRoleIcon = (role: UserRoleEnum) => {
+export const getRoleIcon = (role: UserRoleEnum | 'BRAND' | 'MODERATOR') => {
   const roleIcons = {
     [UserRoleEnum.ADMIN]: {
       icon: RiAdminLine,
@@ -83,6 +83,18 @@ export const getRoleIcon = (role: UserRoleEnum) => {
       iconColor: 'text-orange-500',
       textColor: 'text-orange-500',
       bgColor: 'bg-orange-100'
+    },
+    ['BRAND']: {
+      icon: Store,
+      iconColor: 'text-cyan-500',
+      textColor: 'text-cyan-500',
+      bgColor: 'bg-cyan-100'
+    },
+    ['MODERATOR']: {
+      icon: Star,
+      iconColor: 'text-rose-500',
+      textColor: 'text-rose-500',
+      bgColor: 'bg-rose-100'
     }
   }
   return roleIcons[role] || CircleIcon

@@ -22,6 +22,7 @@ import { getUserProfileApi } from '@/network/apis/user'
 import { ICategory } from '@/types/category'
 import { ClassificationStatusEnum } from '@/types/classification'
 import { StatusEnum } from '@/types/enum'
+import { TServerFile } from '@/types/file'
 import {
   ICreateProduct,
   IServerCreateProduct,
@@ -61,7 +62,7 @@ const UpdateProduct = () => {
     brand: '',
     category: '',
     images: [],
-    certificate: [],
+    certificates: [],
     description: '',
     detail: {},
     productClassifications: [],
@@ -128,7 +129,10 @@ const UpdateProduct = () => {
 
     return uploadedFilesResponse.data
   }
-  const processImages = async (originalImages: Array<IImage>, currentImages: (File | IImage)[]) => {
+  const processImages = async (
+    originalImages: Array<IImage | TServerFile>,
+    currentImages: (File | IImage | TServerFile)[]
+  ) => {
     const processedImages: Array<IImage> = []
 
     // Track original image IDs to check for deletions
@@ -169,91 +173,42 @@ const UpdateProduct = () => {
     return processedImages
   }
 
-  const processCertificate = async (
-    originalCertificates: string[] | undefined,
-    newCertificate: File[] | undefined
-  ): Promise<(File | IImage)[]> => {
-    // If no new certificate is provided
-    if (!newCertificate?.length) {
-      // If there were original certificates, mark them all as inactive
-      if (originalCertificates?.length) {
-        return originalCertificates.map((cert) => ({
-          fileUrl: cert,
-          status: StatusEnum.INACTIVE
-        }))
-      }
-      return []
-    }
+  // const processCertificate = async (
+  //   originalCertificates: string[] | undefined,
+  //   newCertificate: File[] | undefined
+  // ): Promise<(File | IImage)[]> => {
+  //   // If no new certificate is provided
+  //   if (!newCertificate?.length) {
+  //     // If there were original certificates, mark them all as inactive
+  //     if (originalCertificates?.length) {
+  //       return originalCertificates.map((cert) => ({
+  //         fileUrl: cert,
+  //         status: StatusEnum.INACTIVE
+  //       }))
+  //     }
+  //     return []
+  //   }
 
-    // If there's a new certificate file, upload it
-    if (newCertificate[0] instanceof File) {
-      const uploadedUrls = await convertFileToUrl([newCertificate[0]])
-      return [{ fileUrl: uploadedUrls[0] }]
-    }
+  //   // If there's a new certificate file, upload it
+  //   if (newCertificate[0] instanceof File) {
+  //     const uploadedUrls = await convertFileToUrl([newCertificate[0]])
+  //     return [{ fileUrl: uploadedUrls[0] }]
+  //   }
 
-    // Keep existing certificates if no changes
-    return originalCertificates?.length ? originalCertificates.map((cert) => ({ fileUrl: cert })) : []
-  }
+  //   // Keep existing certificates if no changes
+  //   return originalCertificates?.length ? originalCertificates.map((cert) => ({ fileUrl: cert })) : []
+  // }
+
   async function onSubmit(values: z.infer<typeof FormProductSchema>) {
     try {
-      setIsLoading(true)
       if (isValid) {
+        const originalClassifications = productData?.data?.productClassifications ?? []
+        setIsLoading(true)
         // Process product images
         const processedMainImages = await processImages(productData?.data?.images ?? [], values.images)
 
         // Process certificate
-        const processedCertificates = await processCertificate(productData?.data?.certificates, values.certificate)
-
-        // // Process classification images
-        // const processedClassifications = await Promise.all(
-        //   (values.productClassifications ?? []).map(async (classification, index) => {
-        //     const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
-
-        //     const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
-
-        //     return {
-        //       ...classification,
-        //       images: processedClassImages
-        //     }
-        //   })
-        // )
-
-        // Get original classifications from BE
-        const originalClassifications = productData?.data?.productClassifications ?? []
-        // Track IDs of classifications in form values
-        // const formClassificationIds = new Set(
-        //   values.productClassifications
-        //     ?.map((classification) => classification.id)
-        //     .filter((id): id is string => id !== undefined)
-        // )
-
-        // Process classifications
-        // const processedClassifications = await Promise.all(
-        //   (values.productClassifications ?? []).map(async (classification, index) => {
-        //     const originalClassImages = productData?.data?.productClassifications?.[index]?.images ?? []
-        //     const processedClassImages = await processImages(originalClassImages, classification?.images ?? [])
-
-        //     // Include the original ID if it exists
-        //     const originalClassification = originalClassifications.find((oc) => oc.id === classification.id)
-
-        //     return {
-        //       ...classification,
-        //       id: originalClassification?.id, // Keep the original ID
-        //       images: processedClassImages
-        //     }
-        //   })
-        // )
-
-        // Add inactive status to classifications that are not in form values
-        // const inactiveClassifications = originalClassifications
-        //   .filter(
-        //     (original) =>
-        //       original.id && !formClassificationIds.has(original.id) && original.status !== StatusEnum.INACTIVE
-        //   )
-        //   .map((classification) => ({
-        //     ...classification,
-        //     status: StatusEnum.INACTIVE
-        //   }))
+        const processedCertificates = await processImages(productData?.data?.certificates ?? [], values.certificates)
 
         let processedClassifications: IServerProductClassification[] = []
 
@@ -286,7 +241,8 @@ const UpdateProduct = () => {
               }
               return {
                 ...classification,
-                status: StatusEnum.INACTIVE
+                status: StatusEnum.INACTIVE,
+                isAvailable: false
               }
             })
           } else {
@@ -294,7 +250,8 @@ const UpdateProduct = () => {
             processedClassifications = [
               ...originalClassifications.map((classification) => ({
                 ...classification,
-                status: StatusEnum.INACTIVE
+                status: StatusEnum.INACTIVE,
+                isAvailable: false
               })),
               {
                 title: 'Default',
@@ -327,6 +284,9 @@ const UpdateProduct = () => {
               return {
                 ...classification,
                 id: originalClassification?.id,
+                color: classification?.color && classification?.color?.length > 0 ? classification.color : null,
+                size: classification?.size && classification?.size?.length > 0 ? classification.size : null,
+                other: classification?.other && classification?.other?.length > 0 ? classification.other : null,
                 images: processedClassImages,
                 status: StatusEnum.ACTIVE
               }
@@ -341,7 +301,8 @@ const UpdateProduct = () => {
             )
             .map((classification) => ({
               ...classification,
-              status: StatusEnum.INACTIVE
+              status: StatusEnum.INACTIVE,
+              isAvailable: false
             }))
 
           processedClassifications = [...activeClassifications, ...inactiveClassifications]
@@ -353,30 +314,10 @@ const UpdateProduct = () => {
           category: values?.category,
           status: values?.status,
           images: processedMainImages,
-          certificate: processedCertificates,
+          certificates: processedCertificates,
           description: values?.description,
           sku: values?.sku ?? '',
-          detail: JSON.stringify(values.detail), // Convert detail object to a string
-          // productClassifications:
-          //   processedClassifications.length > 0
-          //     ? processedClassifications
-          //     : [
-          // {
-          //   title: 'Default',
-          //   images: [],
-          //   price: values.price ?? 1000,
-          //   quantity: values.quantity ?? 1,
-          //   type: ProductClassificationTypeEnum.DEFAULT,
-          //   sku: values.sku ?? ''
-          // }
-          //       ]
-          // productClassifications: [...processedClassifications, ...inactiveClassifications].map((classification) => ({
-          //   ...classification,
-          //   type: classification.type ?? ProductClassificationTypeEnum.DEFAULT,
-          //   price: classification.price ?? 1000,
-          //   quantity: classification.quantity ?? 1,
-          //   sku: classification.sku ?? values.sku ?? ''
-          // }))
+          detail: JSON.stringify(values.detail),
           productClassifications: processedClassifications.map((classification) => ({
             ...classification,
             type: classification.type ?? ProductClassificationTypeEnum.DEFAULT,
@@ -386,9 +327,9 @@ const UpdateProduct = () => {
           }))
         }
         await updateProductFn({ productId: id ?? '', data: transformedData })
+
         setIsLoading(false)
       }
-      setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
       handleServerError({
@@ -422,16 +363,6 @@ const UpdateProduct = () => {
       return []
     }
   }
-  // const convertUrlToFile = async (url: string) => {
-  //   try {
-  //     const response = await fetch(url)
-  //     const blob = await response.blob()
-  //     return new File([blob], url.split('/').pop() || 'file', { type: blob.type })
-  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   } catch (_error) {
-  //     return null
-  //   }
-  // }
   useEffect(() => {
     if (productData && productData?.data) {
       const productClassifications = productData?.data?.productClassifications ?? []
@@ -449,6 +380,7 @@ const UpdateProduct = () => {
             .filter((classification) => classification.status === StatusEnum.ACTIVE)
             .map((classification) => ({
               ...classification,
+              id: classification?.id,
               color: classification?.color || '',
               size: classification?.size || '',
               other: classification?.other || '',
@@ -465,6 +397,9 @@ const UpdateProduct = () => {
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
 
         const certificateUrls = productData?.data?.certificates
+          ?.filter((cert) => cert.status === StatusEnum.ACTIVE || !cert.status)
+          ?.map((cert) => cert.fileUrl)
+          .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
 
         const classificationImages = updatedProductClassifications?.map(
           (classification) =>
@@ -487,7 +422,7 @@ const UpdateProduct = () => {
           images: convertedMainImages,
           description: productData?.data?.description,
           detail: JSON?.parse(productData?.data?.detail ?? ''),
-          certificate: convertedCertificate ? convertedCertificate : [],
+          certificates: convertedCertificate ? convertedCertificate : [],
           productClassifications: updatedProductClassifications?.map((classification, index) => ({
             ...classification,
             images: convertedClassificationImages[index] || []
@@ -548,16 +483,16 @@ const UpdateProduct = () => {
                 />
                 <div className='w-full flex flex-row-reverse justify-start gap-3'>
                   <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                    {t('button.submitAndShow')}
+                    {t('button.submit')}
                   </Button>
-                  <Button
+                  {/* <Button
                     variant='outline'
                     type='submit'
                     className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
                     onClick={() => form.setValue('status', ProductEnum.INACTIVE)}
                   >
                     {t('button.submitAndHide')}
-                  </Button>
+                  </Button> */}
                   <Button
                     variant='outline'
                     className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
@@ -583,6 +518,12 @@ const UpdateProduct = () => {
               />
             </div>
           </div>
+          {/* <ConfirmDialog
+            open={openDialog}
+            onOpenChange={setOpenDialog}
+            onConfirm={handleConfirmedSubmit}
+            item={'productClassification'}
+          /> */}
         </div>
       ) : (
         <div className='h-[600px] w-full flex justify-center items-center'>

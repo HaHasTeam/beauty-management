@@ -10,6 +10,7 @@ export const getFormProductSchema = () => {
   return z
     .object({
       // basic information
+      id: z.string().optional(),
       name: z
         .string()
         .min(1, { message: i18next.t('productFormMessage.productNameRequired') })
@@ -17,7 +18,7 @@ export const getFormProductSchema = () => {
       brand: z.string().min(1, { message: i18next.t('productFormMessage.brandRequired') }),
       category: z.string().min(1, { message: i18next.t('productFormMessage.categoryRequired') }),
       images: fileArray.min(1, { message: i18next.t('productFormMessage.imagesRequired') }),
-      certificate: fileArray.min(1, { message: i18next.t('productFormMessage.certificateRequired') }),
+      certificates: fileArray.min(1, { message: i18next.t('productFormMessage.certificateRequired') }),
       description: z
         .string()
         .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {

@@ -3,9 +3,11 @@ import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
 
+import ImageWithFallback from '../image/ImageWithFallback'
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '.'
 import { PreviewDialog } from './PreviewImageDialog'
 
@@ -222,7 +224,8 @@ const UploadFilePreview = <T extends FieldValues>({
                                 <div key={file.name} className='flex items-center space-x-3'>
                                   <div className='rounded-md flex items-center justify-center'>
                                     {file.type.includes('image') ? (
-                                      <img
+                                      <ImageWithFallback
+                                        fallback={fallBackImage}
                                         src={URL.createObjectURL(file)}
                                         alt={file.name}
                                         className='size-12 object-cover rounded-lg border-2'
@@ -269,7 +272,8 @@ const UploadFilePreview = <T extends FieldValues>({
                               <div key={file.name} className='flex items-center space-x-3'>
                                 <div className='rounded-md flex items-center justify-center'>
                                   {file?.type?.includes('image') ? (
-                                    <img
+                                    <ImageWithFallback
+                                      fallback={fallBackImage}
                                       src={URL.createObjectURL(file)}
                                       alt={file.name}
                                       className='size-12 object-cover rounded-lg border-2'

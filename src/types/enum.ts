@@ -182,3 +182,10 @@ export enum ProductQuantityWarningEnum {
   SOLD_OUT = 'SOLD_OUT',
   ALMOST_OUT = 'ALMOST_OUT'
 }
+
+export enum FeedbackFilterEnum {
+  ALL = 'ALL',
+  RATING = 'RATING',
+  IMAGE_VIDEO = 'IMAGE_VIDEO',
+  CLASSIFICATION = 'CLASSIFICATION'
+}

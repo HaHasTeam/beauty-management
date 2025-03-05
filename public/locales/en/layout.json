@@ -109,7 +109,10 @@
     "deselect": "Deselect",
     "select": "Select",
     "edit": "Edit",
-    "backToList": "Back to List"
+    "backToList": "Back to List",
+    "close": "Close",
+    "showMore": "Show more {{count}} replies",
+    "showLess": "Show less"
   },
   "noData": "No matching data found",
   "sell": {
@@ -273,6 +276,23 @@
       "title": "System Service Not Found",
       "description": "The system service you're looking for either does not exist, has been removed, or is currently unavailable.",
       "button": "Browse Other System Service"
+    },
+    "feedback": {
+      "title": "No Feedback Yet",
+      "description": "This product has no reviews yet{{filter}}. Please {{filterCallAction}}be the first to share your thoughts!",
+      "filter": " for the selected filter",
+      "filterCallAction": "try viewing all reviews or ",
+      "button": "Write a Review"
+    },
+    "myFeedbackList": {
+      "title": "You haven't written any reviews",
+      "description": "Share your experience with the products you've purchased.",
+      "button": "Write a review"
+    },
+    "feedbackDetail": {
+      "title": "Review not found",
+      "description": "This review may have been deleted or does not exist.",
+      "button": "Go back"
     }
   },
   "productDetail": {
@@ -605,7 +625,7 @@
     "viewFeedback": "View review",
     "cancelOrder": "Cancel order",
     "requestCancelOrder": "Request cancel order",
-    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
+    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied{{brand}} to other orders after canceling this one.",
     "requestCancelOrderDescription": "Since the order is being prepared, this request will need to be reviewed before cancellation. Clicking \"Confirm\" button means submitting a request to cancel all items in this order. This action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
     "cancelOrderReason": {
       "changeOfMind": "Changed my mind",
@@ -677,7 +697,8 @@
     "rejectedCancelRequest": "Cancellation rejected. Order will proceed.",
     "rejectedCancelRequestTitle": "Cancellation Rejected",
     "received": "Received",
-    "receivedOrderStatusSuccess": "Successfully confirmed order receipt!"
+    "receivedOrderStatusSuccess": "Successfully confirmed order receipt!",
+    "cancelOrderAdditional": " by the customer"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -767,7 +788,8 @@
     "videoBrowser": "Your browser does not support the video tag.",
     "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
     "maxImages": "You can only upload up to {{count}} images.",
-    "maxVideos": "You can only upload up to {{count}} videos."
+    "maxVideos": "You can only upload up to {{count}} videos.",
+    "contentReplyFeedback": "The feedback reply must be at least 25 characters long but no more than 500 characters"
   },
   "role": {
     "ADMIN": "Admin",
@@ -777,7 +799,8 @@
     "STAFF": "Brand Staff",
     "KOL": "KOL",
     "OPERATOR": "Operator",
-    "BRAND": "Brand"
+    "BRAND": "Brand",
+    "MODERATOR": "Moderator"
   },
   "productFormMessage": {
     "SKURequired": "Product classification SKU cannot be duplicate",
@@ -807,7 +830,7 @@
     "successStatusMessage": "Update product status successfully!",
     "categoryLastLevel": "Please select the last-level category.",
     "certificateRequired": "Product certificate is required.",
-    "totalQuantityTooLow": "The total quantity is too low. Please increase the quantity to meet the required minimum ({{count}})."
+    "totalQuantityTooLow": "The total quantity is too low. Please increase the quantity to meet the required minimum: {{count}}."
   },
   "createProduct": {
     "successOfficial": "Product created successfully!",
@@ -858,8 +881,10 @@
     "other": "Other",
     "classification": "Classification",
     "addOption": "Add option",
+    "option": "Options",
+    "classificationTitleInformation": "Classification Attributes",
     "classificationEg": "e.g., Red etc.",
-    "inputPriceAndQuantity": "Set price and quantity",
+    "inputPriceAndQuantity": "Classification Details",
     "price": "Price",
     "quantity": "Quantity",
     "action": "Action",
@@ -907,11 +932,14 @@
     "OFFICIAL": "Official",
     "OUT_OF_STOCK": "Out of stock",
     "SOLD_OUT": "Out of stock",
-    "ALMOST_OUT": "Almost out of stock"
+    "ALMOST_OUT": "Almost out of stock",
+    "button_INACTIVE": "Inactive",
+    "button_ACTIVE": "Active",
+    "button_OFFICIAL": "Active"
   },
   "systemService": {
     "generalInformation": "General Information",
-    "resultSheetInformation": "Consultation Criteria",
+    "consultationCriteriaInformation": "Consultation Criteria",
     "name": "Service Name",
     "description": "Description",
     "category": "Category",
@@ -927,7 +955,7 @@
     "enterServiceDescription": "Enter service description",
     "selectServiceCategory": "Select service category",
     "enterSectionName": "Enter section name",
-    "enterResultSheetTitle": "Enter consultation criteria's title",
+    "enterConsultationCriteriaTitle": "Enter consultation criteria's title",
     "enterSectionDescription": "Enter section description",
     "createSuccessMessage": "Service created successfully!",
     "status": "Status",
@@ -940,20 +968,20 @@
     "standardOrPremiumRequired": "Please select a standard or premium type.",
     "sectionNameRequired": "Section name is required.",
     "sectionsRequired": "Please add at least one section.",
-    "resultSheetTitleRequired": "Consultation criteria title is required.",
+    "consultationCriteriaTitleRequired": "Consultation criteria title is required.",
     "orderIndexRequired": "Order index is required.",
     "sectionDescriptionRequired": "Section description is required.",
-    "resultSheetSectionsRequired": "Consultation criteria sections is required.",
+    "consultationCriteriaSectionsRequired": "Consultation criteria sections is required.",
     "section": "Section",
     "updateSuccessMessage": "Update system service successfully!",
-    "eitherResultSheetOrDataRequired": "Please select an existing consultation criteria or create a new one.",
+    "eitherConsultationCriteriaOrDataRequired": "Please select an existing consultation criteria or create a new one.",
     "createNew": "Create new consultation criteria",
     "selectOrCreateNew": "Select an existing consultation criteria or create a new one",
-    "selectResultSheet": "Select consultation criteria",
+    "selectConsultationCriteria": "Select consultation criteria",
     "preview": "Preview",
     "alsoUsedFor": "This consultation criteria also used for the following system services",
-    "updateResultSheet": "Update Consultation Criteria",
-    "updateResultSheetSuccess": "Update consultation criteria successfully!",
+    "updateConsultationCriteria": "Update Consultation Criteria",
+    "updateConsultationCriteriaSuccess": "Update consultation criteria successfully!",
     "deleteSectionSuccess": "Delete consultant criteria section successfully!",
     "createdAt": "Created At",
     "lastUpdated": "Last updated",
@@ -1008,7 +1036,9 @@
   },
   "feedback": {
     "successTitle": "Review submitted successfully!",
+    "successRepTitle": "Response Sent!",
     "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
+    "successRepDescription": "Your response has been successfully submitted. Thank you for addressing customer feedback!",
     "writeReview": "Write a Review",
     "rating": "Rating",
     "content": "Share Your Experiences",
@@ -1030,7 +1060,14 @@
       "REFUNDED": "Upload video of return completion and refund."
     },
     "uploadVideos": "Upload videos",
-    "uploadImages": "Upload images"
+    "uploadImages": "Upload images",
+    "viewReview": "View Review",
+    "images": "Images",
+    "ID": "ID",
+    "order": "Order",
+    "reply": "Reply",
+    "writeYourRep": "Write your reply...",
+    "yourReply": "Your reply"
   },
   "media": {
     "previewImage": "Preview Image/Video",
@@ -1053,5 +1090,13 @@
     "DELIVERED": "Upload Delivery Confirmation",
     "RETURNING": "Upload Return Request Evidence",
     "REFUNDED": "Upload Refund Completion Proof"
+  },
+  "confirm": {
+    "productClassification": {
+      "title": "Confirm Changes to Product Classification Attributes",
+      "description": "You are modifying important classification attributes such as color, size, or other factors. To ensure accurate inventory management, ordering, and order processing, the current classification will be deactivated. A new classification will be created with the updated attributes once you submit the form. Are you sure you want to proceed? You can cancel before submitting to retain the current classification. Note: This action cannot be undone after submission.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
   }
 }

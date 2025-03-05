@@ -1,8 +1,11 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface PreviewDialogProps {
   trigger: React.ReactNode
@@ -21,7 +24,8 @@ export function PreviewDialog({ trigger, content, contentType, className }: Prev
         <div className='overflow-y-auto max-h-96 min-h-80'>
           {contentType === 'image' && typeof content === 'string' ? (
             <div className='flex items-center justify-center'>
-              <img
+              <ImageWithFallback
+                fallback={fallBackImage}
                 src={content}
                 alt='Preview'
                 className='max-h-80 min-h-72 w-auto object-contain rounded-lg shadow-md'

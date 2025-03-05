@@ -6,7 +6,9 @@ import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import Button from '@/components/button'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -116,7 +118,8 @@ function ViewBrandForm() {
               <div className='px-4 py-4 flex items-start gap-3'>
                 <div className='bg-primary  rounded-lg'>
                   {imageLogo ? (
-                    <img
+                    <ImageWithFallback
+                      fallback={fallBackImage}
                       src={URL.createObjectURL(imageLogo)}
                       alt={form.getValues('name')}
                       className='h-16 w-16 object-cover rounded-lg border-2'

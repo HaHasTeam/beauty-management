@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
@@ -19,6 +20,7 @@ import { IResponseProduct } from '@/types/product'
 
 import AlertMessage from '../alert/AlertMessage'
 import Button from '../button'
+import ImageWithFallback from '../image/ImageWithFallback'
 import State from '../state'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { InputNormal } from '../ui/input'
@@ -174,7 +176,12 @@ export default function UpdateProductClassificationQuantityDialog({
                         >
                           {variant.images.map((image: IImage) => (
                             <div key={image.id} className='relative aspect-square w-32 h-32 rounded-lg overflow-hidden'>
-                              <img className='object-cover w-full h-full' src={image.fileUrl} alt={variant.title} />
+                              <ImageWithFallback
+                                fallback={fallBackImage}
+                                src={image.fileUrl}
+                                alt={variant.title}
+                                className='object-cover w-full h-full'
+                              />
                             </div>
                           ))}
                         </div>
