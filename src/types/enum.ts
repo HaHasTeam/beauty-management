@@ -148,6 +148,11 @@ export enum CancelOrderRequestStatusEnum {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
 }
+export enum RequestStatusEnum {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
+}
 
 export enum ServiceTypeEnum {
   STANDARD = 'STANDARD',

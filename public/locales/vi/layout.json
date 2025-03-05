@@ -114,7 +114,8 @@
     "showLess": "Thu gọn",
     "importFile": "Tải lên tệp",
     "downloadSample": "Tải mẫu",
-    "import": "Tải lên"
+    "import": "Tải lên",
+    "view": "Xem"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -700,7 +701,27 @@
     "rejectedCancelRequestTitle": "Yêu Cầu Hủy Bị Từ Chối",
     "received": "Đã nhận hàng",
     "receivedOrderStatusSuccess": "Xác nhận nhận hàng thành công!",
-    "cancelOrderAdditional": " được khách hàng"
+    "cancelOrderAdditional": " được khách hàng",
+    "returnOrderDialog": {
+      "title": "Yêu cầu trả hàng",
+      "description": "Khi nhấn 'Yêu cầu trả hàng', bạn đồng ý trả lại toàn bộ sản phẩm trong đơn hàng. Nếu yêu cầu được chấp nhận, hành động này không thể hoàn tác.",
+      "successTitle": "Yêu cầu trả hàng đã được gửi",
+      "successDescription": "Chúng tôi sẽ xử lý yêu cầu trong vòng {{count}} ngày tới và thông báo kết quả sớm nhất có thể. Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.",
+      "mediaFilesNotes": "Vui lòng cung cấp hình ảnh và video rõ nét, thể hiện chính xác tình trạng sản phẩm, mã đơn hàng và trạng thái đóng gói. Video nên ghi lại quá trình mở gói sản phẩm để hỗ trợ quá trình xử lý."
+    },
+    "returnOrderReason": {
+      "wrongItem": "Nhận sai sản phẩm",
+      "damage": "Sản phẩm bị hư hỏng hoặc vỡ",
+      "missingItem": "Thiếu sản phẩm trong đơn hàng",
+      "expired": "Nhận sản phẩm đã hết hạn",
+      "allergy": "Bị dị ứng hoặc kích ứng da",
+      "notAsDescribed": "Sản phẩm không giống mô tả",
+      "changedMind": "Đổi ý, không muốn sử dụng nữa",
+      "betterPrice": "Tìm thấy giá tốt hơn ở nơi khác",
+      "duplicate": "Nhận đơn hàng trùng lặp",
+      "lateDelivery": "Giao hàng quá chậm",
+      "other": "Khác"
+    }
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -791,7 +812,9 @@
     "fileTypeLimits": "Bạn có thể tải lên tối đa {{imageCount}} hình ảnh và {{videoCount}} video.",
     "maxImages": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
     "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
-    "contentReplyFeedback": "Nội dung phản hồi phải có ít nhất 25 ký tự và không quá 500 ký tự"
+    "contentReplyFeedback": "Nội dung phản hồi phải có ít nhất 25 ký tự và không quá 500 ký tự",
+    "videosRequired": "Vui lòng tải lên ít nhất một video.",
+    "imagesRequired": "Vui lòng tải lên ít nhất một hình ảnh."
   },
   "role": {
     "ADMIN": "Quản trị viên",
@@ -1100,6 +1123,12 @@
       "description": "Bạn đang chỉnh sửa các thuộc tính quan trọng của phân loại sản phẩm, như màu sắc, kích thước hoặc các yếu tố khác. Để đảm bảo quản lý tồn kho, đặt hàng và đơn hàng chính xác, phân loại hiện tại sẽ bị vô hiệu hóa. Một phân loại mới sẽ được tạo với các thuộc tính cập nhật sau khi bạn gửi biểu mẫu. Bạn có chắc chắn muốn tiếp tục? Bạn có thể hủy trước khi gửi để giữ nguyên phân loại hiện tại. Lưu ý: Sau khi gửi, thay đổi này không thể hoàn tác.",
       "cancel": "Hủy",
       "confirm": "Xác Nhận"
+    },
+    "decisionReturn": {
+      "title": "Xác nhận quyết định trả hàng",
+      "description": "Vui lòng xem xét kỹ yêu cầu trả hàng. Sau khi xác nhận, quyết định sẽ được gửi đến thương hiệu để phê duyệt. Thương hiệu có thể chấp nhận trả hàng hoặc yêu cầu từ chối.",
+      "cancel": "Hủy",
+      "confirm": "Xác nhận quyết định"
     }
   }
 }

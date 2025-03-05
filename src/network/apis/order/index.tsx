@@ -5,7 +5,8 @@ import {
   ICreatePreOrder,
   IOrder,
   IOrderFilter,
-  IOrderItem
+  IOrderItem,
+  IReturnRequestOrder
 } from '@/types/order'
 import { TServerResponse } from '@/types/request'
 import { IStatusTracking } from '@/types/status-tracking'
@@ -85,6 +86,15 @@ export const makeDecisionOnCancelRequestOrderApi = toMutationFetcher<
     data: { status }
   })
 })
+export const makeDecisionOnReturnRequestOrderApi = toMutationFetcher<
+  { requestId: string; status: string; reasonRejected: string },
+  TServerResponse<IOrder>
+>('makeDecisionOnReturnRequestOrderApi', async ({ requestId, status, reasonRejected }) => {
+  return privateRequest(`/orders/make-decision-on-refund-request/${requestId}`, {
+    method: 'POST',
+    data: { status, reasonRejected }
+  })
+})
 
 export const getStatusTrackingByIdApi = toQueryFetcher<string, TServerResponse<IStatusTracking[]>>(
   'getStatusTrackingByIdApi',
@@ -98,6 +108,15 @@ export const getBrandCancelRequestApi = toMutationFetcher<
   TServerResponse<ICancelRequestOrder[]>
 >('getBrandCancelRequestApi', async ({ brandId, data }) => {
   return privateRequest(`/orders/get-cancel-request-of-brand/${brandId}`, {
+    method: 'POST',
+    data
+  })
+})
+export const getBrandReturnRequestApi = toMutationFetcher<
+  { brandId: string; data: { status?: string } },
+  TServerResponse<IReturnRequestOrder[]>
+>('getBrandReturnRequestApi', async ({ brandId, data }) => {
+  return privateRequest(`/orders/get-return-request-of-brand/${brandId}`, {
     method: 'POST',
     data
   })

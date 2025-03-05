@@ -113,3 +113,11 @@ export interface ICancelRequestOrder {
   status: string
   order: IOrder
 }
+export interface IReturnRequestOrder {
+  id: string
+  createdAt: string
+  updatedAt: string
+  reason: string
+  status: string
+  order: IOrder
+}

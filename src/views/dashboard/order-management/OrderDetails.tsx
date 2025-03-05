@@ -27,6 +27,7 @@ import { useStore } from '@/stores/store'
 import { CancelOrderRequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 import { ICancelRequestOrder } from '@/types/order'
 
+import MakeDecisionOnReturnRequest from './MakeDecisionOnReturnRequest'
 import OrderDetailItems from './order-detail/OrderDetailItems'
 import OrderGeneral from './order-detail/OrderGeneral'
 import OrderStatusTracking from './order-detail/OrderStatusTracking'
@@ -161,10 +162,17 @@ const OrderDetails = () => {
           <>
             <div className='space-y-6 w-full'>
               {/* alert update order status */}
-              <UpdateOrderStatus order={useOrderData?.data} setOpenCancelOrderDialog={setOpenCancelOrderDialog} />
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) && (
+                <UpdateOrderStatus order={useOrderData?.data} setOpenCancelOrderDialog={setOpenCancelOrderDialog} />
+              )}
+              {/* alert make decision request return order */}
+              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) && (
+                <MakeDecisionOnReturnRequest order={useOrderData?.data} />
+              )}
 
               {/* handle cancel request for brand and system role */}
               {!isLoading &&
+                (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
                 cancelRequests &&
                 cancelRequests?.some(
                   (request) =>
@@ -339,17 +347,18 @@ const OrderDetails = () => {
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
                   useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
                   useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER ||
-                  useOrderData?.data?.status === ShippingStatusEnum.SHIPPING) && (
-                  <div className='w-full'>
-                    <Button
-                      variant='outline'
-                      className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                      onClick={() => setOpenCancelOrderDialog(true)}
-                    >
-                      {t('order.cancelOrder')}
-                    </Button>
-                  </div>
-                )}
+                  useOrderData?.data?.status === ShippingStatusEnum.SHIPPING) &&
+                  (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) && (
+                    <div className='w-full'>
+                      <Button
+                        variant='outline'
+                        className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                        onClick={() => setOpenCancelOrderDialog(true)}
+                      >
+                        {t('order.cancelOrder')}
+                      </Button>
+                    </div>
+                  )}
               </div>
             </div>
           </>
