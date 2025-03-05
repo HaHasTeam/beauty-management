@@ -13,8 +13,8 @@ import { ISystemServiceFormData, SystemServiceSchema } from '@/schemas/system-se
 
 import LoadingLayer from '../loading-icon/LoadingLayer'
 import SectionCollapsable from '../section-collapsable'
+import ConsultationCriteriaSystemService from './ConsultationCriteriaSystemService'
 import GeneralSystemService from './GeneralSystemService'
-import ResultSheetSystemService from './ResultSheetSystemService'
 
 interface SystemServiceFormProps {
   form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
@@ -69,10 +69,10 @@ const SystemServiceForm = ({
                 header={
                   <div className='flex gap-2 items-center text-primary'>
                     <FileSpreadsheet />
-                    <h2 className='font-bold text-xl'>{t('systemService.resultSheetInformation')}</h2>
+                    <h2 className='font-bold text-xl'>{t('systemService.consultationCriteriaInformation')}</h2>
                   </div>
                 }
-                content={<ResultSheetSystemService form={form} mode={mode} />}
+                content={<ConsultationCriteriaSystemService form={form} mode={mode} />}
               />
             </div>
 

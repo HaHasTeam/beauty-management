@@ -2,7 +2,7 @@ import i18next from 'i18next'
 import { z } from 'zod'
 
 // Schema for result sheet section
-export const getResultSheetSectionSchema = () => {
+export const getConsultationCriteriaSectionSchema = () => {
   return z.object({
     id: z.string().optional(),
     section: z.string().min(1, { message: i18next.t('systemService.sectionNameRequired') }),
@@ -12,10 +12,10 @@ export const getResultSheetSectionSchema = () => {
   })
 }
 
-export const ResultSheetSectionSchema = getResultSheetSectionSchema()
+export const ConsultationCriteriaSectionSchema = getConsultationCriteriaSectionSchema()
 
-export const getResultSheetDataSchema = () => {
-  const ResultSheetSectionSchemaData = z.object({
+export const getConsultationCriteriaDataSchema = () => {
+  const ConsultationCriteriaSectionSchemaData = z.object({
     id: z.string().optional(),
     section: z.string().min(1, { message: i18next.t('systemService.sectionNameRequired') }),
     orderIndex: z.number().min(1, { message: i18next.t('systemService.orderIndexRequired') }),
@@ -25,13 +25,13 @@ export const getResultSheetDataSchema = () => {
 
   return z.object({
     id: z.string().optional(),
-    title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
-    resultSheetSections: z
-      .array(ResultSheetSectionSchemaData)
-      .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
+    title: z.string().min(1, { message: i18next.t('systemService.consultationCriteriaTitleRequired') }),
+    consultationCriteriaSections: z
+      .array(ConsultationCriteriaSectionSchemaData)
+      .min(1, { message: i18next.t('systemService.consultationCriteriaSectionsRequired') })
   })
 }
 
-export const ResultSheetDataSchema = getResultSheetDataSchema()
-export type IResultSheetSectionFormData = z.infer<typeof ResultSheetSectionSchema>
-export type IResultSheetDataFormData = z.infer<typeof ResultSheetDataSchema>
+export const ConsultationCriteriaDataSchema = getConsultationCriteriaDataSchema()
+export type IConsultationCriteriaSectionFormData = z.infer<typeof ConsultationCriteriaSectionSchema>
+export type IConsultationCriteriaDataFormData = z.infer<typeof ConsultationCriteriaDataSchema>

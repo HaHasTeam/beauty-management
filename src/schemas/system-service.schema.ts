@@ -3,21 +3,21 @@ import { z } from 'zod'
 
 import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
 
-import { getResultSheetSectionSchema } from './result-sheet.schema'
+import { getConsultationCriteriaSectionSchema } from './consultation-criteria.schema'
 
 // Schema for the entire form
 export const getSystemServiceSchema = () => {
-  // const ResultSheetSectionSchema = getResultSheetSectionSchema()
+  // const ConsultationCriteriaSectionSchema = getConsultationCriteriaSectionSchema()
   const fileArray = z.array(z.instanceof(File))
-  const ResultSheetSectionSchema = getResultSheetSectionSchema()
+  const ConsultationCriteriaSectionSchema = getConsultationCriteriaSectionSchema()
 
-  const resultSheetDataSchema = z
+  const consultationCriteriaDataSchema = z
     .object({
       id: z.string().optional(),
-      title: z.string().min(1, { message: i18next.t('systemService.resultSheetTitleRequired') }),
-      resultSheetSections: z
-        .array(ResultSheetSectionSchema)
-        .min(1, { message: i18next.t('systemService.resultSheetSectionsRequired') })
+      title: z.string().min(1, { message: i18next.t('systemService.consultationCriteriaTitleRequired') }),
+      consultationCriteriaSections: z
+        .array(ConsultationCriteriaSectionSchema)
+        .min(1, { message: i18next.t('systemService.consultationCriteriaSectionsRequired') })
     })
     .optional()
 
@@ -28,18 +28,18 @@ export const getSystemServiceSchema = () => {
       images: fileArray.min(1, { message: i18next.t('systemService.imagesRequired') }),
       category: z.string().min(1, { message: i18next.t('systemService.categoryRequired') }),
       type: z.enum([ServiceTypeEnum.STANDARD, ServiceTypeEnum.PREMIUM]),
-      resultSheet: z.string().optional(),
-      resultSheetData: resultSheetDataSchema,
+      consultationCriteria: z.string().optional(),
+      consultationCriteriaData: consultationCriteriaDataSchema,
       status: z.enum([StatusEnum.ACTIVE, StatusEnum.INACTIVE])
     })
     .refine(
       (data) => {
-        // Check if either resultSheet or resultSheetData is provided
-        return !!(data.resultSheet || data.resultSheetData)
+        // Check if either consultationCriteria or consultationCriteriaData is provided
+        return !!(data.consultationCriteria || data.consultationCriteriaData)
       },
       {
-        message: i18next.t('systemService.eitherResultSheetOrDataRequired'),
-        path: ['resultSheetData']
+        message: i18next.t('systemService.eitherConsultationCriteriaOrDataRequired'),
+        path: ['consultationCriteriaData']
       }
     )
 }
@@ -53,4 +53,4 @@ export const getUpdateSystemServiceStatusSchema = () => {
 export const SystemServiceSchema = getSystemServiceSchema()
 
 export type ISystemServiceFormData = z.infer<typeof SystemServiceSchema>
-export type IResultSheetDataFormData = z.infer<typeof SystemServiceSchema>['resultSheetData']
+export type IConsultationCriteriaDataFormData = z.infer<typeof SystemServiceSchema>['consultationCriteriaData']

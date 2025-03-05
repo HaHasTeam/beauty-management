@@ -7,47 +7,54 @@ import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getAllResultSheetApi, getResultSheetByIdApi, updateResultSheetApi } from '@/network/apis/result-sheet'
-import { getResultSheetDataSchema } from '@/schemas/result-sheet.schema'
-import { IResponseResultSheetData } from '@/types/result-sheet'
+import {
+  getAllConsultationCriteriaApi,
+  getConsultationCriteriaByIdApi,
+  updateConsultationCriteriaApi
+} from '@/network/apis/consultation-criteria'
+import { getConsultationCriteriaDataSchema } from '@/schemas/consultation-criteria.schema'
+import { IResponseConsultationCriteriaData } from '@/types/consultation-criteria'
 
 import Button from '../button'
 import LoadingLayer from '../loading-icon/LoadingLayer'
 import { Form } from '../ui/form'
-import FormResultSheet from './FormResultSheet'
+import FormConsultationCriteria from './FormConsultationCriteria'
 
-interface UpdateResultSheetSectionProps {
-  resultSheet: IResponseResultSheetData
+interface UpdateConsultationCriteriaSectionProps {
+  consultationCriteria: IResponseConsultationCriteriaData
   setOpen: Dispatch<SetStateAction<boolean>>
 }
-const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSectionProps) => {
+const UpdateConsultationCriteriaSection = ({
+  consultationCriteria,
+  setOpen
+}: UpdateConsultationCriteriaSectionProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useTranslation()
   const id = useId()
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
   const queryClient = useQueryClient()
-  const ResultSheetDataSchema = getResultSheetDataSchema()
+  const ConsultationCriteriaDataSchema = getConsultationCriteriaDataSchema()
 
   // Store original sections for comparison
   const originalSections = useMemo(() => {
-    return resultSheet.resultSheetSections || []
-  }, [resultSheet])
+    return consultationCriteria.consultationCriteriaSections || []
+  }, [consultationCriteria])
 
-  const defaultValues: IResponseResultSheetData = useMemo(() => {
+  const defaultValues: IResponseConsultationCriteriaData = useMemo(() => {
     return {
-      id: resultSheet.id ?? '',
-      title: resultSheet.title ?? '',
-      resultSheetSections: resultSheet.resultSheetSections ?? [],
-      status: resultSheet.status ?? '',
-      systemServices: resultSheet.systemServices ?? [],
-      createdAt: resultSheet.createdAt ?? '',
-      updatedAt: resultSheet.updatedAt ?? ''
+      id: consultationCriteria.id ?? '',
+      title: consultationCriteria.title ?? '',
+      consultationCriteriaSections: consultationCriteria.consultationCriteriaSections ?? [],
+      status: consultationCriteria.status ?? '',
+      systemServices: consultationCriteria.systemServices ?? [],
+      createdAt: consultationCriteria.createdAt ?? '',
+      updatedAt: consultationCriteria.updatedAt ?? ''
     }
-  }, [resultSheet])
+  }, [consultationCriteria])
 
-  const form = useForm<z.infer<typeof ResultSheetDataSchema>>({
-    resolver: zodResolver(ResultSheetDataSchema),
+  const form = useForm<z.infer<typeof ConsultationCriteriaDataSchema>>({
+    resolver: zodResolver(ConsultationCriteriaDataSchema),
     defaultValues
   })
 
@@ -60,18 +67,18 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
     form.reset()
     setOpen(false)
   }
-  const { mutateAsync: updateResultSheetFn } = useMutation({
-    mutationKey: [updateResultSheetApi.mutationKey],
-    mutationFn: updateResultSheetApi.fn,
+  const { mutateAsync: updateConsultationCriteriaFn } = useMutation({
+    mutationKey: [updateConsultationCriteriaApi.mutationKey],
+    mutationFn: updateConsultationCriteriaApi.fn,
     onSuccess: () => {
       successToast({
-        message: `${t('systemService.updateResultSheetSuccess')}`
+        message: `${t('systemService.updateConsultationCriteriaSuccess')}`
       })
       queryClient.invalidateQueries({
-        queryKey: [getResultSheetByIdApi.queryKey, resultSheet.id as string]
+        queryKey: [getConsultationCriteriaByIdApi.queryKey, consultationCriteria.id as string]
       })
       queryClient.invalidateQueries({
-        queryKey: [getAllResultSheetApi.queryKey]
+        queryKey: [getAllConsultationCriteriaApi.queryKey]
       })
       handleReset()
     }
@@ -81,11 +88,11 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       setIsLoading(true)
       const transformedValues = {
         ...values,
-        id: resultSheet.id ?? ''
+        id: consultationCriteria.id ?? ''
       }
 
-      await updateResultSheetFn({
-        params: resultSheet.id ?? '',
+      await updateConsultationCriteriaFn({
+        params: consultationCriteria.id ?? '',
         data: transformedValues
       })
       setIsLoading(false)
@@ -109,7 +116,9 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
       {isLoading && <LoadingLayer />}
 
       <div className='flex justify-center items-center'>
-        <h3 className='text-lg font-semibold text-center text-primary'>{t('systemService.updateResultSheet')}</h3>
+        <h3 className='text-lg font-semibold text-center text-primary'>
+          {t('systemService.updateConsultationCriteria')}
+        </h3>
       </div>
 
       <Form {...form}>
@@ -125,7 +134,7 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
         >
           <div>
             {/* Form Result Sheet */}
-            <FormResultSheet form={form} originalSections={originalSections} />
+            <FormConsultationCriteria form={form} originalSections={originalSections} />
           </div>
           <div className='flex justify-end gap-2 w-full'>
             <Button
@@ -154,4 +163,4 @@ const UpdateResultSheetSection = ({ resultSheet, setOpen }: UpdateResultSheetSec
   )
 }
 
-export default UpdateResultSheetSection
+export default UpdateConsultationCriteriaSection

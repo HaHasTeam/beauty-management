@@ -1,12 +1,18 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
+import { ViewFeedbackDialog } from '@/components/feedback/ViewFeedbackDialog'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import ProductTag from '@/components/product-tag'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Routes, routesConfig } from '@/configs/routes'
+import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
 import { ClassificationTypeEnum, OrderEnum } from '@/types/enum'
+import { IResponseFeedback } from '@/types/feedback'
 
 interface ProductOrderDetailLandscapeProps {
   productImage: string
@@ -18,7 +24,11 @@ interface ProductOrderDetailLandscapeProps {
   subTotal: number
   productQuantity: number
   productClassification: IClassification | null
-  isFeedback: boolean
+  feedback: IResponseFeedback | null
+  brand: IBrand | null
+  accountName: string
+  accountAvatar: string
+  orderDetailId: string
 }
 const ProductOrderDetailLandscape = ({
   productImage,
@@ -30,16 +40,26 @@ const ProductOrderDetailLandscape = ({
   unitPriceBeforeDiscount,
   subTotal,
   productClassification,
-  isFeedback
+  feedback,
+  brand,
+  accountName,
+  accountAvatar,
+  orderDetailId
 }: ProductOrderDetailLandscapeProps) => {
   const { t } = useTranslation()
+  const [openViewFbDialog, setOpenViewFbDialog] = useState(false)
   return (
     <div className='w-full py-4 border-b border-gray-200'>
       <div className='w-full flex gap-2 items-center p-2 md:p-3 lg:p-4'>
         <div className='flex gap-1 items-center lg:w-[10%] md:w-[10%] sm:w-[14%] w-[16%]'>
           <Link to={routesConfig[Routes.PRODUCT_LIST].path + '/' + productId}>
             <div className='md:w-20 md:h-20 sm:w-20 sm:h-20 h-16 w-16'>
-              <img src={productImage} alt={productName} className='object-cover w-full h-full' />
+              <ImageWithFallback
+                fallback={fallBackImage}
+                src={productImage}
+                alt={productName}
+                className='object-cover w-full h-full rounded-sm'
+              />
             </div>
           </Link>
         </div>
@@ -55,6 +75,18 @@ const ProductOrderDetailLandscape = ({
                   <ProductTag tag={eventType} size='small' />
                 )}
               </div>
+              {feedback && (
+                <div className='flex gap-1'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                    onClick={() => setOpenViewFbDialog(true)}
+                  >
+                    {t('order.viewFeedback')}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           <div className='order-3 sm:order-2 xl:w-[30%] lg:w-[30%] md:w-[30%] w-full'>
@@ -93,14 +125,6 @@ const ProductOrderDetailLandscape = ({
               </span>
             </div>
           )}
-
-          <div className='order-4 flex gap-2 sm:hidden flex-wrap'>
-            {isFeedback && (
-              <Button variant='outline' size='sm' className='border border-primary text-primary'>
-                {t('order.viewFeedback')}
-              </Button>
-            )}
-          </div>
         </div>
 
         <div className='w-[10%] md:w-[9%] sm:w-[8%] text-center'>
@@ -110,6 +134,19 @@ const ProductOrderDetailLandscape = ({
           {t('productCard.currentPrice', { price: subTotal })}
         </span>
       </div>
+      {feedback && (
+        <ViewFeedbackDialog
+          productQuantity={productQuantity}
+          productClassification={productClassification}
+          isOpen={openViewFbDialog}
+          onClose={() => setOpenViewFbDialog(false)}
+          feedback={feedback}
+          brand={brand}
+          accountAvatar={accountAvatar}
+          accountName={accountName}
+          orderDetailId={orderDetailId}
+        />
+      )}
     </div>
   )
 }

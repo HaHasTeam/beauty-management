@@ -80,7 +80,7 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
       alertVariant: 'bg-green-100 rounded-lg p-3 border',
       buttonBg: 'bg-gray-500 hover:bg-gray-400',
       alertTitle: t(`status.${StatusEnum.ACTIVE}`),
-      buttonText: t(`status.${StatusEnum.INACTIVE}`),
+      buttonText: t(`status.button_${StatusEnum.INACTIVE}`),
       alertDescription: t(`systemService.statusDescription.${StatusEnum.ACTIVE}`),
       nextStatus: StatusEnum.INACTIVE
     },
@@ -93,7 +93,7 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
       alertVariant: 'bg-gray-200 rounded-lg p-3 border',
       buttonBg: 'bg-green-500 hover:bg-green-400',
       alertTitle: t(`status.${StatusEnum.INACTIVE}`),
-      buttonText: t(`status.${StatusEnum.ACTIVE}`),
+      buttonText: t(`status.button_${StatusEnum.ACTIVE}`),
       alertDescription: t(`systemService.statusDescription.${StatusEnum.INACTIVE}`),
       nextStatus: StatusEnum.ACTIVE
     }

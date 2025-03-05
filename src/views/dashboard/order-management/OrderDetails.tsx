@@ -314,7 +314,18 @@ const OrderDetails = () => {
                 {/* order items */}
                 <div>
                   {/* order items */}
-                  <OrderDetailItems orderDetails={useOrderData?.data?.orderDetails} />
+                  <OrderDetailItems
+                    orderDetails={useOrderData?.data?.orderDetails}
+                    brand={
+                      (
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
+                        useOrderData?.data?.orderDetails?.[0]?.productClassification
+                      )?.product?.brand ?? null
+                    }
+                    accountAvatar={useOrderData?.data?.account?.avatar ?? ''}
+                    accountName={useOrderData?.data?.account?.username ?? ''}
+                  />
 
                   {/* order summary */}
                   <OrderSummary

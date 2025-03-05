@@ -1,6 +1,7 @@
 import { Package } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import State from '@/components/state'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -8,6 +9,8 @@ import { StatusEnum } from '@/types/brand'
 import { ClassificationTypeEnum } from '@/types/enum'
 import { IImage } from '@/types/image'
 import { IServerProductClassification } from '@/types/product'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface ClassificationDetailsProps {
   classifications: IServerProductClassification[]
@@ -71,7 +74,12 @@ const ClassificationDetails = ({ classifications }: ClassificationDetailsProps) 
                       >
                         {variant.images.map((image: IImage) => (
                           <div key={image.id} className='relative aspect-square w-32 h-32 rounded-lg overflow-hidden'>
-                            <img className='object-cover w-full h-full' src={image.fileUrl} alt={variant.title} />
+                            <ImageWithFallback
+                              fallback={fallBackImage}
+                              className='object-cover w-full h-full'
+                              src={image.fileUrl}
+                              alt={variant.title}
+                            />
                           </div>
                         ))}
                       </div>

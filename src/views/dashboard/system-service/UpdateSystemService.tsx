@@ -38,9 +38,9 @@
 //     images: [],
 //     category: '',
 //     type: ServiceTypeEnum.STANDARD,
-//     resultSheet: {
+//     consultationCriteria: {
 //       id: '',
-//       resultSheetSections: [
+//       consultationCriteriaSections: [
 //         {
 //           section: '',
 //           orderIndex: 1,
@@ -64,9 +64,9 @@
 //       const formattedData = {
 //         ...serviceData,
 //         category: serviceData.data.category.id,
-//         resultSheetData: {
-//           title: serviceData.data.resultSheet.title,
-//           resultSheetSections: serviceData.data.resultSheet.resultSheetSections.map((section) => ({
+//         consultationCriteriaData: {
+//           title: serviceData.data.consultationCriteria.title,
+//           consultationCriteriaSections: serviceData.data.consultationCriteria.consultationCriteriaSections.map((section) => ({
 //             ...section,
 //             id: section.id,
 //             status: section.status
@@ -108,7 +108,7 @@
 //   }
 
 //   const handleDeleteSection = (index: number) => {
-//     const currentSections = form.getValues('resultSheetData.resultSheetSections')
+//     const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
 //     const updatedSections = currentSections
 //       .map((section, i) => {
 //         if (i === index) {
@@ -137,7 +137,7 @@
 //       ...updatedSections.filter((section) => section.status === StatusEnum.INACTIVE)
 //     ]
 
-//     form.setValue('resultSheetData.resultSheetSections', finalSections)
+//     form.setValue('consultationCriteriaData.consultationCriteriaSections', finalSections)
 //   }
 
 //   const onSubmit = async (values: IUpdateSystemServiceFormData) => {
@@ -166,10 +166,10 @@
 //         ...values,
 //         id: id,
 //         images: transformedImages,
-//         resultSheet: {
-//           id: serviceData.resultSheet.id,
-//           title: values.resultSheetData.title,
-//           resultSheetSections: values.resultSheetData.resultSheetSections.map((section) => ({
+//         consultationCriteria: {
+//           id: serviceData.consultationCriteria.id,
+//           title: values.consultationCriteriaData.title,
+//           consultationCriteriaSections: values.consultationCriteriaData.consultationCriteriaSections.map((section) => ({
 //             ...section,
 //             status: section.status || StatusEnum.ACTIVE
 //           }))
@@ -206,8 +206,8 @@ import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import SystemServiceForm from '@/components/system-service/SystemServiceForm'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
+import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-criteria'
 import { uploadFilesApi } from '@/network/apis/file'
-import { getAllResultSheetApi } from '@/network/apis/result-sheet'
 import { getAllSystemServiceApi, getSystemServiceByIdApi, updateSystemServiceApi } from '@/network/apis/system-service'
 import { getSystemServiceSchema, ISystemServiceFormData } from '@/schemas/system-service.schema'
 import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
@@ -228,9 +228,9 @@ const UpdateSystemService = () => {
     images: [],
     category: '',
     type: ServiceTypeEnum.STANDARD,
-    resultSheetData: {
+    consultationCriteriaData: {
       title: '',
-      resultSheetSections: [
+      consultationCriteriaSections: [
         {
           section: '',
           orderIndex: 1,
@@ -269,7 +269,7 @@ const UpdateSystemService = () => {
           queryKey: [getSystemServiceByIdApi.queryKey, id]
         }),
         queryClient.invalidateQueries({
-          queryKey: [getAllResultSheetApi.queryKey]
+          queryKey: [getAllConsultationCriteriaApi.queryKey]
         })
       ])
     }
@@ -387,8 +387,8 @@ const UpdateSystemService = () => {
           category: initialData.data.category.id,
           type: initialData.data.type,
           status: initialData.data.status,
-          resultSheet: initialData.data.resultSheet?.id,
-          resultSheetData: initialData.data.resultSheet
+          consultationCriteria: initialData.data.consultationCriteria?.id,
+          consultationCriteriaData: initialData.data.consultationCriteria
         }
         form.reset(formValue)
       }

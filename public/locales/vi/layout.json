@@ -108,7 +108,10 @@
     "deselect": "Bỏ chọn",
     "select": "Chọn",
     "edit": "Chỉnh sửa",
-    "backToList": "Quay lại danh sách"
+    "backToList": "Quay lại danh sách",
+    "close": "Đóng",
+    "showMore": "Xem thêm {{count}} phản hồi",
+    "showLess": "Thu gọn"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -272,6 +275,23 @@
       "title": "Không tìm thấy dịch vụ hệ thống",
       "description": "Dịch vụ hệ thống bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
       "button": "Xem các dịch vụ hệ thống khác"
+    },
+    "feedback": {
+      "title": "Chưa có đánh giá nào",
+      "description": "Sản phẩm này hiện chưa có đánh giá nào{{filter}}. Hãy {{filterCallAction}}trở thành người đầu tiên chia sẻ nhận xét của bạn!",
+      "filter": " cho bộ lọc bạn đã chọn",
+      "filterCallAction": "thử xem tất cả đánh giá hoặc ",
+      "button": "Viết đánh giá"
+    },
+    "myFeedbackList": {
+      "title": "Bạn chưa có đánh giá nào",
+      "description": "Hãy chia sẻ trải nghiệm của bạn về các sản phẩm đã mua.",
+      "button": "Viết đánh giá"
+    },
+    "feedbackDetail": {
+      "title": "Không tìm thấy đánh giá",
+      "description": "Đánh giá này có thể đã bị xóa hoặc không tồn tại.",
+      "button": "Quay lại"
     }
   },
   "productDetail": {
@@ -604,7 +624,7 @@
     "viewFeedback": "Xem đánh giá",
     "cancelOrder": "Hủy đơn",
     "requestCancelOrder": "Yêu cầu hủy đơn",
-    "cancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với hủy tất cả sản phẩm trong đơn hàng và không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
+    "cancelOrderDescription": "Nhấn nút \"Xác nhận\" đồng nghĩa với hủy tất cả sản phẩm trong đơn hàng và không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể{{brand}} áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
     "requestCancelOrderDescription": "Do đơn hàng đang được chuẩn bị, yêu cầu này sẽ cần được xét duyệt trước khi hủy. Nhấn nút \"Xác nhận\" đồng nghĩa với việc gửi yêu cầu hủy toàn bộ sản phẩm trong đơn hàng. Hành động này không thể hoàn tác. Mã khuyến mãi (nếu có) vẫn có thể áp dụng cho đơn hàng khác sau khi hủy đơn hàng này.",
     "cancelOrderReason": {
       "changeOfMind": "Thay đổi ý định",
@@ -676,7 +696,8 @@
     "rejectedCancelRequest": "Yêu cầu hủy bị từ chối. Đơn hàng tiếp tục xử lý.",
     "rejectedCancelRequestTitle": "Yêu Cầu Hủy Bị Từ Chối",
     "received": "Đã nhận hàng",
-    "receivedOrderStatusSuccess": "Xác nhận nhận hàng thành công!"
+    "receivedOrderStatusSuccess": "Xác nhận nhận hàng thành công!",
+    "cancelOrderAdditional": " được khách hàng"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -766,7 +787,8 @@
     "videoBrowser": "Trình duyệt của bạn không hỗ trợ video.",
     "fileTypeLimits": "Bạn có thể tải lên tối đa {{imageCount}} hình ảnh và {{videoCount}} video.",
     "maxImages": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
-    "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video."
+    "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
+    "contentReplyFeedback": "Nội dung phản hồi phải có ít nhất 25 ký tự và không quá 500 ký tự"
   },
   "role": {
     "ADMIN": "Quản trị viên",
@@ -776,7 +798,8 @@
     "STAFF": "Nhân viên thương hiệu",
     "KOL": "Người ảnh hưởng",
     "OPERATOR": "Người vận hành",
-    "BRAND": "Thương hiệu"
+    "BRAND": "Thương hiệu",
+    "MODERATOR": "Quản trị viên"
   },
   "productFormMessage": {
     "SKURequired": "SKU phân loại sản phẩm không thể trùng",
@@ -806,7 +829,7 @@
     "successStatusMessage": "Cập nhật trạng thái sản phẩm thành công!",
     "categoryLastLevel": "Vui lòng chọn danh mục cấp cuối.",
     "certificateRequired": "Chứng nhận sản phẩm là bắt buộc.",
-    "totalQuantityTooLow": "Tổng số lượng quá thấp. Vui lòng tăng số lượng để đáp ứng mức tối thiểu yêu cầu ({{count}})."
+    "totalQuantityTooLow": "Tổng số lượng quá thấp. Vui lòng tăng số lượng để đáp ứng mức tối thiểu yêu cầu là: {{count}}."
   },
   "createProduct": {
     "successOfficial": "Tạo sản phẩm thành công!",
@@ -857,8 +880,10 @@
     "other": "Khác",
     "classification": "Phân Loại",
     "addOption": "Thêm tùy chọn",
+    "option": "Tùy chọn",
+    "classificationTitleInformation": "Thuộc Tính Phân Loại",
     "classificationEg": "Ví dụ: Đỏ, v.v.",
-    "inputPriceAndQuantity": "Tùy Chọn Giá Và Số Lượng",
+    "inputPriceAndQuantity": "Chi Tiết Phân Loại Sản Phẩm",
     "price": "Giá",
     "quantity": "Số lượng",
     "action": "Thao tác",
@@ -896,21 +921,24 @@
   },
   "status": {
     "ACTIVE": "Đang hoạt động",
-    "INACTIVE": "Không hoạt động",
+    "INACTIVE": "Đang ẩn",
     "DRAFT": "Bản nháp",
     "PUBLIC": "Công khai",
     "DENIED": "Từ chối",
     "BAN": "Bị cấm",
     "PENDING": "Đang chờ duyệt",
     "PRE_ORDER": "Đặt trước",
-    "OFFICIAL": "Chính thức",
+    "OFFICIAL": "Đang hiển thị",
     "OUT_OF_STOCK": "Hết hàng",
     "SOLD_OUT": "Hết hàng",
-    "ALMOST_OUT": "Sắp hết hàng"
+    "ALMOST_OUT": "Sắp hết hàng",
+    "button_INACTIVE": "Ngừng hiển thị",
+    "button_ACTIVE": "Kích hoạt",
+    "button_OFFICIAL": "Kích hoạt"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",
-    "resultSheetInformation": "Tiêu Chí Tư Vấn",
+    "consultationCriteriaInformation": "Tiêu Chí Tư Vấn",
     "name": "Tên Dịch Vụ",
     "description": "Mô Tả",
     "category": "Danh Mục",
@@ -926,7 +954,7 @@
     "enterServiceDescription": "Nhập mô tả dịch vụ",
     "selectServiceCategory": "Chọn danh mục dịch vụ",
     "enterSectionName": "Nhập tên mục",
-    "enterResultSheetTitle": "Nhập tiêu đề tiêu chí tư vấn",
+    "enterConsultationCriteriaTitle": "Nhập tiêu đề tiêu chí tư vấn",
     "enterSectionDescription": "Nhập mô tả mục",
     "createSuccessMessage": "Tạo dịch vụ thành công!",
     "status": "Trạng thái",
@@ -939,20 +967,20 @@
     "standardOrPremiumRequired": "Vui lòng chọn loại tiêu chuẩn hoặc cao cấp.",
     "sectionNameRequired": "Tên mục là bắt buộc.",
     "sectionsRequired": "Vui lòng thêm ít nhất một mục.",
-    "resultSheetTitleRequired": "Tiêu đề tiêu chí tư vấn là bắt buộc.",
+    "consultationCriteriaTitleRequired": "Tiêu đề tiêu chí tư vấn là bắt buộc.",
     "orderIndexRequired": "Chỉ số thứ tự là bắt buộc.",
     "sectionDescriptionRequired": "Mô tả mục là bắt buộc.",
-    "resultSheetSectionsRequired": "Các mục tiêu chí tư vấn là bắt buộc.",
+    "consultationCriteriaSectionsRequired": "Các mục tiêu chí tư vấn là bắt buộc.",
     "section": "Mục",
     "updateSuccessMessage": "Thay đổi dịch vụ thành công!",
-    "eitherResultSheetOrDataRequired": "Vui lòng chọn một tiêu chí tư vấn hiện có hoặc tạo bảng mới.",
+    "eitherConsultationCriteriaOrDataRequired": "Vui lòng chọn một tiêu chí tư vấn hiện có hoặc tạo bảng mới.",
     "createNew": "Tạo tiêu chí tư vấn mới",
     "selectOrCreateNew": "Chọn một tiêu chí tư vấn hiện có hoặc tạo bảng mới",
-    "selectResultSheet": "Chọn tiêu chí tư vấn",
+    "selectConsultationCriteria": "Chọn tiêu chí tư vấn",
     "preview": "Xem trước",
     "alsoUsedFor": "Tiêu chí tư vấn này cũng được áp dụng cho các dịch vụ sau của hệ thống",
-    "updateResultSheet": "Cập Nhật Tiêu Chí Tư Vấn",
-    "updateResultSheetSuccess": "Cập nhật tiêu chí tư vấn thành công!",
+    "updateConsultationCriteria": "Cập Nhật Tiêu Chí Tư Vấn",
+    "updateConsultationCriteriaSuccess": "Cập nhật tiêu chí tư vấn thành công!",
     "deleteSectionSuccess": "Xóa mục tiêu chí tư vấn thành công!",
     "createdAt": "Ngày tạo",
     "lastUpdated": "Cập nhật lần cuối",
@@ -1007,7 +1035,9 @@
   },
   "feedback": {
     "successTitle": "Gửi đánh giá thành công",
+    "successRepTitle": "Phản hồi đã gửi!",
     "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
+    "successRepDescription": "Phản hồi của bạn đã được gửi thành công. Cảm ơn bạn đã phản hồi ý kiến của khách hàng!",
     "writeReview": "Viết đánh giá",
     "rating": "Đánh giá",
     "content": "Chia sẻ trải nghiệm của bạn",
@@ -1029,7 +1059,14 @@
       "REFUNDED": "Tải lên video xác nhận hoàn tất trả hàng và hoàn tiền."
     },
     "uploadVideos": "Tải lên video",
-    "uploadImages": "Tải lên hình ảnh"
+    "uploadImages": "Tải lên hình ảnh",
+    "viewReview": "Xem đánh giá",
+    "images": "Hình Ảnh",
+    "ID": "ID",
+    "order": "Đơn hàng",
+    "reply": "Reply",
+    "writeYourRep": "Viết phản hồi của bạn...",
+    "yourReply": "Phản hồi của bạn"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",
@@ -1052,5 +1089,13 @@
     "DELIVERED": "Tải lên xác nhận giao hàng",
     "RETURNING": "Tải lên bằng chứng yêu cầu hoàn trả",
     "REFUNDED": "Tải lên bằng chứng hoàn tiền hoàn tất"
+  },
+  "confirm": {
+    "productClassification": {
+      "title": "Xác nhận Thay đổi Thuộc tính Phân loại Sản Phẩm",
+      "description": "Bạn đang chỉnh sửa các thuộc tính quan trọng của phân loại sản phẩm, như màu sắc, kích thước hoặc các yếu tố khác. Để đảm bảo quản lý tồn kho, đặt hàng và đơn hàng chính xác, phân loại hiện tại sẽ bị vô hiệu hóa. Một phân loại mới sẽ được tạo với các thuộc tính cập nhật sau khi bạn gửi biểu mẫu. Bạn có chắc chắn muốn tiếp tục? Bạn có thể hủy trước khi gửi để giữ nguyên phân loại hiện tại. Lưu ý: Sau khi gửi, thay đổi này không thể hoàn tác.",
+      "cancel": "Hủy",
+      "confirm": "Xác Nhận"
+    }
   }
 }

@@ -5,21 +5,21 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
+import { IResponseConsultationCriteriaData } from '@/types/consultation-criteria'
 import { StatusEnum } from '@/types/enum'
-import { IResponseResultSheetData } from '@/types/result-sheet'
 
 import SectionCollapsable from '../section-collapsable'
 import SystemServiceTypeTag from '../system-service/SystemServiceTypeTag'
-import FormResultSheetInSystemService from './FormResultSheetInSystemService'
-import ResultSheetSection from './ResultSheetSection'
-import UpdateResultSheetSection from './UpdateResultSheetSection'
+import ConsultationCriteriaSection from './ConsultationCriteriaSection'
+import FormConsultationCriteriaInSystemService from './FormConsultationCriteriaInSystemService'
+import UpdateConsultationCriteriaSection from './UpdateConsultationCriteriaSection'
 
-export interface ResultSheetProps {
-  resultSheet: IResponseResultSheetData
+export interface ConsultationCriteriaProps {
+  consultationCriteria: IResponseConsultationCriteriaData
   mode?: 'create' | 'update' | 'view'
   form?: UseFormReturn<z.infer<typeof SystemServiceSchema>>
 }
-const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) => {
+const ConsultationCriteria = ({ consultationCriteria, mode = 'create', form }: ConsultationCriteriaProps) => {
   const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
 
@@ -28,10 +28,10 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
   }, [mode])
 
   const originalSections = useMemo(() => {
-    return resultSheet.resultSheetSections || []
-  }, [resultSheet])
+    return consultationCriteria.consultationCriteriaSections || []
+  }, [consultationCriteria])
 
-  if (!resultSheet) return null
+  if (!consultationCriteria) return null
 
   return (
     <div
@@ -47,17 +47,17 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
       )}
       {isEditing ? (
         mode === 'update' ? (
-          form && <FormResultSheetInSystemService form={form} originalSections={originalSections} />
+          form && <FormConsultationCriteriaInSystemService form={form} originalSections={originalSections} />
         ) : (
-          <UpdateResultSheetSection resultSheet={resultSheet} setOpen={setIsEditing} />
+          <UpdateConsultationCriteriaSection consultationCriteria={consultationCriteria} setOpen={setIsEditing} />
         )
       ) : (
         <>
           <div className='bg-primary/80 text-white rounded-tl-lg rounded-tr-lg p-4'>
-            <h2 className='text-xl font-bold'>{resultSheet.title}</h2>
+            <h2 className='text-xl font-bold'>{consultationCriteria.title}</h2>
             <div className='text-sm opacity-80 mt-1'>
               {t('systemService.lastUpdated')}:{' '}
-              {t('date.toLocaleDateTimeString', { val: new Date(resultSheet.updatedAt) })}
+              {t('date.toLocaleDateTimeString', { val: new Date(consultationCriteria.updatedAt) })}
             </div>
           </div>
           <div className='px-4 space-y-4'>
@@ -73,10 +73,10 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
                 }
                 content={
                   <>
-                    {resultSheet.resultSheetSections.map((section, index) => (
+                    {consultationCriteria.consultationCriteriaSections.map((section, index) => (
                       <div key={section.id} className='w-full'>
-                        <ResultSheetSection resultSheetSection={section} />
-                        {index < resultSheet.resultSheetSections.length - 1 && (
+                        <ConsultationCriteriaSection consultationCriteriaSection={section} />
+                        {index < consultationCriteria.consultationCriteriaSections.length - 1 && (
                           <div className='border-b border-gray-200 my-4'></div>
                         )}
                       </div>
@@ -87,9 +87,10 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
             </div>
 
             {/* System Services */}
-            {resultSheet.systemServices &&
-              resultSheet.systemServices.length > 0 &&
-              resultSheet.systemServices.filter((service) => service.status === StatusEnum.ACTIVE).length > 0 && (
+            {consultationCriteria.systemServices &&
+              consultationCriteria.systemServices.length > 0 &&
+              consultationCriteria.systemServices.filter((service) => service.status === StatusEnum.ACTIVE).length >
+                0 && (
                 <div>
                   <SectionCollapsable
                     header={
@@ -100,7 +101,7 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
                     }
                     content={
                       <div className='space-y-2'>
-                        {resultSheet.systemServices
+                        {consultationCriteria.systemServices
                           ?.filter((service) => service.status === StatusEnum.ACTIVE)
                           ?.map((service) => (
                             <div key={service.id} className='bg-primary/10 p-3 rounded-md space-y-1'>
@@ -126,7 +127,7 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
           {/* Footer */}
           <div className='px-4 pb-3'>
             <div className='text-xs text-gray-500'>
-              {t('systemService.ID')}: {resultSheet.id.substring(0, 8)}
+              {t('systemService.ID')}: {consultationCriteria.id.substring(0, 8)}
             </div>
           </div>
         </>
@@ -135,4 +136,4 @@ const ResultSheet = ({ resultSheet, mode = 'create', form }: ResultSheetProps) =
   )
 }
 
-export default ResultSheet
+export default ConsultationCriteria

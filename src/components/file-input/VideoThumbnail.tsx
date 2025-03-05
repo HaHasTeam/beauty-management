@@ -1,8 +1,11 @@
 import { PlayCircle, Video } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { cn } from '@/lib/utils'
-import { IImage } from '@/types/image'
+import { TServerFile } from '@/types/file'
+
+import ImageWithFallback from '../image/ImageWithFallback'
 
 interface VideoThumbnailProps {
   file: File
@@ -75,7 +78,12 @@ export function VideoThumbnail({ file, className, onClick }: VideoThumbnailProps
       {thumbnail ? (
         // Show the actual thumbnail with play button overlay
         <div className='relative w-full h-full'>
-          <img src={thumbnail} alt='Video thumbnail' className='w-full h-full object-cover' />
+          <ImageWithFallback
+            fallback={fallBackImage}
+            src={thumbnail}
+            alt='Video thumbnail'
+            className='w-full h-full object-cover'
+          />
           <div className='absolute inset-0 bg-black/20 flex items-center justify-center'>
             <PlayCircle className='text-white w-10 h-10' />
           </div>
@@ -98,7 +106,7 @@ export function VideoThumbnailServer({
   className,
   onClick
 }: {
-  file: IImage
+  file: TServerFile
   className?: string
   onClick?: () => void
 }) {
@@ -168,7 +176,12 @@ export function VideoThumbnailServer({
       {thumbnail ? (
         // Show the actual thumbnail with play button overlay
         <div className='relative w-full h-full'>
-          <img src={thumbnail} alt='Video thumbnail' className='w-full h-full object-cover' />
+          <ImageWithFallback
+            fallback={fallBackImage}
+            src={thumbnail}
+            alt='Video thumbnail'
+            className='w-full h-full object-cover'
+          />
           <div className='absolute inset-0 bg-black/20 flex items-center justify-center'>
             <PlayCircle className='text-white w-10 h-10' />
           </div>

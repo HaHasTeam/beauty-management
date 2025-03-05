@@ -5,11 +5,13 @@ import { DropzoneOptions } from 'react-dropzone'
 import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { uploadFilesApi } from '@/network/apis/file'
 import { CustomFile, TFile } from '@/types/file'
 import { createFiles } from '@/utils/files'
 
+import ImageWithFallback from '../image/ImageWithFallback'
 import { ScrollArea } from '../ui/scroll-area'
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '.'
 
@@ -235,7 +237,8 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
                           }}
                         >
                           {file?.type?.includes('image') ? (
-                            <img
+                            <ImageWithFallback
+                              fallback={fallBackImage}
                               src={URL.createObjectURL(file)}
                               alt={file.name}
                               className='size-16 object-contain rounded-lg border'

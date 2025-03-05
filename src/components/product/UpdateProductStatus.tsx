@@ -85,7 +85,7 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
       alertVariant: 'bg-green-100 rounded-lg p-3 border',
       buttonBg: 'bg-gray-500 hover:bg-gray-400',
       alertTitle: t(`status.${ProductEnum.OFFICIAL}`),
-      buttonText: t(`status.${ProductEnum.INACTIVE}`),
+      buttonText: t(`status.button_${ProductEnum.INACTIVE}`),
       alertDescription: t(`createProduct.statusDescription.${ProductEnum.OFFICIAL}`),
       nextStatus: ProductEnum.INACTIVE
     },
@@ -109,7 +109,7 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
       alertVariant: 'bg-gray-200 rounded-lg p-3 border',
       buttonBg: 'bg-green-500 hover:bg-green-400',
       alertTitle: t(`status.${ProductEnum.INACTIVE}`),
-      buttonText: t(`status.${ProductEnum.OFFICIAL}`),
+      buttonText: t(`status.button_${ProductEnum.OFFICIAL}`),
       alertDescription: t(`createProduct.statusDescription.${ProductEnum.INACTIVE}`),
       nextStatus: ProductEnum.OFFICIAL
     }

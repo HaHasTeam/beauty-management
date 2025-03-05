@@ -102,8 +102,8 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
           ) : (
             <p className='text-sm text-muted-foreground'>
               Vui lòng xác thực tài khoản email{' '}
-              <a className='cursor-pointer' href='https://mail.google.com/mail/u/0/#inbox'>
-                <span className='text-sm p-1 px-2 text-primary'>link</span>
+              <a className='cursor-pointer' target='_blank' href='https://mail.google.com/mail/u/0/#inbox'>
+                <span className='text-sm text-primary'>Link</span>
               </a>
             </p>
           )}
