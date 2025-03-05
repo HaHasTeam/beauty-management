@@ -1,57 +1,54 @@
 import { CalendarEvent } from '@/types/booking'
 import { BookingStatusEnum } from '@/types/enum'
 
-export const eventStyleGetter = (event: CalendarEvent) => {
-  let backgroundColor = 'hsl(var(--primary))'
-  let textColor = 'hsl(var(--primary-foreground))'
+import { getBookingStatusConfig } from './booking-status-config'
 
-  switch (event.resource.status) {
-    case BookingStatusEnum.WAIT_FOR_CONFIRMATION:
-      backgroundColor = 'hsl(var(--warning))'
-      textColor = 'hsl(var(--warning-foreground))'
-      break
-    case BookingStatusEnum.BOOKING_CONFIRMED:
-      backgroundColor = 'hsl(var(--success))'
-      textColor = 'hsl(var(--success-foreground))'
-      break
-    case BookingStatusEnum.CANCELLED:
-      backgroundColor = 'hsl(var(--destructive))'
-      textColor = 'hsl(var(--destructive-foreground))'
-      break
-  }
+type StatusConfig = {
+  borderColor: string
+  bgColor: string
+  bgTagColor: string
+  alertVariant: string
+  titleColor: string
+  buttonBg: string
+  alertTitle: string
+  buttonText: string
+  alertDescription: string
+  nextStatus: BookingStatusEnum | null | string // Updated to allow null
+}
+export const eventStyleGetter = (event: CalendarEvent, t: (key: string) => string) => {
+  const status = event.resource.status as BookingStatusEnum
+  const statusConfig: Record<BookingStatusEnum, StatusConfig> = getBookingStatusConfig(t)
+  const config = statusConfig[status]
 
   return {
     style: {
-      backgroundColor,
-      color: textColor,
+      backgroundColor: config.bgColor,
+      color: config.titleColor,
       borderRadius: 'var(--radius)',
       border: 'none',
       display: 'block'
     }
   }
 }
+export const getStatusClass = (status: BookingStatusEnum, t: (key: string) => string) => {
+  const statusConfig = getBookingStatusConfig(t)
+  const config = statusConfig[status]
 
-export const getStatusClass = (status: string) => {
-  switch (status) {
-    case BookingStatusEnum.WAIT_FOR_CONFIRMATION:
-      return 'bg-[hsl(var(--warning-light))] text-[hsl(var(--warning-dark))] border-[hsl(var(--warning-border))]'
-    case BookingStatusEnum.BOOKING_CONFIRMED:
-      return 'bg-[hsl(var(--success-light))] text-[hsl(var(--success-dark))] border-[hsl(var(--success-border))]'
-    case BookingStatusEnum.CANCELLED:
-      return 'bg-[hsl(var(--destructive-light))] text-[hsl(var(--destructive-dark))] border-[hsl(var(--destructive-border))]'
-    default:
-      return 'bg-[hsl(var(--neutral-light))] text-[hsl(var(--neutral-dark))] border-[hsl(var(--neutral-border))]'
-  }
+  return `${config.bgColor} ${config.titleColor} ${config.borderColor}`
 }
-export const getStatusBookingText = (status: string) => {
-  switch (status) {
-    case BookingStatusEnum.WAIT_FOR_CONFIRMATION:
-      return 'Wait For Confirmation'
-    case BookingStatusEnum.BOOKING_CONFIRMED:
-      return 'Confirmed'
-    case BookingStatusEnum.CANCELLED:
-      return 'Cancelled'
-    default:
-      return status
+
+export const getStatusBookingText = (status: BookingStatusEnum, t: (key: string) => string) => {
+  const statusConfig = getBookingStatusConfig(t)
+  return statusConfig[status]?.alertTitle || status
+}
+
+export const getBookingStatusInfo = (status: BookingStatusEnum, t: (key: string) => string) => {
+  const statusConfig = getBookingStatusConfig(t)
+  const config = statusConfig[status]
+
+  return {
+    ...config,
+    text: config.alertTitle,
+    description: config.alertDescription
   }
 }

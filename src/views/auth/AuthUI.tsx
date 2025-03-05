@@ -80,12 +80,7 @@ export default function AuthUI() {
                 ? 'Enter your email to get a magic link!'
                 : 'Enter your email and password to sign in!'}
       </p>
-      {props.viewProp !== 'update-password' && props.allowOauth && (
-        <>
-          <OauthSignIn />
-          <Separator />
-        </>
-      )}
+
       {props.viewProp === 'password-signin' && <PasswordSignIn allowEmail={props.allowEmail} />}
       {props.viewProp === 'email-signin' && (
         <EmailSignIn allowPassword={props.allowPassword} disableButton={props.disableButton} />
@@ -95,6 +90,12 @@ export default function AuthUI() {
       )}
       {props.viewProp === 'update-password' && <UpdatePassword />}
       {props.viewProp === 'signup' && <SignUp />}
+      {props.viewProp !== 'update-password' && props.allowOauth && (
+        <>
+          <OauthSignIn />
+          <Separator />
+        </>
+      )}
     </div>
   )
 }

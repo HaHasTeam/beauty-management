@@ -20,8 +20,9 @@ type Props = {
   goBackfn: (number?: number) => void
   steppers: Steppers[]
   form: UseFormReturn<z.infer<typeof brandCreateSchema>>
+  isSubmitting: boolean
 }
-function Confirmation({ stepIndex, goBackfn, form }: Props) {
+function Confirmation({ stepIndex, goBackfn, form, isSubmitting }: Props) {
   return (
     <div className=''>
       <div className='flex w-full items-center gap-4 '>
@@ -102,7 +103,7 @@ function Confirmation({ stepIndex, goBackfn, form }: Props) {
         <Button
           className=' flex select-none items-center justify-center gap-2 px-4'
           type='submit'
-          loading={form.formState.isSubmitting}
+          loading={form.formState.isSubmitting || isSubmitting}
           // disabled={stepIndex === 3}
           // onClick={() => {
           //   console.log('submitted')

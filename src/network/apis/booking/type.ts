@@ -14,3 +14,13 @@ export type TRequestCreateBookingParams = {
   slot: string
   account: string
 }
+export type TUpdateStatusBookingParams = {
+  id: string
+  status: BookingStatusEnum
+  startTime: string
+  endTime: string
+}
+export type BookingStatusResponse = {
+  message: string
+  data: BookingStatusEnum
+}

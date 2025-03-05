@@ -3,10 +3,10 @@ import * as React from 'react'
 import CardSection from '@/components/card-section'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
-import { TProduct } from '@/types/product'
+import { IResponseProduct } from '@/types/product'
 
 interface ViewDetailsProductSheetProps extends React.ComponentPropsWithRef<typeof Sheet> {
-  Product?: TProduct
+  Product?: IResponseProduct
 }
 
 export function ViewDetailsProductSheet({ Product, ...props }: ViewDetailsProductSheetProps) {
