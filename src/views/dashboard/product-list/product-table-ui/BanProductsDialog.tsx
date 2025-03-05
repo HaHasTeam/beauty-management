@@ -27,10 +27,10 @@ import {
 } from '@/components/ui/drawer'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { TProduct } from '@/types/product'
+import { IResponseProduct } from '@/types/product'
 
 interface BanProductsDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
-  Products: Row<TProduct>['original'][]
+  Products: Row<IResponseProduct>['original'][]
   showTrigger?: boolean
   onSuccess?: () => void
 }

@@ -10,11 +10,11 @@ import { Select, SelectContent, SelectGroup, SelectItem } from '@/components/ui/
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { exportTableToCSV } from '@/lib/export'
-import { ProductStatusEnum, TProduct } from '@/types/product'
+import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import { RoleStatusEnum } from '@/types/role'
 
 interface ProductsTableFloatingBarProps {
-  table: Table<TProduct>
+  table: Table<IResponseProduct>
 }
 
 export function ProductsTableFloatingBar({ table }: ProductsTableFloatingBarProps) {

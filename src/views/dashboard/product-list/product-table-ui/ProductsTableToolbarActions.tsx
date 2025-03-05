@@ -6,12 +6,12 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
-import { TProduct } from '@/types/product'
+import { IResponseProduct } from '@/types/product'
 
 import { BanProductsDialog } from './BanProductsDialog'
 
 interface ProductTableToolbarActionsProps {
-  table: Table<TProduct>
+  table: Table<IResponseProduct>
 }
 
 export function ProductTableToolbarActions({ table }: ProductTableToolbarActionsProps) {
