@@ -72,7 +72,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TProduc
           <div className='flex space-x-2 items-center'>
             <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
               <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{displayName[0].toUpperCase() ?? 'A'}</AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>

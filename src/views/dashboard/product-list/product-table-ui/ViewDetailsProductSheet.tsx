@@ -19,7 +19,7 @@ export function ViewDetailsProductSheet({ Product, ...props }: ViewDetailsProduc
           rightComponent={
             <Avatar className='size-20 object-cover aspect-square p-0.5 rounded-full border bg-accent shadow-lg'>
               <AvatarImage src={Product?.images?.length ? Product?.images[0].fileUrl : ''} />
-              <AvatarFallback>{Product?.name}</AvatarFallback>
+              <AvatarFallback>{Product?.name?.charAt(0)?.toUpperCase() ?? ''}</AvatarFallback>
             </Avatar>
           }
         >

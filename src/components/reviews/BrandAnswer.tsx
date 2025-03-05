@@ -66,12 +66,12 @@ const BrandAnswer = ({
                   {brand && (account.role.role === UserRoleEnum.MANAGER || account.role.role === UserRoleEnum.STAFF) ? (
                     <Avatar>
                       <AvatarImage src={brand.logo} alt={brand.name} />
-                      <AvatarFallback>{brand.name?.charAt(0) ?? 'A'}</AvatarFallback>
+                      <AvatarFallback>{brand.name?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
                     </Avatar>
                   ) : (
                     <Avatar>
-                      <AvatarImage src={account.avatar} alt={account.firstName} />
-                      <AvatarFallback>{account.firstName?.charAt(0) ?? 'A'}</AvatarFallback>
+                      <AvatarImage src={account.avatar} alt={account.username} />
+                      <AvatarFallback>{account.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
                     </Avatar>
                   )}
                   <div className='space-y-1'>

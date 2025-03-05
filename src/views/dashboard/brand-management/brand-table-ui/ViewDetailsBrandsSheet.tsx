@@ -21,7 +21,7 @@ export function ViewDetailsBrandsSheet({ TBrand, ...props }: ViewDetailsBrandsSh
           rightComponent={
             <Avatar className='size-20 object-cover aspect-square p-0.5 rounded-full border bg-accent shadow-lg'>
               <AvatarImage src={TBrand?.logo ? TBrand?.logo : ''} />
-              <AvatarFallback>{TBrand?.name}</AvatarFallback>
+              <AvatarFallback>{TBrand?.name?.charAt(0)?.toUpperCase() ?? ''}</AvatarFallback>
             </Avatar>
           }
         >
