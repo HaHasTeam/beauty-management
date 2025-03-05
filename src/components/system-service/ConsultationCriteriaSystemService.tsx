@@ -1,17 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
-import { useMemo } from 'react'
+import { ArrowDownCircle, ArrowUpCircle, Download, Trash2, Upload } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
 import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-criteria'
+import { IConsultationCriteriaSectionFormData } from '@/schemas/consultation-criteria.schema'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { StatusEnum } from '@/types/enum'
+import { handleDownload } from '@/utils/certificate/handleDownload'
 
 import Button from '../button'
 import ConsultationCriteria from '../consultation-criteria/ConsultationCriteria'
+import PreviewImportFilesDialog from '../dialog/PreviewImportFilesDialog'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
@@ -24,12 +27,23 @@ interface ConsultationCriteriaSystemServiceProps {
 }
 const ConsultationCriteriaSystemService = ({ form, mode = 'create' }: ConsultationCriteriaSystemServiceProps) => {
   const CREATE_NEW_RESULT_VALUE = 'createNewConsultationCriteriaData'
+  const MAX_EXCEL_FILES = 10
+  const SAMPLE_EXCEL_FILES = ''
+  const SAMPLE_EXCEL_FILES_NAME = 'Consultation Criteria Sections Sample'
   const { t } = useTranslation()
+  const [openUpFiles, setOpenUpFiles] = useState(false)
 
   const { data: consultationCriterias } = useQuery({
     queryKey: [getAllConsultationCriteriaApi.queryKey],
     queryFn: getAllConsultationCriteriaApi.fn
   })
+
+  const handleImportedFiles = (sections: IConsultationCriteriaSectionFormData[]) => {
+    // If you want to set the sections from imported files
+    form.setValue('consultationCriteriaData.consultationCriteriaSections', sections)
+
+    setOpenUpFiles(false)
+  }
 
   const handleDeleteSection = (index: number) => {
     const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
@@ -155,6 +169,13 @@ const ConsultationCriteriaSystemService = ({ form, mode = 'create' }: Consultati
         )}
       />
 
+      {/* Result Sheet Sections import */}
+      <PreviewImportFilesDialog
+        open={openUpFiles}
+        onOpenChange={setOpenUpFiles}
+        maxExcelFiles={MAX_EXCEL_FILES}
+        onImportFiles={handleImportedFiles}
+      />
       {/* Show Preview if existing result sheet is selected */}
       {selectedConsultationCriteria && selectedConsultationCriteriaData && (
         <div className='relative w-full flex justify-center bg-primary/10 rounded-lg p-4'>
@@ -191,8 +212,28 @@ const ConsultationCriteriaSystemService = ({ form, mode = 'create' }: Consultati
           />
           {/* Result Sheet Sections */}
           <div className='space-y-2'>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 justify-between'>
               <h4 className='text-base font-semibold'>{t('systemService.sections')}</h4>
+              <div className='flex gap-2'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={() => setOpenUpFiles(true)}
+                  className='border-primary text-primary items-center flex gap-1 hover:bg-primary/10 hover:text-primary'
+                >
+                  <Upload size={14} />
+                  {t('button.importFile')}
+                </Button>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={() => handleDownload(SAMPLE_EXCEL_FILES, SAMPLE_EXCEL_FILES_NAME)}
+                  className='border-primary text-primary items-center flex gap-1 hover:bg-primary/10 hover:text-primary'
+                >
+                  <Download size={14} />
+                  {t('button.downloadSample')}
+                </Button>
+              </div>
             </div>
             {sortedSections.map((section, index) => (
               <div key={index} className='space-y-3 p-4 border rounded-lg'>

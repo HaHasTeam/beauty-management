@@ -111,7 +111,10 @@
     "backToList": "Quay lại danh sách",
     "close": "Đóng",
     "showMore": "Xem thêm {{count}} phản hồi",
-    "showLess": "Thu gọn"
+    "showLess": "Thu gọn",
+    "importFile": "Tải lên tệp",
+    "downloadSample": "Tải mẫu",
+    "import": "Tải lên"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {

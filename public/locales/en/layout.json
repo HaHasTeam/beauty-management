@@ -111,7 +111,10 @@
     "backToList": "Back to List",
     "close": "Close",
     "showMore": "Show more {{count}} replies",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "importFile": "Import files",
+    "downloadSample": "Download sample",
+    "import": "Import"
   },
   "noData": "No matching data found",
   "sell": {

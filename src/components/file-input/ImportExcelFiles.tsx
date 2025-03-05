@@ -1,91 +1,52 @@
-// import { useMutation } from '@tanstack/react-query'
 import { FilesIcon, Upload } from 'lucide-react'
-import { ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
-import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-// import { useToast } from '@/hooks/useToast'
-// import { uploadFilesApi } from '@/network/apis/file'
-// import { createFiles } from '@/utils/files'
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { FileInput, FileUploader, FileUploaderContent, ProductFileUploaderItem } from '@/components/file-input'
-import { PreviewDialog } from '@/components/file-input/PreviewImageDialog'
-import ImageWithFallback from '@/components/image/ImageWithFallback'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import useHandleServerError from '@/hooks/useHandleServerError'
 
-type UploadFileModalProps<T extends FieldValues> = {
+import ImageWithFallback from '../image/ImageWithFallback'
+import { ScrollArea } from '../ui/scroll-area'
+import { PreviewDialog } from './PreviewImageDialog'
+
+type UploadFileModalProps = {
   header?: ReactNode
   dropZoneConfigOptions?: DropzoneOptions
-  field: ControllerRenderProps<T>
   renderInputUI?: (isDragActive: boolean, files: File[], maxFiles: number, message?: string) => ReactNode
   renderFileItemUI?: (files: File) => ReactNode
   vertical: boolean
   centerItem?: boolean
-  setIsImagesUpload?: React.Dispatch<SetStateAction<boolean>>
   isAcceptImage?: boolean
   isAcceptFile?: boolean
   isAcceptExcel?: boolean
   isFullWidth?: boolean
+  onFilesChange?: (files: File[]) => void
 }
-
-const UploadProductImages = <T extends FieldValues>({
+const ImportExcelFiles = ({
   dropZoneConfigOptions,
-  field,
-  header,
   renderInputUI,
   renderFileItemUI,
   vertical = true,
-  centerItem = false,
   isAcceptImage = true,
   isAcceptFile = false,
   isAcceptExcel = false,
-  setIsImagesUpload,
-  isFullWidth = false
-}: UploadFileModalProps<T>) => {
+  isFullWidth = false,
+  header,
+  centerItem,
+  onFilesChange
+}: UploadFileModalProps) => {
   const { t } = useTranslation()
   const [files, setFiles] = useState<File[]>([])
+  const isDragActive = false
   const handleServerError = useHandleServerError()
 
-  const { fieldType, fieldValue } = useMemo<{
-    fieldType: 'string' | 'array' | 'object'
-    fieldValue: string | string[]
-  }>(() => {
-    if (typeof field?.value === 'string') {
-      if (dropZoneConfigOptions?.maxFiles && dropZoneConfigOptions?.maxFiles > 1) {
-        throw new Error(t('validation.arrayRequired'))
-      }
-
-      return {
-        fieldType: 'string',
-        fieldValue: field?.value
-      }
-    } else if (Array.isArray(field?.value)) {
-      return {
-        fieldType: 'array',
-        fieldValue: field?.value
-      }
-    } else if (typeof field?.value === 'object') {
-      return {
-        fieldType: 'array',
-        fieldValue: field?.value
-      }
-    }
-    throw new Error(t('validation.stringOrArrayRequired'))
-  }, [field?.value, t, dropZoneConfigOptions?.maxFiles])
-
-  const isDragActive = false
   const dropZoneConfig = {
     accept: isAcceptImage
-      ? {
-          'image/*': ['.jpg', '.jpeg', '.png']
-          // 'application/pdf': ['.pdf'],
-          // 'application/msword': ['.doc']
-        }
+      ? { 'image/*': ['.jpg', '.jpeg', '.png'] }
       : isAcceptFile
         ? {
-            // 'image/*': ['.jpg', '.jpeg', '.png']
             'application/pdf': ['.pdf'],
             'application/msword': ['.doc']
           }
@@ -105,91 +66,34 @@ const UploadProductImages = <T extends FieldValues>({
     ...dropZoneConfigOptions
   } satisfies DropzoneOptions
 
-  useEffect(() => {
-    const transferData = async () => {
-      try {
-        if (Array.isArray(fieldValue)) {
-          if (fieldValue.length === files.length) {
-            return
-          }
-
-          return setFiles(field?.value)
-        }
-      } catch (error) {
-        handleServerError({
-          error: error
-        })
-      }
-    }
-    transferData()
-    // eslint-disable-next-line
-  }, [fieldValue, fieldType, files.length])
-
-  const onFileDrop = async (newFiles: File[] | null) => {
-    const oldFiles = files
+  const onFileDrop = (newFiles: File[] | null) => {
     try {
-      if (setIsImagesUpload) {
-        setIsImagesUpload(true)
-      }
-      // Check file is string or array
-      // If string, convert to file and set to state
-      if (fieldType === 'string') {
-        // Value must be an array of files
-        if (!newFiles?.length && field.onChange) {
-          field.onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
-        }
-        if (newFiles?.length) {
-          // const fileUrls = await convertFileToUrl(newFiles)
-
-          field?.onChange?.(newFiles[0] as unknown as React.ChangeEvent<HTMLInputElement>)
-        }
+      if (!newFiles) {
+        // If no files, reset to empty array
+        setFiles([])
+        onFilesChange?.([])
+        return
       }
 
-      // If array, set to state
-      if (fieldType === 'array' && field?.value) {
-        // console.log('!newFiles?.length', newFiles?.length)
+      // Prevent exceeding max files
+      const filteredFiles = newFiles.slice(0, dropZoneConfigOptions?.maxFiles)
 
-        if (!newFiles) {
-          return field.onChange?.([] as unknown as React.ChangeEvent<HTMLInputElement>)
-        }
-        if (newFiles.length > oldFiles.length) {
-          const diffedFiles = newFiles.filter((file) => {
-            return !oldFiles?.some(
-              (oldFile) => oldFile.name === file.name && oldFile.lastModified === file.lastModified
-            )
-          })
-          const updateFiles = [...diffedFiles, ...field.value]
-          setFiles(updateFiles)
-          // const newDiffedFileUrls = await convertFileToUrl(diffedFiles)
-          field?.onChange?.([
-            ...(field?.value as string[]),
-            ...diffedFiles
-          ] as unknown as React.ChangeEvent<HTMLInputElement>)
-        } else {
-          const deletedIndex = oldFiles.findIndex((oldFile) => {
-            return !newFiles.some((file) => file.name === oldFile.name && file.lastModified === oldFile.lastModified)
-          })
+      // Remove duplicate files based on name and last modified
+      const uniqueFiles = filteredFiles.filter(
+        (file, index, self) =>
+          index === self.findIndex((f) => f.name === file.name && f.lastModified === file.lastModified)
+      )
 
-          if (deletedIndex !== -1) {
-            const updatedFiles = [...field.value]
-            updatedFiles.splice(deletedIndex, 1)
+      // Update local state
+      setFiles(uniqueFiles)
 
-            setFiles(updatedFiles)
-            field?.onChange?.(updatedFiles as unknown as React.ChangeEvent<HTMLInputElement>)
-          }
-        }
-      }
-      // const markedFiles = newFiles?.map((file) => {
-      //   return new File([file], file.name, { type: file.type, lastModified: file.lastModified })
-      // })
-
-      // setFiles(markedFiles || [])
+      // Call optional callback with updated files
+      onFilesChange?.(uniqueFiles)
     } catch (error) {
-      handleServerError({
-        error
-      })
+      handleServerError({ error })
     }
   }
+
   const message = `${t('validation.fileCountValid', { count: dropZoneConfig.maxFiles })}. ${t('validation.fileFormat')} ${Object.values(
     dropZoneConfig.accept
   )
@@ -339,5 +243,4 @@ const UploadProductImages = <T extends FieldValues>({
     </>
   )
 }
-
-export default UploadProductImages
+export default ImportExcelFiles
