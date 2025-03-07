@@ -721,7 +721,8 @@
       "duplicate": "Received duplicate order",
       "lateDelivery": "Shipping took too long",
       "other": "Other"
-    }
+    },
+    "proof": "Images and videos proof"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",

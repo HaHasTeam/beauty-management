@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
+import AlertMessage from '@/components/alert/AlertMessage'
 import BrandSection from '@/components/branch/BrandSection'
 import Button from '@/components/button'
 import CancelOrderDialog from '@/components/dialog/CancelOrderDialog'
@@ -20,12 +21,14 @@ import { useToast } from '@/hooks/useToast'
 import {
   getCancelAndReturnRequestApi,
   getOrderByIdApi,
+  getRejectReturnRequestApi,
   getStatusTrackingByIdApi,
   makeDecisionOnCancelRequestOrderApi
 } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
 import { RequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
+import MakeDecisionOnReturnRejectRequest from './MakeDecisionOnRejectReturnRequest'
 import MakeDecisionOnReturnRequest from './MakeDecisionOnReturnRequest'
 import OrderDetailItems from './order-detail/OrderDetailItems'
 import OrderGeneral from './order-detail/OrderGeneral'
@@ -65,6 +68,11 @@ const OrderDetails = () => {
   const { data: cancelAndReturnRequestData } = useQuery({
     queryKey: [getCancelAndReturnRequestApi.queryKey, id ?? ('' as string)],
     queryFn: getCancelAndReturnRequestApi.fn,
+    enabled: !!id
+  })
+  const { data: rejectReturnRequest } = useQuery({
+    queryKey: [getRejectReturnRequestApi.queryKey, id ?? ('' as string)],
+    queryFn: getRejectReturnRequestApi.fn,
     enabled: !!id
   })
   const { mutateAsync: makeDecisionOnCancelRequestOrderFn } = useMutation({
@@ -109,6 +117,7 @@ const OrderDetails = () => {
       })
     }
   }
+  console.log(user.role)
   return (
     <>
       {isFetching && <LoadingLayer />}
@@ -136,9 +145,60 @@ const OrderDetails = () => {
                 <UpdateOrderStatus order={useOrderData?.data} setOpenCancelOrderDialog={setOpenCancelOrderDialog} />
               )}
               {/* alert make decision request return order */}
-              {cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.PENDING && (
-                <MakeDecisionOnReturnRequest returnRequest={cancelAndReturnRequestData?.data?.refundRequest || null} />
-              )}
+              {/* brand */}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.PENDING && (
+                  <MakeDecisionOnReturnRequest
+                    returnRequest={cancelAndReturnRequestData?.data?.refundRequest || null}
+                  />
+                )}
+              {/* brand */}
+              {/* alert make decision request reject return order */}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                rejectReturnRequest?.data?.status === RequestStatusEnum.PENDING && (
+                  <AlertMessage
+                    title={t('order.rejectReturnRequestPendingTitleBrand')}
+                    message={t('order.rejectReturnRequestPendingMessageBrand')}
+                    isShowIcon={false}
+                  />
+                )}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                rejectReturnRequest?.data?.status === RequestStatusEnum.APPROVED && (
+                  <AlertMessage
+                    title={t('order.rejectReturnRequestApprovedTitleBrand')}
+                    message={t('order.rejectReturnRequestApprovedMessageBrand')}
+                    isShowIcon={false}
+                  />
+                )}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                rejectReturnRequest?.data?.status === RequestStatusEnum.REJECTED && (
+                  <AlertMessage
+                    title={t('order.rejectReturnRequestRejectedTitleBrand')}
+                    message={t('order.rejectReturnRequestRejectedMessageBrand')}
+                    isShowIcon={false}
+                  />
+                )}
+              {/* admin */}
+              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.PENDING && (
+                  <AlertMessage
+                    title={t('order.returnRequestPendingTitleAdmin')}
+                    message={t('order.returnRequestPendingMessageAdmin')}
+                    isShowIcon={false}
+                  />
+                )}
+
+              {/* alert make decision request reject return order */}
+              {/* admin */}
+              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
+                rejectReturnRequest?.data?.status === RequestStatusEnum.PENDING &&
+                cancelAndReturnRequestData?.data?.refundRequest && (
+                  <MakeDecisionOnReturnRejectRequest
+                    rejectReturnRequest={rejectReturnRequest?.data || null}
+                    refundRequest={cancelAndReturnRequestData?.data?.refundRequest}
+                  />
+                )}
+
               {/* handle cancel request for brand and system role */}
               {!isLoading &&
                 (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&

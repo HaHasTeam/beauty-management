@@ -10,6 +10,7 @@ import { RequestStatusEnum } from '@/types/enum'
 import { TServerFile } from '@/types/file'
 import { IReturnRequestOrder } from '@/types/order'
 
+import RejectRejectReturn from './RejectRejectReturnDialog'
 import { RejectReturnOrderDialog } from './RejectReturnOrderDialog'
 
 interface ConfirmDecisionDialogProps {
@@ -22,6 +23,7 @@ interface ConfirmDecisionDialogProps {
   isLoadingDecisionRejected?: boolean
   isLoadingDecisionApproved?: boolean
   isShowAction?: boolean
+  isRejectRequest?: boolean
   reason?: string
   mediaFiles?: TServerFile[]
   returnRequest: IReturnRequestOrder
@@ -39,7 +41,8 @@ export default function ConfirmDecisionDialog({
   isShowAction = true,
   mediaFiles = [],
   returnRequest,
-  reason
+  reason,
+  isRejectRequest
 }: ConfirmDecisionDialogProps) {
   const { t } = useTranslation()
   const [openRejectDialog, setOpenRejectDialog] = useState<boolean>(false)
@@ -57,12 +60,17 @@ export default function ConfirmDecisionDialog({
             </div>
           </DialogHeader>
           {reason && (
-            <div className='flex gap-2'>
-              <h3 className='font-medium text-primary'> {t('order.cancelOrderReason.reason')}</h3>
+            <div className='flex gap-2 items-center'>
+              <h3 className='font-medium text-primary'>{t('order.cancelOrderReason.reason')}</h3>
               <span>{reason}</span>
             </div>
           )}
-          {mediaFiles && mediaFiles?.length > 0 && <ViewMediaSection mediaFiles={mediaFiles} />}
+          {mediaFiles && mediaFiles?.length > 0 && (
+            <div className='space-y-2 mt-2'>
+              <h3 className='font-medium text-primary'> {t('order.proof')}</h3>
+              <ViewMediaSection mediaFiles={mediaFiles} />
+            </div>
+          )}
           <div className='flex justify-end gap-2 mt-4'>
             {isShowAction ? (
               <>
@@ -93,12 +101,21 @@ export default function ConfirmDecisionDialog({
           </div>
         </DialogContent>
       </Dialog>
-      <RejectReturnOrderDialog
-        open={openRejectDialog}
-        onOpenChange={setOpenRejectDialog}
-        returnRequest={returnRequest}
-        setOpen={setOpenRejectDialog}
-      />
+      {isRejectRequest ? (
+        <RejectRejectReturn
+          open={openRejectDialog}
+          onOpenChange={setOpenRejectDialog}
+          requestId={returnRequest.id}
+          setOpen={setOpenRejectDialog}
+        />
+      ) : (
+        <RejectReturnOrderDialog
+          open={openRejectDialog}
+          onOpenChange={setOpenRejectDialog}
+          returnRequest={returnRequest}
+          setOpen={setOpenRejectDialog}
+        />
+      )}
     </>
   )
 }

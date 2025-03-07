@@ -131,7 +131,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
       const imgUrls = values.images ? await convertFileToUrl(values.images) : []
       const videoUrls = values.videos ? await convertFileToUrl(values.videos) : []
       const payload = isOtherReason ? { reasonRejected: values.otherReason } : { reasonRejected: values.reason }
-
+      console.log(returnRequest, payload, [...imgUrls, ...videoUrls])
       await makeDecisionOnReturnRequestOrderFn({
         requestId: returnRequest?.id ?? '',
         status: RequestStatusEnum.REJECTED,

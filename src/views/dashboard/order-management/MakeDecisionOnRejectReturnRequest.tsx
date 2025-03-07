@@ -11,15 +11,21 @@ import {
   getCancelAndReturnRequestApi,
   getOrderByIdApi,
   getStatusTrackingByIdApi,
-  makeDecisionOnReturnRequestOrderApi
+  makeDecisionOnRejectReturnRequestOrderApi
 } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
-import { RequestStatusEnum, RoleEnum } from '@/types/enum'
-import { IReturnRequestOrder } from '@/types/order'
+import { RequestStatusEnum } from '@/types/enum'
+import { IRejectReturnRequestOrder, IReturnRequestOrder } from '@/types/order'
 
 import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 
-const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturnRequestOrder | null }) => {
+const MakeDecisionOnReturnRejectRequest = ({
+  rejectReturnRequest,
+  refundRequest
+}: {
+  refundRequest: IReturnRequestOrder
+  rejectReturnRequest: IRejectReturnRequestOrder | null
+}) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { successToast } = useToast()
@@ -33,12 +39,12 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
       user: state.user
     }))
   )
-  const { mutateAsync: makeDecisionOnReturnRequestOrderFn } = useMutation({
-    mutationKey: [makeDecisionOnReturnRequestOrderApi.mutationKey],
-    mutationFn: makeDecisionOnReturnRequestOrderApi.fn,
+  const { mutateAsync: makeDecisionOnRejectReturnRequestOrderFn } = useMutation({
+    mutationKey: [makeDecisionOnRejectReturnRequestOrderApi.mutationKey],
+    mutationFn: makeDecisionOnRejectReturnRequestOrderApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('order.successMakeDecisionOnReturn')
+        message: t('order.successMakeDecisionOnReject')
       })
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
@@ -52,15 +58,15 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
     }
   })
 
-  const handleMakeDecisionOnReturnRequest = async (decision: RequestStatusEnum) => {
+  const handleMakeDecisionOnReturnRejectRequest = async (decision: RequestStatusEnum) => {
     try {
       if (decision === RequestStatusEnum.APPROVED) {
         setIsLoadingDecisionApproved(true)
       } else {
         setIsLoadingDecisionRejected(true)
       }
-      await makeDecisionOnReturnRequestOrderFn({
-        requestId: returnRequest?.id ?? '',
+      await makeDecisionOnRejectReturnRequestOrderFn({
+        requestId: rejectReturnRequest?.id ?? '',
         status: decision,
         reasonRejected: ''
       })
@@ -80,11 +86,9 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
       })
     }
   }
-  console.log(isLoadingDecisionApproved)
-  console.log(isLoadingDecisionRejected)
-  if (!returnRequest) return null
+  if (!rejectReturnRequest) return null
   return (
-    returnRequest && (
+    rejectReturnRequest && (
       <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
         <div className='flex items-center gap-2 justify-between'>
           <div className='flex items-center gap-2'>
@@ -93,7 +97,7 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
                 <h3
                   className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold bg-red-100 text-red-600`}
                 >
-                  {t('order.returnRequestPendingTitle')}
+                  {t('order.rejectReturnRequestPendingTitle')}
                 </h3>
               </div>
               <AlertDescription>{t('order.returnOrderRequestMessage')}</AlertDescription>
@@ -116,16 +120,17 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
           isLoadingDecisionRejected={isLoadingDecisionRejected}
           open={openConfirmDialog}
           onOpenChange={setOpenConfirmDialog}
-          onConfirm={() => handleMakeDecisionOnReturnRequest(RequestStatusEnum.APPROVED)}
-          item={user.role === RoleEnum.MANAGER || user.role === RoleEnum.STAFF ? 'viewReturn' : 'decisionReturn'}
-          isShowAction={user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF}
-          reason={returnRequest.reason}
-          mediaFiles={returnRequest.mediaFiles}
-          returnRequest={returnRequest}
+          onConfirm={() => handleMakeDecisionOnReturnRejectRequest(RequestStatusEnum.APPROVED)}
+          item={'decisionRejectReturn'}
+          isShowAction
+          reason={refundRequest.reason}
+          mediaFiles={refundRequest.mediaFiles}
+          returnRequest={refundRequest}
+          isRejectRequest
         />
       </div>
     )
   )
 }
 
-export default MakeDecisionOnReturnRequest
+export default MakeDecisionOnReturnRejectRequest
