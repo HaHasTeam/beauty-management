@@ -1126,7 +1126,13 @@
     },
     "decisionReturn": {
       "title": "Xác nhận quyết định trả hàng",
-      "description": "Vui lòng xem xét kỹ yêu cầu trả hàng. Sau khi xác nhận, quyết định sẽ được gửi đến thương hiệu để phê duyệt. Thương hiệu có thể chấp nhận trả hàng hoặc yêu cầu từ chối.",
+      "description": "Khách hàng đã gửi yêu cầu trả hàng. Vui lòng xem xét kỹ lý do, bằng chứng khách hàng cung cấp và đưa ra quyết định trong vòng 2 ngày. Bạn có thể từ chối yêu cầu và gửi bằng chứng để chúng tôi kiểm duyệt và đưa ra quyết định cuối cùng. Nếu không có phản hồi trong 2 ngày, yêu cầu sẽ tự động được chấp nhận.",
+      "cancel": "Hủy",
+      "confirm": "Xác nhận quyết định"
+    },
+    "viewReturn": {
+      "title": "Xác nhận quyết định trả hàng",
+      "description": "Khách hàng đã gửi yêu cầu trả hàng cho đơn hàng này.",
       "cancel": "Hủy",
       "confirm": "Xác nhận quyết định"
     }

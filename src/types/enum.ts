@@ -143,11 +143,6 @@ export enum ResultEnum {
   FAILURE = 'FAILURE'
 }
 
-export enum CancelOrderRequestStatusEnum {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED'
-}
 export enum RequestStatusEnum {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import ViewMediaDialog from '@/components/dialog/ViewMediaDialog'
 import { StatusTrackingIcon, StatusTrackingText } from '@/components/status-tracking-order/StatusTrackingOrder'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { CancelOrderRequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
+import { RequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
 import { UserRoleEnum } from '@/types/role'
 import { IStatusTracking } from '@/types/status-tracking'
 
@@ -69,9 +69,9 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                 <div
                   className={`flex gap-1 items-center text-sm font-medium ${currentIndex === index ? 'text-emerald-500' : 'text-muted-foreground'}`}
                 >
-                  {step.status === CancelOrderRequestStatusEnum.APPROVED
+                  {step.status === RequestStatusEnum.APPROVED
                     ? t('order.approvedCancelRequest')
-                    : step.status === CancelOrderRequestStatusEnum.REJECTED
+                    : step.status === RequestStatusEnum.REJECTED
                       ? t('order.rejectedCancelRequest')
                       : StatusTrackingText(step.status)}
                   {step.mediaFiles && step.mediaFiles.length > 0 && (
@@ -92,11 +92,10 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                   )}
                 </div>
                 {(step.status === ShippingStatusEnum.CANCELLED ||
-                  step.status === CancelOrderRequestStatusEnum.APPROVED ||
+                  step.status === RequestStatusEnum.APPROVED ||
                   step.status === ShippingStatusEnum.REFUNDED) && (
                   <div>
-                    {(step.status === ShippingStatusEnum.CANCELLED ||
-                      step.status === CancelOrderRequestStatusEnum.APPROVED) && (
+                    {(step.status === ShippingStatusEnum.CANCELLED || step.status === RequestStatusEnum.APPROVED) && (
                       <div className='text-sm text-muted-foreground mt-1'>
                         <span className='font-medium'>{t('orderDetail.cancelBy')}: </span>
                         {step.updatedBy}

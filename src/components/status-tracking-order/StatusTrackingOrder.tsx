@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { CancelOrderRequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
+import { RequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
 
 export const StatusTrackingIcon = (status: string) => {
   switch (status) {
@@ -41,9 +41,9 @@ export const StatusTrackingIcon = (status: string) => {
       return <RotateCcw className='w-5 h-5' />
     case ShippingStatusEnum.CANCELLED:
       return <Ban className='w-5 h-5' />
-    case CancelOrderRequestStatusEnum.APPROVED:
+    case RequestStatusEnum.APPROVED:
       return <Ban className='w-5 h-5' />
-    case CancelOrderRequestStatusEnum.REJECTED:
+    case RequestStatusEnum.REJECTED:
       return <CircleOff className='w-5 h-5' />
     default:
       return <Package className='w-5 h-5' />
@@ -76,9 +76,9 @@ export const StatusTrackingText = (status: string) => {
       return t('order.refunded')
     case ShippingStatusEnum.CANCELLED:
       return t('order.cancelled')
-    case CancelOrderRequestStatusEnum.APPROVED:
+    case RequestStatusEnum.APPROVED:
       return t('order.cancelled')
-    case CancelOrderRequestStatusEnum.REJECTED:
+    case RequestStatusEnum.REJECTED:
       return t('order.rejectedCancelRequestTitle')
     default:
       return t('order.created')

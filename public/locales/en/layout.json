@@ -1126,7 +1126,7 @@
     },
     "decisionReturn": {
       "title": "Confirm Return Decision",
-      "description": "Please review the return request carefully. Once confirmed, the decision will be sent to the brand for approval. The brand can either approve the return or request a rejection.",
+      "description": "The customer has requested a return for this order.",
       "cancel": "Cancel",
       "confirm": "Confirm"
     }

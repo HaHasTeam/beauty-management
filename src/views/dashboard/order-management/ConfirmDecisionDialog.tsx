@@ -2,11 +2,15 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import ConfirmDialog from '@/components/dialog/ConfirmDialog'
 import LoadingIcon from '@/components/loading-icon'
+import ViewMediaSection from '@/components/media/ViewMediaSection'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { RequestStatusEnum } from '@/types/enum'
+import { TServerFile } from '@/types/file'
+import { IReturnRequestOrder } from '@/types/order'
+
+import { RejectReturnOrderDialog } from './RejectReturnOrderDialog'
 
 interface ConfirmDecisionDialogProps {
   open: boolean
@@ -17,6 +21,10 @@ interface ConfirmDecisionDialogProps {
   description?: string
   isLoadingDecisionRejected?: boolean
   isLoadingDecisionApproved?: boolean
+  isShowAction?: boolean
+  reason?: string
+  mediaFiles?: TServerFile[]
+  returnRequest: IReturnRequestOrder
 }
 
 export default function ConfirmDecisionDialog({
@@ -27,10 +35,14 @@ export default function ConfirmDecisionDialog({
   title,
   description,
   isLoadingDecisionRejected,
-  isLoadingDecisionApproved
+  isLoadingDecisionApproved,
+  isShowAction = true,
+  mediaFiles = [],
+  returnRequest,
+  reason
 }: ConfirmDecisionDialogProps) {
   const { t } = useTranslation()
-  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false)
+  const [openRejectDialog, setOpenRejectDialog] = useState<boolean>(false)
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -44,29 +56,48 @@ export default function ConfirmDecisionDialog({
               </DialogDescription>
             </div>
           </DialogHeader>
+          {reason && (
+            <div className='flex gap-2'>
+              <h3 className='font-medium text-primary'> {t('order.cancelOrderReason.reason')}</h3>
+              <span>{reason}</span>
+            </div>
+          )}
+          {mediaFiles && mediaFiles?.length > 0 && <ViewMediaSection mediaFiles={mediaFiles} />}
           <div className='flex justify-end gap-2 mt-4'>
-            <Button
-              variant='outline'
-              className='w-full border text-destructive bg-white border-destructive hover:text-destructive hover:bg-destructive/10'
-              onClick={() => onConfirm(RequestStatusEnum.REJECTED)}
-            >
-              {isLoadingDecisionRejected ? <LoadingIcon /> : t('button.rejected')}
-            </Button>
-            <Button
-              variant='default'
-              className='w-full border text-white bg-green-500 hover:text-white hover:bg-green-400'
-              onClick={() => setOpenConfirmDialog(true)}
-            >
-              {isLoadingDecisionApproved ? <LoadingIcon /> : t('button.approved')}
-            </Button>
+            {isShowAction ? (
+              <>
+                <Button
+                  variant='outline'
+                  className='border text-destructive bg-white border-destructive hover:text-destructive hover:bg-destructive/10'
+                  onClick={() => setOpenRejectDialog(true)}
+                >
+                  {isLoadingDecisionRejected ? <LoadingIcon /> : t('button.rejected')}
+                </Button>
+                <Button
+                  variant='default'
+                  className='border text-white bg-green-500 hover:text-white hover:bg-green-400'
+                  onClick={() => onConfirm(RequestStatusEnum.APPROVED)}
+                >
+                  {isLoadingDecisionApproved ? <LoadingIcon /> : t('button.approved')}
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant='default'
+                className='border text-primary border-primary hover:bg-primary/10'
+                onClick={() => onOpenChange(false)}
+              >
+                {t('button.close')}
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
-      <ConfirmDialog
-        open={openConfirmDialog}
-        onOpenChange={setOpenConfirmDialog}
-        onConfirm={() => onConfirm(RequestStatusEnum.APPROVED)}
-        item={'decisionReturn'}
+      <RejectReturnOrderDialog
+        open={openRejectDialog}
+        onOpenChange={setOpenRejectDialog}
+        returnRequest={returnRequest}
+        setOpen={setOpenRejectDialog}
       />
     </>
   )

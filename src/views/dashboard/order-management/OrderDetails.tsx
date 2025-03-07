@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { History, MessageSquareText, Truck } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
@@ -18,14 +18,13 @@ import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import {
-  getBrandCancelRequestApi,
+  getCancelAndReturnRequestApi,
   getOrderByIdApi,
   getStatusTrackingByIdApi,
   makeDecisionOnCancelRequestOrderApi
 } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
-import { CancelOrderRequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
-import { ICancelRequestOrder } from '@/types/order'
+import { RequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
 import MakeDecisionOnReturnRequest from './MakeDecisionOnReturnRequest'
 import OrderDetailItems from './order-detail/OrderDetailItems'
@@ -41,20 +40,12 @@ const OrderDetails = () => {
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
-  const [isTriggerCancelRequest, setIsTriggerCancelRequest] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
   const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
-  const [cancelRequests, setCancelRequests] = useState<ICancelRequestOrder[]>([])
 
   const { user } = useStore(
     useShallow((state) => ({
-      // addProduct: state.addProduct,
-      // removeProduct: state.removeProduct,
-      // incQty: state.incQty,
-      // decQty: state.decQty,
-      // setTotal: state.setTotal,
-      // reset: state.reset,
       user: state.user
     }))
   )
@@ -71,13 +62,10 @@ const OrderDetails = () => {
     staleTime: 0
   })
 
-  const { mutateAsync: getBrandCancelRequestOrderFn } = useMutation({
-    mutationKey: [getBrandCancelRequestApi.mutationKey],
-    mutationFn: getBrandCancelRequestApi.fn,
-    onSuccess: (data) => {
-      setCancelRequests(data?.data)
-      setIsLoading(false)
-    }
+  const { data: cancelAndReturnRequestData } = useQuery({
+    queryKey: [getCancelAndReturnRequestApi.queryKey, id ?? ('' as string)],
+    queryFn: getCancelAndReturnRequestApi.fn,
+    enabled: !!id
   })
   const { mutateAsync: makeDecisionOnCancelRequestOrderFn } = useMutation({
     mutationKey: [makeDecisionOnCancelRequestOrderApi.mutationKey],
@@ -92,42 +80,24 @@ const OrderDetails = () => {
       queryClient.invalidateQueries({
         queryKey: [getStatusTrackingByIdApi.queryKey]
       })
-      setIsTriggerCancelRequest((prev) => !prev)
-    }
-  })
-  useEffect(() => {
-    const fetchCancelRequests = async () => {
-      setIsLoading(true)
-      const brandId =
-        (
-          useOrderData?.data?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-          useOrderData?.data?.orderDetails?.[0]?.productClassification?.productDiscount ??
-          useOrderData?.data?.orderDetails?.[0]?.productClassification
-        )?.product?.brand?.id ?? ''
-      await getBrandCancelRequestOrderFn({
-        brandId,
-        data: {}
+      queryClient.invalidateQueries({
+        queryKey: [getCancelAndReturnRequestApi.queryKey]
       })
     }
-    fetchCancelRequests()
-  }, [getBrandCancelRequestOrderFn, useOrderData?.data?.orderDetails, isTriggerCancelRequest])
+  })
 
-  const handleMakeDecisionOnCancelRequest = async (decision: CancelOrderRequestStatusEnum) => {
+  const handleMakeDecisionOnCancelRequest = async (decision: RequestStatusEnum) => {
     try {
-      if (decision === CancelOrderRequestStatusEnum.APPROVED) {
+      if (decision === RequestStatusEnum.APPROVED) {
         setIsLoadingDecisionApproved(true)
       } else {
         setIsLoadingDecisionRejected(true)
       }
       await makeDecisionOnCancelRequestOrderFn({
-        requestId:
-          cancelRequests?.find(
-            (request) =>
-              request?.order?.id === useOrderData?.data?.id && request.status === CancelOrderRequestStatusEnum.PENDING
-          )?.id ?? '',
+        requestId: cancelAndReturnRequestData?.data?.cancelOrderRequest?.id ?? '',
         status: decision
       })
-      if (decision === CancelOrderRequestStatusEnum.APPROVED) {
+      if (decision === RequestStatusEnum.APPROVED) {
         setIsLoadingDecisionApproved(false)
       } else {
         setIsLoadingDecisionRejected(false)
@@ -166,19 +136,14 @@ const OrderDetails = () => {
                 <UpdateOrderStatus order={useOrderData?.data} setOpenCancelOrderDialog={setOpenCancelOrderDialog} />
               )}
               {/* alert make decision request return order */}
-              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) && (
-                <MakeDecisionOnReturnRequest order={useOrderData?.data} />
+              {cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.PENDING && (
+                <MakeDecisionOnReturnRequest returnRequest={cancelAndReturnRequestData?.data?.refundRequest || null} />
               )}
-
               {/* handle cancel request for brand and system role */}
               {!isLoading &&
                 (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
-                cancelRequests &&
-                cancelRequests?.some(
-                  (request) =>
-                    request?.order?.id === useOrderData?.data?.id &&
-                    request.status === CancelOrderRequestStatusEnum.PENDING
-                ) && (
+                cancelAndReturnRequestData?.data?.cancelOrderRequest &&
+                cancelAndReturnRequestData?.data?.cancelOrderRequest?.status === RequestStatusEnum.PENDING && (
                   <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
                     <div className='flex items-center gap-2 justify-between'>
                       <div className='flex items-center gap-2'>
@@ -201,14 +166,14 @@ const OrderDetails = () => {
                             <Button
                               variant='outline'
                               className='w-full border text-destructive bg-white border-destructive hover:text-destructive hover:bg-destructive/10'
-                              onClick={() => handleMakeDecisionOnCancelRequest(CancelOrderRequestStatusEnum.REJECTED)}
+                              onClick={() => handleMakeDecisionOnCancelRequest(RequestStatusEnum.REJECTED)}
                             >
                               {isLoadingDecisionRejected ? <LoadingIcon /> : t('button.rejected')}
                             </Button>
                             <Button
                               variant='default'
                               className='w-full border text-white bg-green-500 hover:text-white hover:bg-green-400'
-                              onClick={() => handleMakeDecisionOnCancelRequest(CancelOrderRequestStatusEnum.APPROVED)}
+                              onClick={() => handleMakeDecisionOnCancelRequest(RequestStatusEnum.APPROVED)}
                             >
                               {isLoadingDecisionApproved ? <LoadingIcon /> : t('button.approved')}
                             </Button>

@@ -1,41 +1,38 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import { AlertDescription } from '@/components/ui/alert'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import {
-  getBrandReturnRequestApi,
+  getCancelAndReturnRequestApi,
   getOrderByIdApi,
   getStatusTrackingByIdApi,
   makeDecisionOnReturnRequestOrderApi
 } from '@/network/apis/order'
-import { RequestStatusEnum } from '@/types/enum'
-import { IOrderItem, IReturnRequestOrder } from '@/types/order'
+import { useStore } from '@/stores/store'
+import { RequestStatusEnum, RoleEnum } from '@/types/enum'
+import { IReturnRequestOrder } from '@/types/order'
 
 import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 
-const MakeDecisionOnReturnRequest = ({ order }: { order: IOrderItem }) => {
+const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturnRequestOrder | null }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
-  const [isTriggerReturnRequest, setIsTriggerReturnRequest] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false)
   const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
   const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
-  const [returnRequests, setReturnRequests] = useState<IReturnRequestOrder[]>([])
-  const { mutateAsync: getBrandReturnRequestOrderFn } = useMutation({
-    mutationKey: [getBrandReturnRequestApi.mutationKey],
-    mutationFn: getBrandReturnRequestApi.fn,
-    onSuccess: (data) => {
-      setReturnRequests(data?.data)
-      setIsLoading(false)
-    }
-  })
+
+  const { user } = useStore(
+    useShallow((state) => ({
+      user: state.user
+    }))
+  )
   const { mutateAsync: makeDecisionOnReturnRequestOrderFn } = useMutation({
     mutationKey: [makeDecisionOnReturnRequestOrderApi.mutationKey],
     mutationFn: makeDecisionOnReturnRequestOrderApi.fn,
@@ -49,25 +46,11 @@ const MakeDecisionOnReturnRequest = ({ order }: { order: IOrderItem }) => {
       queryClient.invalidateQueries({
         queryKey: [getStatusTrackingByIdApi.queryKey]
       })
-      setIsTriggerReturnRequest((prev) => !prev)
-    }
-  })
-  useEffect(() => {
-    const fetchReturnRequests = async () => {
-      setIsLoading(true)
-      const brandId =
-        (
-          order?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-          order?.orderDetails?.[0]?.productClassification?.productDiscount ??
-          order?.orderDetails?.[0]?.productClassification
-        )?.product?.brand?.id ?? ''
-      await getBrandReturnRequestOrderFn({
-        brandId,
-        data: {}
+      queryClient.invalidateQueries({
+        queryKey: [getCancelAndReturnRequestApi.queryKey]
       })
     }
-    fetchReturnRequests()
-  }, [getBrandReturnRequestOrderFn, order?.orderDetails, isTriggerReturnRequest])
+  })
 
   const handleMakeDecisionOnReturnRequest = async (decision: RequestStatusEnum) => {
     try {
@@ -77,10 +60,7 @@ const MakeDecisionOnReturnRequest = ({ order }: { order: IOrderItem }) => {
         setIsLoadingDecisionRejected(true)
       }
       await makeDecisionOnReturnRequestOrderFn({
-        requestId:
-          returnRequests?.find(
-            (request) => request?.order?.id === order?.id && request.status === RequestStatusEnum.PENDING
-          )?.id ?? '',
+        requestId: returnRequest?.id ?? '',
         status: decision,
         reasonRejected: ''
       })
@@ -90,16 +70,19 @@ const MakeDecisionOnReturnRequest = ({ order }: { order: IOrderItem }) => {
         setIsLoadingDecisionRejected(false)
       }
     } catch (error) {
-      setIsLoading(false)
+      if (decision === RequestStatusEnum.APPROVED) {
+        setIsLoadingDecisionApproved(false)
+      } else {
+        setIsLoadingDecisionRejected(false)
+      }
       handleServerError({
         error
       })
     }
   }
+  if (!returnRequest) return null
   return (
-    !isLoading &&
-    returnRequests &&
-    returnRequests?.length > 0 && (
+    returnRequest && (
       <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
         <div className='flex items-center gap-2 justify-between'>
           <div className='flex items-center gap-2'>
@@ -118,7 +101,7 @@ const MakeDecisionOnReturnRequest = ({ order }: { order: IOrderItem }) => {
             <div className='flex gap-2 items-center'>
               <Button
                 variant='outline'
-                className='w-full bg-yellow-500 hover:bg-yellow-600'
+                className='w-full bg-yellow-500 hover:bg-yellow-600 text-white hover:text-white'
                 onClick={() => setOpenConfirmDialog(true)}
               >
                 {t('button.view')}
@@ -132,7 +115,11 @@ const MakeDecisionOnReturnRequest = ({ order }: { order: IOrderItem }) => {
           open={openConfirmDialog}
           onOpenChange={setOpenConfirmDialog}
           onConfirm={() => handleMakeDecisionOnReturnRequest(RequestStatusEnum.APPROVED)}
-          item={'decisionReturn'}
+          item={user.role === RoleEnum.MANAGER || user.role === RoleEnum.STAFF ? 'viewReturn' : 'decisionReturn'}
+          isShowAction={user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF}
+          reason={returnRequest.reason}
+          mediaFiles={returnRequest.mediaFiles}
+          returnRequest={returnRequest}
         />
       </div>
     )
