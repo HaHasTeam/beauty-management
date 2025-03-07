@@ -8,7 +8,7 @@ export type TRequestCreateBookingParams = {
   //"paymentMethod": "CASH",
   //"voucher": "id",
   //"consultantService": "id",
-  notes: string
+  notes?: string
   type: BookingTypeEnum
   status: BookingStatusEnum
   slot: string
@@ -19,6 +19,11 @@ export type TUpdateStatusBookingParams = {
   status: BookingStatusEnum
   startTime: string
   endTime: string
+}
+
+export type TAssignUserBookingParams = {
+  id: string
+  assigneeId: string
 }
 export type BookingStatusResponse = {
   message: string

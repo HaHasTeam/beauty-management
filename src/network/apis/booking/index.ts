@@ -3,7 +3,7 @@ import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-import { TRequestCreateBookingParams, TUpdateStatusBookingParams } from './type'
+import { TAssignUserBookingParams, TRequestCreateBookingParams, TUpdateStatusBookingParams } from './type'
 
 export const getAllBookingsApi = toQueryFetcher<void, TServerResponse<TBooking[]>>('getAllBookingsApi', async () => {
   return privateRequest(`/bookings/`, {
@@ -29,6 +29,15 @@ export const updateBookingStatusApi = toMutationFetcher<TUpdateStatusBookingPara
   'updateBookingStatusApi',
   async (params) => {
     return privateRequest(`/bookings/update-status/${params.id}`, {
+      method: 'PUT',
+      data: params
+    })
+  }
+)
+export const assignUserToBookingApi = toMutationFetcher<TAssignUserBookingParams, TServerResponse<void>>(
+  'assignUserToBookingApi',
+  async (params) => {
+    return privateRequest(`/bookings/assign-for-interview/${params.id}`, {
       method: 'PUT',
       data: params
     })
