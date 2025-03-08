@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { ICategory } from '@/types/category'
-import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
+import { ServiceTypeEnum } from '@/types/enum'
+import { SystemServiceStatusEnum } from '@/types/system-service'
 import UploadProductImages from '@/views/dashboard/create-product/UploadProductImages'
 
 import FormCategorySelection from '../form-category-selection'
@@ -215,9 +216,9 @@ const GeneralSystemService = ({ form, categories, resetSignal, defineFormSignal 
               <div className='w-full space-y-1'>
                 <FormControl>
                   <Switch
-                    checked={field.value === StatusEnum.ACTIVE ? true : false}
+                    checked={field.value === SystemServiceStatusEnum.ACTIVE ? true : false}
                     onCheckedChange={(value) => {
-                      field.onChange(value === true ? StatusEnum.ACTIVE : StatusEnum.INACTIVE)
+                      field.onChange(value === true ? SystemServiceStatusEnum.ACTIVE : SystemServiceStatusEnum.INACTIVE)
                     }}
                     size='medium'
                   />

@@ -11,7 +11,8 @@ import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-crite
 import { uploadFilesApi } from '@/network/apis/file'
 import { createSystemServiceApi, getAllSystemServiceApi } from '@/network/apis/system-service'
 import { getSystemServiceSchema, ISystemServiceFormData } from '@/schemas/system-service.schema'
-import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
+import { ServiceTypeEnum } from '@/types/enum'
+import { SystemServiceStatusEnum } from '@/types/system-service'
 
 const CreateSystemService = () => {
   const { t } = useTranslation()
@@ -39,7 +40,7 @@ const CreateSystemService = () => {
         }
       ]
     },
-    status: StatusEnum.ACTIVE
+    status: SystemServiceStatusEnum.ACTIVE
   }
 
   const form = useForm<ISystemServiceFormData>({
