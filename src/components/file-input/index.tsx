@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { CustomFile } from '@/types/file'
+import { CustomFile, FileStatusEnum } from '@/types/file'
 
 type DirectionOptions = 'rtl' | 'ltr' | undefined
 
@@ -156,7 +156,7 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
         }
 
         files.forEach((file) => {
-          if (newValues.length < maxFiles) {
+          if (newValues.filter((file) => file.status !== FileStatusEnum.INACTIVE).length < maxFiles) {
             newValues.push(file)
           }
         })
@@ -182,7 +182,7 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
 
     useEffect(() => {
       if (!value) return
-      if (value.filter((file) => file.status !== 'inactive').length === maxFiles) {
+      if (value.filter((file) => file.status !== FileStatusEnum.INACTIVE).length === maxFiles) {
         setIsLOF(true)
         return
       }

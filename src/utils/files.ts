@@ -1,4 +1,4 @@
-import { CustomFile, TFile } from '@/types/file'
+import { CustomFile, FileStatusEnum, TFile } from '@/types/file'
 
 export async function createFiles(files: TFile[] | string[]): Promise<CustomFile[]> {
   if (typeof files[0] === 'string') {
@@ -17,6 +17,10 @@ export async function createFiles(files: TFile[] | string[]): Promise<CustomFile
           value: file,
           writable: true
         })
+        Object.defineProperty(newFile, 'status', {
+          value: FileStatusEnum.ACTIVE,
+          writable: true
+        })
 
         return newFile
       })
@@ -27,7 +31,7 @@ export async function createFiles(files: TFile[] | string[]): Promise<CustomFile
     files = files as TFile[]
     const constructedFiles = await Promise.all(
       files.map(async (file) => {
-        const response = file.status !== 'inactive' ? await fetch(file.fileUrl) : new Response(new Blob())
+        const response = file.status !== FileStatusEnum.INACTIVE ? await fetch(file.fileUrl) : new Response(new Blob())
         const data = await response.blob()
         const metadata = {
           type: data.type,
@@ -41,6 +45,10 @@ export async function createFiles(files: TFile[] | string[]): Promise<CustomFile
         })
         Object.defineProperty(newFile, 'id', {
           value: file.id,
+          writable: true
+        })
+        Object.defineProperty(newFile, 'status', {
+          value: file.status,
           writable: true
         })
 
