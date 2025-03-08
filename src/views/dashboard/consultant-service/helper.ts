@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { defaultRequiredRegex } from '@/constants/regex'
 import { ConsultantServiceTypeEnum, IConsultantService } from '@/types/consultant-service'
+import { FileStatusEnum } from '@/types/file'
 
 export type FormType = Pick<IConsultantService, 'price' | 'serviceBookingFormData' | 'images'> & {
   systemService: string
@@ -27,7 +28,8 @@ const consultantServiceTypeSchema = z
       z.object({
         id: z.string().optional(),
         name: z.string(),
-        fileUrl: z.string()
+        fileUrl: z.string(),
+        status: z.nativeEnum(FileStatusEnum).optional()
       })
     ),
     type: z.nativeEnum(ConsultantServiceTypeEnum, {
@@ -74,7 +76,8 @@ export const formSchema = z.object({
       z.object({
         id: z.string().optional(),
         name: z.string(),
-        fileUrl: z.string()
+        fileUrl: z.string(),
+        status: z.nativeEnum(FileStatusEnum).optional()
       })
     )
     .min(1, {
@@ -106,7 +109,7 @@ export const convertConsultantServiceToForm = (data: IConsultantService): FormTy
   return {
     id: data.id,
     price: data.price,
-    images: data.images,
+    images: data.images.filter((image) => image.status !== FileStatusEnum.INACTIVE),
     systemService: data.systemService.id,
     serviceBookingFormData: {
       title: data.serviceBookingForm.title,
@@ -115,7 +118,7 @@ export const convertConsultantServiceToForm = (data: IConsultantService): FormTy
           question: question.question,
           orderIndex: question.orderIndex,
           mandatory: question.mandatory,
-          images: question.images,
+          images: question.images.filter((image) => image.status !== FileStatusEnum.INACTIVE),
           type: question.type,
           answers: question.answers
             ? Object.keys(question.answers).map((key) => {

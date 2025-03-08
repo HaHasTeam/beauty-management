@@ -1,17 +1,21 @@
 import { FileEnum, StatusEnum } from './enum'
 import { TMetaData } from './request'
 
+export enum FileStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
+}
 export type TFile = {
   name: string
   fileUrl: string
   id?: string
-  status?: 'active' | 'inactive'
+  status?: FileStatusEnum
 }
 
 export type CustomFile = File & {
   fileUrl?: string
   id?: string
-  status?: 'active' | 'inactive'
+  status?: FileStatusEnum
 }
 
 export type TServerFile = TMetaData & {
