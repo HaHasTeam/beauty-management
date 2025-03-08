@@ -103,6 +103,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
           if (fieldValue.length === files.length) {
             return
           }
+
           const constructedFiles = await createFiles(fieldValue)
 
           setFiles(constructedFiles)
