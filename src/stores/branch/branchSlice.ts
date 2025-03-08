@@ -7,7 +7,7 @@ const initialState: BranchesState = {
   branch: {
     name: '',
     logo: '',
-    document: '',
+    documents: [],
     description: '',
     email: '',
     phone: '',
@@ -27,12 +27,12 @@ export const createBranchSlice: StateCreator<BranchSlice, [['zustand/immer', nev
         state.stepStore.push(data)
       }
     }),
-  setBranchState: ({ name, logo, document, address, email }) => {
+  setBranchState: ({ name, logo, documents, address, email }) => {
     return set((state) => {
       state.branch.name = name
       state.branch.address = address
       state.branch.logo = logo
-      state.branch.document = document
+      state.branch.documents = documents
       state.branch.email = email
     })
   },

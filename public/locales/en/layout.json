@@ -8,7 +8,8 @@
     "loginGoogle": "Login with Google",
     "loginOrRegister": "Login/Register",
     "shoppingCart": "Shopping Cart",
-    "notification": "Notifications"
+    "notification": "Notifications",
+    "registerBrand": "Become our brand"
   },
   "profile": {
     "myProfile": "My Profile",
@@ -1175,5 +1176,30 @@
     "successMakeDecisionOnReject": "Successfully processed the brand's return rejection request!",
     "rejectReturnRequestPendingTitle": "Return Rejection Request Under Review",
     "returnOrderRequestMessage": "The return request is being processed. Please review all relevant details and platform policies before making a final decision."
+  },
+  "booking": {
+    "waitConfirm": "Waiting for Confirmation",
+    "confirmBooking": "Confirm Booking",
+    "confirmed": "Booking Confirmed",
+    "markAsCompleted": "Mark as Completed",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "toPay": "Payment Required",
+    "payNow": "Pay Now",
+    "formSubmitted": "Form Submitted",
+    "reviewForm": "Review Form",
+    "resultSheetSent": "Result Sheet Sent",
+    "viewResults": "View Results",
+    "refunded": "Refunded",
+    "statusDescription": {
+      "waitConfirm": "Your booking is waiting for confirmation from the service provider. You will be notified once it's confirmed.",
+      "confirmed": "Your booking has been confirmed. The service provider is ready to deliver the service as scheduled.",
+      "completed": "The service has been successfully completed. Thank you for using our service!",
+      "cancelled": "This booking has been cancelled. Please contact support if you have any questions.",
+      "toPay": "Payment is required to proceed with this booking. Please complete the payment to continue.",
+      "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
+      "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
+      "refunded": "The payment for this booking has been refunded to your original payment method."
+    }
   }
 }

@@ -111,24 +111,6 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           />
         </div>
 
-        {/* <FormField
-          control={form.control}
-          name='address'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Address</FormLabel>
-              <FormControl>
-                <Input
-                  // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                  placeholder='Address'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
-
         <div className='space-y-2'>
           <FormLabel required>Address</FormLabel>
           <AddAddressBrandDialog parentForm={form} getAddress={handleAdress} triggerComponent={addressDisplay} />
@@ -162,7 +144,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <FormControl>
-                <PhoneInputWithCountries {...field} isShowCountry={false} />
+                <PhoneInputWithCountries {...field} isShowCountry={true} />
                 {/* <Input
                   // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                   placeholder='Phone'
@@ -173,23 +155,6 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name='document'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>document</FormLabel>
-              <FormControl>
-                <Input
-                  className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                  placeholder='document'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
 
         <FormField
           control={form.control}
@@ -200,12 +165,12 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
               <UploadFilePreview
                 vertical
                 field={field}
-                dropZoneConfigOptions={{ maxFiles: 1 }}
+                dropZoneConfigOptions={{ maxFiles: 10 }}
                 header={
                   <div>
                     {/* <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div> */}
                     <div className='text-muted-foreground'>
-                      You must upload at least 1 document for your lisense details. To help you, we’ve provided a
+                      You must upload at least 1 document for your lisense details. To help you, we've provided a
                       template file. Please download it, fill in the necessary details, and upload it back:
                     </div>
                     <a href={templateFileUrl} download className='text-primary underline'>

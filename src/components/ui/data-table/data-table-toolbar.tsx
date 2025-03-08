@@ -54,6 +54,7 @@ export function DataTableToolbar<TData>({
       filterableColumns: filterFields.filter((field) => field.options)
     }
   }, [filterFields])
+  console.log('searchableColumns', searchableColumns)
 
   return (
     <div className={cn('flex w-full items-center justify-between gap-2 overflow-auto p-1', className)} {...props}>

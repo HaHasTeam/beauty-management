@@ -27,7 +27,7 @@ export async function createFiles(files: TFile[] | string[]): Promise<CustomFile
     files = files as TFile[]
     const constructedFiles = await Promise.all(
       files.map(async (file) => {
-        const response = await fetch(file.fileUrl)
+        const response = file.status !== 'inactive' ? await fetch(file.fileUrl) : new Response(new Blob())
         const data = await response.blob()
         const metadata = {
           type: data.type,

@@ -38,3 +38,14 @@ export type TUpdateUsersListStatusRequestParams = {
   status: UserStatusEnum
   reason: string
 }
+export type TGetAccountFilterRequestParams = {
+  search?: string
+  brandId?: string
+  categoryId?: string
+  role?: string
+  status?: string
+  sortBy?: string
+  order?: string
+  page?: string
+  limit?: string
+}

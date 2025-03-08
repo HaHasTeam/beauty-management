@@ -42,7 +42,10 @@ export enum Routes {
   CREATE_SYSTEM_SERVICE = 'system-services/create',
   UPDATE_SYSTEM_SERVICE = 'system-services/update',
   SELECT_INTERVIEW_SLOT = 'select-interview',
-  SCHEDULE_BOOKING = 'schedule-booking'
+  SCHEDULE_BOOKING = 'schedule-booking',
+  CONSULTANT_SERVICE = 'consultant-service',
+  ADD_CONSULTANT_SERVICE = 'add-consultant-service',
+  CONSULTANT_SERVICE_DETAILS = 'consultant-service-details'
 }
 
 export const routesConfig: TRoutes = {
@@ -327,5 +330,26 @@ export const routesConfig: TRoutes = {
     description: 'Update system service',
     path: '/dashboard/system-services/update/:id',
     getPath: (params) => `/dashboard/system-services/update/${params.id}`
+  },
+  [Routes.CONSULTANT_SERVICE]: {
+    name: 'Consultant Service',
+    title: 'Consultant Service',
+    description: 'Consultant Service',
+    path: '/dashboard/consultant-service',
+    getPath: () => '/dashboard/consultant-service'
+  },
+  [Routes.ADD_CONSULTANT_SERVICE]: {
+    name: 'Add Consultant Service',
+    title: 'Add Consultant Service',
+    description: 'Add Consultant Service',
+    path: '/dashboard/consultant-service/add',
+    getPath: () => '/dashboard/consultant-service/add'
+  },
+  [Routes.CONSULTANT_SERVICE_DETAILS]: {
+    name: 'Consultant Service Details',
+    title: 'Consultant Service Details',
+    description: 'Consultant Service Details',
+    path: '/dashboard/consultant-service/:id',
+    getPath: (params) => `/dashboard/consultant-service/${params.id}`
   }
 }

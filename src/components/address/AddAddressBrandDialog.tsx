@@ -12,7 +12,6 @@ import { convertToSlug } from '@/utils'
 import { parseAddress } from '@/utils/string'
 
 import Button from '../button'
-import LoadingLayer from '../loading-icon/LoadingLayer'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Form } from '../ui/form'
 import { ScrollArea } from '../ui/scroll-area'
@@ -40,7 +39,7 @@ const AddAddressBrandDialog = ({ triggerComponent, getAddress, parentForm }: Add
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const id = useId()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const [location, setLocation] = useState({
     ward: '',
     district: '',
@@ -119,7 +118,7 @@ const AddAddressBrandDialog = ({ triggerComponent, getAddress, parentForm }: Add
 
     const fetchAddress = async () => {
       try {
-        setLoading(true)
+        // setLoading(true)
 
         const provinceRes = await getProvinceMutate('')
         const findProvince = provinceRes.data.find((el) => convertToSlug(el.name) === convertToSlug(province))
@@ -145,7 +144,7 @@ const AddAddressBrandDialog = ({ triggerComponent, getAddress, parentForm }: Add
         // eslint-disable-next-line no-console
         console.error('Error fetching address data in dialog:', error)
       } finally {
-        setLoading(false)
+        // setLoading(false)
       }
     }
 
@@ -154,7 +153,6 @@ const AddAddressBrandDialog = ({ triggerComponent, getAddress, parentForm }: Add
 
   return (
     <>
-      {loading && <LoadingLayer />}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
         <DialogContent className='max-w-md sm:max-w-xl lg:max-w-3xl' aria-describedby='address-content'>

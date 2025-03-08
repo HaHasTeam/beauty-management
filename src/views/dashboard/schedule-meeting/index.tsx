@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { addDays, format } from 'date-fns'
 import { CalendarIcon, ChevronRight, Clock, HelpCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -19,9 +20,10 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
 import { createBookingApi } from '@/network/apis/booking'
-import { getAllSlotsApi } from '@/network/apis/slots'
+import { getAvailableSlotsApi } from '@/network/apis/slots'
 import { useStore } from '@/stores/store'
-import { BookingStatusEnum, BookingTypeEnum, WeekDay } from '@/types/enum'
+import { BookingStatusEnum, BookingTypeEnum } from '@/types/enum'
+import type { TSlot } from '@/types/slot'
 
 const formSchema = z.object({
   selectedDate: z.date({
@@ -30,12 +32,13 @@ const formSchema = z.object({
   slotId: z.string({
     required_error: 'Please select a time slot'
   }),
-  notes: z.string().min(1, 'Note is required')
+  notes: z.string().optional()
 })
 
 type FormValues = z.infer<typeof formSchema>
 export const url = import.meta.env.VITE_SITE_URL
 function ScheduleMeeting() {
+  const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const handleServerError = useHandleServerError()
   const { errorToast, successToast } = useToast()
@@ -53,47 +56,48 @@ function ScheduleMeeting() {
     }
   })
 
-  const { mutateAsync: mutateCreateBooking } = useMutation({
+  const { mutateAsync: mutateCreateBooking, isPending: isBookingPending } = useMutation({
     mutationKey: [createBookingApi.mutationKey],
     mutationFn: createBookingApi.fn,
     onSuccess: () => {
       successToast({
         message: 'Your appointment is confirmed! See you soon.'
       })
+      // Navigate to dashboard/Schedule on success
+      navigate('/dashboard/Schedule')
     }
   })
 
   const {
-    data: slots,
-    isLoading,
+    mutateAsync: getAvailableSlotMutate,
+    isPending,
     error
-  } = useQuery({
-    queryKey: [getAllSlotsApi.queryKey],
-    queryFn: getAllSlotsApi.fn,
-    select(data) {
-      return data.data
-    }
+  } = useMutation({
+    mutationKey: [getAvailableSlotsApi.mutationKey],
+    mutationFn: getAvailableSlotsApi.fn
   })
 
-  const getWeekDay = (date: Date): WeekDay => {
-    const day = date.getDay()
-    return day === 0 ? WeekDay.SUNDAY : ((day + 1) as WeekDay)
-  }
   const handleRoomIdGenerate = () => {
     const randomId = Math.random().toString(36).substring(2, 9)
     const timestamp = Date.now().toString().substring(-4)
     return `${url}/room/${randomId + timestamp}?type=one-on-one`
   }
+
+  const [availableSlots, setAvailableSlots] = useState<TSlot[]>([])
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false)
+
   const onSubmit = async (data: FormValues) => {
     try {
-      const selectedSlot = slots?.find((slot) => slot.id === data.slotId)
+      const selectedSlot = availableSlots.find((slot) => slot.id === data.slotId)
       if (!selectedSlot) {
         errorToast({ message: 'Error there is no slot selected', isShowDescription: false })
+        return
       }
 
       const formattedDate = format(data.selectedDate, 'yyyy-MM-dd')
-      const startTime = `${formattedDate}T${selectedSlot?.startTime}:00`
-      const endTime = `${formattedDate}T${selectedSlot?.endTime}:00`
+      const startTime = `${formattedDate}T${selectedSlot.startTime}:00`
+      const endTime = `${formattedDate}T${selectedSlot.endTime}:00`
+
       // Generate the meeting URL here
       const meetUrl = handleRoomIdGenerate()
       const payload = {
@@ -107,17 +111,22 @@ function ScheduleMeeting() {
         account: user.id
       }
       await mutateCreateBooking(payload)
-      // Reset the form or navigate to another page
-      form.reset()
+      // Form will be reset and navigation will happen in onSuccess callback
     } catch (error) {
+      // Don't reset form on error, just show the error message
       handleServerError({
         error,
         form
       })
+      errorToast({
+        message: 'Failed to schedule interview. Please try again.',
+        isShowDescription: true,
+        description: 'There was an error processing your request.'
+      })
     }
   }
 
-  if (isLoading) return <LoadingContentLayer />
+  if (isPending) return <LoadingContentLayer />
   if (error) return <div>Error loading slots: {error.message}</div>
 
   return (
@@ -170,10 +179,36 @@ function ScheduleMeeting() {
                         <Calendar
                           mode='single'
                           selected={field.value}
-                          onSelect={(date) => {
+                          onSelect={async (date) => {
                             field.onChange(date)
                             setSelectedDate(date)
                             form.setValue('slotId', '')
+
+                            if (date) {
+                              setIsLoadingSlots(true)
+                              try {
+                                // Format the date for the API payload
+                                const formattedDate = format(date, 'yyyy-MM-dd')
+                                // Create start and end date for the full day
+                                const startDate = `${formattedDate}T00:00:00`
+                                const endDate = `${formattedDate}T23:59:59` // Fixed: Set to end of day
+
+                                // Call API with the correct payload structure
+                                const response = await getAvailableSlotMutate({
+                                  startDate,
+                                  endDate
+                                })
+
+                                if (response.data) {
+                                  setAvailableSlots(response.data)
+                                }
+                              } catch (error) {
+                                handleServerError({ error })
+                                errorToast({ message: 'Failed to load available slots', isShowDescription: false })
+                              } finally {
+                                setIsLoadingSlots(false)
+                              }
+                            }
                           }}
                           disabled={(date) =>
                             date < new Date() || date > addDays(new Date(), 30) || [0, 6].includes(date.getDay())
@@ -188,7 +223,7 @@ function ScheduleMeeting() {
                 )}
               />
 
-              {selectedDate && slots && (
+              {selectedDate && (
                 <FormField
                   control={form.control}
                   name='slotId'
@@ -207,10 +242,13 @@ function ScheduleMeeting() {
                           </Tooltip>
                         </TooltipProvider>
                       </FormLabel>
-                      <div className='grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto'>
-                        {slots
-                          .filter((slot) => slot.weekDay === getWeekDay(selectedDate))
-                          .map((slot) => (
+                      {isLoadingSlots ? (
+                        <div className='flex justify-center py-4'>
+                          <LoadingContentLayer />
+                        </div>
+                      ) : availableSlots.length > 0 ? (
+                        <div className='grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto'>
+                          {availableSlots.map((slot) => (
                             <Button
                               key={slot.id}
                               type='button'
@@ -225,10 +263,12 @@ function ScheduleMeeting() {
                               {slot.startTime} - {slot.endTime}
                             </Button>
                           ))}
-                      </div>
-                      {/* <FormDescription>
-                        Click on a time slot to select it. Scroll to see more options if available.
-                      </FormDescription> */}
+                        </div>
+                      ) : (
+                        <div className='text-center py-4 text-muted-foreground'>
+                          No available slots for this date. Please select another date.
+                        </div>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -261,17 +301,14 @@ function ScheduleMeeting() {
                       {...field}
                     />
                   </FormControl>
-                  {/* <FormDescription>
-                    This information will be shared with the interviewer before your meeting.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <div className='flex justify-end'>
-              <Button type='submit'>
-                Schedule Interview
+              <Button type='submit' disabled={isBookingPending}>
+                {isBookingPending ? 'Scheduling...' : 'Schedule Interview'}
                 <ChevronRight className='ml-2 h-4 w-4' />
               </Button>
             </div>

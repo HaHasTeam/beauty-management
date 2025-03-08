@@ -1,18 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllProductApi } from '@/network/apis/product'
+import { getProductFilterApi } from '@/network/apis/product'
 import { useStore } from '@/stores/store'
-import { TProduct } from '@/types/product'
+import { IResponseProduct } from '@/types/product'
 import { DataTableQueryState } from '@/types/table'
 
 import { ProductTable } from './ProductTable'
 
 export default function IndexPage() {
+  const [searchParams] = useSearchParams()
+  const queryName = searchParams.get('name')
   const { userData } = useStore(
     useShallow((state) => {
       return {
@@ -23,16 +26,20 @@ export default function IndexPage() {
 
   const { data: ProductListData, isLoading: isProductListLoading } = useQuery({
     queryKey: [
-      getAllProductApi.queryKey
-      // {
-      //   brandId: userData?.brands?.length ? userData?.brands[0].id : ''
-      // }
+      getProductFilterApi.queryKey,
+      {
+        search: queryName || '',
+        brandId: userData?.brands?.length ? userData?.brands[0].id : ''
+      }
     ],
-    queryFn: getAllProductApi.fn,
-    enabled: !!userData?.brands?.length
+    queryFn: getProductFilterApi.fn,
+    enabled: !!userData?.brands?.length,
+    select(data) {
+      return data
+    }
   })
 
-  const queryStates = useState<DataTableQueryState<TProduct>>({} as DataTableQueryState<TProduct>)
+  const queryStates = useState<DataTableQueryState<IResponseProduct>>({} as DataTableQueryState<IResponseProduct>)
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
       <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
@@ -47,7 +54,7 @@ export default function IndexPage() {
                 shrinkZero
               />
             ) : (
-              <ProductTable data={ProductListData?.data ?? []} pageCount={1} queryStates={queryStates} />
+              <ProductTable data={ProductListData?.data?.items ?? []} pageCount={1} queryStates={queryStates} />
             )}
           </Shell>
         </div>

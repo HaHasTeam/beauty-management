@@ -1,4 +1,4 @@
-import { IBranch } from '@/types/Branch'
+import { IBranch, IBranch2 } from '@/types/Branch'
 import { TBrand } from '@/types/brand'
 import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
@@ -38,7 +38,7 @@ export const updateBrandByIdApi = toMutationFetcher<TUpdateBrandRequestParams, T
     })
   }
 )
-export const getBrandByIdApi = toQueryFetcher<string, TServerResponse<IBranch>>('getBrandById', async (brandId) => {
+export const getBrandByIdApi = toQueryFetcher<string, TServerResponse<IBranch2>>('getBrandById', async (brandId) => {
   return publicRequest(`/brands/get-by-id/${brandId}`, {
     method: 'GET'
   })
