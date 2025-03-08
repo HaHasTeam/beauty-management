@@ -78,7 +78,7 @@ const ProfileHeader = () => {
                     <Avatar className='min-h-[68px] min-w-[68px] relative'>
                       <AvatarImage src={form.watch('avatar') || ''} />
                       <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>
-                        {userProfileData ? userProfileData?.username[0].toUpperCase() : 'A'}
+                        {userProfileData ? userProfileData?.username?.[0].toUpperCase() : 'A'}
                       </AvatarFallback>
                       {/* <UploadFileModal
                         field={field}

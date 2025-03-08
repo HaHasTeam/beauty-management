@@ -42,15 +42,20 @@ const BrandAnswer = ({
   )
   const [showAllReplies, setShowAllReplies] = useState(false)
 
-  if (!replies || replies.length === 0) {
-    return null
-  }
+  // if (!replies || replies.length === 0) {
+  //   return null
+  // }
 
-  const displayedReplies = showAllReplies || replies.length <= 2 ? replies : replies.slice(0, 2)
+  // const displayedReplies = showAllReplies || replies.length <= 2 ? replies : replies.slice(0, 2)
+
+  const sortedReplies = [...replies].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+
+  const displayedReplies = showAllReplies || sortedReplies.length <= 2 ? sortedReplies : sortedReplies.slice(0, 2)
 
   const toggleReplies = () => {
     setShowAllReplies(!showAllReplies)
   }
+  // console.log(showRep)
 
   return (
     <div className='pl-6 pr-2'>
@@ -156,7 +161,15 @@ const BrandAnswer = ({
           </Button>
         </div>
       )}
-      {showRep && <ReplyFeedbackForm ref={replyFormRef} isOpen={isOpen} feedback={feedback} setShowRep={setShowRep} />}
+      {showRep && (
+        <ReplyFeedbackForm
+          ref={replyFormRef}
+          isOpen={isOpen}
+          feedback={feedback}
+          setShowRep={setShowRep}
+          brand={user?.brands?.some((br) => br.id === brand?.id) ? brand : null}
+        />
+      )}
     </div>
   )
 }
