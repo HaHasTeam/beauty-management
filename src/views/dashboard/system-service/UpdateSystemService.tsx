@@ -12,7 +12,7 @@
 // import { uploadFilesApi } from '@/network/apis/file'
 // import { getAllSystemServiceApi, getSystemServiceByIdApi, updateSystemServiceApi } from '@/network/apis/system-service'
 // import { SystemServiceSchema } from '@/schemas/system-service.schema'
-// import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
+// import { ServiceTypeEnum, SystemServiceStatusEnum } from '@/types/enum'
 // import { IUpdateSystemServiceFormData } from '@/types/system-service'
 
 // const UpdateSystemService = () => {
@@ -46,11 +46,11 @@
 //           orderIndex: 1,
 //           mandatory: true,
 //           description: '',
-//           status: StatusEnum.ACTIVE
+//           status: SystemServiceStatusEnum.ACTIVE
 //         }
 //       ]
 //     },
-//     status: StatusEnum.ACTIVE
+//     status: SystemServiceStatusEnum.ACTIVE
 //   }
 
 //   const form = useForm<IUpdateSystemServiceFormData>({
@@ -114,7 +114,7 @@
 //         if (i === index) {
 //           // If section has an id, mark it as inactive instead of removing
 //           if (section.id) {
-//             return { ...section, status: StatusEnum.INACTIVE }
+//             return { ...section, status: SystemServiceStatusEnum.INACTIVE }
 //           }
 //           // If no id (new section), remove it
 //           return null
@@ -125,7 +125,7 @@
 
 //     // Update orderIndex for remaining active sections
 //     const reorderedSections = updatedSections
-//       .filter((section) => section.status === StatusEnum.ACTIVE)
+//       .filter((section) => section.status === SystemServiceStatusEnum.ACTIVE)
 //       .map((section, i) => ({
 //         ...section,
 //         orderIndex: i + 1
@@ -134,7 +134,7 @@
 //     // Combine active and inactive sections
 //     const finalSections = [
 //       ...reorderedSections,
-//       ...updatedSections.filter((section) => section.status === StatusEnum.INACTIVE)
+//       ...updatedSections.filter((section) => section.status === SystemServiceStatusEnum.INACTIVE)
 //     ]
 
 //     form.setValue('consultationCriteriaData.consultationCriteriaSections', finalSections)
@@ -158,7 +158,7 @@
 //         ...existingImages,
 //         ...imgUrls.map((url) => ({
 //           fileUrl: url,
-//           status: StatusEnum.ACTIVE
+//           status: SystemServiceStatusEnum.ACTIVE
 //         }))
 //       ]
 
@@ -171,7 +171,7 @@
 //           title: values.consultationCriteriaData.title,
 //           consultationCriteriaSections: values.consultationCriteriaData.consultationCriteriaSections.map((section) => ({
 //             ...section,
-//             status: section.status || StatusEnum.ACTIVE
+//             status: section.status || SystemServiceStatusEnum.ACTIVE
 //           }))
 //         }
 //       }
@@ -210,8 +210,9 @@ import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-crite
 import { uploadFilesApi } from '@/network/apis/file'
 import { getAllSystemServiceApi, getSystemServiceByIdApi, updateSystemServiceApi } from '@/network/apis/system-service'
 import { getSystemServiceSchema, ISystemServiceFormData } from '@/schemas/system-service.schema'
-import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
+import { ServiceTypeEnum } from '@/types/enum'
 import { IImage } from '@/types/image'
+import { SystemServiceStatusEnum } from '@/types/system-service'
 
 const UpdateSystemService = () => {
   const { id } = useParams()
@@ -239,7 +240,7 @@ const UpdateSystemService = () => {
         }
       ]
     },
-    status: StatusEnum.ACTIVE
+    status: SystemServiceStatusEnum.ACTIVE
   }
 
   const { data: initialData, isFetching: isGettingSystemService } = useQuery({
@@ -323,7 +324,7 @@ const UpdateSystemService = () => {
         processedImages.push({
           id,
           fileUrl: deletedImage.fileUrl,
-          status: StatusEnum.INACTIVE
+          status: SystemServiceStatusEnum.INACTIVE
         })
       }
     })
@@ -373,7 +374,7 @@ const UpdateSystemService = () => {
     if (initialData && initialData?.data) {
       const processFormValue = async () => {
         const mainImages = initialData?.data?.images
-          ?.filter((image) => image.status === StatusEnum.ACTIVE || !image.status)
+          ?.filter((image) => image.status === SystemServiceStatusEnum.ACTIVE || !image.status)
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
 

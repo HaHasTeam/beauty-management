@@ -3,6 +3,7 @@ import { TMetaData } from './request'
 import { ISystemService } from './system-service'
 
 type BaseConsultantServiceField = {
+  id?: string
   question: string
   orderIndex?: number
   mandatory: boolean
@@ -41,10 +42,12 @@ export interface IConsultantService extends TMetaData {
   images: TFile[]
   systemService: ISystemService & TMetaData
   serviceBookingForm: {
+    id?: string
     title: string
     questions: IConsultantServiceDetail[]
   }
   serviceBookingFormData: {
+    id?: string
     title: string
     questions: IConsultantServiceDetail[]
   }

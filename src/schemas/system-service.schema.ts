@@ -1,7 +1,8 @@
 import i18next from 'i18next'
 import { z } from 'zod'
 
-import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
+import { ServiceTypeEnum } from '@/types/enum'
+import { SystemServiceStatusEnum } from '@/types/system-service'
 
 import { getConsultationCriteriaSectionSchema } from './consultation-criteria.schema'
 
@@ -30,7 +31,7 @@ export const getSystemServiceSchema = () => {
       type: z.enum([ServiceTypeEnum.STANDARD, ServiceTypeEnum.PREMIUM]),
       consultationCriteria: z.string().optional(),
       consultationCriteriaData: consultationCriteriaDataSchema,
-      status: z.enum([StatusEnum.ACTIVE, StatusEnum.INACTIVE])
+      status: z.nativeEnum(SystemServiceStatusEnum)
     })
     .refine(
       (data) => {
