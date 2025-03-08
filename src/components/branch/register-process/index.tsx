@@ -1,21 +1,19 @@
-'use client'
-
 import { useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { Calendar, FileCheck, Info, ShieldCheck, Store, ThumbsUp, User } from 'lucide-react'
+import { Calendar, FileCheck, ShieldCheck, Store, ThumbsUp, User } from 'lucide-react'
 import { cloneElement, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 // Add these imports at the top
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn } from '@/lib/utils'
-import { getBookingDetailsApi, getStatusBookingsApi } from '@/network/apis/booking'
+import { getStatusBookingsApi } from '@/network/apis/booking'
 import { BrandStatusEnum } from '@/types/brand'
 import { BookingStatusEnum, RoleEnum } from '@/types/enum'
 import type { TUser } from '@/types/user'
+
+import { BookingDetailsDialog } from './booking-details-dialog'
+import { BrandDetailsDialog } from './brand-details-dialog'
 
 const useUserStatus = (userProfileData: TUser | undefined) => {
   return useMemo(() => {
@@ -58,85 +56,6 @@ const useCompletionPercentage = (
 
     return Math.round((completedSteps / totalSteps) * 100)
   }, [isEmailVerify, isRegisterBrand, brandStatus, isInterviewSlotSelected, isRegistrationComplete])
-}
-
-// Create a BookingDetailsDialog component
-const BookingDetailsDialog = ({
-  bookingDetails
-}: {
-  bookingDetails: {
-    voucherDiscount: number
-    id: string
-    createdAt: string
-    updatedAt: string
-    totalPrice: number
-    startTime: string
-    endTime: string
-    paymentMethod: string
-    notes: string
-    meetUrl: string
-    record: string | null
-    type: string
-    status: string
-    resultNote: string | null
-  }
-}) => {
-  if (!bookingDetails) return null
-
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant='ghost' size='icon' className='p-0 h-auto'>
-          <Info className='h-5 w-5 text-primary' />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className='sm:max-w-md'>
-        <DialogHeader>
-          <DialogTitle>Chi tiết đặt lịch phỏng vấn</DialogTitle>
-        </DialogHeader>
-        <div className='space-y-3 mt-4'>
-          <div className='grid grid-cols-2 gap-2'>
-            <div className='text-muted-foreground'>Thời gian bắt đầu:</div>
-            <div>
-              {bookingDetails.startTime ? format(new Date(bookingDetails.startTime), 'dd/MM/yyyy HH:mm') : 'N/A'}
-            </div>
-
-            <div className='text-muted-foreground'>Thời gian kết thúc:</div>
-            <div>{bookingDetails.endTime ? format(new Date(bookingDetails.endTime), 'dd/MM/yyyy HH:mm') : 'N/A'}</div>
-
-            <div className='text-muted-foreground'>Phương thức thanh toán:</div>
-            <div>
-              {bookingDetails.paymentMethod === 'BANK_TRANSFER'
-                ? 'Chuyển khoản ngân hàng'
-                : bookingDetails.paymentMethod}
-            </div>
-
-            <div className='text-muted-foreground'>Trạng thái:</div>
-            <div>{bookingDetails.status === 'BOOKING_CONFIRMED' ? 'Đã xác nhận' : bookingDetails.status}</div>
-
-            <div className='text-muted-foreground'>Ghi chú:</div>
-            <div>{bookingDetails.notes || 'Không có ghi chú'}</div>
-
-            {bookingDetails.meetUrl && (
-              <>
-                <div className='text-muted-foreground'>Link phỏng vấn:</div>
-                <div>
-                  <a
-                    href={bookingDetails.meetUrl}
-                    target='_blank'
-                    rel='noreferrer'
-                    className='text-primary hover:underline'
-                  >
-                    Tham gia phỏng vấn
-                  </a>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
 }
 
 // Modify the renderStep function to include the booking icon for step 5
@@ -194,11 +113,11 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
       BookingStatusEnum.COMPLETED
     ].includes(bookingData.data)
 
-  const { data: bookingDetailsData } = useQuery({
-    queryKey: [getBookingDetailsApi.queryKey],
-    queryFn: getBookingDetailsApi.fn,
-    enabled: isInterviewSlotSelected
-  })
+  // const { data: bookingDetailsData } = useQuery({
+  //   queryKey: [getBookingDetailsApi.queryKey],
+  //   queryFn: getBookingDetailsApi.fn,
+  //   enabled: isInterviewSlotSelected
+  // })
 
   const completionPercentage = useCompletionPercentage(
     isEmailVerify,
@@ -265,7 +184,10 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             if (isEmailVerify && !isRegisterBrand) {
               navigate(routesConfig[Routes.REGISTER_BRAND].path)
             }
-          }
+          },
+          isRegisterBrand && userProfileData?.brands && userProfileData.brands.length > 0 ? (
+            <BrandDetailsDialog brandDetails={userProfileData.brands[0]} />
+          ) : null
         )}
 
         {renderStep(
@@ -318,8 +240,25 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
               navigate(routesConfig[Routes.SELECT_INTERVIEW_SLOT].path)
             }
           },
-          isInterviewSlotSelected && bookingDetailsData?.data ? (
-            <BookingDetailsDialog bookingDetails={bookingDetailsData.data} />
+          isInterviewSlotSelected ? (
+            <BookingDetailsDialog
+              bookingDetails={{
+                voucherDiscount: 0,
+                id: 'a7b383cf-732c-41a1-80f4-aca94f48c98e',
+                createdAt: '2025-03-08T03:47:39.809Z',
+                updatedAt: '2025-03-08T03:48:49.529Z',
+                totalPrice: 0,
+                startTime: '2025-03-20T03:00:00.000Z',
+                endTime: '2025-03-20T04:00:00.000Z',
+                paymentMethod: 'BANK_TRANSFER',
+                notes: 'hello',
+                meetUrl: 'http://localhost:5173/room/8qtn3341741405659645?type=one-on-one',
+                record: null,
+                type: 'INTERVIEW',
+                status: 'BOOKING_CONFIRMED',
+                resultNote: null
+              }}
+            />
           ) : null
         )}
 
