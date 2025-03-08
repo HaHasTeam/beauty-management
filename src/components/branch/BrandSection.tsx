@@ -24,7 +24,7 @@ const BrandSection = ({ brand }: BrandSectionProps) => {
             {brand.logo && (
               <Avatar>
                 <AvatarImage src={brand.logo} alt={brand.name} />
-                <AvatarFallback>{brand.name}</AvatarFallback>
+                <AvatarFallback>{brand.name?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
               </Avatar>
             )}
             <div className='md:flex block gap-1 md:gap-2 items-center'>

@@ -17,7 +17,7 @@ import {
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { StatusEnum } from '@/types/enum'
-import { ProductStatusEnum, TProduct } from '@/types/product'
+import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import { getDisplayString } from '@/utils/string'
 
 import { getStatusIcon } from './helper'
@@ -27,9 +27,9 @@ export interface DataTableRowAction<TData> {
   type: 'ban' | 'view' | 'unbanned' | 'update-status-active' | 'update-status-inactive' | 'deny'
 }
 interface GetColumnsProps {
-  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TProduct> | null>>
+  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<IResponseProduct> | null>>
 }
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TProduct>[] {
+export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IResponseProduct>[] {
   return [
     {
       id: 'select',
@@ -61,7 +61,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TProduc
       size: 1
     },
     {
-      id: 'displayName',
+      id: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name
@@ -72,7 +72,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TProduc
           <div className='flex space-x-2 items-center'>
             <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
               <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{displayName[0].toUpperCase() ?? 'A'}</AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>

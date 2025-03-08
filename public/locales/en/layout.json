@@ -8,9 +8,34 @@
     "loginGoogle": "Login with Google",
     "loginOrRegister": "Login/Register",
     "shoppingCart": "Shopping Cart",
-    "notification": "Notifications"
+    "notification": "Notifications",
+    "registerBrand": "Become our brand"
   },
-  "profile": {},
+  "profile": {
+    "myProfile": "My Profile",
+    "profileDescription": "Manage your profile information to secure your account",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "usernameNote": "Username can only be changed once",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "change": "Change",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "birthday": "Date of Birth",
+    "birthdayPlaceholder": "Enter your date of birth",
+    "save": "Save",
+    "avatar": "Avatar",
+    "chooseImage": "Choose Image",
+    "fileSizeLimit": "Max file size: 1 MB",
+    "fileFormat": "Format: .JPEG, .PNG"
+  },
   "home": {
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
@@ -39,7 +64,9 @@
     "groupBuying": "Group Buying",
     "hidden": "Hidden",
     "outOfStock": "Sold old",
-    "waiting": "Upcoming"
+    "waiting": "Upcoming",
+    "cancelled": "Cancelled",
+    "inactive": "Inactive"
   },
   "statusTag": {
     "default": "Default"
@@ -81,7 +108,16 @@
     "submitAndHide": "Submit and Hide",
     "deselect": "Deselect",
     "select": "Select",
-    "edit": "Edit"
+    "edit": "Edit",
+    "backToList": "Back to List",
+    "close": "Close",
+    "showMore": "Show more {{count}} replies",
+    "showLess": "Show less",
+    "importFile": "Import files",
+    "downloadSample": "Download sample",
+    "import": "Import",
+    "view": "View",
+    "upload": "Upload"
   },
   "noData": "No matching data found",
   "sell": {
@@ -239,7 +275,29 @@
     "productDetail": {
       "title": "Product Not Found",
       "description": "The product you're looking for either does not exist, has been removed, or is currently unavailable.",
-      "button": "Browse Other Products"
+      "button": "Browse Other Product"
+    },
+    "systemServiceDetail": {
+      "title": "System Service Not Found",
+      "description": "The system service you're looking for either does not exist, has been removed, or is currently unavailable.",
+      "button": "Browse Other System Service"
+    },
+    "feedback": {
+      "title": "No Feedback Yet",
+      "description": "This product has no reviews yet{{filter}}. Please {{filterCallAction}}be the first to share your thoughts!",
+      "filter": " for the selected filter",
+      "filterCallAction": "try viewing all reviews or ",
+      "button": "Write a Review"
+    },
+    "myFeedbackList": {
+      "title": "You haven't written any reviews",
+      "description": "Share your experience with the products you've purchased.",
+      "button": "Write a review"
+    },
+    "feedbackDetail": {
+      "title": "Review not found",
+      "description": "This review may have been deleted or does not exist.",
+      "button": "Go back"
     }
   },
   "productDetail": {
@@ -572,7 +630,7 @@
     "viewFeedback": "View review",
     "cancelOrder": "Cancel order",
     "requestCancelOrder": "Request cancel order",
-    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
+    "cancelOrderDescription": "Clicking \"Confirm\" button means canceling all items in the order, and this action cannot be undone. Promotional codes (if any) can still be applied{{brand}} to other orders after canceling this one.",
     "requestCancelOrderDescription": "Since the order is being prepared, this request will need to be reviewed before cancellation. Clicking \"Confirm\" button means submitting a request to cancel all items in this order. This action cannot be undone. Promotional codes (if any) can still be applied to other orders after canceling this one.",
     "cancelOrderReason": {
       "changeOfMind": "Changed my mind",
@@ -621,7 +679,7 @@
     "requestCancelSuccess": "Request cancel order successfully!",
     "cancelRequestPendingTitle": "Cancellation Request Pending Confirmation",
     "cancelRequestRejectedTitle": "Cancellation Request Rejected",
-    "cancelRequestPendingMessage": "Your cancellation request has been submitted and is awaiting confirmation. The order will remain active until the brand reviews and approves the request. We will update you with the result within 2 days. If your request is approved, we will process a refund (if applicable).",
+    "cancelRequestPendingMessage": "Your cancellation request has been submitted and is awaiting confirmation. The order will remain active until the brand reviews and approves the request. We will update you with the result within {{count}} days. If your request is approved, we will process a refund (if applicable).",
     "cancelRequestRejectedMessage": "Your cancellation request has been rejected. The order will continue to be processed as usual. You can click \"Return order\" after receiving the item if needed. Please contact customer support if you need further assistance.",
     "statusDescription": {
       "joinGroupBuying": "The customer has joined a group-buying deal. The order will be processed once the required number of participants is reached.",
@@ -642,7 +700,33 @@
     "orderCancellationUpdate": "Order cancellation updated successfully!",
     "approvedCancelRequest": "Cancellation approved. Order is now canceled.",
     "rejectedCancelRequest": "Cancellation rejected. Order will proceed.",
-    "rejectedCancelRequestTitle": "Cancellation Rejected"
+    "rejectedCancelRequestTitle": "Cancellation Rejected",
+    "received": "Received",
+    "receivedOrderStatusSuccess": "Successfully confirmed order receipt!",
+    "cancelOrderAdditional": " by the customer",
+    "returnOrderDialog": {
+      "title": "Return Order Request",
+      "description": "By clicking 'Request Return,' you agree to return all items in this order. Once approved, this action cannot be undone.",
+      "successTitle": "Return Request Submitted",
+      "successDescription": "We will process your request within the next {{count}} days and notify you of the results as soon as possible. Thank you for trusting our service.",
+      "mediaFilesNotes": "Please provide clear images and videos that accurately show the product's condition, order ID, and packaging status. A video of the unboxing process is recommended to support the review."
+    },
+    "returnOrderReason": {
+      "wrongItem": "Received wrong item",
+      "damage": "Received damaged or broken product",
+      "missingItem": "Product missing from order",
+      "expired": "Expired product received",
+      "allergy": "Allergic reaction or skin irritation",
+      "notAsDescribed": "Product not as described",
+      "changedMind": "Changed my mind",
+      "betterPrice": "Found a better price elsewhere",
+      "duplicate": "Received duplicate order",
+      "lateDelivery": "Shipping took too long",
+      "other": "Other"
+    },
+    "proof": "Images and videos proof",
+    "returnRequestApprovedTitle": "Return Request Approved",
+    "returnRequestApprovedMessage": "Your return request has been approved by the brand. Please prepare, pack, and ship the item within {{count}} days. Remember to keep clear photos and videos as proof of the product's condition and packaging."
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -719,7 +803,23 @@
     "stringOrArrayRequired": "Field value must be a string or an array",
     "sizeFileValid": "Each file must be under {{size}}MB.",
     "fileFormat": "Accepted file formats are",
-    "fileCountValid": "You can upload up to {{count}} files"
+    "fileCountValid": "You can upload up to {{count}} files",
+    "tooLong": "Message too long.",
+    "ratingFeedback": "The rating must be between 1 and 5",
+    "contentFeedback": "The feedback content must be at least {{minLength}} characters long but no more than {{maxLength}} characters",
+    "maxImagesExceeded": "You can upload a maximum of {{count}} images.",
+    "maxVideosExceeded": "You can upload a maximum of {{count}} videos.",
+    "inputMedia": "Please upload at least one image or video.",
+    "imageCount": "You have selected {{count}} images.",
+    "videoCount": "You have selected {{count}} videos.",
+    "files": "Files must be in a supported format and within the allowed size limit.",
+    "videoBrowser": "Your browser does not support the video tag.",
+    "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
+    "maxImages": "You can only upload up to {{count}} images.",
+    "maxVideos": "You can only upload up to {{count}} videos.",
+    "contentReplyFeedback": "The feedback reply must be at least {{minLength}} characters long but no more than {{maxLength}} characters",
+    "videosRequired": "Please upload at least one video.",
+    "imagesRequired": "Please upload at least one image."
   },
   "role": {
     "ADMIN": "Admin",
@@ -729,7 +829,8 @@
     "STAFF": "Brand Staff",
     "KOL": "KOL",
     "OPERATOR": "Operator",
-    "BRAND": "Brand"
+    "BRAND": "Brand",
+    "MODERATOR": "Moderator"
   },
   "productFormMessage": {
     "SKURequired": "Product classification SKU cannot be duplicate",
@@ -758,7 +859,8 @@
     "successUpdateInactiveMessage": "Product updated successfully! It is currently inactive and will not be visible until activated.",
     "successStatusMessage": "Update product status successfully!",
     "categoryLastLevel": "Please select the last-level category.",
-    "certificateRequired": "Product certificate is required."
+    "certificateRequired": "Product certificate is required.",
+    "totalQuantityTooLow": "The total quantity is too low. Please increase the quantity to meet the required minimum: {{count}}."
   },
   "createProduct": {
     "successOfficial": "Product created successfully!",
@@ -809,8 +911,10 @@
     "other": "Other",
     "classification": "Classification",
     "addOption": "Add option",
+    "option": "Options",
+    "classificationTitleInformation": "Classification Attributes",
     "classificationEg": "e.g., Red etc.",
-    "inputPriceAndQuantity": "Set price and quantity",
+    "inputPriceAndQuantity": "Classification Details",
     "price": "Price",
     "quantity": "Quantity",
     "action": "Action",
@@ -836,11 +940,15 @@
       "INACTIVE": "The product is currently unavailable for purchase and not visible to customers.",
       "PRE_ORDER": "The product is not yet released or out of stock but can be ordered in advance.",
       "OFFICIAL": "The product is an officially verified item from the brand or manufacturer and has been reviewed by the platform moderator.",
-      "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock."
+      "OUT_OF_STOCK": "The product is temporarily unavailable due to no remaining stock.",
+      "SOLD_OUT": "This product is currently out of stock. Restock now so customers can continue purchasing!",
+      "ALMOST_OUT": "Running low on stock—restock soon!"
     },
     "brandInformation": "Brand Information",
     "noCertificates": "No Certificate",
-    "file": "File"
+    "file": "File",
+    "restockNow": "Restock now",
+    "updateProductClassificationQuantitySuccess": "Product quantity have been successfully updated!"
   },
   "status": {
     "ACTIVE": "Active",
@@ -852,11 +960,16 @@
     "PENDING": "Pending",
     "PRE_ORDER": "Pre-Order",
     "OFFICIAL": "Official",
-    "OUT_OF_STOCK": "Out of stock"
+    "OUT_OF_STOCK": "Out of stock",
+    "SOLD_OUT": "Out of stock",
+    "ALMOST_OUT": "Almost out of stock",
+    "button_INACTIVE": "Inactive",
+    "button_ACTIVE": "Active",
+    "button_OFFICIAL": "Active"
   },
   "systemService": {
     "generalInformation": "General Information",
-    "resultSheetInformation": "Result Sheet Information",
+    "consultationCriteriaInformation": "Consultation Criteria",
     "name": "Service Name",
     "description": "Description",
     "category": "Category",
@@ -872,7 +985,7 @@
     "enterServiceDescription": "Enter service description",
     "selectServiceCategory": "Select service category",
     "enterSectionName": "Enter section name",
-    "enterResultSheetTitle": "Enter result sheet's title",
+    "enterConsultationCriteriaTitle": "Enter consultation criteria's title",
     "enterSectionDescription": "Enter section description",
     "createSuccessMessage": "Service created successfully!",
     "status": "Status",
@@ -885,17 +998,208 @@
     "standardOrPremiumRequired": "Please select a standard or premium type.",
     "sectionNameRequired": "Section name is required.",
     "sectionsRequired": "Please add at least one section.",
-    "resultSheetTitleRequired": "Result sheet title is required.",
+    "consultationCriteriaTitleRequired": "Consultation criteria title is required.",
     "orderIndexRequired": "Order index is required.",
     "sectionDescriptionRequired": "Section description is required.",
-    "resultSheetSectionsRequired": "Result sheet sections is required.",
+    "consultationCriteriaSectionsRequired": "Consultation criteria sections is required.",
     "section": "Section",
     "updateSuccessMessage": "Update system service successfully!",
-    "eitherResultSheetOrDataRequired": "Please select an existing result sheet or create a new one.",
-    "createNew": "Create new result sheet",
-    "selectOrCreateNew": "Select an existing result sheet or create a new one",
-    "selectResultSheet": "Select result sheet",
+    "eitherConsultationCriteriaOrDataRequired": "Please select an existing consultation criteria or create a new one.",
+    "createNew": "Create new consultation criteria",
+    "selectOrCreateNew": "Select an existing consultation criteria or create a new one",
+    "selectConsultationCriteria": "Select consultation criteria",
     "preview": "Preview",
-    "alsoUsedFor": "This result sheet also used for the following system services"
+    "alsoUsedFor": "This consultation criteria also used for the following system services",
+    "updateConsultationCriteria": "Update Consultation Criteria",
+    "updateConsultationCriteriaSuccess": "Update consultation criteria successfully!",
+    "deleteSectionSuccess": "Delete consultant criteria section successfully!",
+    "createdAt": "Created At",
+    "lastUpdated": "Last updated",
+    "updateSystemServiceStatusSuccess": "Update system service status successfully!",
+    "statusDescription": {
+      "ACTIVE": "The system service is currently visible in the system, and consultants can register.",
+      "INACTIVE": "The system service is currently hidden from the system, and consultant registration is disabled."
+    },
+    "consultantCriteriaDetails": "Consultation Criteria Details",
+    "ID": "ID",
+    "applicableServices": "Applicable Services",
+    "files": "files",
+    "index": "Index"
+  },
+  "layout": {
+    "help": "HELP",
+    "contactUs": "Contact us",
+    "faq": "FAQ",
+    "shippingReturns": "Shipping & Returns",
+    "myAccount": "MY ACCOUNT",
+    "addresses": "Addresses",
+    "orders": "Orders",
+    "vouchers": "Vouchers",
+    "customerCare": "CUSTOMER CARE",
+    "aboutUs": "About us",
+    "blog": "Blog",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms And Conditions"
+  },
+  "contact": {
+    "contactUs": "Contact Us",
+    "getInTouch": "Get In Touch With Us",
+    "description": "We're here to help! Whether you have questions about our beauty consulting services, need support with an order, or are interested in joining our platform as a beauty consultant, our team is ready to assist.",
+    "location": "Our Location",
+    "address": "99 S.t Jomblo Park Pekanbaru 28292, Indonesia",
+    "phone": "Phone Number",
+    "phoneNumber": "(+62)81 414 257 9980",
+    "email": "Email Address",
+    "emailAddress": "info@yourdomain.com",
+    "yourInformation": "Your Information",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your Full Name",
+    "emailPlaceholder": "Your Email",
+    "phonePlaceholder": "Your Phone",
+    "message": "Your Message",
+    "messagePlaceholder": "Your Message",
+    "sendMessage": "Send Message",
+    "sendSuccess": "Send message successfully!"
+  },
+  "systemServiceType": {
+    "PREMIUM": "Premium",
+    "STANDARD": "Standard"
+  },
+  "feedback": {
+    "successTitle": "Review submitted successfully!",
+    "successRepTitle": "Response Sent!",
+    "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
+    "successRepDescription": "Your response has been successfully submitted. Thank you for addressing customer feedback!",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "content": "Share Your Experiences",
+    "contentPlaceholder": "Enter your message here...",
+    "mediaFiles": "Upload video and images",
+    "mediaFilesHint": "You can upload up to {{videoCount}} video(s) and {{imageCount}} image(s), ensuring the total file size does not exceed {{size}}MB. \nSupports the following formats: {{format}}.",
+    "imagesHint": {
+      "TO_SHIP": "Show order contents, packaging, shipping label.",
+      "SHIPPING": "Provide proof of handing the package to the shipping carrier.",
+      "DELIVERED": "Show outer package, product inside, any visible damage (if any).",
+      "RETURNING": "Provide evidence of the return process.",
+      "REFUNDED": "Upload proof of return completion and refund."
+    },
+    "videosHint": {
+      "TO_SHIP": "A 360° view of the package to confirm it’s properly sealed.",
+      "SHIPPING": "Record handover moment or a short clip of the sealed package before shipping.",
+      "DELIVERED": "Unboxing video to capture package condition & item accuracy.",
+      "RETURNING": "Record defect/missing parts/issues clearly for verification.",
+      "REFUNDED": "Upload video of return completion and refund."
+    },
+    "uploadVideos": "Upload videos",
+    "uploadImages": "Upload images",
+    "viewReview": "View Review",
+    "images": "Images",
+    "ID": "ID",
+    "order": "Order",
+    "reply": "Reply",
+    "writeYourRep": "Write your reply...",
+    "yourReply": "Your reply"
+  },
+  "media": {
+    "previewImage": "Preview Image/Video",
+    "viewMediaFiles": "View videos/images",
+    "images": "Images",
+    "imagesFile": "images",
+    "videos": "Videos",
+    "videosFile": "videos"
+  },
+  "orderEvidence": {
+    "description": {
+      "TO_SHIP": "Please upload images or videos of the packaged order before shipping. This helps ensure accurate order fulfillment and reduce disputes.",
+      "SHIPPING": "Upload images or videos of the package as it is handed over to the shipping carrier. This helps track the shipment condition and prevent delivery issues.",
+      "DELIVERED": "Please upload images or videos of the received package if necessary. This helps confirm the product condition and support dispute resolution if needed.",
+      "RETURNING": "Upload images or videos showing the returned product’s condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
+      "REFUNDED": "Please upload images or videos confirming the successful return and refund process. This ensures proper documentation and avoids misunderstandings."
+    },
+    "TO_SHIP": "Upload Proof of Handover to Carrier",
+    "SHIPPING": "Upload Images & Videos for Order Preparation",
+    "DELIVERED": "Upload Delivery Confirmation",
+    "RETURNING": "Upload Return Request Evidence",
+    "REFUNDED": "Upload Refund Completion Proof"
+  },
+  "confirm": {
+    "productClassification": {
+      "title": "Confirm Changes to Product Classification Attributes",
+      "description": "You are modifying important classification attributes such as color, size, or other factors. To ensure accurate inventory management, ordering, and order processing, the current classification will be deactivated. A new classification will be created with the updated attributes once you submit the form. Are you sure you want to proceed? You can cancel before submitting to retain the current classification. Note: This action cannot be undone after submission.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "decisionReturn": {
+      "title": "Confirm Return Decision",
+      "description": "The customer has requested a return for this order.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
+  },
+  "return": {
+    "rejectReturnOrderReason": {
+      "notEligible": "The product is not eligible for return",
+      "noValidReason": "The provided return reason is not valid",
+      "insufficientEvidence": "Insufficient proof or evidence provided for the claim",
+      "policyViolation": "The return request violates platform return policy",
+      "damagedByCustomer": "The product was damaged due to customer misuse",
+      "usedOrAltered": "The product has been used, or altered from its original state",
+      "discountedOrFinalSale": "Item is a final sale or non-returnable promotional product",
+      "other": "Other"
+    },
+    "complaintReturnOrderReason": {
+      "wrongItemReturned": "The returned item does not match the original order",
+      "usedOrDamaged": "The product has been used or is not in its original condition",
+      "missingParts": "Returned item is missing parts, accessories, or original packaging",
+      "fakeOrDifferentProduct": "The returned item is counterfeit or different from what was purchased",
+      "damagedPackaging": "The product packaging is damaged beyond acceptable condition",
+      "returnAbuse": "Customer has a history of excessive or fraudulent returns",
+      "expiredReturn": "The return was received after the allowed return period",
+      "other": "Other"
+    },
+    "rejectReturnOrderDialog": {
+      "title": "Reject Return Request",
+      "description": "Please provide a valid reason for rejecting this return request. If applicable, attach supporting evidence to justify your decision. This information will be reviewed before finalizing the rejection.",
+      "mediaFilesNotes": "Ensure that any uploaded images or videos clearly support your decision, such as product condition, missing packaging, or policy violations."
+    },
+
+    "rejectReturnSuccess": "Return Request Rejected Successfully",
+    "rejectReturnSuccessMessage": "You have successfully rejected the return request. Our support team will review this decision and provide you with the final result as soon as possible.",
+    "rejectReturnRequestPendingTitleBrand": "Return Rejection Under Review",
+    "rejectReturnRequestPendingMessageBrand": "Your request to reject the return is being reviewed by our support team. We will notify you once a final decision is made.",
+    "rejectReturnRequestApprovedTitleBrand": "Return Rejection Approved",
+    "rejectReturnRequestApprovedMessageBrand": "Your request to reject the return has been approved. The customer will be notified accordingly.",
+    "rejectReturnRequestRejectedTitleBrand": "Return Rejection Denied",
+    "rejectReturnRequestRejectedMessageBrand": "Your request to reject the return has been denied. The return request will proceed as approved.",
+    "returnRequestPendingTitleAdmin": "Return Request Pending Review",
+    "returnRequestPendingMessageAdmin": "The customer has requested a return for this order. The brand will review and decide. You can check the platform's return policy for guidance.",
+    "successMakeDecisionOnReject": "Successfully processed the brand's return rejection request!",
+    "rejectReturnRequestPendingTitle": "Return Rejection Request Under Review",
+    "returnOrderRequestMessage": "The return request is being processed. Please review all relevant details and platform policies before making a final decision."
+  },
+  "booking": {
+    "waitConfirm": "Waiting for Confirmation",
+    "confirmBooking": "Confirm Booking",
+    "confirmed": "Booking Confirmed",
+    "markAsCompleted": "Mark as Completed",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "toPay": "Payment Required",
+    "payNow": "Pay Now",
+    "formSubmitted": "Form Submitted",
+    "reviewForm": "Review Form",
+    "resultSheetSent": "Result Sheet Sent",
+    "viewResults": "View Results",
+    "refunded": "Refunded",
+    "statusDescription": {
+      "waitConfirm": "Your booking is waiting for confirmation from the service provider. You will be notified once it's confirmed.",
+      "confirmed": "Your booking has been confirmed. The service provider is ready to deliver the service as scheduled.",
+      "completed": "The service has been successfully completed. Thank you for using our service!",
+      "cancelled": "This booking has been cancelled. Please contact support if you have any questions.",
+      "toPay": "Payment is required to proceed with this booking. Please complete the payment to continue.",
+      "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
+      "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
+      "refunded": "The payment for this booking has been refunded to your original payment method."
+    }
   }
 }

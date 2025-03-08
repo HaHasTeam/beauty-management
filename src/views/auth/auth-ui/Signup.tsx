@@ -1,3 +1,5 @@
+'use client'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { jwtDecode } from 'jwt-decode'
@@ -20,7 +22,7 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { createUserApi, signInWithPasswordApi } from '@/network/apis/user'
 import { useStore } from '@/stores/store'
-import { TInviteSignupDecoded } from '@/types/auth'
+import type { TInviteSignupDecoded } from '@/types/auth'
 import { UserRoleEnum } from '@/types/role'
 
 // Define prop type with allowEmail boolean
@@ -32,11 +34,11 @@ const formSchema = z
   .object({
     email: z
       .string()
-      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
-      .regex(emailRegex.pattern, emailRegex.message),
-    password: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-    username: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-    phone: z.string().refine(phoneRegex.pattern, phoneRegex.message).optional(),
+      .regex(defaultRequiredRegex.pattern, 'Please fill out this field')
+      .regex(emailRegex.pattern, 'Please enter a valid email address'),
+    password: z.string().regex(defaultRequiredRegex.pattern, 'Please fill out this field'),
+    username: z.string().regex(defaultRequiredRegex.pattern, 'Please fill out this field'),
+    phone: z.string().refine(phoneRegex.pattern, 'Please fill in a valid phone number').optional(),
     passwordConfirm: z.string().min(8).max(20)
     // acceptTerms: z.boolean()
   })
@@ -131,154 +133,131 @@ export default function SignUp() {
   }
 
   return (
-    <div className='mb-8'>
-      <Form {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
-          <div className='flex flex-col gap-4'>
-            <FormField
-              control={form.control}
-              name='email'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='e.g. allure@gmail.com'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='username'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Họ và tên</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='
-                     Nhập đầy đủ họ và tên
-                    '
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className='w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800'>
+      <div className='px-8 pt-8 pb-4'>
+        <h2 className='text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white'>Create your account</h2>
+        <p className='text-center text-gray-500 dark:text-gray-400 mb-6'>Fill in the details below to get started</p>
 
-            <FormField
-              control={form.control}
-              name='phone'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <PhoneInputWithCountries {...field} />
-                  </FormControl>
-                  <FormDescription>This is the phone number that will be displayed on your profile</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Password</FormLabel>
-                  <FormControl>
-                    <PasswordInput
-                      className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='e.g. ********'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='passwordConfirm'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Confirm Password</FormLabel>
-                  <FormControl>
-                    <PasswordInput
-                      className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='e.g. ********'
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* <FormField
-              control={form.control}
-              name='acceptTerms'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-start space-x-3 space-y-0  p-4'>
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <div className='space-y-1 leading-none'>
-                    <FormLabel>
-                      {' '}
-                      I accept the{' '}
-                      <Link to='/terms' className='text-[#FFA07A] hover:underline'>
-                        Terms and Conditions
-                      </Link>
+        <Form {...form}>
+          <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='space-y-5' id={`form-${id}`}>
+            <div className='space-y-4'>
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required className='text-gray-700 dark:text-gray-300'>
+                      Email
                     </FormLabel>
+                    <FormControl>
+                      <Input
+                        className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
+                        placeholder='e.g. allure@gmail.com'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
 
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            /> */}
-          </div>
-          <Button
-            loading={form.formState.isSubmitting}
-            type='submit'
-            className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
-          >
-            Sign up
-          </Button>
-        </form>
-      </Form>
-      <div className='mt-6 text-center'>
-        <p className='mt-4 text-sm text-gray-600'>
+              <FormField
+                control={form.control}
+                name='username'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required className='text-gray-700 dark:text-gray-300'>
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
+                        placeholder='Enter your full name'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='phone'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700 dark:text-gray-300'>Phone Number</FormLabel>
+                    <FormControl>
+                      <PhoneInputWithCountries className='h-11 rounded-lg' {...field} />
+                    </FormControl>
+                    <FormDescription className='text-xs text-gray-500 dark:text-gray-400'>
+                      This is the phone number that will be displayed on your profile
+                    </FormDescription>
+                    <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required className='text-gray-700 dark:text-gray-300'>
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
+                        placeholder='••••••••'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='passwordConfirm'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required className='text-gray-700 dark:text-gray-300'>
+                      Confirm Password
+                    </FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
+                        placeholder='••••••••'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Button
+              loading={form.formState.isSubmitting}
+              type='submit'
+              className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
+            >
+              Sign up
+            </Button>
+          </form>
+        </Form>
+      </div>
+
+      <div className='px-8 py-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600'>
+        <p className='text-center text-gray-600 dark:text-gray-300'>
           Already have an account?{' '}
-          <Link to='/sign-in' className='text-[#FFA07A] hover:underline'>
-            Log in
+          <Link to='/sign-in' className='text-[#FFA07A] hover:underline font-medium'>
+            Sign in
           </Link>
         </p>
       </div>
-      {/* <p>
-        <Link to='/auth/signin/forgot_password' className='font-medium text-zinc-950 dark:text-white text-sm'>
-          Forgot your password?
-        </Link>
-      </p>
-      <p className='font-medium text-sm dark:text-white'>
-        <Link to='/auth/signin/password_signin' className='font-medium text-sm dark:text-white'>
-          Already have an account?
-        </Link>
-      </p> */}
-      {/* {allowEmail && (
-        <p className='font-medium text-sm dark:text-white'>
-          <Link to='/auth/signin/email_signin' className='font-medium text-sm dark:text-white'>
-            Sign in via magic link
-          </Link>
-        </p>
-      )} */}
     </div>
   )
 }

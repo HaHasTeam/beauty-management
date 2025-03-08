@@ -1,6 +1,6 @@
 import 'react-quill-new/dist/quill.snow.css'
 
-import { ImagePlus, Info, Upload } from 'lucide-react'
+import { BadgeInfo, ImagePlus, Upload } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -8,9 +8,11 @@ import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
 
 import docFile from '@/assets/images/docFile.png'
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import pdfFile from '@/assets/images/pdfFile.png'
 import FormCategorySelection from '@/components/form-category-selection'
 import FormLabel from '@/components/form-label'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -87,7 +89,7 @@ const BasicInformation = ({
         <AccordionItem value='description'>
           <AccordionTrigger className='pt-0 text-left font-medium no-underline hover:no-underline'>
             <div className='flex gap-2 items-center text-primary'>
-              <Info className='w-5 h-5' />
+              <BadgeInfo className='w-5 h-5' />
               <h2 className='font-bold text-xl'>{t('createProduct.basicInformation')}</h2>
             </div>
           </AccordionTrigger>
@@ -115,7 +117,8 @@ const BasicInformation = ({
                                   key={file?.name}
                                   className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
                                 >
-                                  <img
+                                  <ImageWithFallback
+                                    fallback={fallBackImage}
                                     src={URL?.createObjectURL(file)}
                                     alt={file?.name}
                                     className='object-contain w-full h-full rounded-lg'
@@ -248,7 +251,7 @@ const BasicInformation = ({
               </div>
               <FormField
                 control={form.control}
-                name='certificate'
+                name='certificates'
                 render={({ field }) => (
                   <FormItem className='w-full'>
                     <div className='flex w-full gap-2'>
@@ -270,9 +273,19 @@ const BasicInformation = ({
                                 <div className='w-full hover:border-primary h-16 rounded-lg border border-gray-300 p-4 bg-card'>
                                   <div className='h-full flex items-center justify-start gap-2'>
                                     {file.type === 'application/pdf' ? (
-                                      <img src={pdfFile} alt='pdf' className='w-10 h-10' />
+                                      <ImageWithFallback
+                                        fallback={fallBackImage}
+                                        src={pdfFile}
+                                        alt='pdf'
+                                        className='w-10 h-10'
+                                      />
                                     ) : file.type === 'application/msword' ? (
-                                      <img src={docFile} alt='doc' className='w-10 h-10' />
+                                      <ImageWithFallback
+                                        fallback={fallBackImage}
+                                        src={docFile}
+                                        alt='doc'
+                                        className='w-10 h-10'
+                                      />
                                     ) : null}
                                     <div className='text-start'>
                                       <span className='text-sm font-medium overflow-ellipsis line-clamp-2'>

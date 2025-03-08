@@ -1,12 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { type Row } from '@tanstack/react-table'
-import { XIcon } from 'lucide-react'
-import * as React from 'react'
-import { useId } from 'react'
+import type { Row } from '@tanstack/react-table'
+import { createElement, useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { GrStatusGood } from 'react-icons/gr'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
@@ -37,7 +34,31 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { getAllBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
 import { reasonSchema, reasonSchemaRequire } from '@/schemas'
-import { BrandStatusEnum, TBrand } from '@/types/brand'
+import { BrandStatusEnum, type TBrand } from '@/types/brand'
+
+import { getStatusInfo } from './helper'
+
+function getUpdateButtonText(status: BrandStatusEnum, isPlural: boolean) {
+  const brandText = isPlural ? 'Brands' : 'Brand'
+  switch (status) {
+    case BrandStatusEnum.ACTIVE:
+      return `Activate ${brandText}`
+    case BrandStatusEnum.INACTIVE:
+      return `Deactivate ${brandText}`
+    case BrandStatusEnum.PENDING_REVIEW:
+      return `Set ${brandText} to Pending Review`
+    case BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS:
+      return `Request Additional Documents`
+    case BrandStatusEnum.PRE_APPROVED_FOR_MEETING:
+      return `Pre-approve ${brandText} for Meeting`
+    case BrandStatusEnum.DENIED:
+      return `Deny ${brandText}`
+    case BrandStatusEnum.BANNED:
+      return `Ban ${brandText}`
+    default:
+      return `Update ${brandText} Status`
+  }
+}
 
 interface UpdateStatusBrandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   Brands: Row<TBrand>['original'][]
@@ -56,7 +77,13 @@ export function UpdateStatusBrandDialog({
   const handleServerError = useHandleServerError()
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const form = useForm<z.infer<typeof reasonSchemaRequire>>({
-    resolver: zodResolver(status == BrandStatusEnum.DENIED ? reasonSchemaRequire : reasonSchema),
+    resolver: zodResolver(
+      status === BrandStatusEnum.DENIED ||
+        status === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS ||
+        status === BrandStatusEnum.BANNED
+        ? reasonSchemaRequire
+        : reasonSchema
+    ),
     defaultValues: {
       reason: ''
     }
@@ -87,9 +114,14 @@ export function UpdateStatusBrandDialog({
   }
   async function onSubmit(values: z.infer<typeof reasonSchemaRequire>) {
     try {
+      const needsReason =
+        status === BrandStatusEnum.DENIED ||
+        status === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS ||
+        status === BrandStatusEnum.BANNED
+
       const formatData = {
         status: status,
-        reason: status !== BrandStatusEnum.DENIED ? status : values.reason,
+        reason: needsReason ? values.reason : undefined,
         brands: Brands
       }
 
@@ -106,8 +138,15 @@ export function UpdateStatusBrandDialog({
       <Dialog {...props}>
         {showTrigger ? (
           <DialogTrigger asChild>
-            <Button variant='destructive' size='sm' className='text-white'>
-              <XIcon className='size-4' aria-hidden='true' />
+            <Button
+              variant='outline'
+              size='sm'
+              className={`${getStatusInfo(status).textColor} ${getStatusInfo(status).bgColor} border-none hover:${getStatusInfo(status).bgColor} hover:opacity-80`}
+            >
+              {createElement(getStatusInfo(status).icon, {
+                className: 'size-4 mr-2',
+                'aria-hidden': 'true'
+              })}
               Update status {Brands.length} Selected {Brands.length > 1 ? 'Brands' : 'Brand'}
             </Button>
           </DialogTrigger>
@@ -122,20 +161,48 @@ export function UpdateStatusBrandDialog({
             >
               <DialogHeader className='my-2'>
                 <DialogTitle className='flex items-center gap-2'>
-                  <GrStatusGood className='size-6' aria-hidden='true' />
-                  Are you sure to update status to {status} {Brands.length >= 2 ? 'these Brands' : 'this Brand'}?
+                  {createElement(getStatusInfo(status).icon, {
+                    className: `size-6 ${getStatusInfo(status).iconColor}`,
+                    'aria-hidden': 'true'
+                  })}
+                  <span>
+                    Are you sure to update status to{' '}
+                    <span className={getStatusInfo(status).textColor}>{status.replace(/_/g, ' ').toLowerCase()}</span>{' '}
+                    {Brands.length >= 2 ? 'these Brands' : 'this Brand'}?
+                  </span>
                 </DialogTitle>
                 <DialogDescription>
-                  You are about to <b className='uppercase'>Update</b>{' '}
+                  You are about to update the status to{' '}
+                  <Badge
+                    variant='outline'
+                    className={`font-semibold ${getStatusInfo(status).textColor} ${getStatusInfo(status).bgColor}`}
+                  >
+                    {createElement(getStatusInfo(status).icon, {
+                      className: 'size-4 mr-2 inline',
+                      'aria-hidden': 'true'
+                    })}
+                    {status.replace(/_/g, ' ')}
+                  </Badge>{' '}
+                  for{' '}
                   {Brands.map((Brand, index) => (
-                    <div className='' key={index}>
-                      <Badge className='mr-1'>{Brand.name}</Badge>
-                    </div>
+                    <Badge key={index} variant='secondary' className='mr-1'>
+                      {Brand.name}
+                    </Badge>
                   ))}
-                  . After update , the Brand will be active on platform. Please check the Brand information before
-                  update.
+                  {status === BrandStatusEnum.ACTIVE && '. After update, the Brand will be active on platform.'}
+                  {status === BrandStatusEnum.INACTIVE && '. After update, the Brand will be inactive on platform.'}
+                  {status === BrandStatusEnum.BANNED && '. After update, the Brand will be banned from the platform.'}
+                  {status === BrandStatusEnum.PENDING_REVIEW && '. The Brand will be placed in the review queue.'}
+                  {status === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS &&
+                    '. The Brand will be notified to provide additional documents.'}
+                  {status === BrandStatusEnum.PRE_APPROVED_FOR_MEETING &&
+                    '. The Brand has been pre-approved pending a confirmation meeting.'}
+                  {status === BrandStatusEnum.DENIED && ". The Brand's application will be rejected."}
+                  {' Please review the information before proceeding.'}
                 </DialogDescription>
-                {status === BrandStatusEnum.DENIED && (
+                {(status === BrandStatusEnum.DENIED ||
+                  status === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS ||
+                  status === BrandStatusEnum.BANNED) && (
                   <FormField
                     control={form.control}
                     name='reason'
@@ -143,7 +210,12 @@ export function UpdateStatusBrandDialog({
                       <FormItem className='my-2'>
                         <FormLabel required>Reason</FormLabel>
                         <FormControl>
-                          <Textarea rows={3} placeholder='reason' className='resize-none' {...field} />
+                          <Textarea
+                            rows={3}
+                            placeholder={`Please provide a reason for ${status.toLowerCase().replace(/_/g, ' ')}`}
+                            className='resize-none'
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -162,8 +234,13 @@ export function UpdateStatusBrandDialog({
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button type='submit' aria-label='Update Selected rows' variant='default' className='text-white'>
-                  Update To {status}
+                <Button
+                  type='submit'
+                  aria-label='Update Selected rows'
+                  variant='default'
+                  className={`${getStatusInfo(status).bgColor} ${getStatusInfo(status).textColor} hover:${getStatusInfo(status).bgColor} hover:opacity-80`}
+                >
+                  {getUpdateButtonText(status, Brands.length > 1)}
                 </Button>
               </DialogFooter>
             </form>
@@ -177,8 +254,15 @@ export function UpdateStatusBrandDialog({
     <Drawer {...props}>
       {showTrigger ? (
         <DrawerTrigger asChild>
-          <Button variant='default' size='sm' className='text-white'>
-            <XIcon className='size-4' aria-hidden='true' />
+          <Button
+            variant='outline'
+            size='sm'
+            className={`${getStatusInfo(status).textColor} ${getStatusInfo(status).bgColor} border-none hover:${getStatusInfo(status).bgColor} hover:opacity-80`}
+          >
+            {createElement(getStatusInfo(status).icon, {
+              className: 'size-4 mr-2',
+              'aria-hidden': 'true'
+            })}
             Update {Brands.length} Selected {Brands.length > 1 ? 'Brands' : 'Brand'}
           </Button>
         </DrawerTrigger>
@@ -192,17 +276,48 @@ export function UpdateStatusBrandDialog({
             id={`form-${id}`}
           >
             <DrawerHeader className='my-2'>
-              <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+              <DrawerTitle className='flex items-center gap-2'>
+                {createElement(getStatusInfo(status).icon, {
+                  className: `size-6 ${getStatusInfo(status).iconColor}`,
+                  'aria-hidden': 'true'
+                })}
+                <span>
+                  Update status to{' '}
+                  <span className={getStatusInfo(status).textColor}>{status.replace(/_/g, ' ').toLowerCase()}</span>
+                </span>
+              </DrawerTitle>
               <DrawerDescription>
-                You are about to <b className='uppercase'>update</b>{' '}
+                You are about to update the status to{' '}
+                <Badge
+                  variant='outline'
+                  className={`font-semibold ${getStatusInfo(status).textColor} ${getStatusInfo(status).bgColor}`}
+                >
+                  {createElement(getStatusInfo(status).icon, {
+                    className: 'size-4 mr-2 inline',
+                    'aria-hidden': 'true'
+                  })}
+                  {status.replace(/_/g, ' ')}
+                </Badge>{' '}
+                for{' '}
                 {Brands.map((Brand, index) => (
-                  <Badge className='mr-1' key={index}>
+                  <Badge key={index} variant='secondary' className='mr-1'>
                     {Brand.name}
                   </Badge>
                 ))}
-                . After update , the Brand will be active on platform. Please check the Brand information before update.
+                {status === BrandStatusEnum.ACTIVE && '. After update, the Brand will be active on platform.'}
+                {status === BrandStatusEnum.INACTIVE && '. After update, the Brand will be inactive on platform.'}
+                {status === BrandStatusEnum.BANNED && '. After update, the Brand will be banned from the platform.'}
+                {status === BrandStatusEnum.PENDING_REVIEW && '. The Brand will be placed in the review queue.'}
+                {status === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS &&
+                  '. The Brand will be notified to provide additional documents.'}
+                {status === BrandStatusEnum.PRE_APPROVED_FOR_MEETING &&
+                  '. The Brand has been pre-approved pending a confirmation meeting.'}
+                {status === BrandStatusEnum.DENIED && ". The Brand's application will be rejected."}
+                {' Please review the information before proceeding.'}
               </DrawerDescription>
-              {status === BrandStatusEnum.DENIED && (
+              {(status === BrandStatusEnum.DENIED ||
+                status === BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS ||
+                status === BrandStatusEnum.BANNED) && (
                 <FormField
                   control={form.control}
                   name='reason'
@@ -210,7 +325,12 @@ export function UpdateStatusBrandDialog({
                     <FormItem className='my-2'>
                       <FormLabel required>Reason</FormLabel>
                       <FormControl>
-                        <Textarea rows={3} placeholder='reason' className='resize-none' {...field} />
+                        <Textarea
+                          rows={3}
+                          placeholder={`Please provide a reason for ${status.toLowerCase().replace(/_/g, ' ')}`}
+                          className='resize-none'
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -223,8 +343,13 @@ export function UpdateStatusBrandDialog({
               <DrawerClose asChild>
                 <Button variant='outline'>Cancel</Button>
               </DrawerClose>
-              <Button aria-label='Update Selected rows' className='text-white' variant='default' type='submit'>
-                Update Brand{Brands.length > 1 ? 's' : ''}
+              <Button
+                aria-label='Update Selected rows'
+                className={`${getStatusInfo(status).bgColor} ${getStatusInfo(status).textColor} hover:${getStatusInfo(status).bgColor} hover:opacity-80`}
+                variant='default'
+                type='submit'
+              >
+                {getUpdateButtonText(status, Brands.length > 1)}
               </Button>
             </DrawerFooter>
           </form>

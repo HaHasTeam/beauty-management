@@ -6,7 +6,7 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
-import { ProductStatusEnum, TProduct } from '@/types/product'
+import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { BanProductsDialog } from './BanProductsDialog'
@@ -17,13 +17,16 @@ import { ProductTableToolbarActions } from './ProductsTableToolbarActions'
 import { ViewDetailsProductSheet } from './ViewDetailsProductSheet'
 
 interface ProductTableProps {
-  data: TProduct[]
+  data: IResponseProduct[]
   pageCount: number
-  queryStates?: [DataTableQueryState<TProduct>, React.Dispatch<React.SetStateAction<DataTableQueryState<TProduct>>>]
+  queryStates?: [
+    DataTableQueryState<IResponseProduct>,
+    React.Dispatch<React.SetStateAction<DataTableQueryState<IResponseProduct>>>
+  ]
 }
 
 export function ProductTable({ data, pageCount, queryStates }: ProductTableProps) {
-  const [rowAction, setRowAction] = React.useState<DataTableRowAction<TProduct> | null>(null)
+  const [rowAction, setRowAction] = React.useState<DataTableRowAction<IResponseProduct> | null>(null)
   const columns = React.useMemo(() => getColumns({ setRowAction }), [])
 
   /**
@@ -37,7 +40,12 @@ export function ProductTable({ data, pageCount, queryStates }: ProductTableProps
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<TProduct>[] = [
+  const filterFields: DataTableFilterField<IResponseProduct>[] = [
+    {
+      id: 'name',
+      label: 'Name',
+      placeholder: 'Search product by name'
+    },
     {
       id: 'status',
       label: 'Status',

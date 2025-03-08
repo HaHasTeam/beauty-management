@@ -1,20 +1,17 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Row } from '@tanstack/react-table'
 import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
-import { getAllBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
 import { BrandStatusEnum, TBrand } from '@/types/brand'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
-import { BanBrandsDialog } from './BanBrandsDialog'
+// import { BanBrandsDialog } from './BanBrandsDialog'
 import { DataTableRowAction, getColumns } from './BrandsTableColumns'
 import { BrandsTableFloatingBar } from './BrandsTableFloatingBar'
 import { BrandsTableToolbarActions } from './BrandsTableToolbarActions'
-import { getStatusIcon } from './helper'
+import { getStatusInfo } from './helper'
 import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
 import { ViewDetailsBrandsSheet } from './ViewDetailsBrandsSheet'
 
@@ -25,8 +22,6 @@ interface BrandTableProps {
 }
 
 export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
-  const queryClient = useQueryClient()
-
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TBrand> | null>(null)
   const columns = React.useMemo(
     () =>
@@ -56,7 +51,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         return {
           label: toSentenceCase(value),
           value: value,
-          icon: getStatusIcon(value).icon
+          icon: getStatusInfo(value).icon
         }
       })
     }
@@ -87,26 +82,35 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
     shallow: false,
     clearOnDefault: true
   })
-  const { mutateAsync: updateStatusBrandMutation } = useMutation({
-    mutationKey: [updateStatusBrandByIdApi.mutationKey],
-    mutationFn: updateStatusBrandByIdApi.fn,
-    onSettled: async () => {
-      return await queryClient.invalidateQueries({ queryKey: [getAllBrandsApi.queryKey] })
-    }
-  })
-  const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) =>
-      updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED, reason: 'ban' })
-    )
+  // const { mutateAsync: updateStatusBrandMutation } = useMutation({
+  //   mutationKey: [updateStatusBrandByIdApi.mutationKey],
+  //   mutationFn: updateStatusBrandByIdApi.fn,
+  //   onSettled: async () => {
+  //     return await queryClient.invalidateQueries({ queryKey: [getAllBrandsApi.queryKey] })
+  //   }
+  // })
+  // const deleteBrand = async (brand: Row<TBrand>['original'][]) => {
+  //   // Map over the brand array and call the mutation for each brand
+  //   const updatePromises = brand.map((item) =>
+  //     updateStatusBrandMutation({ brandId: item.id, status: BrandStatusEnum.BANNED, reason: 'ban' })
+  //   )
 
-    // Wait for all updates to complete
-    await Promise.all(updatePromises)
-    // await queryClient.invalidateQueries({
-    //   queryKey: ['getAllBrands', 'updateStatusBrandById']
-    //   // exact: true
-    // })
-  }
+  //   // Wait for all updates to complete
+  //   await Promise.all(updatePromises)
+  //   // await queryClient.invalidateQueries({
+  //   //   queryKey: ['getAllBrands', 'updateStatusBrandById']
+  //   //   // exact: true
+  //   // })
+  // }
+  const statusDialogs = [
+    { type: 'ban', status: BrandStatusEnum.BANNED },
+    { type: 'update-status-pre-approved-for-meeting', status: BrandStatusEnum.PRE_APPROVED_FOR_MEETING },
+    { type: 'update-status-needs-additional-documents', status: BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS },
+    { type: 'update-status-active', status: BrandStatusEnum.ACTIVE },
+    { type: 'update-status-inactive', status: BrandStatusEnum.INACTIVE },
+    { type: 'update-status-pending-review', status: BrandStatusEnum.PENDING_REVIEW },
+    { type: 'deny', status: BrandStatusEnum.DENIED }
+  ]
 
   return (
     <>
@@ -115,7 +119,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
           <BrandsTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-      <BanBrandsDialog
+      {/* <BanBrandsDialog
         open={rowAction?.type === 'ban'}
         onOpenChange={() => setRowAction(null)}
         Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
@@ -124,32 +128,20 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
           deleteBrand(brand)
           rowAction?.row.toggleSelected(false)
         }}
-      />
-      <UpdateStatusBrandDialog
-        status={BrandStatusEnum.ACTIVE}
-        open={rowAction?.type === 'update-status-active'}
-        onOpenChange={() => setRowAction(null)}
-        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-      />
+      /> */}
+      {statusDialogs.map(({ type, status }) => (
+        <UpdateStatusBrandDialog
+          key={type}
+          status={status}
+          open={rowAction?.type === type}
+          onOpenChange={() => setRowAction(null)}
+          Brands={rowAction?.row.original ? [rowAction.row.original] : []}
+          showTrigger={false}
+        />
+      ))}
 
-      <UpdateStatusBrandDialog
-        status={BrandStatusEnum.INACTIVE}
-        open={rowAction?.type === 'update-status-inactive'}
-        onOpenChange={() => setRowAction(null)}
-        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-      />
-
-      <UpdateStatusBrandDialog
-        status={BrandStatusEnum.DENIED}
-        open={rowAction?.type === 'deny'}
-        onOpenChange={() => setRowAction(null)}
-        Brands={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-      />
       <ViewDetailsBrandsSheet
-        TBrand={rowAction?.row.original}
+        brandId={rowAction?.row.original.id}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
       />

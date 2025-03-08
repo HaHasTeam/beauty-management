@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next'
 import SystemServiceForm from '@/components/system-service/SystemServiceForm'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
+import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-criteria'
 import { uploadFilesApi } from '@/network/apis/file'
-import { getAllResultSheetApi } from '@/network/apis/result-sheet'
 import { createSystemServiceApi, getAllSystemServiceApi } from '@/network/apis/system-service'
 import { getSystemServiceSchema, ISystemServiceFormData } from '@/schemas/system-service.schema'
 import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
@@ -28,9 +28,9 @@ const CreateSystemService = () => {
     images: [],
     category: '',
     type: ServiceTypeEnum.STANDARD,
-    resultSheetData: {
+    consultationCriteriaData: {
       title: '',
-      resultSheetSections: [
+      consultationCriteriaSections: [
         {
           section: '',
           orderIndex: 1,
@@ -61,7 +61,7 @@ const CreateSystemService = () => {
           queryKey: [getAllSystemServiceApi]
         }),
         queryClient.invalidateQueries({
-          queryKey: [getAllResultSheetApi]
+          queryKey: [getAllConsultationCriteriaApi]
         })
       ])
     }

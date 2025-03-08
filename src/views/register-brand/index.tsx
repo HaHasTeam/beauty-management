@@ -7,12 +7,14 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import MockImage from '@/assets/SidebarBadge.png'
 import BranchCreation from '@/components/branch/BranchCreation'
 import BranchDetails from '@/components/branch/BranchDetails'
 import Confirmation from '@/components/branch/Confirmation'
 // import DocumentDetails from '@/components/branch/DocumentDetails'
 import UplImagesUploader from '@/components/branch/UplImagesUploader'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import Stepper from '@/components/steppers'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -23,7 +25,6 @@ import { useToast } from '@/hooks/useToast'
 import { requestCreateBrandApi } from '@/network/apis/brand'
 import { uploadFilesApi } from '@/network/apis/file'
 import { brandCreateSchema } from '@/schemas'
-import { StatusEnum } from '@/types/enum'
 
 function RegisterBrand() {
   const { successToast } = useToast()
@@ -50,7 +51,30 @@ function RegisterBrand() {
     }
   })
   const handleServerError = useHandleServerError()
+  const { mutateAsync: uploadFilesFn, isPending: isUploading } = useMutation({
+    mutationKey: [uploadFilesApi.mutationKey],
+    mutationFn: uploadFilesApi.fn
+  })
+  const { mutateAsync: requestCreateBrandFn, isPending } = useMutation({
+    mutationKey: [requestCreateBrandApi.mutationKey],
+    mutationFn: requestCreateBrandApi.fn,
+    onSuccess: () => {
+      // console.log('data received', data)
+      form.reset()
+      navigate(routesConfig[Routes.DASHBOARD_HOME].getPath())
+      successToast({ message: 'Your request to create a brand has been successfully completed.' })
+    }
+  })
+  const convertFileToUrl = async (files: File[]) => {
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
 
+    const uploadedFilesResponse = await uploadFilesFn(formData)
+
+    return uploadedFilesResponse.data
+  }
   const steppers: Steppers[] = [
     {
       icon: <BadgePlus />,
@@ -91,83 +115,44 @@ function RegisterBrand() {
 
       default:
         return (
-          <Confirmation stepIndex={activeStep} goNextFn={goNext} goBackfn={goBack} steppers={steppers} form={form} />
+          <Confirmation
+            stepIndex={activeStep}
+            goNextFn={goNext}
+            goBackfn={goBack}
+            steppers={steppers}
+            form={form}
+            isSubmitting={isPending || isUploading}
+          />
         )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep])
-  const { mutateAsync: uploadFilesFn } = useMutation({
-    mutationKey: [uploadFilesApi.mutationKey],
-    mutationFn: uploadFilesApi.fn
-  })
-  const { mutateAsync: requestCreateBrandFn } = useMutation({
-    mutationKey: [requestCreateBrandApi.mutationKey],
-    mutationFn: requestCreateBrandApi.fn,
-    onSuccess: () => {
-      // console.log('data received', data)
-      form.reset()
-      navigate(routesConfig[Routes.DASHBOARD_HOME].getPath())
-      successToast({ message: 'Your request to create a brand has been successfully completed.' })
-    }
-  })
-  const convertFileToUrl = async (files: File[]) => {
-    const formData = new FormData()
-    files.forEach((file) => {
-      formData.append('files', file)
-    })
-
-    const uploadedFilesResponse = await uploadFilesFn(formData)
-
-    return uploadedFilesResponse.data
-  }
 
   async function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
-      if (values.logo && values.logo?.length > 0) {
-        const imgUrls = await convertFileToUrl([...values.logo, ...values.document])
-        if (imgUrls && imgUrls.length > 0) {
-          const formatData = {
-            name: values.name,
-            document: imgUrls[1],
-            address: values.address,
-            logo: imgUrls[0],
-            email: values.email,
-            phone: values.phone,
-            description: values.description,
-            province: values.province,
-            district: values.district,
-            ward: values.ward,
-            businessTaxCode: values.businessTaxCode,
-            businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
-            businessRegistrationAddress: values.businessRegistrationAddress,
-            status: StatusEnum.PENDING
-          }
-          await requestCreateBrandFn(formatData)
-        }
-      } else {
-        const imgUrls = await convertFileToUrl([...values.document])
+      const filesToConvert =
+        values.logo && values.logo?.length > 0 ? [...values.logo, ...values.document] : values.document
+      const imgUrls = await convertFileToUrl(filesToConvert)
 
-        if (imgUrls && imgUrls.length > 0) {
-          const formatData = {
-            name: values.name,
-            document: imgUrls[0],
-            address: values.address,
-            email: values.email,
-            logo: '',
-            phone: values.phone,
-            description: values.description,
-            status: StatusEnum.PENDING,
-            province: values.province,
-            district: values.district,
-            ward: values.ward,
-            businessTaxCode: values.businessTaxCode,
-            businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
-            businessRegistrationAddress: values.businessRegistrationAddress
-          }
-          await requestCreateBrandFn(formatData)
+      if (imgUrls && imgUrls.length > 0) {
+        const formatData = {
+          name: values.name,
+          address: values.address,
+          email: values.email,
+          phone: values.phone,
+          description: values.description,
+          province: values.province,
+          district: values.district,
+          ward: values.ward,
+          businessTaxCode: values.businessTaxCode,
+          businessRegistrationCode: values.businessRegistrationCode,
+          establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+          businessRegistrationAddress: values.businessRegistrationAddress,
+          logo: values.logo && values.logo?.length > 0 ? imgUrls[0] : '',
+          documents: values.logo && values.logo?.length > 0 ? imgUrls.slice(1) : imgUrls
         }
+
+        await requestCreateBrandFn(formatData)
       }
     } catch (error) {
       handleServerError({
@@ -181,7 +166,14 @@ function RegisterBrand() {
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-primary text-white px-4 py-3 shadow-md'>
         <div className='flex items-center gap-2'>
-          <img src={MockImage} alt='Logo' width={32} height={32} className='h-8 w-8 object-contain' />
+          <ImageWithFallback
+            fallback={fallBackImage}
+            src={MockImage}
+            alt='Logo'
+            width={32}
+            height={32}
+            className='h-8 w-8 object-contain'
+          />
           <span className='text-lg'>{t('header.registerBrand')}</span>
         </div>
       </header>

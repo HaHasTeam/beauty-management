@@ -2,7 +2,9 @@ import { ArrowUpRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import MockImage from '@/assets/SidebarBadge.png'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 
@@ -13,7 +15,14 @@ function Home() {
     <div className='min-h-screen bg-primary/10'>
       <header className='border-b bg-primary/90 text-white px-4 py-3 shadow-md'>
         <div className='flex items-center gap-2'>
-          <img src={MockImage} alt='Shopee Logo' width={32} height={32} className='h-8 w-8 object-contain' />
+          <ImageWithFallback
+            fallback={fallBackImage}
+            src={MockImage}
+            alt='Shopee Logo'
+            width={32}
+            height={32}
+            className='h-8 w-8 object-contain'
+          />
           <span className='text-lg'>{t('header.registerBrand')}</span>
         </div>
       </header>
@@ -52,7 +61,8 @@ function Home() {
                 </Button>
               </div>
             </div>
-            <img
+            <ImageWithFallback
+              fallback={fallBackImage}
               src='https://www.shadcnblocks.com/images/block/placeholder-1.svg'
               alt='placeholder hero'
               className='max-h-96 w-full rounded-md object-cover'

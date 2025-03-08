@@ -3,6 +3,7 @@ import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import FormLabel from '@/components/form-label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,6 +13,7 @@ import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
 import UploadProductImages from '@/views/dashboard/create-product/UploadProductImages'
 
 import FormCategorySelection from '../form-category-selection'
+import ImageWithFallback from '../image/ImageWithFallback'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Switch } from '../ui/switch'
@@ -53,7 +55,8 @@ const GeneralSystemService = ({ form, categories, resetSignal, defineFormSignal 
                           key={file?.name}
                           className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
                         >
-                          <img
+                          <ImageWithFallback
+                            fallback={fallBackImage}
                             src={URL?.createObjectURL(file)}
                             alt={file?.name}
                             className='object-contain w-full h-full rounded-lg'

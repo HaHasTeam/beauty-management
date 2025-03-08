@@ -1,6 +1,8 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
 import { Image, SettingsIcon, Trash } from 'lucide-react'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -53,7 +55,7 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
             <div className='w-8 h-8 rounded bg-muted flex items-center justify-center'>
               <Image className='w-4 h-4 text-muted-foreground' />
 
-              <img src={productImage} alt={displayName} />
+              <ImageWithFallback fallback={fallBackImage} src={productImage} alt={displayName} />
             </div>
             <span>{displayName}</span>
           </div>

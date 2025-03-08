@@ -1,5 +1,7 @@
 import { IClassification } from './classification'
 import { OrderEnum, PaymentMethod, ShippingStatusEnum } from './enum'
+import { IResponseFeedback } from './feedback'
+import { TServerFile } from './file'
 import { TUser } from './user'
 import { TVoucher } from './voucher'
 
@@ -21,6 +23,7 @@ export interface IOrderDetail {
   shopVoucherDiscount: number
   productClassification: IClassification
   productClassificationPreOrder: null | IClassification
+  feedback: IResponseFeedback
 }
 
 // Order item interface
@@ -42,6 +45,7 @@ export interface IOrderItem {
   shopVoucherDiscount: number
   orderDetails: IOrderDetail[]
   voucher: TVoucher | null
+  account: TUser
 }
 
 // Main order interface
@@ -109,4 +113,15 @@ export interface ICancelRequestOrder {
   reason: string
   status: string
   order: IOrder
+}
+export interface IReturnRequestOrder extends ICancelRequestOrder {
+  mediaFiles: TServerFile[]
+}
+export interface IRejectReturnRequestOrder extends ICancelRequestOrder {
+  mediaFiles: TServerFile[]
+}
+
+export interface ICancelAndReturnRequest {
+  cancelOrderRequest: ICancelRequestOrder
+  refundRequest: IReturnRequestOrder
 }

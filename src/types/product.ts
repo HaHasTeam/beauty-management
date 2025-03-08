@@ -1,6 +1,7 @@
 import { IBrand } from './brand'
 import { ICategory } from './category'
 import { IClassification } from './classification'
+import { TServerFile } from './file'
 import { IPreOrder } from './pre-order'
 import { IProductDiscount } from './product-discount'
 import { IImage } from './productImage'
@@ -66,9 +67,9 @@ export type IServerProductClassification = {
   status?: string
   type?: string
   sku?: string
-  color?: string
-  size?: string
-  other?: string
+  color?: string | null
+  size?: string | null
+  other?: string | null
 }
 
 export type ICreateProduct = {
@@ -84,7 +85,7 @@ export type ICreateProduct = {
   price?: number
   quantity?: number
   sku?: string
-  certificate: File[]
+  certificates: File[]
 }
 export type IServerCreateProduct = {
   id?: string
@@ -99,7 +100,7 @@ export type IServerCreateProduct = {
   price?: number
   quantity?: number
   sku?: string
-  certificate?: IImage[]
+  certificates?: IImage[]
 }
 export type IResponseProduct = {
   id?: string
@@ -117,7 +118,7 @@ export type IResponseProduct = {
   menu?: string
   updatedAt?: string
   createdAt: string
-  certificates: string[]
+  certificates: TServerFile[]
 }
 
 export type IProductTable = {
@@ -130,7 +131,7 @@ export type IProductTable = {
   updatedAt?: string
   description: string
   productClassifications: IServerProductClassification[]
-  certificates: string[]
+  certificates: TServerFile[]
 
   detail?: string
   brand?: IBrand

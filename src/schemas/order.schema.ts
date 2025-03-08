@@ -29,10 +29,29 @@ export const getCancelOrderSchema = () => {
 }
 export const getUpdateOrderStatusSchema = () => {
   return z.object({
-    status: z.string().min(1, i18next.t('validation.statusRequired'))
+    status: z.string().min(1, i18next.t('validation.statusRequired')),
+    mediaFiles: z.array(z.instanceof(File)).optional()
+  })
+}
+export const getUpdateOrderStatusEvidenceSchema = () => {
+  return z.object({
+    status: z.string().min(1, i18next.t('validation.statusRequired')),
+    videos: z.array(z.instanceof(File)).min(1, i18next.t('validation.required')),
+    images: z.array(z.instanceof(File)).min(1, i18next.t('validation.required'))
+  })
+}
+
+export const getRejectReturnOrderSchema = () => {
+  return z.object({
+    reason: z.string().min(1, i18next.t('validation.reasonRequired')),
+    otherReason: z.string(),
+    mediaFiles: z.array(z.instanceof(File)).optional(),
+    videos: z.array(z.instanceof(File)).min(1, i18next.t('validation.videosRequired')),
+    images: z.array(z.instanceof(File)).min(1, i18next.t('validation.imagesRequired'))
   })
 }
 
 export const CreateOrderSchema = getCreateOrderSchema()
 export const UpdateOrderStatusSchema = getUpdateOrderStatusSchema()
 export const CancelOrderSchema = getCancelOrderSchema()
+export const ReturnOrderSchema = getRejectReturnOrderSchema()

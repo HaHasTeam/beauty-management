@@ -1,8 +1,11 @@
-import { Check, Package } from 'lucide-react'
+import { Check, Eye, Package } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ViewMediaDialog from '@/components/dialog/ViewMediaDialog'
 import { StatusTrackingIcon, StatusTrackingText } from '@/components/status-tracking-order/StatusTrackingOrder'
-import { CancelOrderRequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { RequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
 import { UserRoleEnum } from '@/types/role'
 import { IStatusTracking } from '@/types/status-tracking'
 
@@ -11,6 +14,7 @@ interface OrderStatusTrackingDetailProps {
 }
 const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDetailProps) => {
   const { t } = useTranslation()
+  const [openMediaStep, setOpenMediaStep] = useState<number | null>(null)
 
   const defaultTimeline = [
     {
@@ -19,13 +23,15 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
       text: t('order.created'),
       icon: <Package className='w-5 h-5' />,
       reason: '',
-      updatedBy: ''
+      updatedBy: '',
+      mediaFiles: []
     }
   ]
 
   const databaseTimeline = statusTrackingData.map((tracking) => ({
     status: tracking.status,
     createdAt: tracking.createdAt,
+    mediaFiles: tracking.mediaFiles,
     text: StatusTrackingText(tracking.status),
     icon: StatusTrackingIcon(tracking.status),
     reason: tracking.reason,
@@ -61,20 +67,35 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
               </div>
               <div className='flex flex-col'>
                 <div
-                  className={`text-sm font-medium ${currentIndex === index ? 'text-emerald-500' : 'text-muted-foreground'}`}
+                  className={`flex gap-1 items-center text-sm font-medium ${currentIndex === index ? 'text-emerald-500' : 'text-muted-foreground'}`}
                 >
-                  {step.status === CancelOrderRequestStatusEnum.APPROVED
+                  {step.status === RequestStatusEnum.APPROVED
                     ? t('order.approvedCancelRequest')
-                    : step.status === CancelOrderRequestStatusEnum.REJECTED
+                    : step.status === RequestStatusEnum.REJECTED
                       ? t('order.rejectedCancelRequest')
                       : StatusTrackingText(step.status)}
+                  {step.mediaFiles && step.mediaFiles.length > 0 && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Eye
+                            size={16}
+                            className='text-gray-500 hover:text-gray-800 cursor-pointer hover:bg-gray-100 transition-colors'
+                            onClick={() => setOpenMediaStep(index)}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t('media.viewMediaFiles')}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </div>
                 {(step.status === ShippingStatusEnum.CANCELLED ||
-                  step.status === CancelOrderRequestStatusEnum.APPROVED ||
+                  step.status === RequestStatusEnum.APPROVED ||
                   step.status === ShippingStatusEnum.REFUNDED) && (
                   <div>
-                    {(step.status === ShippingStatusEnum.CANCELLED ||
-                      step.status === CancelOrderRequestStatusEnum.APPROVED) && (
+                    {(step.status === ShippingStatusEnum.CANCELLED || step.status === RequestStatusEnum.APPROVED) && (
                       <div className='text-sm text-muted-foreground mt-1'>
                         <span className='font-medium'>{t('orderDetail.cancelBy')}: </span>
                         {step.updatedBy}
@@ -88,6 +109,13 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
                 )}
               </div>
             </div>
+            {openMediaStep !== null && timeline[openMediaStep]?.mediaFiles && (
+              <ViewMediaDialog
+                mediaFiles={timeline[openMediaStep].mediaFiles}
+                open={openMediaStep !== null}
+                onOpenChange={() => setOpenMediaStep(null)}
+              />
+            )}
           </div>
         ))}
       </div>

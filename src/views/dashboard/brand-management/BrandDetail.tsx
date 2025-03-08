@@ -6,11 +6,13 @@ import { LuSaveAll } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
 
+import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import Button from '@/components/button'
 import CardSection from '@/components/card-section'
 import UploadFilePreview from '@/components/file-input/UploadFilePreview'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -22,7 +24,7 @@ import { useToast } from '@/hooks/useToast'
 import { getAllBrandsApi, getBrandByIdApi, requestCreateBrandApi, updateBrandByIdApi } from '@/network/apis/brand'
 import { uploadFilesApi } from '@/network/apis/file'
 import { brandCreateSchema } from '@/schemas'
-import { IBranch } from '@/types/Branch'
+import { IBranch2 } from '@/types/Branch'
 import { StatusEnum } from '@/types/brand'
 
 const BrandDetail = ({
@@ -30,7 +32,7 @@ const BrandDetail = ({
   brandData
 }: {
   form: UseFormReturn<z.infer<typeof brandCreateSchema>>
-  brandData?: IBranch
+  brandData?: IBranch2
 }) => {
   const queryClient = useQueryClient()
   const id = useId()
@@ -74,68 +76,37 @@ const BrandDetail = ({
 
     return uploadedFilesResponse.data
   }
-
   async function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
-      if (values.logo && values.logo?.length > 0) {
-        const imgUrls = await convertFileToUrl([...values.logo, ...values.document])
+      const filesToConvert = values.logo ? [...values.logo, ...values.document] : values.document
+      const imgUrls = await convertFileToUrl(filesToConvert)
 
-        if (imgUrls && imgUrls.length > 0) {
-          const formatData = {
-            name: values.name,
-            document: imgUrls[1],
-            address: values.address,
-            logo: imgUrls[0],
-            email: values.email,
-            phone: values.phone,
-            description: values.description,
-            province: values.province,
-            district: values.district,
-            ward: values.ward,
-            businessTaxCode: values.businessTaxCode,
-            businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
-            businessRegistrationAddress: values.businessRegistrationAddress,
-            status: StatusEnum.PENDING
-          }
-
-          if (brandData && brandData?.id) {
-            await updateBrandFn({
-              brandId: brandData?.id,
-              ...formatData
-            })
-          } else {
-            await requestCreateBrandFn(formatData)
-          }
+      if (imgUrls && imgUrls.length > 0) {
+        const formatData = {
+          name: values.name,
+          address: values.address,
+          email: values.email,
+          phone: values.phone,
+          description: values.description,
+          province: values.province,
+          district: values.district,
+          ward: values.ward,
+          businessTaxCode: values.businessTaxCode,
+          businessRegistrationCode: values.businessRegistrationCode,
+          establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
+          businessRegistrationAddress: values.businessRegistrationAddress,
+          status: StatusEnum.PENDING,
+          logo: values.logo && values.logo?.length > 0 ? imgUrls[0] : '',
+          documents: values.logo && values.logo?.length > 0 ? imgUrls.slice(1) : imgUrls
         }
-      } else {
-        const imgUrls = await convertFileToUrl([...values.document])
-        if (imgUrls && imgUrls.length > 0) {
-          const formatData = {
-            name: values.name,
-            document: imgUrls[0],
-            address: values.address,
-            email: values.email,
-            logo: '',
-            phone: values.phone,
-            description: values.description,
-            status: StatusEnum.PENDING,
-            province: values.province,
-            district: values.district,
-            ward: values.ward,
-            businessTaxCode: values.businessTaxCode,
-            businessRegistrationCode: values.businessRegistrationCode,
-            establishmentDate: values.establishmentDate ? values.establishmentDate : '',
-            businessRegistrationAddress: values.businessRegistrationAddress
-          }
-          if (brandData && brandData?.id) {
-            await updateBrandFn({
-              brandId: brandData?.id,
-              ...formatData
-            })
-          } else {
-            await requestCreateBrandFn(formatData)
-          }
+
+        if (brandData && brandData.id) {
+          await updateBrandFn({
+            brandId: brandData.id,
+            ...formatData
+          })
+        } else {
+          await requestCreateBrandFn(formatData)
         }
       }
     } catch (error) {
@@ -228,7 +199,8 @@ const BrandDetail = ({
                             return (
                               <div key={file.name} className=' rounded-lg max-h-32 '>
                                 {file.type.includes('image') ? (
-                                  <img
+                                  <ImageWithFallback
+                                    fallback={fallBackImage}
                                     src={URL.createObjectURL(file)}
                                     alt={file.name}
                                     className='object-cover rounded-lg max-h-32 '

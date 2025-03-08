@@ -30,6 +30,21 @@ export type TUser = TMetaData & {
   isEmailVerify: boolean
   brands?: IBrand[]
 }
+export type TUserFeedback = TMetaData & {
+  firstName?: string
+  lastName?: string
+  username: string
+  email: string
+  password: string
+  role: TRoleResponse
+  gender?: UserGenderEnum | string
+  phone?: string
+  dob?: string
+  avatar?: string
+  status: UserStatusEnum | string
+  isEmailVerify: boolean
+  brands?: IBrand[]
+}
 
 export type TUserUpdateStatusTracking = TMetaData & {
   firstName?: string

@@ -3,10 +3,10 @@ import * as React from 'react'
 import CardSection from '@/components/card-section'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
-import { TProduct } from '@/types/product'
+import { IResponseProduct } from '@/types/product'
 
 interface ViewDetailsProductSheetProps extends React.ComponentPropsWithRef<typeof Sheet> {
-  Product?: TProduct
+  Product?: IResponseProduct
 }
 
 export function ViewDetailsProductSheet({ Product, ...props }: ViewDetailsProductSheetProps) {
@@ -19,7 +19,7 @@ export function ViewDetailsProductSheet({ Product, ...props }: ViewDetailsProduc
           rightComponent={
             <Avatar className='size-20 object-cover aspect-square p-0.5 rounded-full border bg-accent shadow-lg'>
               <AvatarImage src={Product?.images?.length ? Product?.images[0].fileUrl : ''} />
-              <AvatarFallback>{Product?.name}</AvatarFallback>
+              <AvatarFallback>{Product?.name?.charAt(0)?.toUpperCase() ?? ''}</AvatarFallback>
             </Avatar>
           }
         >

@@ -23,6 +23,11 @@ export const routes: IRoute[] = [
     collapse: false
   },
   {
+    name: routesConfig[Routes.CONSULTANT_SERVICE].name,
+    path: routesConfig[Routes.CONSULTANT_SERVICE].path,
+    icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />
+  },
+  {
     name: routesConfig[Routes.CATEGORY].name,
     path: routesConfig[Routes.CATEGORY].path,
     icon: <Layers2Icon className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />
@@ -61,12 +66,6 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.MERCHANTS_DIRECTORY].name,
     path: routesConfig[Routes.MERCHANTS_DIRECTORY].path,
     icon: <HiOutlineUsers className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
-    collapse: false
-  },
-  {
-    name: routesConfig[Routes.SERVICES_CATALOG].name,
-    path: routesConfig[Routes.SERVICES_CATALOG].path,
-    icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

@@ -6,6 +6,7 @@ import { privateRequest, publicRequest } from '@/utils/request'
 
 import {
   TCreateUserRequestParams,
+  TGetAccountFilterRequestParams,
   TInviteCoWorkerRequestParams,
   TInviteMultipleCoWorkersRequestParams,
   TLoginUserRequestParams,
@@ -108,3 +109,13 @@ export const updateUsersListStatusApi = toMutationFetcher<TUpdateUsersListStatus
     return Promise.all(requests)
   }
 )
+
+export const getAccountFilterApi = toQueryFetcher<
+  TGetAccountFilterRequestParams,
+  TServerResponse<{ total: string }, TUserResponse[]>
+>('getProductFilterApi', async (params) => {
+  return privateRequest(`/accounts/filter-account`, {
+    method: 'GET',
+    params: params
+  })
+})

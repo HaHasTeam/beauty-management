@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Info, List, Pencil, Store } from 'lucide-react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
@@ -10,14 +11,17 @@ import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import BasicInformationDetails from '@/components/product/BasicInformationDetails'
 import ClassificationDetails from '@/components/product/ClassificationDetails'
 import ProductDetailInfoSection from '@/components/product/ProductDetailInfoSection'
+import UpdateProductQuantity from '@/components/product/UpdateProductQuantity'
 import UpdateProductStatus from '@/components/product/UpdateProductStatus'
 import SectionCollapsable from '@/components/section-collapsable'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getProductApi } from '@/network/apis/product'
 import { useStore } from '@/stores/store'
-import { RoleEnum } from '@/types/enum'
+import { ProductEnum, RoleEnum } from '@/types/enum'
 
 const ProductDetails = () => {
+  const PRODUCT_QUANTITY_WARNING = 15
+
   const { t } = useTranslation()
   const { id } = useParams()
   const { data: productData, isFetching: isGettingProduct } = useQuery({
@@ -36,6 +40,11 @@ const ProductDetails = () => {
       user: state.user
     }))
   )
+
+  const productQuantity = useMemo(() => {
+    return productData?.data?.productClassifications?.reduce((total, item) => total + (item.quantity || 0), 0) ?? 0
+  }, [productData])
+
   return (
     <>
       {isGettingProduct && <LoadingLayer />}
@@ -43,18 +52,25 @@ const ProductDetails = () => {
         <div className='container mx-auto p-6 space-y-4'>
           {/* Header Section */}
           <div className='flex justify-between items-center gap-2'>
-            <h3 className='md:text-xl sm:text-sm text-xs font-bold'>{productData.data.name}</h3>
-            <Link
-              to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
-              className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'
-            >
-              {t('button.edit')}
-              <Pencil className='w-5 h-5 sm:block hidden' />
-            </Link>
+            <h3 className='md:text-xl sm:text-sm text-xs font-bold text-justify'>{productData.data.name}</h3>
+            {productData.data.status !== ProductEnum.INACTIVE && (
+              <Link
+                to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
+                className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'
+              >
+                {t('button.edit')}
+                <Pencil className='w-5 h-5 sm:block hidden' />
+              </Link>
+            )}
           </div>
 
           {/* Update product status */}
           <UpdateProductStatus product={productData.data} />
+
+          {/* Update product quantity */}
+          {productQuantity <= PRODUCT_QUANTITY_WARNING && productData.data.status !== ProductEnum.INACTIVE && (
+            <UpdateProductQuantity product={productData.data} productQuantityWarning={PRODUCT_QUANTITY_WARNING} />
+          )}
 
           {/* Basic Information Section */}
           <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>

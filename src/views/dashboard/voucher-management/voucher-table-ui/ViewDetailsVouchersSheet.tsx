@@ -21,7 +21,7 @@ export function ViewDetailsVouchersSheet({ Voucher, ...props }: ViewDetailsVouch
           rightComponent={
             <Avatar className='size-20 object-cover aspect-square p-0.5 rounded-full border bg-accent shadow-lg'>
               <AvatarImage src={Voucher?.code ? Voucher?.code : ''} />
-              <AvatarFallback>{Voucher?.name}</AvatarFallback>
+              <AvatarFallback>{Voucher?.name?.charAt(0)?.toUpperCase() ?? 'A'}</AvatarFallback>
             </Avatar>
           }
         >

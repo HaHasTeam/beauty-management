@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { FileSpreadsheet, Sheet } from 'lucide-react'
+import { BadgeInfo, FileSpreadsheet } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -13,8 +13,8 @@ import { ISystemServiceFormData, SystemServiceSchema } from '@/schemas/system-se
 
 import LoadingLayer from '../loading-icon/LoadingLayer'
 import SectionCollapsable from '../section-collapsable'
+import ConsultationCriteriaSystemService from './ConsultationCriteriaSystemService'
 import GeneralSystemService from './GeneralSystemService'
-import ResultSheetSystemService from './ResultSheetSystemService'
 
 interface SystemServiceFormProps {
   form: UseFormReturn<z.infer<typeof SystemServiceSchema>>
@@ -23,6 +23,7 @@ interface SystemServiceFormProps {
   formId?: string
   resetSignal?: boolean
   defineFormSignal?: boolean
+  mode?: 'create' | 'update'
 }
 const SystemServiceForm = ({
   form,
@@ -30,7 +31,8 @@ const SystemServiceForm = ({
   onSubmit,
   formId,
   resetSignal,
-  defineFormSignal
+  defineFormSignal,
+  mode = 'create'
 }: SystemServiceFormProps) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -47,8 +49,8 @@ const SystemServiceForm = ({
             <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
               <SectionCollapsable
                 header={
-                  <div className='flex gap-2 items-center'>
-                    <Sheet />
+                  <div className='flex gap-2 items-center text-primary'>
+                    <BadgeInfo />
                     <h2 className='font-bold text-xl'>{t('systemService.generalInformation')}</h2>
                   </div>
                 }
@@ -65,12 +67,12 @@ const SystemServiceForm = ({
             <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
               <SectionCollapsable
                 header={
-                  <div className='flex gap-2 items-center'>
+                  <div className='flex gap-2 items-center text-primary'>
                     <FileSpreadsheet />
-                    <h2 className='font-bold text-xl'>{t('systemService.resultSheetInformation')}</h2>
+                    <h2 className='font-bold text-xl'>{t('systemService.consultationCriteriaInformation')}</h2>
                   </div>
                 }
-                content={<ResultSheetSystemService form={form} />}
+                content={<ConsultationCriteriaSystemService form={form} mode={mode} />}
               />
             </div>
 
@@ -86,7 +88,9 @@ const SystemServiceForm = ({
               >
                 {t('button.cancel')}
               </Button>
-              <Button type='submit'>{t('button.create')}</Button>
+              <Button form={formId} type='submit'>
+                {t('button.create')}
+              </Button>
             </div>
           </form>
         </Form>
