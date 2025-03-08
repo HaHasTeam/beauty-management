@@ -36,7 +36,6 @@ function ScheduleBooking() {
       )
     }
   })
-
   const EventComponent = useCallback(
     ({ event }: { event: CalendarEvent }) => (
       <div className='p-2 overflow-hidden'>

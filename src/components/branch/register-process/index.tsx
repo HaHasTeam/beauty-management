@@ -4,12 +4,16 @@ import { cloneElement, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Card } from '@/components/ui/card'
+// Add these imports at the top
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn } from '@/lib/utils'
 import { getStatusBookingsApi } from '@/network/apis/booking'
 import { BrandStatusEnum } from '@/types/brand'
 import { BookingStatusEnum, RoleEnum } from '@/types/enum'
 import type { TUser } from '@/types/user'
+
+import { BookingDetailsDialog } from './booking-details-dialog'
+import { BrandDetailsDialog } from './brand-details-dialog'
 
 const useUserStatus = (userProfileData: TUser | undefined) => {
   return useMemo(() => {
@@ -54,6 +58,40 @@ const useCompletionPercentage = (
   }, [isEmailVerify, isRegisterBrand, brandStatus, isInterviewSlotSelected, isRegistrationComplete])
 }
 
+// Modify the renderStep function to include the booking icon for step 5
+// Find the renderStep function and update it to:
+const renderStep = (
+  step: number,
+  icon: React.ReactNode,
+  title: string,
+  content: React.ReactNode,
+  isCompleted: boolean,
+  onClick?: () => void,
+  extraContent?: React.ReactNode
+) => (
+  <Card
+    onClick={onClick}
+    className={cn(
+      isCompleted && 'bg-primary/10 after:border-primary',
+      onClick && 'cursor-pointer',
+      step < 6 &&
+        "after:-right-4 after:absolute after:top-1/2 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']",
+      'shadow-sm p-4 relative z-10'
+    )}
+  >
+    <div className='flex justify-between items-start'>
+      <div>
+        {cloneElement(icon as React.ReactElement, {
+          className: cn(isCompleted && 'text-primary', 'w-8 h-8 mb-3')
+        })}
+      </div>
+      {extraContent}
+    </div>
+    <h3 className='font-medium mb-1'>{title}</h3>
+    {content}
+  </Card>
+)
+
 function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
   const navigate = useNavigate()
 
@@ -75,6 +113,12 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
       BookingStatusEnum.COMPLETED
     ].includes(bookingData.data)
 
+  // const { data: bookingDetailsData } = useQuery({
+  //   queryKey: [getBookingDetailsApi.queryKey],
+  //   queryFn: getBookingDetailsApi.fn,
+  //   enabled: isInterviewSlotSelected
+  // })
+
   const completionPercentage = useCompletionPercentage(
     isEmailVerify,
     isRegisterBrand,
@@ -91,32 +135,6 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
   ) {
     return null
   }
-
-  const renderStep = (
-    step: number,
-    icon: React.ReactNode,
-    title: string,
-    content: React.ReactNode,
-    isCompleted: boolean,
-    onClick?: () => void
-  ) => (
-    <Card
-      onClick={onClick}
-      className={cn(
-        isCompleted && 'bg-primary/10 after:border-primary',
-        onClick && 'cursor-pointer',
-        step < 6 &&
-          "after:-right-4 after:absolute after:top-1/2 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']",
-        'shadow-sm p-4 relative z-10'
-      )}
-    >
-      {cloneElement(icon as React.ReactElement, {
-        className: cn(isCompleted && 'text-primary', 'w-8 h-8 mb-3')
-      })}
-      <h3 className='font-medium mb-1'>{title}</h3>
-      {content}
-    </Card>
-  )
 
   return (
     <>
@@ -137,7 +155,12 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
           ) : (
             <p className='text-sm text-muted-foreground'>
               Vui lòng xác thực tài khoản email{' '}
-              <a className='cursor-pointer' target='_blank' href='https://mail.google.com/mail/u/0/#inbox'>
+              <a
+                className='cursor-pointer'
+                target='_blank'
+                href='https://mail.google.com/mail/u/0/#inbox'
+                rel='noreferrer'
+              >
                 <span className='text-sm text-primary'>Link</span>
               </a>
             </p>
@@ -161,7 +184,10 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             if (isEmailVerify && !isRegisterBrand) {
               navigate(routesConfig[Routes.REGISTER_BRAND].path)
             }
-          }
+          },
+          isRegisterBrand && userProfileData?.brands && userProfileData.brands.length > 0 ? (
+            <BrandDetailsDialog brandDetails={userProfileData.brands[0]} />
+          ) : null
         )}
 
         {renderStep(
@@ -213,7 +239,27 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             if (hasBrands && brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING && !isInterviewSlotSelected) {
               navigate(routesConfig[Routes.SELECT_INTERVIEW_SLOT].path)
             }
-          }
+          },
+          isInterviewSlotSelected ? (
+            <BookingDetailsDialog
+              bookingDetails={{
+                voucherDiscount: 0,
+                id: 'a7b383cf-732c-41a1-80f4-aca94f48c98e',
+                createdAt: '2025-03-08T03:47:39.809Z',
+                updatedAt: '2025-03-08T03:48:49.529Z',
+                totalPrice: 0,
+                startTime: '2025-03-20T03:00:00.000Z',
+                endTime: '2025-03-20T04:00:00.000Z',
+                paymentMethod: 'BANK_TRANSFER',
+                notes: 'hello',
+                meetUrl: 'http://localhost:5173/room/8qtn3341741405659645?type=one-on-one',
+                record: null,
+                type: 'INTERVIEW',
+                status: 'BOOKING_CONFIRMED',
+                resultNote: null
+              }}
+            />
+          ) : null
         )}
 
         {renderStep(

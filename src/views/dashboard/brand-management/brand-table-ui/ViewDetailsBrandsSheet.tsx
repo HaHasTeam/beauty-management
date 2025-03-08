@@ -1,12 +1,6 @@
-'use client'
-
-import '@cyntler/react-doc-viewer/dist/index.css'
-
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer'
 import { useQuery } from '@tanstack/react-query'
 import { Calendar, Download, FileText, Mail, MapPin, Phone, Star, X } from 'lucide-react'
 import type * as React from 'react'
-import { useState } from 'react'
 
 import CardSection from '@/components/card-section'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -14,7 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getBrandByIdApi } from '@/network/apis/brand'
 
@@ -64,7 +57,37 @@ const LoadingSkeleton = () => (
 )
 
 export function ViewDetailsBrandsSheet({ brandId, onOpenChange, ...props }: ViewDetailsBrandsSheetProps) {
-  const [selectedDocumentIndex, setSelectedDocumentIndex] = useState(0)
+  const handleDownloadAll = () => {
+    if (!brand?.documents || brand.documents.length === 0) return
+
+    // Create a message to show download progress
+    const downloadMessage = document.createElement('div')
+    downloadMessage.className =
+      'fixed bottom-4 right-4 bg-primary text-primary-foreground p-3 rounded-md shadow-lg z-50'
+    downloadMessage.textContent = `Downloading ${brand.documents.length} documents...`
+    document.body.appendChild(downloadMessage)
+
+    // Download each document
+    brand.documents.forEach((doc, index) => {
+      setTimeout(() => {
+        const fileName = doc.fileUrl.split('/').pop() || `document-${index + 1}`
+        const link = document.createElement('a')
+        link.href = doc.fileUrl
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        // Update message when all downloads are initiated
+        if (index === brand.documents.length - 1) {
+          downloadMessage.textContent = 'All downloads initiated!'
+          setTimeout(() => {
+            document.body.removeChild(downloadMessage)
+          }, 3000)
+        }
+      }, index * 1000) // Stagger downloads by 1 second
+    })
+  }
 
   const { data: brand, isLoading } = useQuery({
     queryKey: [getBrandByIdApi.queryKey, brandId ?? ''],
@@ -168,41 +191,33 @@ export function ViewDetailsBrandsSheet({ brandId, onOpenChange, ...props }: View
                 <CardSection
                   title='Attached Documents'
                   rightComponent={
-                    <div className='flex items-center gap-2'>
-                      <Select
-                        value={selectedDocumentIndex.toString()}
-                        onValueChange={(value) => setSelectedDocumentIndex(Number.parseInt(value))}
-                      >
-                        <SelectTrigger className='w-[180px]'>
-                          <SelectValue placeholder='Select a document' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {brand.documents.map((doc, index) => (
-                            <SelectItem key={doc.id} value={index.toString()}>
-                              Document {index + 1}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        className='flex items-center gap-1'
-                        onClick={() =>
-                          brand.documents && handleDownload(brand.documents[selectedDocumentIndex].fileUrl)
-                        }
-                      >
-                        <Download className='h-4 w-4' />
-                        Download
-                      </Button>
-                    </div>
+                    <Button variant='default' size='sm' className='flex items-center gap-1' onClick={handleDownloadAll}>
+                      <Download className='h-4 w-4' />
+                      Download All Documents
+                    </Button>
                   }
                 >
-                  <div className='w-full h-[400px] border rounded'>
-                    <DocViewer
-                      documents={[{ uri: brand.documents[selectedDocumentIndex].fileUrl }]}
-                      pluginRenderers={DocViewerRenderers}
-                    />
+                  <div className='w-full border rounded p-4 space-y-2'>
+                    {brand.documents.map((doc, index) => (
+                      <div
+                        key={doc.id}
+                        className='flex items-center justify-between p-2 hover:bg-accent rounded-md transition-colors'
+                      >
+                        <div className='flex items-center gap-2'>
+                          <FileText className='h-5 w-5 text-primary' />
+                          <span>Document {index + 1}</span>
+                          {doc.name && <span className='text-muted-foreground'>({doc.name})</span>}
+                        </div>
+                        <Button
+                          variant='ghost'
+                          size='sm'
+                          className='flex items-center gap-1'
+                          onClick={() => handleDownload(doc.fileUrl)}
+                        >
+                          <Download className='h-4 w-4' />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                 </CardSection>
               )}

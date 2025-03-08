@@ -1098,5 +1098,30 @@
       "cancel": "Hủy",
       "confirm": "Xác Nhận"
     }
+  },
+  "booking": {
+    "waitConfirm": "Đang chờ xác nhận",
+    "confirmBooking": "Xác nhận đặt chỗ",
+    "confirmed": "Đã xác nhận đặt chỗ",
+    "markAsCompleted": "Đánh dấu là hoàn thành",
+    "completed": "Đã hoàn thành",
+    "cancelled": "Đã hủy",
+    "toPay": "Cần thanh toán",
+    "payNow": "Thanh toán ngay",
+    "formSubmitted": "Đã gửi biểu mẫu",
+    "reviewForm": "Xem lại biểu mẫu",
+    "resultSheetSent": "Đã gửi bảng kết quả",
+    "viewResults": "Xem kết quả",
+    "refunded": "Đã hoàn tiền",
+    "statusDescription": {
+      "waitConfirm": "Đặt chỗ của bạn đang chờ xác nhận từ nhà cung cấp dịch vụ. Bạn sẽ được thông báo khi nó được xác nhận.",
+      "confirmed": "Đặt chỗ của bạn đã được xác nhận. Nhà cung cấp dịch vụ đã sẵn sàng cung cấp dịch vụ theo lịch trình.",
+      "completed": "Dịch vụ đã được hoàn thành thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!",
+      "cancelled": "Đặt chỗ này đã bị hủy. Vui lòng liên hệ với bộ phận hỗ trợ nếu bạn có bất kỳ câu hỏi nào.",
+      "toPay": "Cần thanh toán để tiếp tục với đặt chỗ này. Vui lòng hoàn tất thanh toán để tiếp tục.",
+      "formSubmitted": "Biểu mẫu đặt dịch vụ của bạn đã được gửi thành công. Chúng tôi đang xem xét thông tin của bạn.",
+      "resultSheetSent": "Bảng kết quả cho dịch vụ của bạn đã được gửi. Bạn có thể xem kết quả chi tiết ngay bây giờ.",
+      "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn."
+    }
   }
 }
