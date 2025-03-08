@@ -25,6 +25,12 @@ export type TAssignUserBookingParams = {
   id: string
   assigneeId: string
 }
+
+export type TNoteResultBookingParams = {
+  id: string
+  resultNote: string
+}
+
 export type BookingStatusResponse = {
   message: string
   data: BookingStatusEnum

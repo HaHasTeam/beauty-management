@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { CustomFile } from '@/types/file'
 
 type DirectionOptions = 'rtl' | 'ltr' | undefined
 
@@ -41,9 +42,9 @@ export const useFileUpload = () => {
 }
 
 type FileUploaderProps = {
-  value: File[] | null
+  value: CustomFile[] | null
   reSelect?: boolean
-  onValueChange: (value: File[] | null) => void
+  onValueChange: (value: CustomFile[] | null) => void
   dropzoneOptions: DropzoneOptions
   orientation?: 'horizontal' | 'vertical'
   customMaxFiles?: number
@@ -140,7 +141,7 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
     )
 
     const onDrop = useCallback(
-      (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+      (acceptedFiles: CustomFile[], rejectedFiles: FileRejection[]) => {
         const files = acceptedFiles
 
         if (!files) {
@@ -148,7 +149,7 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
           return
         }
 
-        const newValues: File[] = value ? [...value] : []
+        const newValues: CustomFile[] = value ? [...value] : []
 
         if (reSelectAll) {
           newValues.splice(0, newValues.length)
@@ -181,7 +182,7 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
 
     useEffect(() => {
       if (!value) return
-      if (value.length === maxFiles) {
+      if (value.filter((file) => file.status !== 'inactive').length === maxFiles) {
         setIsLOF(true)
         return
       }

@@ -13,7 +13,7 @@ import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker
 import FormLabel from '@/components/form-label'
 import { buttonVariants } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { InputNormal } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -181,7 +181,7 @@ function VoucherForm({
                   <FormItem>
                     <FormLabel required>Tên chương trình giảm giá</FormLabel>
                     <FormControl>
-                      <Input placeholder='Điền tên mã giảm giá' {...field} />
+                      <InputNormal placeholder='Điền tên mã giảm giá' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,7 +206,7 @@ function VoucherForm({
                       </button>
                     </div>
                     <FormControl>
-                      <Input placeholder='Code' {...field} />
+                      <InputNormal placeholder='Code' {...field} />
                     </FormControl>
                     <FormMessage />
                     <FormDescription>Chỉ bao gồm từ 5 - 10 ký tự thường và chữ số.</FormDescription>
@@ -347,7 +347,7 @@ function VoucherForm({
                       <span className='text-sm text-primary'>Áp dụng</span>
                     </FormDescription>
                     <FormControl>
-                      <Input
+                      <InputNormal
                         type='number'
                         {...field}
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -367,7 +367,7 @@ function VoucherForm({
                     <FormItem>
                       <FormLabel>Số tiền giảm giá tối đa</FormLabel>
                       <FormControl>
-                        <Input
+                        <InputNormal
                           // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                           placeholder='Max Discount'
                           {...field}
@@ -386,7 +386,7 @@ function VoucherForm({
                   <FormItem>
                     <FormLabel>Giá trị đơn hàng tối thiểu</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputNormal
                         className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
                         placeholder='Min Order Value'
                         {...field}
@@ -431,7 +431,7 @@ function VoucherForm({
                       <FormLabel>Giá trị tối thiểu</FormLabel>
                       <FormControl>
                         <div className='relative'>
-                          <Input
+                          <InputNormal
                             {...field}
                             className='pr-8'
                             onChange={(e) => {
@@ -473,7 +473,7 @@ function VoucherForm({
                   <FormItem>
                     <FormLabel>Số lượng mã giảm giá</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputNormal
                         type='number'
                         {...field}
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}

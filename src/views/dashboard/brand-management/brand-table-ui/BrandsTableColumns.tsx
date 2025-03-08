@@ -176,7 +176,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
             icon: Ban,
             action: () => setRowAction({ row: row, type: 'ban' }),
             className: 'bg-red-500 text-white hover:bg-red-600',
-            show: currentStatus !== BrandStatusEnum.BANNED
+            show: currentStatus === BrandStatusEnum.ACTIVE
           },
           {
             label: 'Activate',

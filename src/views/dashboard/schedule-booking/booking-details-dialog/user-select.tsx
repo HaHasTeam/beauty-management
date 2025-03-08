@@ -1,3 +1,5 @@
+'use client'
+
 import { useQuery } from '@tanstack/react-query'
 import { Check, ChevronsUpDown, Loader2, Search, User } from 'lucide-react'
 import { useState } from 'react'
@@ -39,13 +41,16 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
   })
 
   const handleSelect = (userId: string, userName: string, userEmail: string) => {
+    // First update the selected user
     setSelectedUser({ id: userId, name: userName, email: userEmail })
-    setOpen(false)
+    // Then call the onSelect callback
     onSelect(userId)
+    // Finally close the popover
+    setTimeout(() => setOpen(false), 0)
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen} modal={false}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant='outline'
@@ -65,8 +70,8 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[300px] p-0'>
-        <Command>
+      <PopoverContent className='w-[300px] p-0' align='start'>
+        <Command shouldFilter={false}>
           <div className='flex items-center border-b px-3'>
             <Search className='mr-2 h-4 w-4 shrink-0 opacity-50' />
             <CommandInput
@@ -89,7 +94,10 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
                   <CommandItem
                     key={user.id}
                     value={user.id}
-                    onSelect={() => handleSelect(user.id, user.username, user.email)}
+                    onSelect={() => {
+                      // Prevent the default behavior
+                      handleSelect(user.id, user.username, user.email)
+                    }}
                   >
                     <User className='mr-2 h-4 w-4' />
                     <div className='flex flex-col'>

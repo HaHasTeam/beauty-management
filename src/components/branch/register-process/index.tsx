@@ -1,12 +1,18 @@
+'use client'
+
 import { useQuery } from '@tanstack/react-query'
-import { Calendar, FileCheck, ShieldCheck, Store, ThumbsUp, User } from 'lucide-react'
+import { format } from 'date-fns'
+import { Calendar, FileCheck, Info, ShieldCheck, Store, ThumbsUp, User } from 'lucide-react'
 import { cloneElement, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+// Add these imports at the top
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn } from '@/lib/utils'
-import { getStatusBookingsApi } from '@/network/apis/booking'
+import { getBookingDetailsApi, getStatusBookingsApi } from '@/network/apis/booking'
 import { BrandStatusEnum } from '@/types/brand'
 import { BookingStatusEnum, RoleEnum } from '@/types/enum'
 import type { TUser } from '@/types/user'
@@ -54,6 +60,119 @@ const useCompletionPercentage = (
   }, [isEmailVerify, isRegisterBrand, brandStatus, isInterviewSlotSelected, isRegistrationComplete])
 }
 
+// Create a BookingDetailsDialog component
+const BookingDetailsDialog = ({
+  bookingDetails
+}: {
+  bookingDetails: {
+    voucherDiscount: number
+    id: string
+    createdAt: string
+    updatedAt: string
+    totalPrice: number
+    startTime: string
+    endTime: string
+    paymentMethod: string
+    notes: string
+    meetUrl: string
+    record: string | null
+    type: string
+    status: string
+    resultNote: string | null
+  }
+}) => {
+  if (!bookingDetails) return null
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant='ghost' size='icon' className='p-0 h-auto'>
+          <Info className='h-5 w-5 text-primary' />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='sm:max-w-md'>
+        <DialogHeader>
+          <DialogTitle>Chi tiết đặt lịch phỏng vấn</DialogTitle>
+        </DialogHeader>
+        <div className='space-y-3 mt-4'>
+          <div className='grid grid-cols-2 gap-2'>
+            <div className='text-muted-foreground'>Thời gian bắt đầu:</div>
+            <div>
+              {bookingDetails.startTime ? format(new Date(bookingDetails.startTime), 'dd/MM/yyyy HH:mm') : 'N/A'}
+            </div>
+
+            <div className='text-muted-foreground'>Thời gian kết thúc:</div>
+            <div>{bookingDetails.endTime ? format(new Date(bookingDetails.endTime), 'dd/MM/yyyy HH:mm') : 'N/A'}</div>
+
+            <div className='text-muted-foreground'>Phương thức thanh toán:</div>
+            <div>
+              {bookingDetails.paymentMethod === 'BANK_TRANSFER'
+                ? 'Chuyển khoản ngân hàng'
+                : bookingDetails.paymentMethod}
+            </div>
+
+            <div className='text-muted-foreground'>Trạng thái:</div>
+            <div>{bookingDetails.status === 'BOOKING_CONFIRMED' ? 'Đã xác nhận' : bookingDetails.status}</div>
+
+            <div className='text-muted-foreground'>Ghi chú:</div>
+            <div>{bookingDetails.notes || 'Không có ghi chú'}</div>
+
+            {bookingDetails.meetUrl && (
+              <>
+                <div className='text-muted-foreground'>Link phỏng vấn:</div>
+                <div>
+                  <a
+                    href={bookingDetails.meetUrl}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='text-primary hover:underline'
+                  >
+                    Tham gia phỏng vấn
+                  </a>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// Modify the renderStep function to include the booking icon for step 5
+// Find the renderStep function and update it to:
+const renderStep = (
+  step: number,
+  icon: React.ReactNode,
+  title: string,
+  content: React.ReactNode,
+  isCompleted: boolean,
+  onClick?: () => void,
+  extraContent?: React.ReactNode
+) => (
+  <Card
+    onClick={onClick}
+    className={cn(
+      isCompleted && 'bg-primary/10 after:border-primary',
+      onClick && 'cursor-pointer',
+      step < 6 &&
+        "after:-right-4 after:absolute after:top-1/2 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']",
+      'shadow-sm p-4 relative z-10'
+    )}
+  >
+    <div className='flex justify-between items-start'>
+      <div>
+        {cloneElement(icon as React.ReactElement, {
+          className: cn(isCompleted && 'text-primary', 'w-8 h-8 mb-3')
+        })}
+      </div>
+      {extraContent}
+    </div>
+    <h3 className='font-medium mb-1'>{title}</h3>
+    {content}
+  </Card>
+)
+
 function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
   const navigate = useNavigate()
 
@@ -75,6 +194,12 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
       BookingStatusEnum.COMPLETED
     ].includes(bookingData.data)
 
+  const { data: bookingDetailsData } = useQuery({
+    queryKey: [getBookingDetailsApi.queryKey],
+    queryFn: getBookingDetailsApi.fn,
+    enabled: isInterviewSlotSelected
+  })
+
   const completionPercentage = useCompletionPercentage(
     isEmailVerify,
     isRegisterBrand,
@@ -91,32 +216,6 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
   ) {
     return null
   }
-
-  const renderStep = (
-    step: number,
-    icon: React.ReactNode,
-    title: string,
-    content: React.ReactNode,
-    isCompleted: boolean,
-    onClick?: () => void
-  ) => (
-    <Card
-      onClick={onClick}
-      className={cn(
-        isCompleted && 'bg-primary/10 after:border-primary',
-        onClick && 'cursor-pointer',
-        step < 6 &&
-          "after:-right-4 after:absolute after:top-1/2 after:inline-block after:h-0 after:w-4 after:border-2 after:border-b after:content-['']",
-        'shadow-sm p-4 relative z-10'
-      )}
-    >
-      {cloneElement(icon as React.ReactElement, {
-        className: cn(isCompleted && 'text-primary', 'w-8 h-8 mb-3')
-      })}
-      <h3 className='font-medium mb-1'>{title}</h3>
-      {content}
-    </Card>
-  )
 
   return (
     <>
@@ -137,7 +236,12 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
           ) : (
             <p className='text-sm text-muted-foreground'>
               Vui lòng xác thực tài khoản email{' '}
-              <a className='cursor-pointer' target='_blank' href='https://mail.google.com/mail/u/0/#inbox'>
+              <a
+                className='cursor-pointer'
+                target='_blank'
+                href='https://mail.google.com/mail/u/0/#inbox'
+                rel='noreferrer'
+              >
                 <span className='text-sm text-primary'>Link</span>
               </a>
             </p>
@@ -213,7 +317,10 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
             if (hasBrands && brandStatus === BrandStatusEnum.PRE_APPROVED_FOR_MEETING && !isInterviewSlotSelected) {
               navigate(routesConfig[Routes.SELECT_INTERVIEW_SLOT].path)
             }
-          }
+          },
+          isInterviewSlotSelected && bookingDetailsData?.data ? (
+            <BookingDetailsDialog bookingDetails={bookingDetailsData.data} />
+          ) : null
         )}
 
         {renderStep(

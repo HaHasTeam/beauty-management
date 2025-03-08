@@ -7,6 +7,7 @@ import { z } from 'zod'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import useHandleServerError from '@/hooks/useHandleServerError'
+import { cn } from '@/lib/utils'
 import { uploadFilesApi } from '@/network/apis/file'
 import { CustomFile, TFile } from '@/types/file'
 import { createFiles } from '@/utils/files'
@@ -103,6 +104,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
           if (fieldValue.length === files.length) {
             return
           }
+
           const constructedFiles = await createFiles(fieldValue)
 
           setFiles(constructedFiles)
@@ -129,11 +131,31 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
         if (field.onChange) field.onChange(fileItem as unknown as React.ChangeEvent<HTMLInputElement>)
       }
       if (fieldType === 'multiple') {
+        const deleteFiles: TFile[] = []
+        if (newFiles && newFiles.length < files.length) {
+          for (let i = 0; i < files.length; i++) {
+            if (!newFiles.find((file) => file.name === files[i].name)) {
+              if (files[i].id) {
+                deleteFiles.push(files[i] as TFile)
+              }
+            }
+          }
+        }
+        const parseDeletedFiles = deleteFiles.map((file) => ({
+          ...file,
+          status: 'inactive'
+        }))
+
         const fileItems: TFile[] = newFiles?.map((file) => ({
+          id: file.id ?? undefined,
           fileUrl: file.fileUrl ?? URL.createObjectURL(file as File),
-          name: file.name as string
+          name: file.name as string,
+          status: file.status ?? undefined
         })) as TFile[]
-        if (field.onChange) field.onChange(fileItems as unknown as React.ChangeEvent<HTMLInputElement>)
+
+        const combineFiles = fileItems ? [...fileItems, ...parseDeletedFiles] : [...parseDeletedFiles]
+
+        if (field.onChange) field.onChange(combineFiles as unknown as React.ChangeEvent<HTMLInputElement>)
       }
     } catch (error) {
       handleServerError({
@@ -211,7 +233,8 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
             <div className='flex items-center flex-col gap-2'>
               <ImagePlusIcon className='size-10 text-muted-foreground max-lg:size-6' />
               <p className='text-foreground tracking-tight flex-1'>
-                Drag & drop or browse files <b>{`(${files.length}/${dropZoneConfig.maxFiles})`}</b>
+                Drag & drop or browse files{' '}
+                <b>{`(${files.filter((file) => file.status !== 'inactive').length}/${dropZoneConfig.maxFiles})`}</b>
               </p>
             </div>
           </div>
@@ -227,7 +250,10 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
                     <FileUploaderItem
                       key={index}
                       index={index}
-                      className='flex items-center justify-between rounded-lg hover:bg-primary/30 border bg-background'
+                      className={cn(
+                        'flex items-center justify-between rounded-lg hover:bg-primary/30 border bg-background',
+                        { hidden: file.status === 'inactive' }
+                      )}
                     >
                       <div key={file.name} className='flex items-center space-x-3 w-[95%]'>
                         <div

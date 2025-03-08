@@ -1,14 +1,24 @@
+'use client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CalendarIcon, Check, Clock, FileText, Loader2, MapPin, Plus, X } from 'lucide-react'
 import moment from 'moment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useShallow } from 'zustand/react/shallow'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/useToast'
-import { assignUserToBookingApi, getAllBookingsApi, updateBookingStatusApi } from '@/network/apis/booking'
+import {
+  assignUserToBookingApi,
+  getAllBookingsApi,
+  saveInterviewNotesApi,
+  updateBookingStatusApi
+} from '@/network/apis/booking/index'
+import { useStore } from '@/stores/store'
 import type { CalendarEvent } from '@/types/booking'
 import { BookingStatusEnum } from '@/types/enum'
 
@@ -23,8 +33,20 @@ interface BookingDetailsDialogProps {
 export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDetailsDialogProps) {
   const queryClient = useQueryClient()
   const { successToast, errorToast } = useToast()
+  const { user } = useStore(
+    useShallow((state) => ({
+      user: state.user
+    }))
+  )
   const { t } = useTranslation()
   const [showUserSelect, setShowUserSelect] = useState(false)
+  // Add state for interview notes
+  const [interviewNotes, setInterviewNotes] = useState(selectedEvent?.resource.notes || '')
+
+  // Check user roles
+  const isAdmin = user?.role === 'admin'
+  const isOperator = user?.role === 'operator'
+  const hasOperationalAccess = isAdmin || isOperator
 
   const { mutate: updateBookingStatus, isPending: isUpdating } = useMutation({
     mutationFn: ({ id, status }: { id: string; status: BookingStatusEnum }) => {
@@ -84,6 +106,23 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
     }
   })
 
+  // Add mutation for saving interview notes
+  const { mutate: saveInterviewNotes, isPending: isSavingNotes } = useMutation({
+    mutationKey: [saveInterviewNotesApi.mutationKey],
+    mutationFn: saveInterviewNotesApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: 'Interview notes have been successfully saved.'
+      })
+      queryClient.invalidateQueries({ queryKey: [getAllBookingsApi.queryKey] })
+    },
+    onError: (error) => {
+      errorToast({
+        message: error.message ?? 'Failed to save interview notes. Please try again.'
+      })
+    }
+  })
+
   const handleAcceptBooking = () => {
     if (selectedEvent) {
       updateBookingStatus({ id: selectedEvent.id.toString(), status: BookingStatusEnum.BOOKING_CONFIRMED })
@@ -109,6 +148,16 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
     })
   }
 
+  // Add handler for saving notes
+  const handleSaveNotes = () => {
+    if (selectedEvent) {
+      saveInterviewNotes({
+        id: selectedEvent.id.toString(),
+        resultNote: interviewNotes
+      })
+    }
+  }
+
   const isWaitingForConfirmation = selectedEvent?.resource.status === BookingStatusEnum.WAIT_FOR_CONFIRMATION
   const isConfirmed = selectedEvent?.resource.status === BookingStatusEnum.BOOKING_CONFIRMED
   const isCancelled = selectedEvent?.resource.status === BookingStatusEnum.CANCELLED
@@ -122,47 +171,58 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
           <DialogTitle>{selectedEvent?.resource.type}</DialogTitle>
         </DialogHeader>
         <div className='grid gap-4 py-4'>
-          <div className='flex items-center gap-4'>
-            <CalendarIcon className='h-4 w-4 opacity-70' />
-            <span>{selectedEvent && moment(selectedEvent.start).format('MMMM D, YYYY')}</span>
-          </div>
-          <div className='flex items-center gap-4'>
-            <Clock className='h-4 w-4 opacity-70' />
-            <span>
-              {selectedEvent &&
-                `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-            </span>
-          </div>
+          {/* Booking Information Section with Labels */}
+          <div className='space-y-3'>
+            <div className='grid grid-cols-3 gap-2 items-center'>
+              <Label className='text-xs text-muted-foreground'>{t('Date')}:</Label>
+              <div className='col-span-2 flex items-center'>
+                <CalendarIcon className='h-4 w-4 opacity-70 mr-2' />
+                <span>{selectedEvent && moment(selectedEvent.start).format('MMMM D, YYYY')}</span>
+              </div>
+            </div>
 
-          {selectedEvent?.resource.meetUrl && (
-            <div className='flex items-center gap-4'>
-              <MapPin className='h-4 w-4 opacity-70' />
-              <a
-                href={selectedEvent.resource.meetUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-blue-500 hover:underline'
-              >
-                Join Meeting
-              </a>
+            <div className='grid grid-cols-3 gap-2 items-center'>
+              <Label className='text-xs text-muted-foreground'>{t('Time')}:</Label>
+              <div className='col-span-2 flex items-center'>
+                <Clock className='h-4 w-4 opacity-70 mr-2' />
+                <span>
+                  {selectedEvent &&
+                    `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
+                </span>
+              </div>
             </div>
-          )}
-          {selectedEvent?.resource.notes && (
-            <div className='flex items-start gap-4'>
-              <FileText className='h-4 w-4 opacity-70 mt-1' />
-              <p className='text-sm'>{selectedEvent.resource.notes}</p>
+
+            {selectedEvent?.resource.meetUrl && (
+              <div className='grid grid-cols-3 gap-2 items-center'>
+                <Label className='text-xs text-muted-foreground'>{t('Meeting Link')}:</Label>
+                <div className='col-span-2 flex items-center'>
+                  <MapPin className='h-4 w-4 opacity-70 mr-2' />
+                  <a
+                    href={selectedEvent.resource.meetUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='text-blue-500 hover:underline'
+                  >
+                    {t('Join Meeting')}
+                  </a>
+                </div>
+              </div>
+            )}
+
+            <div className='grid grid-cols-3 gap-2 items-center'>
+              <Label className='text-xs text-muted-foreground'>{t('Status')}:</Label>
+              <div className='col-span-2'>
+                {selectedEvent && (
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(selectedEvent.resource.status, t)}`}
+                    style={eventStyle}
+                  >
+                    {getStatusBookingText(selectedEvent.resource.status, t)}
+                  </span>
+                )}
+              </div>
             </div>
-          )}
-          {selectedEvent && (
-            <div className='flex items-center gap-4'>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(selectedEvent.resource.status, t)}`}
-                style={eventStyle}
-              >
-                {getStatusBookingText(selectedEvent.resource.status, t)}
-              </span>
-            </div>
-          )}
+          </div>
 
           <Separator className='my-2' />
 
@@ -170,7 +230,8 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
           <div>
             <div className='flex items-center justify-between mb-2'>
               <h3 className='text-sm font-medium'>{t('Interview Participants')}</h3>
-              {!isCancelled && (
+              {/* Only show Assign User button if user is admin and booking is not cancelled */}
+              {isAdmin && !isCancelled && (
                 <Button
                   variant='outline'
                   size='sm'
@@ -195,6 +256,63 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
               </div>
             )}
           </div>
+
+          {/* Interview Notes Section when booking is confirmed */}
+          {isConfirmed && (
+            <div className='space-y-4 bg-gray-50 p-4 rounded-lg border'>
+              <div className='flex items-center justify-between'>
+                <h3 className='text-sm font-medium flex items-center'>
+                  <FileText className='h-4 w-4 mr-2' />
+                  {t('Interview Notes')}
+                </h3>
+                {selectedEvent?.resource.notes && (
+                  <span className='text-xs text-muted-foreground'>
+                    {t('Last updated')}: {moment(selectedEvent.resource.updatedAt).format('MMM D, YYYY HH:mm')}
+                  </span>
+                )}
+              </div>
+
+              <div className='space-y-3'>
+                <div>
+                  <Label htmlFor='interview-summary' className='text-xs font-medium'>
+                    {t('Summary & Key Points')}
+                  </Label>
+                  <Textarea
+                    id='interview-summary'
+                    placeholder={t('Summarize the key points discussed in the interview...')}
+                    value={interviewNotes}
+                    onChange={(e) => setInterviewNotes(e.target.value)}
+                    className='min-h-[150px] mt-1'
+                    readOnly={!hasOperationalAccess}
+                  />
+                </div>
+
+                {/* Only show Save Notes button if user is admin or operator */}
+                {hasOperationalAccess && (
+                  <div className='flex justify-center mt-4'>
+                    <Button
+                      onClick={handleSaveNotes}
+                      disabled={isSavingNotes || !interviewNotes.trim()}
+                      size='default'
+                      className='w-full max-w-xs bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md transition-all duration-200 hover:shadow-lg'
+                    >
+                      {isSavingNotes ? (
+                        <>
+                          <Loader2 className='mr-2 h-5 w-5 animate-spin' />
+                          {t('Saving Notes...')}
+                        </>
+                      ) : (
+                        <>
+                          <Check className='mr-2 h-5 w-5' />
+                          {t('Save Interview Notes')}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <DialogFooter className='flex flex-col sm:flex-row gap-2'>
           {isWaitingForConfirmation && (
@@ -232,7 +350,8 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
               </Button>
             </>
           )}
-          {isConfirmed && (
+          {/* Only show Mark as Completed button if user is admin or operator */}
+          {isConfirmed && hasOperationalAccess && (
             <Button onClick={handleCompleteBooking} disabled={isUpdating} className='w-full sm:w-auto'>
               {isUpdating ? (
                 <>
