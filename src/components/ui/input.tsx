@@ -10,7 +10,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   symbol?: React.ReactNode
   maxVal?: number
 }
-const MAX_DIGITS = 99
+const MAX_DIGITS = 20
 const numberableTypes = ['number', 'currency', 'quantity', 'percentage']
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

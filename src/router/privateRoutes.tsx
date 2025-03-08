@@ -9,6 +9,9 @@ import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
 import Category from '@/views/dashboard/category'
 import CategoryDetailById from '@/views/dashboard/category/[id]'
 import AddCategory from '@/views/dashboard/category/AddCategory'
+import ConsultantService from '@/views/dashboard/consultant-service'
+import ConsultantServiceDetailById from '@/views/dashboard/consultant-service/[id]'
+import AddConsultantService from '@/views/dashboard/consultant-service/AddConsultantService'
 import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import FlashSaleDetailsById from '@/views/dashboard/flash-sale/[id]'
@@ -127,7 +130,7 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
-        path: 'category',
+        path: routesConfig[Routes.CATEGORY].path.replace('/dashboard/', ''),
         children: [
           {
             index: true,
@@ -137,6 +140,20 @@ export const privateRoutes: RouteObject[] = [
           {
             path: ':id',
             element: <CategoryDetailById />
+          }
+        ]
+      },
+      {
+        path: routesConfig[Routes.CONSULTANT_SERVICE].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <ConsultantService />
+          },
+          { path: 'add', element: <AddConsultantService /> },
+          {
+            path: ':id',
+            element: <ConsultantServiceDetailById />
           }
         ]
       },

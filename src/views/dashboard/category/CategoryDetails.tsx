@@ -234,7 +234,7 @@ const CategoryDetails = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      if (categoryId !== 'add') {
+      if (categoryId) {
         await updateCategoryFn({
           name: data.name,
           detail: data.detail,

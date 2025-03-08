@@ -5,11 +5,13 @@ export type TFile = {
   name: string
   fileUrl: string
   id?: string
+  status?: 'active' | 'inactive'
 }
 
 export type CustomFile = File & {
   fileUrl?: string
   id?: string
+  status?: 'active' | 'inactive'
 }
 
 export type TServerFile = TMetaData & {
