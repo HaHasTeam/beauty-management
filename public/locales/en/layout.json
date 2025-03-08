@@ -115,7 +115,8 @@
     "importFile": "Import files",
     "downloadSample": "Download sample",
     "import": "Import",
-    "view": "View"
+    "view": "View",
+    "upload": "Upload"
   },
   "noData": "No matching data found",
   "sell": {
@@ -677,7 +678,7 @@
     "requestCancelSuccess": "Request cancel order successfully!",
     "cancelRequestPendingTitle": "Cancellation Request Pending Confirmation",
     "cancelRequestRejectedTitle": "Cancellation Request Rejected",
-    "cancelRequestPendingMessage": "Your cancellation request has been submitted and is awaiting confirmation. The order will remain active until the brand reviews and approves the request. We will update you with the result within 2 days. If your request is approved, we will process a refund (if applicable).",
+    "cancelRequestPendingMessage": "Your cancellation request has been submitted and is awaiting confirmation. The order will remain active until the brand reviews and approves the request. We will update you with the result within {{count}} days. If your request is approved, we will process a refund (if applicable).",
     "cancelRequestRejectedMessage": "Your cancellation request has been rejected. The order will continue to be processed as usual. You can click \"Return order\" after receiving the item if needed. Please contact customer support if you need further assistance.",
     "statusDescription": {
       "joinGroupBuying": "The customer has joined a group-buying deal. The order will be processed once the required number of participants is reached.",
@@ -722,7 +723,9 @@
       "lateDelivery": "Shipping took too long",
       "other": "Other"
     },
-    "proof": "Images and videos proof"
+    "proof": "Images and videos proof",
+    "returnRequestApprovedTitle": "Return Request Approved",
+    "returnRequestApprovedMessage": "Your return request has been approved by the brand. Please prepare, pack, and ship the item within {{count}} days. Remember to keep clear photos and videos as proof of the product's condition and packaging."
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -802,7 +805,7 @@
     "fileCountValid": "You can upload up to {{count}} files",
     "tooLong": "Message too long.",
     "ratingFeedback": "The rating must be between 1 and 5",
-    "contentFeedback": "The feedback content must be at least 25 characters long but no more than 500 characters",
+    "contentFeedback": "The feedback content must be at least {{minLength}} characters long but no more than {{maxLength}} characters",
     "maxImagesExceeded": "You can upload a maximum of {{count}} images.",
     "maxVideosExceeded": "You can upload a maximum of {{count}} videos.",
     "inputMedia": "Please upload at least one image or video.",
@@ -813,7 +816,7 @@
     "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
     "maxImages": "You can only upload up to {{count}} images.",
     "maxVideos": "You can only upload up to {{count}} videos.",
-    "contentReplyFeedback": "The feedback reply must be at least 25 characters long but no more than 500 characters",
+    "contentReplyFeedback": "The feedback reply must be at least {{minLength}} characters long but no more than {{maxLength}} characters",
     "videosRequired": "Please upload at least one video.",
     "imagesRequired": "Please upload at least one image."
   },
@@ -1131,5 +1134,46 @@
       "cancel": "Cancel",
       "confirm": "Confirm"
     }
+  },
+  "return": {
+    "rejectReturnOrderReason": {
+      "notEligible": "The product is not eligible for return",
+      "noValidReason": "The provided return reason is not valid",
+      "insufficientEvidence": "Insufficient proof or evidence provided for the claim",
+      "policyViolation": "The return request violates platform return policy",
+      "damagedByCustomer": "The product was damaged due to customer misuse",
+      "usedOrAltered": "The product has been used, or altered from its original state",
+      "discountedOrFinalSale": "Item is a final sale or non-returnable promotional product",
+      "other": "Other"
+    },
+    "complaintReturnOrderReason": {
+      "wrongItemReturned": "The returned item does not match the original order",
+      "usedOrDamaged": "The product has been used or is not in its original condition",
+      "missingParts": "Returned item is missing parts, accessories, or original packaging",
+      "fakeOrDifferentProduct": "The returned item is counterfeit or different from what was purchased",
+      "damagedPackaging": "The product packaging is damaged beyond acceptable condition",
+      "returnAbuse": "Customer has a history of excessive or fraudulent returns",
+      "expiredReturn": "The return was received after the allowed return period",
+      "other": "Other"
+    },
+    "rejectReturnOrderDialog": {
+      "title": "Reject Return Request",
+      "description": "Please provide a valid reason for rejecting this return request. If applicable, attach supporting evidence to justify your decision. This information will be reviewed before finalizing the rejection.",
+      "mediaFilesNotes": "Ensure that any uploaded images or videos clearly support your decision, such as product condition, missing packaging, or policy violations."
+    },
+
+    "rejectReturnSuccess": "Return Request Rejected Successfully",
+    "rejectReturnSuccessMessage": "You have successfully rejected the return request. Our support team will review this decision and provide you with the final result as soon as possible.",
+    "rejectReturnRequestPendingTitleBrand": "Return Rejection Under Review",
+    "rejectReturnRequestPendingMessageBrand": "Your request to reject the return is being reviewed by our support team. We will notify you once a final decision is made.",
+    "rejectReturnRequestApprovedTitleBrand": "Return Rejection Approved",
+    "rejectReturnRequestApprovedMessageBrand": "Your request to reject the return has been approved. The customer will be notified accordingly.",
+    "rejectReturnRequestRejectedTitleBrand": "Return Rejection Denied",
+    "rejectReturnRequestRejectedMessageBrand": "Your request to reject the return has been denied. The return request will proceed as approved.",
+    "returnRequestPendingTitleAdmin": "Return Request Pending Review",
+    "returnRequestPendingMessageAdmin": "The customer has requested a return for this order. The brand will review and decide. You can check the platform's return policy for guidance.",
+    "successMakeDecisionOnReject": "Successfully processed the brand's return rejection request!",
+    "rejectReturnRequestPendingTitle": "Return Rejection Request Under Review",
+    "returnOrderRequestMessage": "The return request is being processed. Please review all relevant details and platform policies before making a final decision."
   }
 }

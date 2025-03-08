@@ -80,8 +80,6 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
       })
     }
   }
-  console.log(isLoadingDecisionApproved)
-  console.log(isLoadingDecisionRejected)
   if (!returnRequest) return null
   return (
     returnRequest && (

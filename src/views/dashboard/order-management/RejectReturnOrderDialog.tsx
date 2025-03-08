@@ -59,14 +59,14 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
 
   const reasons: { value: string }[] = useMemo(
     () => [
-      { value: t('order.rejectReturnOrderReason.wrongItem') },
-      { value: t('order.rejectReturnOrderReason.damage') },
-      { value: t('order.rejectReturnOrderReason.missingItem') },
-      { value: t('order.rejectReturnOrderReason.expired') },
-      { value: t('order.rejectReturnOrderReason.allergy') },
-      { value: t('order.rejectReturnOrderReason.notAsDescribed') },
-      { value: t('order.rejectReturnOrderReason.duplicate') },
-      { value: t('order.rejectReturnOrderReason.other') }
+      { value: t('return.rejectReturnOrderReason.notEligible') },
+      { value: t('return.rejectReturnOrderReason.noValidReason') },
+      { value: t('return.rejectReturnOrderReason.insufficientEvidence') },
+      { value: t('return.rejectReturnOrderReason.policyViolation') },
+      { value: t('return.rejectReturnOrderReason.damagedByCustomer') },
+      { value: t('return.rejectReturnOrderReason.usedOrAltered') },
+      { value: t('return.rejectReturnOrderReason.discountedOrFinalSale') },
+      { value: t('return.rejectReturnOrderReason.other') }
     ],
     [t]
   )
@@ -89,7 +89,8 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
     mutationFn: makeDecisionOnReturnRequestOrderApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('order.orderReturnlationUpdate')
+        message: t('return.rejectReturnSuccess'),
+        description: t('return.rejectReturnSuccessMessage')
       })
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
@@ -131,7 +132,6 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
       const imgUrls = values.images ? await convertFileToUrl(values.images) : []
       const videoUrls = values.videos ? await convertFileToUrl(values.videos) : []
       const payload = isOtherReason ? { reasonRejected: values.otherReason } : { reasonRejected: values.reason }
-      console.log(returnRequest, payload, [...imgUrls, ...videoUrls])
       await makeDecisionOnReturnRequestOrderFn({
         requestId: returnRequest?.id ?? '',
         status: RequestStatusEnum.REJECTED,
@@ -154,12 +154,12 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
         <ScrollArea className='max-h-[80vh]'>
           <div className='space-y-3 mr-2'>
             <DialogHeader>
-              <DialogTitle className='text-primary'>{t('order.rejectReturnOrderDialog.title')}</DialogTitle>
+              <DialogTitle className='text-primary'>{t('return.rejectReturnOrderDialog.title')}</DialogTitle>
             </DialogHeader>
 
             <AlertMessage
               className='text-justify'
-              message={t('order.rejectReturnOrderDialog.description')}
+              message={t('return.rejectReturnOrderDialog.description')}
               textSize='medium'
             />
             <Form {...form}>
@@ -181,7 +181,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
                               value={field.value ?? ''}
                               onValueChange={(value: string) => {
                                 field.onChange(value)
-                                setIsOtherReason(value === t('order.rejectReturnOrderReason.other'))
+                                setIsOtherReason(value === t('return.rejectReturnOrderReason.other'))
                               }}
                               required
                               name='reason'
@@ -243,7 +243,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
                     {t('feedback.mediaFiles')}
                   </Label>
                   <FormDescription className='text-justify'>
-                    {t('order.rejectReturnOrderDialog.mediaFilesNotes')}
+                    {t('return.rejectReturnOrderDialog.mediaFilesNotes')}
                   </FormDescription>
                   <FormDescription className='text-justify'>
                     {t('feedback.mediaFilesHint', {

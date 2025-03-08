@@ -117,7 +117,6 @@ const OrderDetails = () => {
       })
     }
   }
-  console.log(user.role)
   return (
     <>
       {isFetching && <LoadingLayer />}
@@ -157,24 +156,24 @@ const OrderDetails = () => {
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
                 rejectReturnRequest?.data?.status === RequestStatusEnum.PENDING && (
                   <AlertMessage
-                    title={t('order.rejectReturnRequestPendingTitleBrand')}
-                    message={t('order.rejectReturnRequestPendingMessageBrand')}
+                    title={t('return.rejectReturnRequestPendingTitleBrand')}
+                    message={t('return.rejectReturnRequestPendingMessageBrand')}
                     isShowIcon={false}
                   />
                 )}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
                 rejectReturnRequest?.data?.status === RequestStatusEnum.APPROVED && (
                   <AlertMessage
-                    title={t('order.rejectReturnRequestApprovedTitleBrand')}
-                    message={t('order.rejectReturnRequestApprovedMessageBrand')}
+                    title={t('return.rejectReturnRequestApprovedTitleBrand')}
+                    message={t('return.rejectReturnRequestApprovedMessageBrand')}
                     isShowIcon={false}
                   />
                 )}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
                 rejectReturnRequest?.data?.status === RequestStatusEnum.REJECTED && (
                   <AlertMessage
-                    title={t('order.rejectReturnRequestRejectedTitleBrand')}
-                    message={t('order.rejectReturnRequestRejectedMessageBrand')}
+                    title={t('return.rejectReturnRequestRejectedTitleBrand')}
+                    message={t('return.rejectReturnRequestRejectedMessageBrand')}
                     isShowIcon={false}
                   />
                 )}
@@ -182,8 +181,8 @@ const OrderDetails = () => {
               {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
                 cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.PENDING && (
                   <AlertMessage
-                    title={t('order.returnRequestPendingTitleAdmin')}
-                    message={t('order.returnRequestPendingMessageAdmin')}
+                    title={t('return.returnRequestPendingTitleAdmin')}
+                    message={t('return.returnRequestPendingMessageAdmin')}
                     isShowIcon={false}
                   />
                 )}

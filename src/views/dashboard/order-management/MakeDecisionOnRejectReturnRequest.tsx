@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import { AlertDescription } from '@/components/ui/alert'
@@ -13,7 +12,6 @@ import {
   getStatusTrackingByIdApi,
   makeDecisionOnRejectReturnRequestOrderApi
 } from '@/network/apis/order'
-import { useStore } from '@/stores/store'
 import { RequestStatusEnum } from '@/types/enum'
 import { IRejectReturnRequestOrder, IReturnRequestOrder } from '@/types/order'
 
@@ -34,17 +32,13 @@ const MakeDecisionOnReturnRejectRequest = ({
   const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
   const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
 
-  const { user } = useStore(
-    useShallow((state) => ({
-      user: state.user
-    }))
-  )
   const { mutateAsync: makeDecisionOnRejectReturnRequestOrderFn } = useMutation({
     mutationKey: [makeDecisionOnRejectReturnRequestOrderApi.mutationKey],
     mutationFn: makeDecisionOnRejectReturnRequestOrderApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('order.successMakeDecisionOnReject')
+        message: t('return.successMakeDecisionOnReject'),
+        isShowDescription: false
       })
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
@@ -97,10 +91,10 @@ const MakeDecisionOnReturnRejectRequest = ({
                 <h3
                   className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold bg-red-100 text-red-600`}
                 >
-                  {t('order.rejectReturnRequestPendingTitle')}
+                  {t('return.rejectReturnRequestPendingTitle')}
                 </h3>
               </div>
-              <AlertDescription>{t('order.returnOrderRequestMessage')}</AlertDescription>
+              <AlertDescription>{t('return.returnOrderRequestMessage')}</AlertDescription>
             </div>
           </div>
           <div className='flex gap-2 items-center'>

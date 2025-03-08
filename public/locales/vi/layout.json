@@ -115,7 +115,8 @@
     "importFile": "Tải lên tệp",
     "downloadSample": "Tải mẫu",
     "import": "Tải lên",
-    "view": "Xem"
+    "view": "Xem",
+    "upload": "Tải lên"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -677,7 +678,7 @@
     "requestCancelSuccess": "Yêu cầu hủy đơn hàng thành công!",
     "cancelRequestPendingTitle": "Yêu Cầu Hủy Đơn Đang Chờ Xác Nhận",
     "cancelRequestRejectedTitle": "Yêu Cầu Hủy Đơn Bị Từ Chối",
-    "cancelRequestPendingMessage": "Yêu cầu hủy đơn hàng của bạn đã được gửi và đang chờ xác nhận. Đơn hàng sẽ vẫn được xử lý cho đến khi thương hiệu xem xét và phê duyệt yêu cầu. Chúng tôi sẽ cập nhật kết quả trong vòng 2 ngày. Nếu yêu cầu được chấp nhận, chúng tôi sẽ hoàn tiền cho bạn (nếu có).",
+    "cancelRequestPendingMessage": "Yêu cầu hủy đơn hàng của bạn đã được gửi và đang chờ xác nhận. Đơn hàng sẽ vẫn được xử lý cho đến khi thương hiệu xem xét và phê duyệt yêu cầu. Chúng tôi sẽ cập nhật kết quả trong vòng {{count}} ngày. Nếu yêu cầu được chấp nhận, chúng tôi sẽ hoàn tiền cho bạn (nếu có).",
     "cancelRequestRejectedMessage": "Yêu cầu hủy đơn hàng của bạn đã bị từ chối. Đơn hàng sẽ tiếp tục được xử lý như bình thường. Bạn có thể nhấn \"Trả hàng\" sau khi nhận được sản phẩm nếu có nhu cầu. Vui lòng liên hệ bộ phận hỗ trợ khách hàng nếu cần thêm trợ giúp.",
     "statusDescription": {
       "joinGroupBuying": "Khách hàng đã tham gia chương trình mua chung. Đơn hàng sẽ được xử lý khi đủ số lượng người tham gia.",
@@ -721,7 +722,10 @@
       "duplicate": "Nhận đơn hàng trùng lặp",
       "lateDelivery": "Giao hàng quá chậm",
       "other": "Khác"
-    }
+    },
+    "proof": "Hình ảnh và videos bằng chứng",
+    "returnRequestApprovedTitle": "Yêu Cầu Trả Hàng Đã Được Chấp Thuận",
+    "returnRequestApprovedMessage": "Yêu cầu trả hàng của bạn đã được thương hiệu chấp thuận. Vui lòng chuẩn bị, đóng gói và gửi hàng trong vòng {{count}} ngày. Hãy nhớ chụp ảnh và quay video rõ ràng để làm bằng chứng về tình trạng sản phẩm và bao bì nhé."
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -801,7 +805,7 @@
     "fileCountValid": "Bạn có thể tải lên tối đa {{count}} tệp",
     "tooLong": "Tin nhắn quá dài.",
     "ratingFeedback": "Vui lòng chọn điểm đánh giá từ 1 đến 5",
-    "contentFeedback": "Nội dung đánh giá phải có ít nhất 25 ký tự và không quá 500 ký tự",
+    "contentFeedback": "Nội dung đánh giá phải có ít nhất {{minLength}} ký tự và không quá {{maxLength}} ký tự",
     "maxImagesExceeded": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
     "maxVideosExceeded": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
     "inputMedia": "Vui lòng tải lên ít nhất một hình ảnh hoặc video.",
@@ -812,7 +816,7 @@
     "fileTypeLimits": "Bạn có thể tải lên tối đa {{imageCount}} hình ảnh và {{videoCount}} video.",
     "maxImages": "Bạn chỉ có thể tải lên tối đa {{count}} hình ảnh.",
     "maxVideos": "Bạn chỉ có thể tải lên tối đa {{count}} video.",
-    "contentReplyFeedback": "Nội dung phản hồi phải có ít nhất 25 ký tự và không quá 500 ký tự",
+    "contentReplyFeedback": "Nội dung phản hồi phải có ít nhất {{minLength}} ký tự và không quá {{maxLength}} ký tự",
     "videosRequired": "Vui lòng tải lên ít nhất một video.",
     "imagesRequired": "Vui lòng tải lên ít nhất một hình ảnh."
   },
@@ -1136,5 +1140,57 @@
       "cancel": "Hủy",
       "confirm": "Xác nhận quyết định"
     }
+  },
+  "return": {
+    "returnRequestPendingTitleCustomer": "Yêu Cầu Trả Hàng Đang Được Xem Xét",
+    "returnRequestPendingMessageCustomer": "Yêu cầu trả hàng của bạn đang được xem xét. Chúng tôi sẽ thông báo quyết định trong vòng {{count}} ngày. Vui lòng kiểm tra thông báo để cập nhật thông tin.",
+    "returnRequestRejectedTitleCustomer": "Yêu Cầu Trả Hàng Bị Từ Chối",
+    "returnRequestRejectedMessageCustomer": "Rất tiếc, yêu cầu trả hàng của bạn đã bị từ chối. Vui lòng kiểm tra lý do được cung cấp trong chi tiết trả hàng. Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với đội ngũ hỗ trợ của chúng tôi.",
+    "returnOrderEvidenceDialog": {
+      "title": "Tải Lên Bằng Chứng Gửi Trả Hàng",
+      "description": "Vui lòng cung cấp bằng chứng rõ ràng về việc gửi trả hàng, bao gồm hình ảnh hoặc video của sản phẩm đã đóng gói và biên lai vận chuyển. Điều này giúp đảm bảo quá trình trả hàng diễn ra suôn sẻ.",
+      "mediaFilesNotes": "Đảm bảo rằng ảnh hoặc video của bạn hiển thị rõ ràng tình trạng sản phẩm, bao bì và nhãn vận chuyển. Nên quay video ghi lại quá trình đóng gói và gửi hàng để xác minh.",
+      "returnOrderShipmentSuccessTitle": "Gửi Trả Hàng Thành Công!",
+      "returnOrderShipmentSuccessMessage": "Bạn đã gửi thành công thông tin về đơn hàng trả lại. Chúng tôi sẽ xem xét bằng chứng được cung cấp và cập nhật cho bạn về các bước tiếp theo. Vui lòng giữ lại biên lai vận chuyển và thông tin theo dõi để đối chiếu."
+    },
+    "rejectReturnOrderReason": {
+      "notEligible": "Sản phẩm không đủ điều kiện để trả hàng",
+      "noValidReason": "Lý do trả hàng được cung cấp không hợp lệ",
+      "insufficientEvidence": "Bằng chứng hoặc tài liệu hỗ trợ không đủ",
+      "policyViolation": "Yêu cầu trả hàng vi phạm chính sách trả hàng của nền tảng",
+      "damagedByCustomer": "Sản phẩm bị hư hỏng do khách hàng sử dụng sai cách",
+      "usedOrAltered": "Sản phẩm đã qua sử dụng hoặc bị thay đổi so với trạng thái ban đầu",
+      "discountedOrFinalSale": "Sản phẩm thuộc diện không thể trả hàng hoặc là mặt hàng khuyến mãi không hoàn trả",
+      "other": "Khác"
+    },
+    "complaintReturnOrderReason": {
+      "wrongItemReturned": "Sản phẩm trả lại không khớp với đơn hàng ban đầu",
+      "usedOrDamaged": "Sản phẩm đã qua sử dụng hoặc không còn trong tình trạng ban đầu",
+      "missingParts": "Sản phẩm trả lại bị thiếu bộ phận, phụ kiện hoặc bao bì gốc",
+      "fakeOrDifferentProduct": "Sản phẩm trả lại là hàng giả hoặc khác với sản phẩm đã mua",
+      "damagedPackaging": "Bao bì sản phẩm bị hư hỏng quá mức cho phép",
+      "returnAbuse": "Khách hàng có lịch sử trả hàng quá mức hoặc gian lận",
+      "expiredReturn": "Sản phẩm trả lại sau thời gian cho phép",
+      "other": "Khác"
+    },
+    "rejectReturnOrderDialog": {
+      "title": "Từ Chối Yêu Cầu Trả Hàng",
+      "description": "Vui lòng cung cấp lý do hợp lệ để từ chối yêu cầu trả hàng này. Nếu có, hãy đính kèm bằng chứng hỗ trợ để giải thích quyết định của bạn. Thông tin này sẽ được xem xét trước khi xác nhận việc từ chối.",
+      "mediaFilesNotes": "Đảm bảo rằng bất kỳ hình ảnh hoặc video nào được tải lên đều thể hiện rõ lý do từ chối, chẳng hạn như tình trạng sản phẩm, thiếu bao bì hoặc vi phạm chính sách."
+    },
+
+    "rejectReturnSuccess": "Từ Chối Yêu Cầu Trả Hàng Thành Công",
+    "rejectReturnSuccessMessage": "Bạn đã từ chối yêu cầu trả hàng thành công. Đội ngũ hỗ trợ của chúng tôi sẽ xem xét quyết định này và phản hồi kết quả cho bạn sớm nhất có thể.",
+    "rejectReturnRequestPendingTitleBrand": "Từ Chối Trả Hàng Đang Xem Xét",
+    "rejectReturnRequestPendingMessageBrand": "Yêu cầu từ chối trả hàng của bạn đang được đội ngũ hỗ trợ xem xét. Chúng tôi sẽ thông báo cho bạn khi có quyết định cuối cùng.",
+    "rejectReturnRequestApprovedTitleBrand": "Từ Chối Trả Hàng Được Phê Duyệt",
+    "rejectReturnRequestApprovedMessageBrand": "Yêu cầu từ chối trả hàng của bạn đã được phê duyệt. Khách hàng sẽ được thông báo tương ứng.",
+    "rejectReturnRequestRejectedTitleBrand": "Từ Chối Trả Hàng Bị Từ Chối",
+    "rejectReturnRequestRejectedMessageBrand": "Yêu cầu từ chối trả hàng của bạn đã bị từ chối. Yêu cầu trả hàng sẽ tiếp tục được xử lý như đã phê duyệt.",
+    "returnRequestPendingTitleAdmin": "Yêu Cầu Trả Hàng Đang Chờ Xem Xét",
+    "returnRequestPendingMessageAdmin": "Khách hàng đã yêu cầu trả hàng cho đơn hàng này. Thương hiệu sẽ xem xét và đưa ra quyết định. Bạn có thể kiểm tra chính sách trả hàng của nền tảng để tham khảo.",
+    "successMakeDecisionOnReject": "Xử lý thành công yêu cầu từ chối trả hàng của thương hiệu!",
+    "rejectReturnRequestPendingTitle": "Yêu Cầu Từ Chối Trả Hàng Đang Xem Xét",
+    "returnOrderRequestMessage": "Yêu cầu trả hàng đang được xử lý. Vui lòng xem xét tất cả các chi tiết liên quan và chính sách của nền tảng trước khi đưa ra quyết định cuối cùng."
   }
 }
