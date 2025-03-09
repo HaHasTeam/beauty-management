@@ -27,7 +27,8 @@ export default function SalesInformation({
   setIsValid,
   setCompleteSteps,
   activeStep,
-  setActiveStep
+  setActiveStep,
+  mode = 'create'
 }: SalesInformationProps) {
   const { t } = useTranslation()
   const [classificationCount, setClassificationCount] = useState<number>(0)
@@ -39,7 +40,7 @@ export default function SalesInformation({
   const [duplicateOptionIndex, setDuplicateOptionIndex] = useState<number | null>(null)
   const [duplicatedSKUIndex, setDuplicatedSKUIndex] = useState<number[]>([])
   const [isImagesUpload, setIsImagesUpload] = useState<boolean>(false)
-  const [isAllowEditing, setIsAllowEditing] = useState<boolean>(false)
+  const [isAllowEditing, setIsAllowEditing] = useState<boolean>(true)
   const [openDialog, setOpenDialog] = useState(false)
   const [usedClassificationTypes, setUsedClassificationTypes] = useState<{ [key: number]: string }>({})
   const selectedCategory = form.watch('category')
@@ -429,8 +430,10 @@ export default function SalesInformation({
     setUsedClassificationTypes(newUsedTypes)
 
     // Prevent user edit title, color, size, other
-    setIsAllowEditing(false)
-  }, [defineFormSignal, form])
+    if (mode === 'update') {
+      setIsAllowEditing(false)
+    }
+  }, [defineFormSignal, form, mode])
 
   // Scroll to the BasicInformation section when activeStep is 1
   useEffect(() => {
@@ -609,7 +612,7 @@ export default function SalesInformation({
                                           value={classification?.title || ''}
                                           disabled={!isAllowEditing}
                                         >
-                                          <SelectTrigger>
+                                          <SelectTrigger className='border bg-white border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'>
                                             <SelectValue
                                               placeholder={t('createProduct.pleaseChooseClassificationName')}
                                               className='border border-primary/40 text-primary hover:bg-primary/20 hover:text-primary'

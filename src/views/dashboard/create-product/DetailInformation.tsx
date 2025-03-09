@@ -12,7 +12,7 @@ import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker
 import FormSelect from '@/components/form-select'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { InputNormal } from '@/components/ui/input'
 import { ICategory } from '@/types/category'
 import { FormProductSchema, IProductFormFields } from '@/variables/productFormDetailFields'
 
@@ -206,7 +206,7 @@ export default function DetailInformation({
                             )}
                             {formField.type === 'input' && (
                               <FormControl>
-                                <Input
+                                <InputNormal
                                   type={formField?.inputType}
                                   className='border-primary/40'
                                   placeholder={t('createProduct.textPlaceholder')}

@@ -28,6 +28,7 @@ export interface SalesInformationProps {
   form: UseFormReturn<z.infer<typeof FormProductSchema>>
   resetSignal?: boolean
   defineFormSignal?: boolean
+  mode?: 'create' | 'update'
   setIsValid: React.Dispatch<boolean>
   setActiveStep: React.Dispatch<number>
   activeStep: number
