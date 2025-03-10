@@ -897,7 +897,7 @@
     "selectFile": "or click to select files",
     "reachMaxFiles": "You have reached the maximum number of files allowed",
     "uniqueNameClassification": "Each option in the same classification must have a unique name.",
-    "classificationInformation": "Pricing & Inventory",
+    "classificationInformation": "Pricing & Classifications",
     "skuProduct": "Product SKU",
     "sku": "SKU",
     "skuProductPlaceholder": "Enter product SKU",

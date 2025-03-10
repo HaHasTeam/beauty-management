@@ -48,7 +48,7 @@ export const getFormProductSchema = () => {
               .optional(),
             sku: z
               .string()
-              .min(1, { message: i18next.t('productFormMessage.SKUValidate') })
+              .min(1, { message: i18next.t('productFormMessage.SKURequiredLength') })
               .regex(skuRegex, { message: i18next.t('productFormMessage.SKURegex') })
               .optional(),
             type: z.string().min(0).optional(),

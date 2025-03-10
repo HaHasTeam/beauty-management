@@ -93,12 +93,6 @@ export const routes: IRoute[] = [
     collapse: true
   },
   {
-    name: routesConfig[Routes.CREATE_PRODUCT].name,
-    path: routesConfig[Routes.CREATE_PRODUCT].path,
-    icon: <Package className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
-    collapse: true
-  },
-  {
     name: routesConfig[Routes.SYSTEM_SERVICE_LIST].name,
     path: routesConfig[Routes.SYSTEM_SERVICE_LIST].path,
     icon: <Brush className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,

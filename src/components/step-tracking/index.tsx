@@ -39,7 +39,7 @@ const StepTracking = ({
         <div
           key={step.id}
           className={cn(
-            `flex hover:text-primary ${index !== steps?.length - 1 ? `w-${stepWidth}` : `w-${stepWidth}`}`,
+            `flex hover:text-primary w-full`,
             activeStep === index + 1
               ? 'text-primary hover:text-primary/80'
               : completeSteps?.includes(step?.id) && 'text-green-400 hover:text-green-500',
@@ -49,7 +49,7 @@ const StepTracking = ({
           )}
         >
           {/* Step */}
-          <div className='flex-col'>
+          <div className='flex flex-col items-center'>
             <div
               onClick={() => setActiveStep(step.id)}
               className={cn(
@@ -94,7 +94,7 @@ const StepTracking = ({
               orientation === 'vertical' ? 'h-[50px] flex items-center' : 'flex-row items-center justify-between'
             )}
           >
-            <span className='hidden md:block md:text-base text-sm'>{step?.title}</span>
+            <span className='hidden md:block md:text-base text-sm w-fit'>{step?.title}</span>
           </div>
         </div>
       ))}
