@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/drawer'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
+import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { getAllBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
@@ -103,7 +104,14 @@ export function UpdateStatusBrandDialog({
     brands: TBrand[]
   }) => {
     // Map over the brand array and call the mutation for each brand
-    const updatePromises = brands.map((item) => updateStatusBrandMutation({ brandId: item.id, status: status, reason }))
+    const updatePromises = brands.map((item) =>
+      updateStatusBrandMutation({
+        brandId: item.id,
+        status: status,
+        reason: reason,
+        url: import.meta.env.VITE_SITE_URL + routesConfig[Routes.DASHBOARD_HOME].getPath()
+      })
+    )
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)

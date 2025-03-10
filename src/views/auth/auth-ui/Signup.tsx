@@ -7,7 +7,6 @@ import { useId, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
@@ -20,10 +19,11 @@ import { defaultRequiredRegex, emailRegex, phoneRegex } from '@/constants/regex'
 import { useAppProvider } from '@/contexts/AppProvider'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { createUserApi, signInWithPasswordApi } from '@/network/apis/user'
-import { useStore } from '@/stores/store'
+import { createUserApi } from '@/network/apis/user'
 import type { TInviteSignupDecoded } from '@/types/auth'
 import { UserRoleEnum } from '@/types/role'
+
+import OauthSignIn from './OauthSignIn'
 
 // Define prop type with allowEmail boolean
 // type SignUpProps = {
@@ -59,12 +59,6 @@ export default function SignUp() {
     return undefined
   }, [code])
 
-  const { authenticate } = useStore(
-    useShallow((state) => ({
-      authenticate: state.setAuthState
-    }))
-  )
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -89,27 +83,27 @@ export default function SignUp() {
     }
   })
 
-  const { mutateAsync: signInWithPasswordFn } = useMutation({
-    mutationKey: [signInWithPasswordApi.mutationKey],
-    mutationFn: signInWithPasswordApi.fn
-  })
+  // const { mutateAsync: signInWithPasswordFn } = useMutation({
+  //   mutationKey: [signInWithPasswordApi.mutationKey],
+  //   mutationFn: signInWithPasswordApi.fn
+  // })
 
-  const handleLogin = async (email: string, password: string) => {
-    try {
-      const { data } = await signInWithPasswordFn({
-        email,
-        password
-      })
-      authenticate({
-        isAuthenticated: true,
-        authData: data
-      })
-    } catch (error) {
-      handleServerError({
-        error
-      })
-    }
-  }
+  // const handleLogin = async (email: string, password: string) => {
+  //   try {
+  //     const { data } = await signInWithPasswordFn({
+  //       email,
+  //       password
+  //     })
+  //     authenticate({
+  //       isAuthenticated: true,
+  //       authData: data
+  //     })
+  //   } catch (error) {
+  //     handleServerError({
+  //       error
+  //     })
+  //   }
+  // }
 
   const handleServerError = useHandleServerError()
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -122,8 +116,8 @@ export default function SignUp() {
         role: prefillData ? prefillData.role : rolesData[UserRoleEnum.MANAGER].id,
         brands: prefillData ? [prefillData.brand] : undefined
       })
-      await handleLogin(values.email, values.password)
-      navigate(routesConfig[Routes.DASHBOARD_HOME].getPath({ email: values.email }))
+      // await handleLogin(values.email, values.password)
+      navigate(routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath({ email: values.email }))
     } catch (error) {
       handleServerError({
         error,
@@ -239,13 +233,16 @@ export default function SignUp() {
               />
             </div>
 
-            <Button
-              loading={form.formState.isSubmitting}
-              type='submit'
-              className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
-            >
-              Sign up
-            </Button>
+            <div className='relative w-full'>
+              <Button
+                loading={form.formState.isSubmitting}
+                type='submit'
+                className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
+              >
+                Sign up
+              </Button>
+              <OauthSignIn />
+            </div>
           </form>
         </Form>
       </div>

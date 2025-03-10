@@ -18,7 +18,7 @@ import { useStore } from '@/stores/store'
 import { UserRoleEnum } from '@/types/role'
 import { IRoute } from '@/types/types'
 
-import RoleTag from '../account/RoleTag'
+import { RoleTag } from '../account/RoleTag'
 import ImageWithFallback from '../image/ImageWithFallback'
 import { Button } from '../ui/button'
 
@@ -74,7 +74,7 @@ function Sidebar(props: SidebarProps) {
               </div>
               <div className='w-full flex justify-center mt-2'>
                 <div className='w-fit'>
-                  <RoleTag role={userProfile?.role as UserRoleEnum} />
+                  <RoleTag role={(userProfile?.role as UserRoleEnum | 'BRAND' | 'MODERATOR') || UserRoleEnum.MANAGER} />
                 </div>
               </div>
               <div className='mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10' />

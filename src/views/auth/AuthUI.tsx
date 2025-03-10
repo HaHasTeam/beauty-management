@@ -52,7 +52,7 @@ export default function AuthUI() {
   if (!viewProp || !AuthPaths.includes(viewProp)) {
     return <Navigate to={routesConfig[Routes.AUTH_LOGIN].getPath()} replace />
   }
-  if (viewProp === 'email-verification') {
+  if (viewProp == 'email-verification') {
     return <EmailVerification />
   }
 
@@ -60,7 +60,7 @@ export default function AuthUI() {
     <div className='my-auto mb-auto  flex flex-col md:max-w-full  lg:max-w-[420px]'>
       <p className='text-[32px] font-bold text-zinc-950 dark:text-white'>
         {props.viewProp === 'signup'
-          ? 'Đăng ký'
+          ? ''
           : props.viewProp === 'forgot-password'
             ? 'Forgot Password'
             : props.viewProp === 'update-password'
@@ -71,7 +71,7 @@ export default function AuthUI() {
       </p>
       <p className='mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400'>
         {props.viewProp === 'signup'
-          ? 'Đăng ký bán hàng cùng Allure'
+          ? ''
           : props.viewProp === 'forgot-password'
             ? 'Enter your email to get a password reset link!'
             : props.viewProp === 'update-password'
@@ -90,7 +90,7 @@ export default function AuthUI() {
       )}
       {props.viewProp === 'update-password' && <UpdatePassword />}
       {props.viewProp === 'signup' && <SignUp />}
-      {props.viewProp !== 'update-password' && props.allowOauth && (
+      {props.viewProp !== 'update-password' && props.viewProp !== 'signup' && props.allowOauth && (
         <>
           <OauthSignIn />
           <Separator />

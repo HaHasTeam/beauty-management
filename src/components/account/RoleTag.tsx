@@ -14,7 +14,7 @@ const sizeClasses = {
   large: 'text-base px-4 py-2'
 }
 
-export default function RoleTag({ role, size = 'medium' }: RoleTagProps) {
+export function RoleTag({ role, size = 'medium' }: RoleTagProps) {
   const { t } = useTranslation()
   const roleData = getRoleIcon(role)
 
