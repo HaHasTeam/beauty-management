@@ -70,7 +70,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
       id: 'brand',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Brand Name' />,
       cell: ({ row }) => {
-        const displayName = row.original.name
+        const displayName = row.original.name ?? 'brand'
         const image = row.original.logo
         return (
           <div className='flex space-x-2 items-center'>

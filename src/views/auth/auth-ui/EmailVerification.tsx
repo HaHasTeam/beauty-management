@@ -1,48 +1,85 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { jwtDecode } from 'jwt-decode'
 import { CircleHelpIcon, LoaderCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { MdMarkEmailRead } from 'react-icons/md'
 import { SiMinutemailer } from 'react-icons/si'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { useShallow } from 'zustand/react/shallow'
 
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 import { emailContact } from '@/constants/infor'
-import { activateAccountApi } from '@/network/apis/auth'
-import { useStore } from '@/stores/store'
-import { TEmailDecoded } from '@/types/auth'
+import { activateAccountApi, resendMutateApi } from '@/network/apis/auth'
+import type { TEmailDecoded } from '@/types/auth'
 
 const EmailVerification = () => {
   const navigate = useNavigate()
   const queryParams = new URLSearchParams(window.location.search)
   const email = queryParams.get('email')
   const code = queryParams.get('code')
-  const { authData } = useStore(
-    useShallow((state) => ({
-      authData: state.authData
-    }))
-  )
+
   const accountId = code ? jwtDecode<TEmailDecoded>(code).accountId : undefined
-  const currentUrl = window.location.href
+
+  const verifyEmailRedirectUrl = import.meta.env.VITE_SITE_URL + routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath()
+
+  // Add state for countdown timer
+  const [isCountdownActive, setIsCountdownActive] = useState(false)
+  const [countdown, setCountdown] = useState(60)
+
+  // Handle countdown timer
+  useEffect(() => {
+    let timer: number | undefined
+
+    if (isCountdownActive && countdown > 0) {
+      timer = window.setInterval(() => {
+        setCountdown((prevCount) => prevCount - 1)
+      }, 1000)
+    } else if (countdown === 0) {
+      setIsCountdownActive(false)
+      setCountdown(60)
+    }
+
+    return () => {
+      if (timer) clearInterval(timer)
+    }
+  }, [isCountdownActive, countdown])
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: [resendMutateApi.mutationKey],
+    mutationFn: resendMutateApi.fn
+  })
+
   const { data: activateAccountData, isFetching: isActivatingAccount } = useQuery({
     queryKey: [activateAccountApi.queryKey, accountId as string],
     queryFn: activateAccountApi.fn,
     enabled: !!accountId
   })
-  if (!authData && !email && !code) {
+
+  // Update the handleResend function to handle the case where email could be null
+  const handleResend = async () => {
+    if (!isCountdownActive && !isPending && email) {
+      await mutateAsync({
+        email: email,
+        url: verifyEmailRedirectUrl
+      })
+      // Start countdown after successful resend
+      setIsCountdownActive(true)
+    }
+  }
+
+  if (!email && !code) {
     return <Navigate to={routesConfig[Routes.AUTH_LOGIN].getPath()} replace />
   }
-  if (!authData) {
-    return (
-      <Navigate
-        to={routesConfig[Routes.AUTH_LOGIN].getPath({
-          returnUrl: currentUrl
-        })}
-        replace
-      />
-    )
-  }
+  // if (!authData) {
+  //   return (
+  //     <Navigate
+  //       to={routesConfig[Routes.AUTH_LOGIN].getPath({
+  //         returnUrl: currentUrl
+  //       })}
+  //       replace
+  //     />
+  //   )
+  // }
 
   if (activateAccountData) {
     return <Navigate to={routesConfig[Routes.DASHBOARD_HOME].getPath()} replace />
@@ -113,15 +150,10 @@ const EmailVerification = () => {
               navigate(routesConfig[Routes.DASHBOARD_HOME].path)
             }}
           >
-            Go to dashboard
+            Register Brand
           </Button>
-          <Button
-            variant={'default'}
-            onClick={() => {
-              navigate(routesConfig[Routes.REGISTER_BRAND].path)
-            }}
-          >
-            Continue register
+          <Button variant={'default'} onClick={handleResend} disabled={isCountdownActive || isPending}>
+            {isPending ? 'Sending...' : isCountdownActive ? `Resend (${countdown}s)` : 'Resend'}
           </Button>
         </div>
       </div>

@@ -33,7 +33,7 @@ export default function OauthSignIn() {
       {oAuthProviders.map((provider) => (
         <form key={provider.name} className='pb-2' onSubmit={handleSubmit}>
           <Input type='hidden' name='provider' value={provider.name} />
-          <Button variant='outline' type='submit' className='w-full text-zinc-950 py-6 dark:text-white'>
+          <Button variant='outline' type='submit' className='w-full border-primary text-zinc-950 py-6 dark:text-white'>
             <span className='mr-2'>{provider.icon}</span>
             <span>{provider.displayName}</span>
           </Button>
