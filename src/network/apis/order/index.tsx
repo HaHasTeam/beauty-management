@@ -80,12 +80,12 @@ export const cancelOrderApi = toMutationFetcher<ICancelOrder, TServerResponse<IO
   }
 )
 export const makeDecisionOnCancelRequestOrderApi = toMutationFetcher<
-  { requestId: string; status: string },
+  { requestId: string; status: string; reasonRejected: string },
   TServerResponse<IOrder>
->('makeDecisionOnCancelRequestOrderApi', async ({ requestId, status }) => {
+>('makeDecisionOnCancelRequestOrderApi', async ({ requestId, status, reasonRejected }) => {
   return privateRequest(`/orders/make-decision-on-request/${requestId}`, {
     method: 'POST',
-    data: { status }
+    data: { status, reasonRejected }
   })
 })
 

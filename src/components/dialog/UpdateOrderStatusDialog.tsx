@@ -272,7 +272,10 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
               <Button
                 variant='outline'
                 className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                onClick={() => setOpenCancelOrderDialog(true)}
+                onClick={() => {
+                  setOpenCancelOrderDialog(true)
+                  handleReset()
+                }}
               >
                 {t('order.cancelOrder')}
               </Button>

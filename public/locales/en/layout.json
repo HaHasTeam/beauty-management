@@ -726,7 +726,15 @@
     },
     "proof": "Images and videos proof",
     "returnRequestApprovedTitle": "Return Request Approved",
-    "returnRequestApprovedMessage": "Your return request has been approved by the brand. Please prepare, pack, and ship the item within {{count}} days. Remember to keep clear photos and videos as proof of the product's condition and packaging."
+    "returnRequestApprovedMessage": "Your return request has been approved by the brand. Please prepare, pack, and ship the item within {{count}} days. Remember to keep clear photos and videos as proof of the product's condition and packaging.",
+    "rejectCancelOrderReason": {
+      "SHIPPED": "The order is in transit and cannot be canceled.",
+      "PROCESSED": "The order has already been processed and is ready for shipment.",
+      "MULTIPLE_ATTEMPTS": "Multiple cancellation attempts detected, violating our cancellation policy.",
+      "SUSPICIOUS_ACTIVITY": "This cancellation request appears to be fraudulent or suspicious.",
+      "OTHER": "Other"
+    },
+    "processSuccess": "Cancellation request processed successfully!"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -1075,7 +1083,7 @@
     "content": "Share Your Experiences",
     "contentPlaceholder": "Enter your message here...",
     "mediaFiles": "Upload video and images",
-    "mediaFilesHint": "You can upload up to {{videoCount}} video(s) and {{imageCount}} image(s), ensuring the total file size does not exceed {{size}}MB. \nSupports the following formats: {{format}}.",
+    "mediaFilesHint": "You are allowed to upload a maximum of {{videoCount}} video(s) and {{imageCount}} image(s), provided that the total file size remains within {{size}}MB. Please ensure your files are in one of the supported formats: {{format}}.",
     "imagesHint": {
       "TO_SHIP": "Show order contents, packaging, shipping label.",
       "SHIPPING": "Provide proof of handing the package to the shipping carrier.",
@@ -1200,6 +1208,12 @@
       "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
       "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
       "refunded": "The payment for this booking has been refunded to your original payment method."
+    }
+  },
+  "reason": {
+    "rejectCancel": {
+      "title": "Cancel Request Rejected",
+      "message": "Please provide a reason for rejecting the request."
     }
   }
 }

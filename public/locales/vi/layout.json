@@ -726,7 +726,15 @@
     },
     "proof": "Hình ảnh và videos bằng chứng",
     "returnRequestApprovedTitle": "Yêu Cầu Trả Hàng Đã Được Chấp Thuận",
-    "returnRequestApprovedMessage": "Yêu cầu trả hàng của bạn đã được thương hiệu chấp thuận. Vui lòng chuẩn bị, đóng gói và gửi hàng trong vòng {{count}} ngày. Hãy nhớ chụp ảnh và quay video rõ ràng để làm bằng chứng về tình trạng sản phẩm và bao bì nhé."
+    "returnRequestApprovedMessage": "Yêu cầu trả hàng của bạn đã được thương hiệu chấp thuận. Vui lòng chuẩn bị, đóng gói và gửi hàng trong vòng {{count}} ngày. Hãy nhớ chụp ảnh và quay video rõ ràng để làm bằng chứng về tình trạng sản phẩm và bao bì nhé.",
+    "rejectCancelOrderReason": {
+      "SHIPPED": "Đơn hàng đã được giao cho đơn vị vận chuyển và không thể hủy.",
+      "PROCESSED": "Đơn hàng đã được xử lý và sẵn sàng giao hàng.",
+      "MULTIPLE_ATTEMPTS": "Phát hiện nhiều yêu cầu hủy đơn, vi phạm chính sách hủy đơn hàng.",
+      "SUSPICIOUS_ACTIVITY": "Yêu cầu hủy đơn hàng có dấu hiệu gian lận hoặc đáng ngờ.",
+      "OTHER": "Khác"
+    },
+    "processSuccess": "Yêu cầu hủy đơn đã được xử lý thành công!"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -1075,7 +1083,7 @@
     "content": "Chia sẻ trải nghiệm của bạn",
     "contentPlaceholder": "Nhập nội dung tại đây...",
     "mediaFiles": "Tải lên video và hình ảnh",
-    "mediaFilesHint": "Bạn có thể tải lên tối đa {{videoCount}} video và {{imageCount}} hình ảnh, đảm bảo tổng dung lượng tệp không vượt quá {{size}}MB. \nHỗ trợ những định dạng sau: {{format}}.",
+    "mediaFilesHint": "Bạn có thể tải lên tối đa {{videoCount}} video và {{imageCount}} hình ảnh, đảm bảo tổng dung lượng tệp không vượt quá {{size}}MB. Hệ thống hỗ trợ những định dạng phổ biến như: {{format}}.",
     "imagesHint": {
       "TO_SHIP": "Hiển thị nội dung đơn hàng, cách đóng gói, nhãn vận chuyển.",
       "SHIPPING": "Cung cấp bằng chứng bàn giao kiện hàng cho đơn vị vận chuyển.",
@@ -1217,6 +1225,12 @@
       "formSubmitted": "Biểu mẫu đặt dịch vụ của bạn đã được gửi thành công. Chúng tôi đang xem xét thông tin của bạn.",
       "resultSheetSent": "Bảng kết quả cho dịch vụ của bạn đã được gửi. Bạn có thể xem kết quả chi tiết ngay bây giờ.",
       "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn."
+    }
+  },
+  "reason": {
+    "rejectCancel": {
+      "title": "Từ chối yêu cầu hủy đơn",
+      "message": "Vui lòng cung cấp lý do từ chối yêu cầu."
     }
   }
 }

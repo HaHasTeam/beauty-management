@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { History, MessageSquareText, Truck } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,23 +11,19 @@ import Button from '@/components/button'
 import CancelOrderDialog from '@/components/dialog/CancelOrderDialog'
 import UpdateOrderStatus from '@/components/dialog/UpdateOrderStatusDialog'
 import Empty from '@/components/empty/Empty'
-import LoadingIcon from '@/components/loading-icon'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import OrderStatus from '@/components/order-status'
-import { AlertDescription } from '@/components/ui/alert'
 import { Routes, routesConfig } from '@/configs/routes'
-import useHandleServerError from '@/hooks/useHandleServerError'
-import { useToast } from '@/hooks/useToast'
 import {
   getCancelAndReturnRequestApi,
   getOrderByIdApi,
   getRejectReturnRequestApi,
-  getStatusTrackingByIdApi,
-  makeDecisionOnCancelRequestOrderApi
+  getStatusTrackingByIdApi
 } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
 import { RequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
+import MakeDecisionOnCancelRequest from './MakeDecisionOnCancelRequest'
 import MakeDecisionOnReturnRejectRequest from './MakeDecisionOnRejectReturnRequest'
 import MakeDecisionOnReturnRequest from './MakeDecisionOnReturnRequest'
 import OrderDetailItems from './order-detail/OrderDetailItems'
@@ -39,13 +35,7 @@ import OrderSummary from './order-detail/OrderSummary'
 const OrderDetails = () => {
   const { id } = useParams()
   const { t } = useTranslation()
-  const queryClient = useQueryClient()
-  const { successToast } = useToast()
-  const handleServerError = useHandleServerError()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
-  const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
 
   const { user } = useStore(
     useShallow((state) => ({
@@ -75,48 +65,7 @@ const OrderDetails = () => {
     queryFn: getRejectReturnRequestApi.fn,
     enabled: !!id
   })
-  const { mutateAsync: makeDecisionOnCancelRequestOrderFn } = useMutation({
-    mutationKey: [makeDecisionOnCancelRequestOrderApi.mutationKey],
-    mutationFn: makeDecisionOnCancelRequestOrderApi.fn,
-    onSuccess: () => {
-      successToast({
-        message: t('order.orderCancellationUpdate')
-      })
-      queryClient.invalidateQueries({
-        queryKey: [getOrderByIdApi.queryKey]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [getStatusTrackingByIdApi.queryKey]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [getCancelAndReturnRequestApi.queryKey]
-      })
-    }
-  })
 
-  const handleMakeDecisionOnCancelRequest = async (decision: RequestStatusEnum) => {
-    try {
-      if (decision === RequestStatusEnum.APPROVED) {
-        setIsLoadingDecisionApproved(true)
-      } else {
-        setIsLoadingDecisionRejected(true)
-      }
-      await makeDecisionOnCancelRequestOrderFn({
-        requestId: cancelAndReturnRequestData?.data?.cancelOrderRequest?.id ?? '',
-        status: decision
-      })
-      if (decision === RequestStatusEnum.APPROVED) {
-        setIsLoadingDecisionApproved(false)
-      } else {
-        setIsLoadingDecisionRejected(false)
-      }
-    } catch (error) {
-      setIsLoading(false)
-      handleServerError({
-        error
-      })
-    }
-  }
   return (
     <>
       {isFetching && <LoadingLayer />}
@@ -199,48 +148,12 @@ const OrderDetails = () => {
                 )}
 
               {/* handle cancel request for brand and system role */}
-              {!isLoading &&
-                (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
                 cancelAndReturnRequestData?.data?.cancelOrderRequest &&
                 cancelAndReturnRequestData?.data?.cancelOrderRequest?.status === RequestStatusEnum.PENDING && (
-                  <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
-                    <div className='flex items-center gap-2 justify-between'>
-                      <div className='flex items-center gap-2'>
-                        <div className='flex flex-col gap-1'>
-                          <div>
-                            <h3
-                              className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold bg-red-100 text-red-600`}
-                            >
-                              {t('order.cancelRequestPendingBrandTitle')}
-                            </h3>
-                          </div>
-                          <AlertDescription>{t('order.CancelOrderRequestBrandMessage')}</AlertDescription>
-                        </div>
-                      </div>
-                      <div className='flex gap-2 items-center'>
-                        {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
-                          useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
-                          useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER) && (
-                          <div className='flex gap-2 items-center'>
-                            <Button
-                              variant='outline'
-                              className='w-full border text-destructive bg-white border-destructive hover:text-destructive hover:bg-destructive/10'
-                              onClick={() => handleMakeDecisionOnCancelRequest(RequestStatusEnum.REJECTED)}
-                            >
-                              {isLoadingDecisionRejected ? <LoadingIcon /> : t('button.rejected')}
-                            </Button>
-                            <Button
-                              variant='default'
-                              className='w-full border text-white bg-green-500 hover:text-white hover:bg-green-400'
-                              onClick={() => handleMakeDecisionOnCancelRequest(RequestStatusEnum.APPROVED)}
-                            >
-                              {isLoadingDecisionApproved ? <LoadingIcon /> : t('button.approved')}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <MakeDecisionOnCancelRequest
+                    cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelOrderRequest}
+                  />
                 )}
 
               {/* order status tracking */}
