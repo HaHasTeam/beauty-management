@@ -128,7 +128,7 @@ export const getBrandCancelRequestApi = toMutationFetcher<
 export const getCancelAndReturnRequestApi = toQueryFetcher<string, TServerResponse<ICancelAndReturnRequest>>(
   'getCancelAndReturnRequestApi',
   async (orderId) => {
-    return privateRequest(`/orders/get-both-request-refund-cancel/${orderId}`, {
+    return privateRequest(`/orders/get-requests-of-order/${orderId}`, {
       method: 'GET'
     })
   }

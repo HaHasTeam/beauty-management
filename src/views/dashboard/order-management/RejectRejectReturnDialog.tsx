@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import AlertMessage from '@/components/alert/AlertMessage'
 import Button from '@/components/button'
 import Label from '@/components/form-label'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -99,11 +98,10 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
           <AlertTriangle className='mt-2 h-6 w-6 text-orange-500' />
           <div className='flex-1 gap-2 items-start'>
             <DialogTitle className='text-lg'>{t(`order.rejectRequestRejectOrder`)}</DialogTitle>
-            <DialogDescription></DialogDescription>
+            <DialogDescription className='text-justify'>{t('order.rejectRequestRejectOrderMessage')}</DialogDescription>
           </div>
         </DialogHeader>
 
-        <AlertMessage message={t('order.rejectRequestRejectOrderMessage')} textSize='medium' />
         <Form {...form}>
           <form
             noValidate

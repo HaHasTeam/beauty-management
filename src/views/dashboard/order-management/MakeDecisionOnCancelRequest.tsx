@@ -109,34 +109,6 @@ const MakeDecisionOnCancelRequest = ({ cancelOrderRequest }: { cancelOrderReques
   if (!cancelOrderRequest) return null
   return (
     cancelOrderRequest && (
-      //   <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
-      //     <div className='flex items-center gap-2 justify-between'>
-      //       <div className='flex items-center gap-2'>
-      //         <div className='flex flex-col gap-1'>
-      //           <div>
-      //             <h3
-      //               className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold bg-red-100 text-red-600`}
-      //             >
-      //               {t('return.rejectReturnRequestPendingTitle')}
-      //             </h3>
-      //           </div>
-      //           <AlertDescription>{t('return.returnOrderRequestMessage')}</AlertDescription>
-      //         </div>
-      //       </div>
-      //       <div className='flex gap-2 items-center'>
-      //         <div className='flex gap-2 items-center'>
-      //           <Button
-      //             variant='outline'
-      //             className='w-full bg-yellow-500 hover:bg-yellow-600 text-white hover:text-white'
-      //             onClick={() => setOpenConfirmDialog(true)}
-      //           >
-      //             {t('button.view')}
-      //           </Button>
-      //         </div>
-      //       </div>
-      //     </div>
-      //     <ReasonDialog />
-      //   </div>
       <div className='w-full'>
         <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
           <div className='flex items-center gap-2 justify-between'>

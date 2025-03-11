@@ -1140,6 +1140,21 @@
     "decisionReturn": {
       "title": "Confirm Return Decision",
       "description": "The customer has requested a return for this order.",
+      "cus": "Customer's Return Request Details",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "viewReturn": {
+      "title": "Confirm Return Decision",
+      "description": "The customer has submitted a return request for this order.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "decisionRejectReturn": {
+      "title": "Review Return Request Rejection",
+      "description": "The brand has rejected the customer's return request. Please review the details of the request and the brand's reason for rejection. You can either approve or reject the rejection. If you reject the request, please provide a reason, the brand and customer will be notified.",
+      "cus": "Customer's Return Request Details",
+      "brand": "Brand's Rejection Response",
       "cancel": "Cancel",
       "confirm": "Confirm"
     }
@@ -1170,7 +1185,6 @@
       "description": "Please provide a valid reason for rejecting this return request. If applicable, attach supporting evidence to justify your decision. This information will be reviewed before finalizing the rejection.",
       "mediaFilesNotes": "Ensure that any uploaded images or videos clearly support your decision, such as product condition, missing packaging, or policy violations."
     },
-
     "rejectReturnSuccess": "Return Request Rejected Successfully",
     "rejectReturnSuccessMessage": "You have successfully rejected the return request. Our support team will review this decision and provide you with the final result as soon as possible.",
     "rejectReturnRequestPendingTitleBrand": "Return Rejection Under Review",
@@ -1183,7 +1197,10 @@
     "returnRequestPendingMessageAdmin": "The customer has requested a return for this order. The brand will review and decide. You can check the platform's return policy for guidance.",
     "successMakeDecisionOnReject": "Successfully processed the brand's return rejection request!",
     "rejectReturnRequestPendingTitle": "Return Rejection Request Under Review",
-    "returnOrderRequestMessage": "The return request is being processed. Please review all relevant details and platform policies before making a final decision."
+    "returnOrderRequestMessage": "The brand has declined the customer's return request. Please review all relevant details and platform policies before making a final decision.",
+    "successMakeDecisionOnReturn": "Successfully Processed Return Request",
+    "returnRequestPendingTitleBrand": "Return Request Pending Review",
+    "returnOrderRequestMessageBrand": "A customer has requested a return for this order. You can review the request and make a decision. If no action is taken within {{count}} days, the request will be automatically approved. If approved, the customer will proceed with shipping the return. If rejected, the admin will review and make the final decision."
   },
   "booking": {
     "waitConfirm": "Waiting for Confirmation",

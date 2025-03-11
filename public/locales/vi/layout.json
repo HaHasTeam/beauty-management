@@ -724,7 +724,7 @@
       "lateDelivery": "Giao hàng quá chậm",
       "other": "Khác"
     },
-    "proof": "Hình ảnh và videos bằng chứng",
+    "proof": "Hình ảnh và video bằng chứng",
     "returnRequestApprovedTitle": "Yêu Cầu Trả Hàng Đã Được Chấp Thuận",
     "returnRequestApprovedMessage": "Yêu cầu trả hàng của bạn đã được thương hiệu chấp thuận. Vui lòng chuẩn bị, đóng gói và gửi hàng trong vòng {{count}} ngày. Hãy nhớ chụp ảnh và quay video rõ ràng để làm bằng chứng về tình trạng sản phẩm và bao bì nhé.",
     "rejectCancelOrderReason": {
@@ -1140,14 +1140,23 @@
     "decisionReturn": {
       "title": "Xác nhận quyết định trả hàng",
       "description": "Khách hàng đã gửi yêu cầu trả hàng. Vui lòng xem xét kỹ lý do, bằng chứng khách hàng cung cấp và đưa ra quyết định trong vòng 2 ngày. Bạn có thể từ chối yêu cầu và gửi bằng chứng để chúng tôi kiểm duyệt và đưa ra quyết định cuối cùng. Nếu không có phản hồi trong 2 ngày, yêu cầu sẽ tự động được chấp nhận.",
+      "cus": "Chi Tiết Yêu Cầu Trả Hàng Của Khách Hàng",
       "cancel": "Hủy",
-      "confirm": "Xác nhận quyết định"
+      "confirm": "Xác nhận"
     },
     "viewReturn": {
       "title": "Xác nhận quyết định trả hàng",
       "description": "Khách hàng đã gửi yêu cầu trả hàng cho đơn hàng này.",
       "cancel": "Hủy",
-      "confirm": "Xác nhận quyết định"
+      "confirm": "Xác nhận"
+    },
+    "decisionRejectReturn": {
+      "title": "Xét Duyệt Yêu Cầu Từ Chối Trả Hàng",
+      "description": "Thương hiệu đã từ chối yêu cầu trả hàng của khách hàng. Vui lòng xem xét chi tiết yêu cầu và lý do từ chối của thương hiệu. Bạn có thể chấp nhận hoặc từ chối quyết định của thương hiệu. Nếu bạn từ chối, vui lòng cung cấp lý do, thương hiệu và khách hàng sẽ nhận được thông báo.",
+      "cus": "Chi Tiết Yêu Cầu Trả Hàng Của Khách Hàng",
+      "brand": "Phản Hồi Từ Chối Yêu Cầu Trả Hàng Của Thương Hiệu",
+      "cancel": "Hủy",
+      "confirm": "Xác nhận"
     }
   },
   "return": {
@@ -1190,7 +1199,7 @@
 
     "rejectReturnSuccess": "Từ Chối Yêu Cầu Trả Hàng Thành Công",
     "rejectReturnSuccessMessage": "Bạn đã từ chối yêu cầu trả hàng thành công. Đội ngũ hỗ trợ của chúng tôi sẽ xem xét quyết định này và phản hồi kết quả cho bạn sớm nhất có thể.",
-    "rejectReturnRequestPendingTitleBrand": "Từ Chối Trả Hàng Đang Xem Xét",
+    "rejectReturnRequestPendingTitleBrand": "Yêu Cầu Từ chối Trả Hàng Đang Chờ Xét Duyệt",
     "rejectReturnRequestPendingMessageBrand": "Yêu cầu từ chối trả hàng của bạn đang được đội ngũ hỗ trợ xem xét. Chúng tôi sẽ thông báo cho bạn khi có quyết định cuối cùng.",
     "rejectReturnRequestApprovedTitleBrand": "Từ Chối Trả Hàng Được Phê Duyệt",
     "rejectReturnRequestApprovedMessageBrand": "Yêu cầu từ chối trả hàng của bạn đã được phê duyệt. Khách hàng sẽ được thông báo tương ứng.",
@@ -1199,8 +1208,11 @@
     "returnRequestPendingTitleAdmin": "Yêu Cầu Trả Hàng Đang Chờ Xem Xét",
     "returnRequestPendingMessageAdmin": "Khách hàng đã yêu cầu trả hàng cho đơn hàng này. Thương hiệu sẽ xem xét và đưa ra quyết định. Bạn có thể kiểm tra chính sách trả hàng của nền tảng để tham khảo.",
     "successMakeDecisionOnReject": "Xử lý thành công yêu cầu từ chối trả hàng của thương hiệu!",
-    "rejectReturnRequestPendingTitle": "Yêu Cầu Từ Chối Trả Hàng Đang Xem Xét",
-    "returnOrderRequestMessage": "Yêu cầu trả hàng đang được xử lý. Vui lòng xem xét tất cả các chi tiết liên quan và chính sách của nền tảng trước khi đưa ra quyết định cuối cùng."
+    "rejectReturnRequestPendingTitle": "Yêu Cầu Từ chối Trả Hàng Đang Chờ Xét Duyệt",
+    "returnOrderRequestMessage": "Thương hiệu đã từ chối yêu cầu trả hàng của khách hàng. Vui lòng xem xét tất cả các chi tiết liên quan và chính sách của nền tảng trước khi đưa ra quyết định cuối cùng.",
+    "successMakeDecisionOnReturn": "Đã xử lý thành công yêu cầu trả hàng",
+    "returnRequestPendingTitleBrand": "Yêu Cầu Từ chối Trả Hàng Đang Chờ Xét Duyệt",
+    "returnOrderRequestMessageBrand": "Khách hàng đã yêu cầu trả hàng cho đơn hàng này. Bạn có thể xem xét yêu cầu và đưa ra quyết định. Nếu không có hành động nào được thực hiện trong {{count}} ngày, yêu cầu sẽ tự động được chấp thuận. Nếu được chấp thuận, khách hàng sẽ tiếp tục gửi hàng trả lại. Nếu bị từ chối, quản trị viên sẽ xem xét và đưa ra quyết định cuối cùng."
   },
   "booking": {
     "waitConfirm": "Đang chờ xác nhận",

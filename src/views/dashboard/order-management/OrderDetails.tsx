@@ -14,12 +14,7 @@ import Empty from '@/components/empty/Empty'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import OrderStatus from '@/components/order-status'
 import { Routes, routesConfig } from '@/configs/routes'
-import {
-  getCancelAndReturnRequestApi,
-  getOrderByIdApi,
-  getRejectReturnRequestApi,
-  getStatusTrackingByIdApi
-} from '@/network/apis/order'
+import { getCancelAndReturnRequestApi, getOrderByIdApi, getStatusTrackingByIdApi } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
 import { RequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
@@ -60,11 +55,6 @@ const OrderDetails = () => {
     queryFn: getCancelAndReturnRequestApi.fn,
     enabled: !!id
   })
-  const { data: rejectReturnRequest } = useQuery({
-    queryKey: [getRejectReturnRequestApi.queryKey, id ?? ('' as string)],
-    queryFn: getRejectReturnRequestApi.fn,
-    enabled: !!id
-  })
 
   return (
     <>
@@ -103,7 +93,9 @@ const OrderDetails = () => {
               {/* brand */}
               {/* alert make decision request reject return order */}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
-                rejectReturnRequest?.data?.status === RequestStatusEnum.PENDING && (
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.REJECTED &&
+                cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status ===
+                  RequestStatusEnum.PENDING && (
                   <AlertMessage
                     title={t('return.rejectReturnRequestPendingTitleBrand')}
                     message={t('return.rejectReturnRequestPendingMessageBrand')}
@@ -111,7 +103,9 @@ const OrderDetails = () => {
                   />
                 )}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
-                rejectReturnRequest?.data?.status === RequestStatusEnum.APPROVED && (
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.REJECTED &&
+                cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status ===
+                  RequestStatusEnum.APPROVED && (
                   <AlertMessage
                     title={t('return.rejectReturnRequestApprovedTitleBrand')}
                     message={t('return.rejectReturnRequestApprovedMessageBrand')}
@@ -119,7 +113,9 @@ const OrderDetails = () => {
                   />
                 )}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
-                rejectReturnRequest?.data?.status === RequestStatusEnum.REJECTED && (
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.REJECTED &&
+                cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status ===
+                  RequestStatusEnum.REJECTED && (
                   <AlertMessage
                     title={t('return.rejectReturnRequestRejectedTitleBrand')}
                     message={t('return.rejectReturnRequestRejectedMessageBrand')}
@@ -139,10 +135,11 @@ const OrderDetails = () => {
               {/* alert make decision request reject return order */}
               {/* admin */}
               {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
-                rejectReturnRequest?.data?.status === RequestStatusEnum.PENDING &&
-                cancelAndReturnRequestData?.data?.refundRequest && (
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.REJECTED &&
+                cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status ===
+                  RequestStatusEnum.PENDING && (
                   <MakeDecisionOnReturnRejectRequest
-                    rejectReturnRequest={rejectReturnRequest?.data || null}
+                    rejectReturnRequest={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest || null}
                     refundRequest={cancelAndReturnRequestData?.data?.refundRequest}
                   />
                 )}

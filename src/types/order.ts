@@ -114,11 +114,13 @@ export interface ICancelRequestOrder {
   status: string
   order: IOrder
 }
-export interface IReturnRequestOrder extends ICancelRequestOrder {
-  mediaFiles: TServerFile[]
-}
+
 export interface IRejectReturnRequestOrder extends ICancelRequestOrder {
   mediaFiles: TServerFile[]
+}
+export interface IReturnRequestOrder extends ICancelRequestOrder {
+  mediaFiles: TServerFile[]
+  rejectedRefundRequest: IRejectReturnRequestOrder
 }
 
 export interface ICancelAndReturnRequest {

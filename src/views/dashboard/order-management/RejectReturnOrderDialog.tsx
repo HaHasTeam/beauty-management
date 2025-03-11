@@ -6,12 +6,18 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import AlertMessage from '@/components/alert/AlertMessage'
 import Button from '@/components/button'
 import UploadMediaFiles from '@/components/file-input/UploadMediaFiles'
 import { VideoThumbnail } from '@/components/file-input/VideoThumbnail'
 import Label from '@/components/form-label'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -155,13 +161,11 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
           <div className='space-y-3 mr-2'>
             <DialogHeader>
               <DialogTitle className='text-primary'>{t('return.rejectReturnOrderDialog.title')}</DialogTitle>
+              <DialogDescription className='text-justify'>
+                {t('return.rejectReturnOrderDialog.description')}
+              </DialogDescription>
             </DialogHeader>
 
-            <AlertMessage
-              className='text-justify'
-              message={t('return.rejectReturnOrderDialog.description')}
-              textSize='medium'
-            />
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6' id={`form-${id}`}>
                 <FormField

@@ -83,14 +83,12 @@ const MakeDecisionOnReturnRejectRequest = ({
   if (!rejectReturnRequest) return null
   return (
     rejectReturnRequest && (
-      <div className={`bg-red-100 rounded-lg p-3 border border-red-300`}>
+      <div className={`bg-yellow-50 rounded-lg p-3 border border-yellow-300`}>
         <div className='flex items-center gap-2 justify-between'>
           <div className='flex items-center gap-2'>
             <div className='flex flex-col gap-1'>
               <div>
-                <h3
-                  className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold bg-red-100 text-red-600`}
-                >
+                <h3 className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold text-yellow-500`}>
                   {t('return.rejectReturnRequestPendingTitle')}
                 </h3>
               </div>
@@ -117,6 +115,8 @@ const MakeDecisionOnReturnRejectRequest = ({
           onConfirm={() => handleMakeDecisionOnReturnRejectRequest(RequestStatusEnum.APPROVED)}
           item={'decisionRejectReturn'}
           isShowAction
+          rejectReason={rejectReturnRequest.reason}
+          rejectMediaFiles={rejectReturnRequest.mediaFiles}
           reason={refundRequest.reason}
           mediaFiles={refundRequest.mediaFiles}
           returnRequest={refundRequest}
