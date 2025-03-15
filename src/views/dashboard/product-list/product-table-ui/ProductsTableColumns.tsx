@@ -66,7 +66,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
       cell: ({ row }) => {
         const displayName = row.original.name
         const image =
-          row.original.images[0].fileUrl ||
+          row.original.images?.[0]?.fileUrl ||
           'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg'
         return (
           <div className='flex space-x-2 items-center'>
