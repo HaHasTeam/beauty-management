@@ -1,5 +1,5 @@
 import { IClassification } from './classification'
-import { OrderEnum, PaymentMethod, ShippingStatusEnum } from './enum'
+import { OrderEnum, PaymentMethod, RequestStatusEnum, ShippingStatusEnum } from './enum'
 import { IResponseFeedback } from './feedback'
 import { TServerFile } from './file'
 import { TUser } from './user'
@@ -111,7 +111,7 @@ export interface ICancelRequestOrder {
   createdAt: string
   updatedAt: string
   reason: string
-  status: string
+  status: RequestStatusEnum
   order: IOrder
 }
 
@@ -121,9 +121,11 @@ export interface IRejectReturnRequestOrder extends ICancelRequestOrder {
 export interface IReturnRequestOrder extends ICancelRequestOrder {
   mediaFiles: TServerFile[]
   rejectedRefundRequest: IRejectReturnRequestOrder
+  reasonRejected: string | null
 }
 
 export interface ICancelAndReturnRequest {
   cancelOrderRequest: ICancelRequestOrder
   refundRequest: IReturnRequestOrder
+  complaintRequest: IReturnRequestOrder
 }

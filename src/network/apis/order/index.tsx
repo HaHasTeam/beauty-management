@@ -69,6 +69,15 @@ export const updateOrderStatusApi = toMutationFetcher<
     data: { status: status, mediaFiles: mediaFiles }
   })
 })
+export const takeReceivedActionApi = toMutationFetcher<{ id: string; action: string }, TServerResponse<IOrder>>(
+  'takeReceivedActionApi',
+  async ({ id, action }) => {
+    return privateRequest(`/orders/take-received-action/${id}`, {
+      method: 'POST',
+      data: { action: action }
+    })
+  }
+)
 
 export const cancelOrderApi = toMutationFetcher<ICancelOrder, TServerResponse<IOrder>>(
   'cancelOrderApi',
@@ -98,12 +107,30 @@ export const makeDecisionOnReturnRequestOrderApi = toMutationFetcher<
     data: { status, reasonRejected, mediaFiles }
   })
 })
+export const complaintReturnOrderApi = toMutationFetcher<
+  { orderId: string; reason: string; mediaFiles?: string[] },
+  TServerResponse<IOrder>
+>('complaintReturnOrderApi', async ({ orderId, reason, mediaFiles }) => {
+  return privateRequest(`/orders/request-complaint/${orderId}`, {
+    method: 'POST',
+    data: { reason, mediaFiles }
+  })
+})
 
 export const makeDecisionOnRejectReturnRequestOrderApi = toMutationFetcher<
   { requestId: string; status: string; reasonRejected: string },
   TServerResponse<IOrder>
 >('makeDecisionOnRejectReturnRequestOrderApi', async ({ requestId, status, reasonRejected }) => {
   return privateRequest(`/orders/make-decision-on-reject-refund-request/${requestId}`, {
+    method: 'POST',
+    data: { status, reasonRejected }
+  })
+})
+export const makeDecisionOnComplaintRequestApi = toMutationFetcher<
+  { requestId: string; status: string; reasonRejected: string },
+  TServerResponse<IOrder>
+>('makeDecisionOnComplaintRequestApi', async ({ requestId, status, reasonRejected }) => {
+  return privateRequest(`/orders/make-decision-on-complaint-request/${requestId}`, {
     method: 'POST',
     data: { status, reasonRejected }
   })

@@ -121,6 +121,8 @@ const MakeDecisionOnReturnRejectRequest = ({
           mediaFiles={refundRequest.mediaFiles}
           returnRequest={refundRequest}
           isRejectRequest
+          status={refundRequest?.status}
+          rejectRequestId={rejectReturnRequest.id}
         />
       </div>
     )

@@ -18,7 +18,9 @@ import { getCancelAndReturnRequestApi, getOrderByIdApi, getStatusTrackingByIdApi
 import { useStore } from '@/stores/store'
 import { RequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
 
+import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 import MakeDecisionOnCancelRequest from './MakeDecisionOnCancelRequest'
+import MakeDecisionOnComplaint from './MakeDecisionOnComplaint'
 import MakeDecisionOnReturnRejectRequest from './MakeDecisionOnRejectReturnRequest'
 import MakeDecisionOnReturnRequest from './MakeDecisionOnReturnRequest'
 import OrderDetailItems from './order-detail/OrderDetailItems'
@@ -28,9 +30,13 @@ import OrderStatusTrackingDetail from './order-detail/OrderStatusTrackingDetail'
 import OrderSummary from './order-detail/OrderSummary'
 
 const OrderDetails = () => {
+  const WAITING_REFUND_DAYS = 3
+
   const { id } = useParams()
   const { t } = useTranslation()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
+  const [openTrackReturn, setOpenTrackReturn] = useState<boolean>(false)
+  const [openTrackComplaint, setOpenTrackComplaint] = useState<boolean>(false)
 
   const { user } = useStore(
     useShallow((state) => ({
@@ -80,8 +86,61 @@ const OrderDetails = () => {
             <div className='space-y-6 w-full'>
               {/* alert update order status */}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) && (
-                <UpdateOrderStatus order={useOrderData?.data} setOpenCancelOrderDialog={setOpenCancelOrderDialog} />
+                <UpdateOrderStatus
+                  order={useOrderData?.data}
+                  setOpenCancelOrderDialog={setOpenCancelOrderDialog}
+                  cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelOrderRequest ?? null}
+                  complaintRequest={cancelAndReturnRequestData?.data?.complaintRequest ?? null}
+                />
               )}
+              {/* alert complaint request return order */}
+              {/* brand */}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.PENDING && (
+                  <AlertMessage
+                    title={t('return.complaintRequestPendingTitleBrand')}
+                    message={t('return.complaintRequestPendingMessageBrand')}
+                    isShowIcon={false}
+                    color='warn'
+                    buttonText='view'
+                    buttonClassName='bg-yellow-500 hover:bg-yellow-600'
+                    onClick={() => setOpenTrackComplaint(true)}
+                  />
+                )}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.APPROVED && (
+                  <AlertMessage
+                    title={t('return.complaintRequestApprovedTitleBrand')}
+                    message={t('return.complaintRequestApprovedMessageBrand')}
+                    isShowIcon={false}
+                    color='success'
+                    buttonText='view'
+                    buttonClassName='bg-green-500 hover:bg-green-600'
+                    onClick={() => setOpenTrackComplaint(true)}
+                  />
+                )}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.REJECTED && (
+                  <AlertMessage
+                    title={t('return.complaintRequestRejectedTitleBrand')}
+                    message={t('return.complaintRequestRejectedMessageBrand', { count: WAITING_REFUND_DAYS })}
+                    isShowIcon={false}
+                    color='danger'
+                    buttonText='view'
+                    buttonClassName='bg-red-500 hover:bg-red-600'
+                    onClick={() => setOpenTrackComplaint(true)}
+                  />
+                )}
+
+              {/* alert complaint request return order */}
+              {/* admin */}
+              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
+                cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.PENDING && (
+                  <MakeDecisionOnComplaint
+                    complaintRequest={cancelAndReturnRequestData?.data?.complaintRequest || null}
+                  />
+                )}
+
               {/* alert make decision request return order */}
               {/* brand */}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
@@ -110,6 +169,10 @@ const OrderDetails = () => {
                     title={t('return.rejectReturnRequestApprovedTitleBrand')}
                     message={t('return.rejectReturnRequestApprovedMessageBrand')}
                     isShowIcon={false}
+                    color='success'
+                    buttonText='view'
+                    buttonClassName='bg-green-500 hover:bg-green-600'
+                    onClick={() => setOpenTrackReturn(true)}
                   />
                 )}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
@@ -120,6 +183,10 @@ const OrderDetails = () => {
                     title={t('return.rejectReturnRequestRejectedTitleBrand')}
                     message={t('return.rejectReturnRequestRejectedMessageBrand')}
                     isShowIcon={false}
+                    color='danger'
+                    buttonText='view'
+                    buttonClassName='bg-red-500 hover:bg-red-600'
+                    onClick={() => setOpenTrackReturn(true)}
                   />
                 )}
               {/* admin */}
@@ -129,6 +196,9 @@ const OrderDetails = () => {
                     title={t('return.returnRequestPendingTitleAdmin')}
                     message={t('return.returnRequestPendingMessageAdmin')}
                     isShowIcon={false}
+                    buttonText='view'
+                    buttonClassName='bg-yellow-500 hover:bg-yellow-600'
+                    onClick={() => setOpenTrackReturn(true)}
                   />
                 )}
 
@@ -280,7 +350,8 @@ const OrderDetails = () => {
                 </div>
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
                   useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
-                  useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER ||
+                  (useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER &&
+                    !cancelAndReturnRequestData?.data?.cancelOrderRequest) ||
                   useOrderData?.data?.status === ShippingStatusEnum.SHIPPING) &&
                   (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) && (
                     <div className='w-full'>
@@ -311,6 +382,46 @@ const OrderDetails = () => {
             setOpen={setOpenCancelOrderDialog}
             onOpenChange={setOpenCancelOrderDialog}
             orderId={useOrderData?.data?.id ?? ''}
+          />
+        )}
+        {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.refundRequest && (
+          <ConfirmDecisionDialog
+            isLoadingDecisionApproved
+            isLoadingDecisionRejected
+            open={openTrackReturn}
+            onOpenChange={setOpenTrackReturn}
+            onConfirm={() => {}}
+            item={'returnTrackView'}
+            rejectReason={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.reason}
+            rejectMediaFiles={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.mediaFiles}
+            reason={cancelAndReturnRequestData?.data?.refundRequest?.reason}
+            mediaFiles={cancelAndReturnRequestData?.data?.refundRequest?.mediaFiles}
+            returnRequest={cancelAndReturnRequestData?.data?.refundRequest}
+            isRejectRequest={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest !== null}
+            isShowAction={false}
+            status={cancelAndReturnRequestData?.data?.refundRequest?.status}
+            rejectStatus={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status}
+            reasonRejected={cancelAndReturnRequestData?.data?.refundRequest?.reasonRejected}
+          />
+        )}
+        {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.complaintRequest && (
+          <ConfirmDecisionDialog
+            isLoadingDecisionApproved
+            isLoadingDecisionRejected
+            open={openTrackComplaint}
+            onOpenChange={setOpenTrackComplaint}
+            onConfirm={() => {}}
+            item={'complaintTrackView'}
+            rejectReason={''}
+            rejectMediaFiles={[]}
+            reason={cancelAndReturnRequestData?.data?.complaintRequest?.reason}
+            mediaFiles={cancelAndReturnRequestData?.data?.complaintRequest?.mediaFiles}
+            returnRequest={cancelAndReturnRequestData?.data?.complaintRequest}
+            isRejectRequest={false}
+            isShowAction={false}
+            rejectStatus={cancelAndReturnRequestData?.data?.complaintRequest?.status}
+            status={cancelAndReturnRequestData?.data?.complaintRequest?.status}
+            reasonRejected={cancelAndReturnRequestData?.data?.complaintRequest?.reasonRejected}
           />
         )}
       </div>

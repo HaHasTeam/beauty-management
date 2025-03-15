@@ -4,11 +4,13 @@ import {
   Banknote,
   CarFront,
   Check,
+  CircleCheck,
   CircleOff,
   Grab,
   Package,
   PackageCheck,
   PackageOpen,
+  RefreshCwOff,
   RotateCcw,
   Truck,
   UsersRound
@@ -45,6 +47,10 @@ export const StatusTrackingIcon = (status: string) => {
       return <Ban className='w-5 h-5' />
     case RequestStatusEnum.REJECTED:
       return <CircleOff className='w-5 h-5' />
+    case ShippingStatusEnum.BRAND_RECEIVED:
+      return <CircleCheck className='w-5 h-5' />
+    case ShippingStatusEnum.RETURNED_FAIL:
+      return <RefreshCwOff className='w-5 h-5' />
     default:
       return <Package className='w-5 h-5' />
   }
@@ -74,6 +80,10 @@ export const StatusTrackingText = (status: string) => {
       return t('order.returning')
     case ShippingStatusEnum.REFUNDED:
       return t('order.refunded')
+    case ShippingStatusEnum.RETURNED_FAIL:
+      return t('order.returnedFail')
+    case ShippingStatusEnum.BRAND_RECEIVED:
+      return t('order.brandReceived')
     case ShippingStatusEnum.CANCELLED:
       return t('order.cancelled')
     case RequestStatusEnum.APPROVED:

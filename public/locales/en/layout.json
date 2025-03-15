@@ -89,6 +89,9 @@
   "loginRcm": "Log in to update your skills!",
   "facebook": "Facebook",
   "button": {
+    "received": "Received",
+    "notReceived": "Haven't received",
+    "complaint": "Complaint",
     "goBack": "Go Back",
     "preOderAction": "Pre-Order Now",
     "groupBuyingAction": "Explore Group-Buy Deals",
@@ -614,6 +617,8 @@
     "preparingOrder": "Preparing Order",
     "delivered": "Delivered",
     "returning": "Returning",
+    "brandReceived": "Brand Received",
+    "returnedFail": "Return Failed",
     "refunded": "Returned & Refunded",
     "lastUpdated": "Last updated",
     "success": "Order placed successfully!",
@@ -692,7 +697,9 @@
       "completed": "The customer has confirmed receipt of the order, and the transaction is finalized.",
       "cancelled": "The refund has been processed and issued to the customer.",
       "returning": "The customer has requested a return, and the order is in the process of being returned to the seller.",
-      "refunded": "The order has been canceled and will not be processed or shipped."
+      "refunded": "The order has been canceled and will not be processed or shipped.",
+      "brandReceived": "The returned order has been successfully received by the brand. The return process is awaiting further review. If the brand does not file a complaint, the coins will be refunded to the customer's wallet within {{count}} days. If the brand files a complaint, the support team will review and resolve the issue.",
+      "returnFailed": "The return process was unsuccessful due to issues such as incorrect return shipment, damaged item upon return, or failure to meet return conditions. Further action may be required."
     },
     "cancelRequestPendingBrandTitle": "Order Cancellation Request",
     "CancelOrderRequestBrandMessage": "The customer has requested to cancel the order. Please review and make a decision. You can approve the cancellation or reject it to proceed with the order.",
@@ -726,7 +733,7 @@
     },
     "proof": "Images and videos proof",
     "returnRequestApprovedTitle": "Return Request Approved",
-    "returnRequestApprovedMessage": "Your return request has been approved by the brand. Please prepare, pack, and ship the item within {{count}} days. Remember to keep clear photos and videos as proof of the product's condition and packaging.",
+    "returnRequestApprovedMessage": "Your return request has been approved. Please prepare, pack, and ship the item within {{count}} days. Remember to keep clear photos and videos as proof of the product's condition and packaging.",
     "rejectCancelOrderReason": {
       "SHIPPED": "The order is in transit and cannot be canceled.",
       "PROCESSED": "The order has already been processed and is ready for shipment.",
@@ -1118,17 +1125,19 @@
   },
   "orderEvidence": {
     "description": {
-      "TO_SHIP": "Please upload images or videos of the packaged order before shipping. This helps ensure accurate order fulfillment and reduce disputes.",
-      "SHIPPING": "Upload images or videos of the package as it is handed over to the shipping carrier. This helps track the shipment condition and prevent delivery issues.",
-      "DELIVERED": "Please upload images or videos of the received package if necessary. This helps confirm the product condition and support dispute resolution if needed.",
-      "RETURNING": "Upload images or videos showing the returned product’s condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
-      "REFUNDED": "Please upload images or videos confirming the successful return and refund process. This ensures proper documentation and avoids misunderstandings."
+      "TO_SHIP": "Please upload images and videos of the packaged order before shipping. This helps ensure accurate order fulfillment and reduce disputes.",
+      "SHIPPING": "Upload images and videos of the package as it is handed over to the shipping carrier. This helps track the shipment condition and prevent delivery issues.",
+      "DELIVERED": "Please upload images and videos of the received package if necessary. This helps confirm the product condition and support dispute resolution if needed.",
+      "RETURNING": "Upload images and videos showing the returned product’s condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
+      "REFUNDED": "Please upload images and videos confirming the successful return and refund process. This ensures proper documentation and avoids misunderstandings.",
+      "COMPLAINT": "Please upload images and videos as evidence to support your complaint regarding the returned order. This helps verify the issue and assist in resolving disputes effectively."
     },
     "TO_SHIP": "Upload Proof of Handover to Carrier",
     "SHIPPING": "Upload Images & Videos for Order Preparation",
     "DELIVERED": "Upload Delivery Confirmation",
     "RETURNING": "Upload Return Request Evidence",
-    "REFUNDED": "Upload Refund Completion Proof"
+    "REFUNDED": "Upload Refund Completion Proof",
+    "COMPLAINT": "Submit Complaint Evidence"
   },
   "confirm": {
     "productClassification": {
@@ -1138,28 +1147,94 @@
       "confirm": "Confirm"
     },
     "decisionReturn": {
-      "title": "Confirm Return Decision",
+      "title": "Confirm Return Order Decision",
       "description": "The customer has requested a return for this order.",
       "cus": "Customer's Return Request Details",
       "cancel": "Cancel",
       "confirm": "Confirm"
     },
     "viewReturn": {
-      "title": "Confirm Return Decision",
+      "title": "Confirm Return Order Decision",
       "description": "The customer has submitted a return request for this order.",
+      "cus": "Customer's Return Request Details",
+      "admin": "Admin's Decision on the Brand's Request",
+      "brand": "Brand's Return Request Response",
       "cancel": "Cancel",
       "confirm": "Confirm"
     },
     "decisionRejectReturn": {
-      "title": "Review Return Request Rejection",
+      "title": "Review Return Order Request Rejection",
       "description": "The brand has rejected the customer's return request. Please review the details of the request and the brand's reason for rejection. You can either approve or reject the rejection. If you reject the request, please provide a reason, the brand and customer will be notified.",
       "cus": "Customer's Return Request Details",
-      "brand": "Brand's Rejection Response",
+      "admin": "Admin's Decision on the Brand's Request",
+      "brand": "Brand's Return Request Response",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "decisionComplaint": {
+      "title": "Review Complaint Request",
+      "description": "The brand has submitted a complaint regarding the return order. Please review the complaint details and the brand's reason for the request. You can either approve or reject the complaint. If you reject the complaint, please provide a reason, and both the brand will be notified.",
+      "cus": "Brand's Complaint Details",
+      "admin": "Admin's Decision on the Brand's Complaint",
+      "brand": "Admin's Decision on the Brand's Complaint",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "returnTrackView": {
+      "title": "Return Order Details",
+      "description": "Below is the detailed information on the return review process.",
+      "cus": "Customer's Return Request Details",
+      "admin": "Admin's Decision on the Brand's Request",
+      "brand": "Brand's Return Request Response",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "complaintTrackView": {
+      "title": "Complaint Details",
+      "description": "Below is the detailed information on the complaint review process.",
+      "cus": "Brand's Complaint Details",
+      "admin": "Admin's Decision on the Brand's Complaint",
+      "brand": "Admin's Decision on the Brand's Complaint",
       "cancel": "Cancel",
       "confirm": "Confirm"
     }
   },
   "return": {
+    "rejectComplaintReason": {
+      "missingEvidence": "The brand did not provide sufficient evidence to support the complaint.",
+      "insufficientJustification": "The complaint reason provided by the brand is not valid.",
+      "policyCompliance": "The complaint violates the platform's policies.",
+      "validReturnRequest": "The customer's return request was valid, and the complaint is unjustified.",
+      "delayedSubmission": "The complaint was submitted after the allowed timeframe.",
+      "other": "Other"
+    },
+    "returnRequestApprovedView": "Your return request has been approved. Press the \"View\" button to review the processing details.",
+    "rejectBrandRejectionReason": {
+      "validReturnRequest": "The customer's return request is valid and meets platform policies",
+      "insufficientJustification": "The brand's reason for rejecting the return request is not sufficiently justified",
+      "missingEvidence": "The brand did not provide enough evidence to support the rejection",
+      "policyCompliance": "The return request aligns with the platform's return policy",
+      "customerProtection": "Decision made in favor of customer protection and fair resolution",
+      "escalationRequired": "Further escalation or review is needed before rejecting the return request",
+      "other": "Other"
+    },
+    "rejectComplaintTitle": "Confirm Rejection",
+    "successMakeDecisionOnComplaint": "The complaint request has been successfully processed!",
+    "rejectComplaintMessage": "Press \"Confirm\" to reject the brand's complaint request.",
+    "rejectRequestRejectOrder": "Confirm Rejection",
+    "rejectRequestRejectOrderMessage": "Pressing \"Confirm\" means rejecting the brand's request. The customer will receive a notification to pack and return the item to the brand.",
+    "decision": "Decision",
+    "returnRequestPendingTitleCustomer": "Return Request Under Review",
+    "returnRequestPendingMessageCustomer": "Your return request is being reviewed. We will notify you of the decision within {{count}} days. Please check your notifications for updates.",
+    "returnRequestRejectedTitleCustomer": "Return Request Rejected",
+    "returnRequestRejectedMessageCustomer": "Unfortunately, your return request has been rejected. Please check the provided reason in your return details. If you have any questions, feel free to contact our support team.",
+    "returnOrderEvidenceDialog": {
+      "title": "Upload Return Shipment Evidence",
+      "description": "Please provide clear proof of your return shipment, including images or videos of the packaged item and the shipping receipt. This helps ensure a smooth return process.",
+      "mediaFilesNotes": "Ensure that your photos or videos clearly show the product's condition, packaging, and shipping label. A video recording of the packing and shipping process is recommended for verification.",
+      "returnOrderShipmentSuccessTitle": "Return shipment submitted!",
+      "returnOrderShipmentSuccessMessage": "You have successfully submitted your return shipment details. We will review the provided evidence and update you on the next steps. Please keep your shipping receipt and tracking information for reference."
+    },
     "rejectReturnOrderReason": {
       "notEligible": "The product is not eligible for return",
       "noValidReason": "The provided return reason is not valid",
@@ -1185,6 +1260,8 @@
       "description": "Please provide a valid reason for rejecting this return request. If applicable, attach supporting evidence to justify your decision. This information will be reviewed before finalizing the rejection.",
       "mediaFilesNotes": "Ensure that any uploaded images or videos clearly support your decision, such as product condition, missing packaging, or policy violations."
     },
+    "complaintSuccess": "Your complaint has been submitted successfully!",
+    "mediaFilesNotesComplaint": "Ensure that any uploaded images or videos clearly show the reason for the complaint, such as the condition of the product upon receipt, damages, missing items, or other issues related to the returned order.",
     "rejectReturnSuccess": "Return Request Rejected Successfully",
     "rejectReturnSuccessMessage": "You have successfully rejected the return request. Our support team will review this decision and provide you with the final result as soon as possible.",
     "rejectReturnRequestPendingTitleBrand": "Return Rejection Under Review",
@@ -1200,7 +1277,21 @@
     "returnOrderRequestMessage": "The brand has declined the customer's return request. Please review all relevant details and platform policies before making a final decision.",
     "successMakeDecisionOnReturn": "Successfully Processed Return Request",
     "returnRequestPendingTitleBrand": "Return Request Pending Review",
-    "returnOrderRequestMessageBrand": "A customer has requested a return for this order. You can review the request and make a decision. If no action is taken within {{count}} days, the request will be automatically approved. If approved, the customer will proceed with shipping the return. If rejected, the admin will review and make the final decision."
+    "returnOrderRequestMessageBrand": "A customer has requested a return for this order. You can review the request and make a decision. If no action is taken within {{count}} days, the request will be automatically approved. If approved, the customer will proceed with shipping the return. If rejected, the admin will review and make the final decision.",
+    "complaintRequestPendingTitleBrand": "Complaint Request Submitted",
+    "complaintRequestPendingMessageBrand": "Your complaint request has been submitted and is awaiting review by the admin/operator.",
+    "complaintRequestApprovedTitleBrand": "Complaint Approved",
+    "complaintRequestApprovedMessageBrand": "Your complaint has been approved by the admin/operator. Further actions will be processed accordingly.",
+    "complaintRequestRejectedTitleBrand": "Complaint Rejected",
+    "complaintRequestRejectedMessageBrand": "Your complaint has been rejected by the admin/operator. The coins will be refunded to the customer's wallet within {{count}} days.",
+    "complaintRequestPendingTitleAdmin": "New Complaint Request",
+    "complaintRequestPendingMessageAdmin": "A brand has submitted a complaint regarding a returned order. Please review and make a decision.",
+    "complaintRequestApprovedTitleAdmin": "Complaint Approved Successfully",
+    "complaintRequestApprovedMessageAdmin": "You have approved the brand's complaint. Necessary actions will be processed accordingly.",
+    "complaintRequestRejectedTitleAdmin": "Complaint Rejected Successfully",
+    "complaintRequestRejectedMessageAdmin": "You have rejected the brand's complaint. The coins will be refunded to the customer's wallet within {{count}} days.",
+    "complaintRequestApprovedTitleCustomer": "Complaint Approved",
+    "complaintRequestApprovedMessageCustomer": "The brand's complaint has been approved by the admin. You will not receive a coin refund for this order. You can review the complaint details and contact the support team if needed."
   },
   "booking": {
     "waitConfirm": "Waiting for Confirmation",
@@ -1232,5 +1323,10 @@
       "title": "Cancel Request Rejected",
       "message": "Please provide a reason for rejecting the request."
     }
+  },
+  "requestStatus": {
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "pending": "Pending"
   }
 }

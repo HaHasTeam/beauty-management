@@ -15,9 +15,10 @@ import { Textarea } from '@/components/ui/textarea'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import {
+  getCancelAndReturnRequestApi,
   getOrderByIdApi,
-  getRejectReturnRequestApi,
   getStatusTrackingByIdApi,
+  makeDecisionOnComplaintRequestApi,
   makeDecisionOnRejectReturnRequestOrderApi
 } from '@/network/apis/order'
 import { CancelOrderSchema } from '@/schemas/order.schema'
@@ -28,9 +29,24 @@ interface RejectRejectReturnProps {
   setOpen: Dispatch<SetStateAction<boolean>>
   onOpenChange: (open: boolean) => void
   requestId: string
+  reasonItem: string
+  dialogTitle: string
+  successTitle: string
+  dialogMessage: string
+  item: string
 }
 
-export default function RejectRejectReturn({ open, setOpen, onOpenChange, requestId }: RejectRejectReturnProps) {
+export default function RejectRejectReturn({
+  open,
+  setOpen,
+  onOpenChange,
+  requestId,
+  reasonItem,
+  dialogMessage,
+  dialogTitle,
+  successTitle,
+  item
+}: RejectRejectReturnProps) {
   const { t } = useTranslation()
   const { successToast } = useToast()
   const formId = useId()
@@ -39,7 +55,18 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
   const [isOtherReason, setIsOtherReason] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
-  const reasons: { value: string }[] = useMemo(() => [{ value: t('order.cancelOrderReason.other') }], [t])
+  const reasons: { value: string }[] = useMemo(
+    () => [
+      { value: t(`return.${reasonItem}.validReturnRequest`) },
+      { value: t(`return.${reasonItem}.insufficientJustification`) },
+      { value: t(`return.${reasonItem}.missingEvidence`) },
+      { value: t(`return.${reasonItem}.policyCompliance`) },
+      // { value: t(`return.${reasonItem}.customerProtection`) },
+      // { value: t(`return.${reasonItem}.escalationRequired`) },
+      { value: t(`return.${reasonItem}.other`) }
+    ],
+    [reasonItem, t]
+  )
   const defaultOrderValues = {
     reason: '',
     otherReason: ''
@@ -58,7 +85,7 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
     mutationFn: makeDecisionOnRejectReturnRequestOrderApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('order.successMakeDecisionOnReject')
+        message: t(`return.${successTitle}`)
       })
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
@@ -67,7 +94,26 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
         queryKey: [getStatusTrackingByIdApi.queryKey]
       })
       queryClient.invalidateQueries({
-        queryKey: [getRejectReturnRequestApi.queryKey]
+        queryKey: [getCancelAndReturnRequestApi.queryKey]
+      })
+      handleReset()
+    }
+  })
+  const { mutateAsync: makeDecisionOnComplaintRequestFn } = useMutation({
+    mutationKey: [makeDecisionOnComplaintRequestApi.mutationKey],
+    mutationFn: makeDecisionOnComplaintRequestApi.fn,
+    onSuccess: () => {
+      successToast({
+        message: t(`return.${successTitle}`)
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getOrderByIdApi.queryKey]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getStatusTrackingByIdApi.queryKey]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getCancelAndReturnRequestApi.queryKey]
       })
       handleReset()
     }
@@ -76,11 +122,20 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
     try {
       setIsLoading(true)
       const payload = isOtherReason ? { reasonRejected: values.otherReason } : { reasonRejected: values.reason }
-      await makeDecisionOnRejectReturnRequestOrderFn({
-        requestId: requestId ?? '',
-        status: RequestStatusEnum.REJECTED,
-        ...payload
-      })
+      if (item === 'decisionComplaint') {
+        await makeDecisionOnComplaintRequestFn({
+          requestId: requestId ?? '',
+          status: RequestStatusEnum.REJECTED,
+          ...payload
+        })
+      }
+      if (item === 'decisionRejectReturn') {
+        await makeDecisionOnRejectReturnRequestOrderFn({
+          requestId: requestId ?? '',
+          status: RequestStatusEnum.REJECTED,
+          ...payload
+        })
+      }
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
@@ -97,8 +152,8 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
         <DialogHeader className='flex flex-row items-start gap-4'>
           <AlertTriangle className='mt-2 h-6 w-6 text-orange-500' />
           <div className='flex-1 gap-2 items-start'>
-            <DialogTitle className='text-lg'>{t(`order.rejectRequestRejectOrder`)}</DialogTitle>
-            <DialogDescription className='text-justify'>{t('order.rejectRequestRejectOrderMessage')}</DialogDescription>
+            <DialogTitle className='text-lg'>{t(`return.${dialogTitle}`)}</DialogTitle>
+            <DialogDescription className='text-justify'>{t(`return.${dialogMessage}`)}</DialogDescription>
           </div>
         </DialogHeader>
 
@@ -115,23 +170,23 @@ export default function RejectRejectReturn({ open, setOpen, onOpenChange, reques
               render={({ field }) => (
                 <FormItem className='w-full'>
                   <div className='w-full flex gap-2'>
-                    <div className='w-1/5 flex items-center'>
+                    <div className='w-1/6 flex items-center'>
                       <Label required className='w-fit'>
                         {t('order.cancelOrderReason.reason')}
                       </Label>
                     </div>
-                    <div className='w-full space-y-1'>
+                    <div className='w-5/6 space-y-1'>
                       <FormControl>
                         <Select
                           value={field.value ?? ''}
                           onValueChange={(value) => {
                             field.onChange(value)
-                            setIsOtherReason(value === t('order.cancelOrderReason.other'))
+                            setIsOtherReason(value === t(`return.${reasonItem}.other`))
                           }}
                           required
                           name='reason'
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className='border-primary/40'>
                             <SelectValue {...field} placeholder={t('order.cancelOrderReason.selectAReason')} />
                           </SelectTrigger>
                           <SelectContent>

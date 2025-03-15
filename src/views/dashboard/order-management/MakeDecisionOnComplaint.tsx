@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import { AlertDescription } from '@/components/ui/alert'
@@ -11,16 +10,14 @@ import {
   getCancelAndReturnRequestApi,
   getOrderByIdApi,
   getStatusTrackingByIdApi,
-  makeDecisionOnReturnRequestOrderApi
+  makeDecisionOnComplaintRequestApi
 } from '@/network/apis/order'
-import { useStore } from '@/stores/store'
-import { RequestStatusEnum, RoleEnum } from '@/types/enum'
+import { RequestStatusEnum } from '@/types/enum'
 import { IReturnRequestOrder } from '@/types/order'
 
 import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 
-const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturnRequestOrder | null }) => {
-  const WAITING_DECISION_ON_REQUEST_RETURN_DAYS = 2
+const MakeDecisionOnComplaint = ({ complaintRequest }: { complaintRequest: IReturnRequestOrder }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { successToast } = useToast()
@@ -29,17 +26,13 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
   const [isLoadingDecisionApproved, setIsLoadingDecisionApproved] = useState<boolean>(false)
   const [isLoadingDecisionRejected, setIsLoadingDecisionRejected] = useState<boolean>(false)
 
-  const { user } = useStore(
-    useShallow((state) => ({
-      user: state.user
-    }))
-  )
-  const { mutateAsync: makeDecisionOnReturnRequestOrderFn } = useMutation({
-    mutationKey: [makeDecisionOnReturnRequestOrderApi.mutationKey],
-    mutationFn: makeDecisionOnReturnRequestOrderApi.fn,
+  const { mutateAsync: makeDecisionOnComplaintRequestFn } = useMutation({
+    mutationKey: [makeDecisionOnComplaintRequestApi.mutationKey],
+    mutationFn: makeDecisionOnComplaintRequestApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('return.successMakeDecisionOnReturn')
+        message: t('return.successMakeDecisionOnComplaint'),
+        isShowDescription: false
       })
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
@@ -53,15 +46,15 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
     }
   })
 
-  const handleMakeDecisionOnReturnRequest = async (decision: RequestStatusEnum) => {
+  const handleMakeDecisionOnComplaint = async (decision: RequestStatusEnum) => {
     try {
       if (decision === RequestStatusEnum.APPROVED) {
         setIsLoadingDecisionApproved(true)
       } else {
         setIsLoadingDecisionRejected(true)
       }
-      await makeDecisionOnReturnRequestOrderFn({
-        requestId: returnRequest?.id ?? '',
+      await makeDecisionOnComplaintRequestFn({
+        requestId: complaintRequest?.id ?? '',
         status: decision,
         reasonRejected: ''
       })
@@ -81,21 +74,19 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
       })
     }
   }
-  if (!returnRequest) return null
+  if (!complaintRequest) return null
   return (
-    returnRequest && (
+    complaintRequest && (
       <div className={`bg-yellow-50 rounded-lg p-3 border border-yellow-300`}>
         <div className='flex items-center gap-2 justify-between'>
           <div className='flex items-center gap-2'>
             <div className='flex flex-col gap-1'>
               <div>
                 <h3 className={`sm:text-base text-xs rounded-full uppercase cursor-default font-bold text-yellow-500`}>
-                  {t('return.returnRequestPendingTitleBrand')}
+                  {t('return.complaintRequestPendingTitleAdmin')}
                 </h3>
               </div>
-              <AlertDescription>
-                {t('return.returnOrderRequestMessageBrand', { count: WAITING_DECISION_ON_REQUEST_RETURN_DAYS })}
-              </AlertDescription>
+              <AlertDescription>{t('return.complaintRequestPendingMessageAdmin')}</AlertDescription>
             </div>
           </div>
           <div className='flex gap-2 items-center'>
@@ -115,17 +106,21 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
           isLoadingDecisionRejected={isLoadingDecisionRejected}
           open={openConfirmDialog}
           onOpenChange={setOpenConfirmDialog}
-          onConfirm={() => handleMakeDecisionOnReturnRequest(RequestStatusEnum.APPROVED)}
-          item={user.role === RoleEnum.MANAGER || user.role === RoleEnum.STAFF ? 'returnTrackView' : 'decisionReturn'}
-          isShowAction={user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF}
-          reason={returnRequest.reason}
-          mediaFiles={returnRequest.mediaFiles}
-          returnRequest={returnRequest}
-          status={returnRequest.status}
+          onConfirm={() => handleMakeDecisionOnComplaint(RequestStatusEnum.APPROVED)}
+          item={'decisionComplaint'}
+          isShowAction
+          rejectReason={''}
+          rejectMediaFiles={[]}
+          reason={complaintRequest.reason}
+          mediaFiles={complaintRequest.mediaFiles}
+          returnRequest={complaintRequest}
+          isRejectRequest={false}
+          status={complaintRequest?.status}
+          rejectRequestId={''}
         />
       </div>
     )
   )
 }
 
-export default MakeDecisionOnReturnRequest
+export default MakeDecisionOnComplaint

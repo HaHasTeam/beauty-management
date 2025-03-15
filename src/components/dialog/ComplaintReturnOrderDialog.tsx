@@ -26,24 +26,22 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { uploadFilesApi } from '@/network/apis/file'
 import {
+  complaintReturnOrderApi,
   getCancelAndReturnRequestApi,
   getOrderByIdApi,
-  getStatusTrackingByIdApi,
-  makeDecisionOnReturnRequestOrderApi
+  getStatusTrackingByIdApi
 } from '@/network/apis/order'
 import { getRejectReturnOrderSchema } from '@/schemas/order.schema'
-import { RequestStatusEnum } from '@/types/enum'
-import { IReturnRequestOrder } from '@/types/order'
 
-interface RejectReturnOrderDialogProps {
-  returnRequest: IReturnRequestOrder
+interface ComplaintReturnOrderDialogProps {
+  orderId: string
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   onOpenChange: (open: boolean) => void
 }
 
-export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = ({
-  returnRequest,
+export const ComplaintReturnOrderDialog: React.FC<ComplaintReturnOrderDialogProps> = ({
+  orderId,
   open,
   setOpen,
   onOpenChange
@@ -65,14 +63,13 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
 
   const reasons: { value: string }[] = useMemo(
     () => [
-      { value: t('return.rejectReturnOrderReason.notEligible') },
-      { value: t('return.rejectReturnOrderReason.noValidReason') },
-      { value: t('return.rejectReturnOrderReason.insufficientEvidence') },
-      { value: t('return.rejectReturnOrderReason.policyViolation') },
-      { value: t('return.rejectReturnOrderReason.damagedByCustomer') },
-      { value: t('return.rejectReturnOrderReason.usedOrAltered') },
-      { value: t('return.rejectReturnOrderReason.discountedOrFinalSale') },
-      { value: t('return.rejectReturnOrderReason.other') }
+      { value: t('return.complaintReturnOrderReason.wrongItemReturned') },
+      { value: t('return.complaintReturnOrderReason.usedOrDamaged') },
+      { value: t('return.complaintReturnOrderReason.missingParts') },
+      { value: t('return.complaintReturnOrderReason.fakeOrDifferentProduct') },
+      { value: t('return.complaintReturnOrderReason.damagedPackaging') },
+      { value: t('return.complaintReturnOrderReason.returnAbuse') },
+      { value: t('return.complaintReturnOrderReason.other') }
     ],
     [t]
   )
@@ -90,13 +87,12 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
     defaultValues
   })
 
-  const { mutateAsync: makeDecisionOnReturnRequestOrderFn } = useMutation({
-    mutationKey: [makeDecisionOnReturnRequestOrderApi.mutationKey],
-    mutationFn: makeDecisionOnReturnRequestOrderApi.fn,
+  const { mutateAsync: complaintReturnOrderFn } = useMutation({
+    mutationKey: [complaintReturnOrderApi.mutationKey],
+    mutationFn: complaintReturnOrderApi.fn,
     onSuccess: () => {
       successToast({
-        message: t('return.rejectReturnSuccess'),
-        description: t('return.rejectReturnSuccessMessage')
+        message: t('return.complaintSuccess')
       })
       queryClient.invalidateQueries({
         queryKey: [getOrderByIdApi.queryKey]
@@ -137,10 +133,9 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
       setIsLoading(true)
       const imgUrls = values.images ? await convertFileToUrl(values.images) : []
       const videoUrls = values.videos ? await convertFileToUrl(values.videos) : []
-      const payload = isOtherReason ? { reasonRejected: values.otherReason } : { reasonRejected: values.reason }
-      await makeDecisionOnReturnRequestOrderFn({
-        requestId: returnRequest?.id ?? '',
-        status: RequestStatusEnum.REJECTED,
+      const payload = isOtherReason ? { reason: values.otherReason } : { reason: values.reason }
+      await complaintReturnOrderFn({
+        orderId: orderId ?? '',
         ...payload,
         mediaFiles: [...imgUrls, ...videoUrls]
       })
@@ -160,10 +155,8 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
         <ScrollArea className='max-h-[80vh]'>
           <div className='space-y-3 mr-2'>
             <DialogHeader>
-              <DialogTitle className='text-primary'>{t('return.rejectReturnOrderDialog.title')}</DialogTitle>
-              <DialogDescription className='text-justify'>
-                {t('return.rejectReturnOrderDialog.description')}
-              </DialogDescription>
+              <DialogTitle className='text-primary'>{t('orderEvidence.COMPLAINT')}</DialogTitle>
+              <DialogDescription className='text-justify'>{t('orderEvidence.description.COMPLAINT')}</DialogDescription>
             </DialogHeader>
 
             <Form {...form}>
@@ -185,7 +178,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
                               value={field.value ?? ''}
                               onValueChange={(value: string) => {
                                 field.onChange(value)
-                                setIsOtherReason(value === t('return.rejectReturnOrderReason.other'))
+                                setIsOtherReason(value === t('return.complaintReturnOrderReason.other'))
                               }}
                               required
                               name='reason'
@@ -250,9 +243,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
                   <Label required className='text-primary'>
                     {t('feedback.mediaFiles')}
                   </Label>
-                  <FormDescription className='text-justify'>
-                    {t('return.rejectReturnOrderDialog.mediaFilesNotes')}
-                  </FormDescription>
+                  <FormDescription className='text-justify'>{t('return.mediaFilesNotesComplaint')}</FormDescription>
                   <FormDescription className='text-justify'>
                     {t('feedback.mediaFilesHint', {
                       videoCount: MAX_VIDEOS,

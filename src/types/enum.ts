@@ -98,7 +98,9 @@ export enum ShippingStatusEnum {
   DELIVERED = 'DELIVERED',
   COMPLETED = 'COMPLETED',
   RETURNING = 'RETURNING',
+  BRAND_RECEIVED = 'BRAND_RECEIVED',
   REFUNDED = 'REFUNDED',
+  RETURNED_FAIL = 'RETURNED_FAIL',
   CANCELLED = 'CANCELLED'
 }
 export enum ProductDiscountEnum {
@@ -188,4 +190,16 @@ export enum FeedbackFilterEnum {
   RATING = 'RATING',
   IMAGE_VIDEO = 'IMAGE_VIDEO',
   CLASSIFICATION = 'CLASSIFICATION'
+}
+
+export enum OrderRequestTypeEnum {
+  CANCEL = 'CANCEL',
+  REFUND = 'REFUND',
+  REJECT_REFUND = 'REJECT_REFUND',
+  COMPLAINT = 'COMPLAINT'
+}
+
+export enum ActionReceivedEnum {
+  RECEIVED = 'RECEIVED',
+  NOT_RECEIVED = 'NOT_RECEIVED'
 }

@@ -1,4 +1,4 @@
-import { AlertTriangle, Component } from 'lucide-react'
+import { Component, Info } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -31,6 +31,10 @@ interface ConfirmDecisionDialogProps {
   mediaFiles?: TServerFile[]
   rejectMediaFiles?: TServerFile[]
   returnRequest: IReturnRequestOrder
+  status: RequestStatusEnum
+  rejectStatus?: RequestStatusEnum
+  reasonRejected?: string | null
+  rejectRequestId?: string
 }
 
 export default function ConfirmDecisionDialog({
@@ -48,7 +52,11 @@ export default function ConfirmDecisionDialog({
   reason,
   isRejectRequest,
   rejectReason,
-  rejectMediaFiles
+  rejectMediaFiles,
+  rejectStatus,
+  status,
+  reasonRejected,
+  rejectRequestId
 }: ConfirmDecisionDialogProps) {
   const { t } = useTranslation()
   const [openRejectDialog, setOpenRejectDialog] = useState<boolean>(false)
@@ -57,11 +65,11 @@ export default function ConfirmDecisionDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className='sm:max-w-2xl gap-2'>
           <ScrollArea className='max-h-[80vh]'>
-            <div className='space-y-3'>
-              <DialogHeader className='flex flex-row items-start gap-4'>
-                <AlertTriangle className='mt-2 h-6 w-6 text-orange-500' />
+            <div className='space-y-3 mr-2'>
+              <DialogHeader className='flex flex-row items-start gap-2'>
+                <Info className='mt-2 h-6 w-6 text-primary' />
                 <div className='flex-1 gap-2 items-start'>
-                  <DialogTitle className='text-lg'>{title ?? t(`confirm.${item}.title`)}</DialogTitle>
+                  <DialogTitle className='text-lg text-primary'>{title ?? t(`confirm.${item}.title`)}</DialogTitle>
                   <DialogDescription className='text-base'>
                     {description ?? t(`confirm.${item}.description`)}
                   </DialogDescription>
@@ -72,7 +80,7 @@ export default function ConfirmDecisionDialog({
                   header={
                     <div className='text-primary flex gap-1 items-center'>
                       <Component size={16} />
-                      <h2 className='font-semibold text-primary text-lg'>{t(`confirm.${item}.cus`)}</h2>
+                      <h2 className='font-semibold text-primary text-base'>{t(`confirm.${item}.cus`)}</h2>
                     </div>
                   }
                   content={
@@ -98,11 +106,21 @@ export default function ConfirmDecisionDialog({
                     header={
                       <div className='text-primary flex gap-1 items-center'>
                         <Component size={16} />
-                        <h2 className='font-semibold text-primary text-lg'>{t(`confirm.${item}.brand`)}</h2>
+                        <h2 className='font-semibold text-primary text-base'>{t(`confirm.${item}.brand`)}</h2>
                       </div>
                     }
                     content={
                       <div className='space-y-2'>
+                        {(status === RequestStatusEnum.APPROVED || status === RequestStatusEnum.REJECTED) && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('return.decision')}:</h3>
+                            <span>
+                              {status === RequestStatusEnum.APPROVED
+                                ? t('requestStatus.approved')
+                                : t('requestStatus.rejected')}
+                            </span>
+                          </div>
+                        )}
                         {rejectReason && (
                           <div className='flex gap-2 items-center'>
                             <h3 className='font-medium text-primary'>{t('order.cancelOrderReason.reason')}:</h3>
@@ -113,6 +131,37 @@ export default function ConfirmDecisionDialog({
                           <div className='space-y-2'>
                             <h3 className='font-medium text-primary'> {t('order.proof')}</h3>
                             <ViewMediaSection mediaFiles={rejectMediaFiles} />
+                          </div>
+                        )}
+                      </div>
+                    }
+                  />
+                )}
+                {rejectStatus && rejectStatus !== RequestStatusEnum.PENDING && (
+                  <SectionCollapsable
+                    header={
+                      <div className='text-primary flex gap-1 items-center'>
+                        <Component size={16} />
+                        <h2 className='font-semibold text-primary text-base'>{t(`confirm.${item}.admin`)}</h2>
+                      </div>
+                    }
+                    content={
+                      <div className='space-y-2'>
+                        {(rejectStatus === RequestStatusEnum.APPROVED ||
+                          rejectStatus === RequestStatusEnum.REJECTED) && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('return.decision')}:</h3>
+                            <span>
+                              {rejectStatus === RequestStatusEnum.APPROVED
+                                ? t('requestStatus.approved')
+                                : t('requestStatus.rejected')}
+                            </span>
+                          </div>
+                        )}
+                        {reasonRejected && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('order.cancelOrderReason.reason')}:</h3>
+                            <span>{reasonRejected}</span>
                           </div>
                         )}
                       </div>
@@ -140,8 +189,8 @@ export default function ConfirmDecisionDialog({
                   </>
                 ) : (
                   <Button
-                    variant='default'
-                    className='border text-primary border-primary hover:bg-primary/10'
+                    variant='outline'
+                    className='border text-primary border-primary hover:bg-primary/10 hover:text-primary'
                     onClick={() => onOpenChange(false)}
                   >
                     {t('button.close')}
@@ -152,19 +201,39 @@ export default function ConfirmDecisionDialog({
           </ScrollArea>
         </DialogContent>
       </Dialog>
-      {isRejectRequest ? (
+      {isRejectRequest && rejectRequestId ? (
+        <RejectRejectReturn
+          open={openRejectDialog}
+          onOpenChange={setOpenRejectDialog}
+          requestId={rejectRequestId}
+          setOpen={setOpenRejectDialog}
+          reasonItem={'rejectBrandRejectionReason'}
+          dialogTitle={'rejectRequestRejectOrder'}
+          successTitle={'successMakeDecisionOnReject'}
+          dialogMessage={'rejectRequestRejectOrderMessage'}
+          item={item}
+        />
+      ) : (
+        item === 'decisionReturn' && (
+          <RejectReturnOrderDialog
+            open={openRejectDialog}
+            onOpenChange={setOpenRejectDialog}
+            returnRequest={returnRequest}
+            setOpen={setOpenRejectDialog}
+          />
+        )
+      )}
+      {item === 'decisionComplaint' && (
         <RejectRejectReturn
           open={openRejectDialog}
           onOpenChange={setOpenRejectDialog}
           requestId={returnRequest.id}
           setOpen={setOpenRejectDialog}
-        />
-      ) : (
-        <RejectReturnOrderDialog
-          open={openRejectDialog}
-          onOpenChange={setOpenRejectDialog}
-          returnRequest={returnRequest}
-          setOpen={setOpenRejectDialog}
+          reasonItem={'rejectComplaintReason'}
+          dialogTitle={'rejectComplaintTitle'}
+          successTitle={'successMakeDecisionOnComplaint'}
+          dialogMessage={'rejectComplaintMessage'}
+          item={item}
         />
       )}
     </>
