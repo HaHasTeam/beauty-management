@@ -93,8 +93,10 @@ function Sidebar(props: SidebarProps) {
               <div className='mt-5 flex w-full items-center rounded-lg border border-zinc-200 p-4 dark:border-zinc-800 bg-accent/20'>
                 <a href='/dashboard/profile-settings'>
                   <Avatar className='min-h-10 min-w-10'>
-                    <AvatarImage src={''} />
-                    <AvatarFallback className='font-bold'>A</AvatarFallback>
+                    <AvatarImage src={userProfile.avatar ?? ''} />
+                    <AvatarFallback className='font-bold'>
+                      {userProfile?.username?.charAt(0).toUpperCase() ?? 'A'}
+                    </AvatarFallback>
                   </Avatar>
                 </a>
                 <a href='/dashboard/profile-settings'>

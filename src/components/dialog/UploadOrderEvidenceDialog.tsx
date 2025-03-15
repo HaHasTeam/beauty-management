@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FilesIcon, ImagePlus } from 'lucide-react'
+import { FilesIcon, ImagePlus, Video } from 'lucide-react'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -192,10 +192,10 @@ export const UploadOrderEvidenceDialog: React.FC<UploadOrderEvidenceDialogProps>
                         renderInputUI={(_isDragActive, files, maxFiles) => {
                           return (
                             <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
-                              <ImagePlus className='w-8 h-8 text-primary' />
-                              <p className='text-xs text-primary'>{t('validation.inputMedia')}</p>
+                              <Video className='w-8 h-8 text-primary' />
+                              {/* <p className='text-xs text-primary'>{t('validation.inputMedia')}</p> */}
                               <p className='text-xs text-muted-foreground'>
-                                {files.length}/{maxFiles} {t('systemService.files')}
+                                {files.length}/{maxFiles} {t('media.videosFile')}
                               </p>
                             </div>
                           )
@@ -260,9 +260,9 @@ export const UploadOrderEvidenceDialog: React.FC<UploadOrderEvidenceDialogProps>
                           return (
                             <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
                               <ImagePlus className='w-8 h-8 text-primary' />
-                              <p className='text-xs text-primary'>{t('validation.inputMedia')}</p>
+                              {/* <p className='text-xs text-primary'>{t('validation.inputMedia')}</p> */}
                               <p className='text-xs text-muted-foreground'>
-                                {files.length}/{maxFiles} {t('systemService.files')}
+                                {files.length}/{maxFiles} {t('media.imagesFile')}
                               </p>
                             </div>
                           )

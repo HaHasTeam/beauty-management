@@ -24,23 +24,27 @@ const BrandSection = ({ brand }: BrandSectionProps) => {
             {brand.logo && (
               <Avatar>
                 <AvatarImage src={brand.logo} alt={brand.name} />
-                <AvatarFallback>{brand.name}</AvatarFallback>
+                <AvatarFallback>{brand.name?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
               </Avatar>
             )}
-            <div className='md:flex block gap-1 md:gap-2 items-center'>
-              <div className='flex gap-2 items-center'>
-                <Link to={routesConfig[Routes.BRAND].path + '/' + brand.id} className='text-xl font-bold'>
-                  {brand.name}
-                </Link>
+            <div className='flex flex-col gap-1'>
+              <div className='flex gap-2 items-start'>
+                <div className='flex flex-col'>
+                  <Link to={routesConfig[Routes.BRAND].path + '/' + brand.id} className='text-xl font-bold'>
+                    {brand.name}
+                  </Link>
+                  <Ratings rating={brand.star ?? 0} size={13} variant='yellow' />
+                </div>
                 <State state={brand.status} />
               </div>
-              <Ratings rating={brand.star} size={13} variant='yellow' />
+              <p className='text-sm text-gray-500'>
+                {t('brand.establishmentDate')}:{' '}
+                {t('date.toLocaleDateString', { val: new Date(brand.establishmentDate) })}
+              </p>
             </div>
           </div>
-          <p className='text-sm text-gray-500'>
-            {t('brand.establishmentDate')}: {t('date.toLocaleDateString', { val: new Date(brand.establishmentDate) })}
-          </p>
         </div>
+
         <div className='flex gap-2 w-full md:w-auto'>
           <Button className='sm:gap-2 gap-1 flex-1 md:flex-none bg-primary hover:bg-primary/80 px-2 sm:px-3' size='sm'>
             <MessageSquare className='w-4 h-4 sm:mr-2 mr-1 sm:inline hidden' />
@@ -66,7 +70,7 @@ const BrandSection = ({ brand }: BrandSectionProps) => {
         </div>
         <div>
           <p className='text-sm text-gray-500'>{t('address.title')}</p>
-          <p className='font-medium'>{[brand.address, brand.ward, brand.district, brand.province].join(', ')}</p>
+          <p className='font-medium'>{brand.address}</p>
         </div>
         <div>
           <p className='text-sm text-gray-500'>{t('brand.businessTaxCode')}</p>

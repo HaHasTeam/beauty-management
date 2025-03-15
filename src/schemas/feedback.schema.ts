@@ -7,8 +7,14 @@ export const getReplyFeedbackSchema = () => {
   return z.object({
     content: z
       .string()
-      .min(MIN_FEEDBACK_LENGTH, i18next.t('validation.contentReplyFeedback'))
-      .max(MAX_FEEDBACK_LENGTH, i18next.t('validation.contentReplyFeedback'))
+      .min(
+        MIN_FEEDBACK_LENGTH,
+        i18next.t('validation.contentReplyFeedback', { minLength: MIN_FEEDBACK_LENGTH, maxLength: MAX_FEEDBACK_LENGTH })
+      )
+      .max(
+        MAX_FEEDBACK_LENGTH,
+        i18next.t('validation.contentReplyFeedback', { minLength: MIN_FEEDBACK_LENGTH, maxLength: MAX_FEEDBACK_LENGTH })
+      )
   })
 }
 

@@ -17,7 +17,7 @@ interface ProductTableToolbarActionsProps {
 export function ProductTableToolbarActions({ table }: ProductTableToolbarActionsProps) {
   const navigate = useNavigate()
   const handleAddProduct = () => {
-    navigate(routesConfig[Routes.ADD_FLASH_SALE].getPath())
+    navigate(routesConfig[Routes.CREATE_PRODUCT].getPath())
   }
 
   return (
@@ -30,7 +30,7 @@ export function ProductTableToolbarActions({ table }: ProductTableToolbarActions
       ) : null}
       <Button size={'sm'} onClick={handleAddProduct}>
         <IoIosAddCircleOutline />
-        Add Flash Sale
+        Add Product
       </Button>
       <Button
         variant='outline'

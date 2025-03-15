@@ -8,12 +8,14 @@ import {
   HiOutlineSun
 } from 'react-icons/hi2'
 import { Link, useNavigate } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { OpenContext } from '@/contexts/layout'
 import { useTheme } from '@/contexts/ThemeProvider'
+import { useStore } from '@/stores/store'
 
 export default function HeaderLinks() {
   const { open, setOpen } = useContext(OpenContext)
@@ -30,6 +32,14 @@ export default function HeaderLinks() {
   const handleSignOut = () => {
     router('/auth/password_signin')
   }
+
+  const { userProfile } = useStore(
+    useShallow((state) => {
+      return {
+        userProfile: state.user
+      }
+    })
+  )
 
   return (
     <div className='relative flex min-w-max max-w-max flex-grow items-center justify-around gap-1 rounded-lg md:px-2 md:py-2 md:pl-3 xl:gap-2'>
@@ -95,8 +105,8 @@ export default function HeaderLinks() {
       </Button>
       <Link className='w-full' to='/dashboard/profile-settings'>
         <Avatar className='h-9 min-w-9 md:min-h-10 md:min-w-10'>
-          <AvatarImage src={''} />
-          <AvatarFallback className='font-bold'>{'A'}</AvatarFallback>
+          <AvatarImage src={userProfile?.avatar ?? ''} />
+          <AvatarFallback className='font-bold'>{userProfile.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
         </Avatar>
       </Link>
     </div>

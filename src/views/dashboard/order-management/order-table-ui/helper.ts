@@ -4,7 +4,9 @@ import {
   Clock,
   CreditCard,
   Package,
+  PackageCheck,
   RefreshCcw,
+  RefreshCwOff,
   RotateCcw,
   ShoppingBag,
   Truck,
@@ -75,6 +77,18 @@ export function getStatusIcon(status: ShippingStatusEnum) {
       iconColor: 'text-teal-500',
       textColor: 'text-teal-500',
       bgColor: 'bg-teal-100'
+    },
+    [ShippingStatusEnum.BRAND_RECEIVED]: {
+      icon: PackageCheck,
+      iconColor: 'text-emerald-500',
+      textColor: 'text-emerald-500',
+      bgColor: 'bg-emerald-100'
+    },
+    [ShippingStatusEnum.RETURNED_FAIL]: {
+      icon: RefreshCwOff,
+      iconColor: 'text-rose-500',
+      textColor: 'text-rose-500',
+      bgColor: 'bg-rose-100'
     },
     [ShippingStatusEnum.CANCELLED]: {
       icon: XCircle,

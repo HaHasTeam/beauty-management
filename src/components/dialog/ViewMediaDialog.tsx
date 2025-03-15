@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { TServerFile } from '@/types/file'
+import { isImageFile, isVideoFile } from '@/utils/media-files'
 
 import { PreviewDialog } from '../file-input/PreviewImageDialog'
 import { VideoThumbnailServer } from '../file-input/VideoThumbnail'
@@ -18,35 +19,15 @@ interface ViewMediaDialogProps {
 export default function ViewMediaDialog({ mediaFiles, open, onOpenChange }: ViewMediaDialogProps) {
   const { t } = useTranslation()
 
-  const imageFiles = mediaFiles.filter(
-    (file: TServerFile) =>
-      file.fileUrl && (file.fileUrl.endsWith('.jpg') || file.fileUrl.endsWith('.jpeg') || file.fileUrl.endsWith('.png'))
-  )
+  const imageFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isImageFile(file.fileUrl))
 
-  const videoFiles = mediaFiles.filter(
-    (file: TServerFile) =>
-      file.fileUrl &&
-      (file.fileUrl.endsWith('.mp4') ||
-        file.fileUrl.endsWith('.wmv') ||
-        file.fileUrl.endsWith('.mov') ||
-        file.fileUrl.endsWith('.avi') ||
-        file.fileUrl.endsWith('.mkv') ||
-        file.fileUrl.endsWith('.flv'))
-  )
+  const videoFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isVideoFile(file.fileUrl))
 
   // Get file type based on file URL
   const getFileContentType = (file: TServerFile) => {
     if (!file.fileUrl) return 'text'
-    if (file.fileUrl.endsWith('.jpg') || file.fileUrl.endsWith('.jpeg') || file.fileUrl.endsWith('.png')) return 'image'
-    if (
-      file.fileUrl.endsWith('.mp4') ||
-      file.fileUrl.endsWith('.wmv') ||
-      file.fileUrl.endsWith('.mov') ||
-      file.fileUrl.endsWith('.avi') ||
-      file.fileUrl.endsWith('.mkv') ||
-      file.fileUrl.endsWith('.flv')
-    )
-      return 'video'
+    if (isImageFile(file.fileUrl)) return 'image'
+    if (isVideoFile(file.fileUrl)) return 'video'
     return 'text'
   }
 

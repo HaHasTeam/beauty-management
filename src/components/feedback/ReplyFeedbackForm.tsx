@@ -13,6 +13,7 @@ import { getOrderByIdApi } from '@/network/apis/order'
 import { getProductByIdApi } from '@/network/apis/product'
 import { getReplyFeedbackSchema } from '@/schemas/feedback.schema'
 import { useStore } from '@/stores/store'
+import { IBrand } from '@/types/brand'
 import { IResponseFeedback } from '@/types/feedback'
 
 import Button from '../button'
@@ -24,10 +25,11 @@ interface ReplyFeedbackFormProps {
   isOpen: boolean
   feedback: IResponseFeedback
   setShowRep: Dispatch<SetStateAction<boolean>>
+  brand?: IBrand | null
 }
 
 export const ReplyFeedbackForm = forwardRef<HTMLDivElement, ReplyFeedbackFormProps>(
-  ({ isOpen, feedback, setShowRep }, ref) => {
+  ({ isOpen, feedback, brand, setShowRep }, ref) => {
     const { t } = useTranslation()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { successToast } = useToast()
@@ -106,10 +108,17 @@ export const ReplyFeedbackForm = forwardRef<HTMLDivElement, ReplyFeedbackFormPro
                     {/* <FormLabel required className='text-primary'>
                     {t('feedback.reply')}
                   </FormLabel> */}
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.firstName} />
-                      <AvatarFallback>{user.firstName?.charAt(0) ?? 'A'}</AvatarFallback>
-                    </Avatar>
+                    {brand ? (
+                      <Avatar>
+                        <AvatarImage src={brand.logo} alt={brand.name} />
+                        <AvatarFallback>{brand.name?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <Avatar>
+                        <AvatarImage src={user.avatar} alt={user.username} />
+                        <AvatarFallback>{user.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
+                      </Avatar>
+                    )}
                   </div>
                   <div className='w-full space-y-1' ref={ref}>
                     <FormControl>

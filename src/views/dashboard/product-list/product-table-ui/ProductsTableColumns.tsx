@@ -72,7 +72,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
           <div className='flex space-x-2 items-center'>
             <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
               <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{displayName[0].toUpperCase() ?? 'A'}</AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
@@ -144,18 +144,24 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem
-                onClick={() => {
-                  setRowAction({ row: row, type: 'view' })
-                }}
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <EyeIcon />
-                  View Details
-                </span>
+              <DropdownMenuItem>
+                <Link
+                  to={routesConfig[Routes.PRODUCT_DETAILS].getPath({
+                    id: row.original.id
+                  })}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <EyeIcon />
+                    View Details
+                  </span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to={routesConfig[Routes.UPDATE_PRODUCT].getPath(row.original.id)}>
+                <Link
+                  to={routesConfig[Routes.UPDATE_PRODUCT].getPath({
+                    id: row.original.id
+                  })}
+                >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
                     <Pen />
                     Update

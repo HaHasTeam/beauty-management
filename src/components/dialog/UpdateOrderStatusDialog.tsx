@@ -8,21 +8,36 @@ import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { getOrderByIdApi, getStatusTrackingByIdApi, updateOrderStatusApi } from '@/network/apis/order'
+import {
+  getOrderByIdApi,
+  getStatusTrackingByIdApi,
+  takeReceivedActionApi,
+  updateOrderStatusApi
+} from '@/network/apis/order'
 import { UpdateOrderStatusSchema } from '@/schemas/order.schema'
-import { ShippingStatusEnum } from '@/types/enum'
-import { IOrderItem } from '@/types/order'
+import { ActionReceivedEnum, ShippingStatusEnum } from '@/types/enum'
+import { ICancelRequestOrder, IOrderItem, IReturnRequestOrder } from '@/types/order'
 
 import Button from '../button'
 import { AlertDescription } from '../ui/alert'
+import { ComplaintReturnOrderDialog } from './ComplaintReturnOrderDialog'
 import { UploadOrderEvidenceDialog } from './UploadOrderEvidenceDialog'
 
 interface UpdateOrderStatusProps {
   order: IOrderItem
   setOpenCancelOrderDialog: Dispatch<SetStateAction<boolean>>
+  cancelOrderRequest: ICancelRequestOrder | null
+  complaintRequest: IReturnRequestOrder | null
 }
 
-export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: UpdateOrderStatusProps) {
+export default function UpdateOrderStatus({
+  order,
+  setOpenCancelOrderDialog,
+  cancelOrderRequest,
+  complaintRequest
+}: UpdateOrderStatusProps) {
+  const REFUND_WAITING_DAYS = 5
+
   const { t } = useTranslation()
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
@@ -54,6 +69,20 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
       handleReset()
     }
   })
+  const { mutateAsync: takeReceivedActionFn } = useMutation({
+    mutationKey: [takeReceivedActionApi.mutationKey],
+    mutationFn: takeReceivedActionApi.fn,
+    onSuccess: async () => {
+      successToast({
+        message: t('order.updateOrderStatusSuccess')
+      })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [getOrderByIdApi.queryKey] }),
+        queryClient.invalidateQueries({ queryKey: [getStatusTrackingByIdApi.queryKey] })
+      ])
+      handleReset()
+    }
+  })
   async function handleUpdateStatus(values: z.infer<typeof UpdateOrderStatusSchema>) {
     try {
       setIsLoading(true)
@@ -64,6 +93,18 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
       handleServerError({
         error,
         form
+      })
+    }
+  }
+  async function handleTakeReceivedAction(action: ActionReceivedEnum) {
+    try {
+      setIsLoading(true)
+      await takeReceivedActionFn({ id: order?.id, action: action })
+      setIsLoading(false)
+    } catch (error) {
+      setIsLoading(false)
+      handleServerError({
+        error
       })
     }
   }
@@ -190,6 +231,30 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
       alertDescription: t('order.statusDescription.returning'),
       nextStatus: ''
     },
+    [ShippingStatusEnum.BRAND_RECEIVED]: {
+      borderColor: 'border-emerald-300',
+      bgColor: 'bg-emerald-100',
+      bgTagColor: 'bg-emerald-300',
+      titleColor: 'text-emerald-600',
+      alertVariant: 'bg-emerald-100 rounded-lg p-3 border',
+      buttonBg: '',
+      alertTitle: t('order.brandReceived'),
+      buttonText: '',
+      alertDescription: t('order.statusDescription.brandReceived', { count: REFUND_WAITING_DAYS }),
+      nextStatus: ''
+    },
+    [ShippingStatusEnum.RETURNED_FAIL]: {
+      borderColor: 'border-rose-300',
+      bgColor: 'bg-rose-100',
+      bgTagColor: 'bg-rose-300',
+      titleColor: 'text-rose-600',
+      alertVariant: 'bg-rose-100 rounded-lg p-3 border',
+      buttonBg: '',
+      alertTitle: t('order.returnedFail'),
+      buttonText: '',
+      alertDescription: t('order.statusDescription.returnFailed'),
+      nextStatus: ''
+    },
     [ShippingStatusEnum.REFUNDED]: {
       borderColor: 'border-gray-400',
       bgColor: 'bg-gray-200',
@@ -267,35 +332,81 @@ export default function UpdateOrderStatus({ order, setOpenCancelOrderDialog }: U
             )}
           {(order?.status === ShippingStatusEnum.TO_PAY ||
             order?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
-            order?.status === ShippingStatusEnum.PREPARING_ORDER) && (
+            (order?.status === ShippingStatusEnum.PREPARING_ORDER && !cancelOrderRequest)) && (
             <div>
               <Button
                 variant='outline'
                 className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                onClick={() => setOpenCancelOrderDialog(true)}
+                onClick={() => {
+                  setOpenCancelOrderDialog(true)
+                  handleReset()
+                }}
               >
                 {t('order.cancelOrder')}
               </Button>
             </div>
           )}
+          {order?.status === ShippingStatusEnum.RETURNING && !complaintRequest && (
+            <div className='flex items-center gap-1'>
+              <Button
+                variant='default'
+                className='w-full bg-emerald-600 hover:bg-emerald-800'
+                onClick={() => {
+                  handleTakeReceivedAction(ActionReceivedEnum.RECEIVED)
+                }}
+                loading={isLoading}
+              >
+                {t('button.received')}
+              </Button>
+              <Button
+                variant='outline'
+                className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                onClick={() => {
+                  handleTakeReceivedAction(ActionReceivedEnum.NOT_RECEIVED)
+                }}
+              >
+                {t('button.notReceived')}
+              </Button>
+              <Button
+                className='w-full bg-yellow-500 hover:bg-yellow-600'
+                onClick={() => {
+                  setIsOpenOrderEvidence(true)
+                }}
+              >
+                {t('button.complaint')}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
-      <UploadOrderEvidenceDialog
-        isOpen={isOpenOrderEvidence}
-        onClose={() => setIsOpenOrderEvidence(false)}
-        order={order}
-        dialogTitle={t(`orderEvidence.${ShippingStatusEnum.TO_SHIP}`)}
-        dialogDescription={t(`orderEvidence.description.${ShippingStatusEnum.TO_SHIP}`)}
-        status={config.nextStatus}
-      />
-      <UploadOrderEvidenceDialog
-        isOpen={isOpenOrderEvidence}
-        onClose={() => setIsOpenOrderEvidence(false)}
-        order={order}
-        dialogTitle={t(`orderEvidence.${ShippingStatusEnum.SHIPPING}`)}
-        dialogDescription={t(`orderEvidence.description.${ShippingStatusEnum.SHIPPING}`)}
-        status={config.nextStatus}
-      />
+      {order.status === ShippingStatusEnum.TO_SHIP ? (
+        <UploadOrderEvidenceDialog
+          isOpen={isOpenOrderEvidence}
+          onClose={() => setIsOpenOrderEvidence(false)}
+          order={order}
+          dialogTitle={t(`orderEvidence.${ShippingStatusEnum.TO_SHIP}`)}
+          dialogDescription={t(`orderEvidence.description.${ShippingStatusEnum.TO_SHIP}`)}
+          status={config.nextStatus}
+        />
+      ) : order.status === ShippingStatusEnum.SHIPPING ? (
+        <UploadOrderEvidenceDialog
+          isOpen={isOpenOrderEvidence}
+          onClose={() => setIsOpenOrderEvidence(false)}
+          order={order}
+          dialogTitle={t(`orderEvidence.${ShippingStatusEnum.SHIPPING}`)}
+          dialogDescription={t(`orderEvidence.description.${ShippingStatusEnum.SHIPPING}`)}
+          status={config.nextStatus}
+        />
+      ) : (
+        order.status === ShippingStatusEnum.RETURNING && (
+          <ComplaintReturnOrderDialog
+            open={isOpenOrderEvidence}
+            setOpen={setIsOpenOrderEvidence}
+            onOpenChange={setIsOpenOrderEvidence}
+            orderId={order.id}
+          />
+        )
+      )}
     </div>
   )
 }

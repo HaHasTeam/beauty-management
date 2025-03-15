@@ -77,7 +77,9 @@ const ProfileHeader = () => {
                   <div className='flex gap-4 items-center'>
                     <Avatar className='min-h-[68px] min-w-[68px] relative'>
                       <AvatarImage src={form.watch('avatar') || ''} />
-                      <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>A</AvatarFallback>
+                      <AvatarFallback className='text-2xl font-bold dark:bg-accent/20'>
+                        {userProfileData ? userProfileData?.username?.[0].toUpperCase() : 'A'}
+                      </AvatarFallback>
                       {/* <UploadFileModal
                         field={field}
                         Trigger={
