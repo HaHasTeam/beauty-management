@@ -1,5 +1,7 @@
+import IndexPage from './system-service-table-ui'
+
 const SystemService = () => {
-  return <div>SystemService</div>
+  return <IndexPage />
 }
 
 export default SystemService

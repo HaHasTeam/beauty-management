@@ -42,6 +42,10 @@ import {
   getConsultantServiceByIdApi,
   updateConsultantServiceByIdApi
 } from '@/network/apis/consultant-service'
+import {
+  AddConsultantServiceRequestParams,
+  UpdateConsultantServiceByIdRequestParams
+} from '@/network/apis/consultant-service/type'
 import { ConsultantServiceStatusEnum, ConsultantServiceTypeEnum } from '@/types/consultant-service'
 import { TFile } from '@/types/file'
 
@@ -124,12 +128,12 @@ const ConsultantServiceDetails = () => {
 
     try {
       if (consultantServiceId) {
-        await updateConsultantServiceFn(values)
+        await updateConsultantServiceFn(values as UpdateConsultantServiceByIdRequestParams)
         return queryClient.invalidateQueries({
           queryKey: [getConsultantServiceByIdApi.queryKey, { consultantServiceId }]
         })
       } else {
-        await addConsultantServiceFn(values)
+        await addConsultantServiceFn(values as AddConsultantServiceRequestParams)
       }
       handleBackToConsultantService()
     } catch (error) {
@@ -186,7 +190,7 @@ const ConsultantServiceDetails = () => {
         id: consultantServiceId,
         ...values,
         status
-      })
+      } as UpdateConsultantServiceByIdRequestParams)
       queryClient.invalidateQueries({
         queryKey: [getConsultantServiceByIdApi.queryKey, { consultantServiceId }]
       })

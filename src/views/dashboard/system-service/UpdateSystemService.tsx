@@ -14,8 +14,9 @@ import { getAllConsultationCriteriaApi } from '@/network/apis/consultation-crite
 import { uploadFilesApi } from '@/network/apis/file'
 import { getAllSystemServiceApi, getSystemServiceByIdApi, updateSystemServiceApi } from '@/network/apis/system-service'
 import { getSystemServiceSchema, ISystemServiceFormData } from '@/schemas/system-service.schema'
-import { ServiceTypeEnum, StatusEnum } from '@/types/enum'
+import { ServiceTypeEnum } from '@/types/enum'
 import { IImage } from '@/types/image'
+import { SystemServiceStatusEnum } from '@/types/system-service'
 
 const UpdateSystemService = () => {
   const { id } = useParams()
@@ -43,7 +44,7 @@ const UpdateSystemService = () => {
         }
       ]
     },
-    status: StatusEnum.ACTIVE
+    status: SystemServiceStatusEnum.ACTIVE
   }
 
   const { data: initialData, isFetching: isGettingSystemService } = useQuery({
@@ -127,7 +128,7 @@ const UpdateSystemService = () => {
         processedImages.push({
           id,
           fileUrl: deletedImage.fileUrl,
-          status: StatusEnum.INACTIVE
+          status: SystemServiceStatusEnum.INACTIVE
         })
       }
     })
@@ -177,7 +178,7 @@ const UpdateSystemService = () => {
     if (initialData && initialData?.data) {
       const processFormValue = async () => {
         const mainImages = initialData?.data?.images
-          ?.filter((image) => image.status === StatusEnum.ACTIVE || !image.status)
+          ?.filter((image) => image.status === SystemServiceStatusEnum.ACTIVE || !image.status)
           ?.map((image) => image.fileUrl)
           .filter((fileUrl): fileUrl is string => fileUrl !== undefined)
 

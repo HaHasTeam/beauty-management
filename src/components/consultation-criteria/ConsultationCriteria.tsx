@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { IResponseConsultationCriteriaData } from '@/types/consultation-criteria'
-import { StatusEnum } from '@/types/enum'
+import { SystemServiceStatusEnum } from '@/types/system-service'
 
 import SectionCollapsable from '../section-collapsable'
 import SystemServiceTypeTag from '../system-service/SystemServiceTypeTag'
@@ -89,8 +89,8 @@ const ConsultationCriteria = ({ consultationCriteria, mode = 'create', form }: C
             {/* System Services */}
             {consultationCriteria.systemServices &&
               consultationCriteria.systemServices.length > 0 &&
-              consultationCriteria.systemServices.filter((service) => service.status === StatusEnum.ACTIVE).length >
-                0 && (
+              consultationCriteria.systemServices.filter((service) => service.status === SystemServiceStatusEnum.ACTIVE)
+                .length > 0 && (
                 <div>
                   <SectionCollapsable
                     header={
@@ -102,7 +102,7 @@ const ConsultationCriteria = ({ consultationCriteria, mode = 'create', form }: C
                     content={
                       <div className='space-y-2'>
                         {consultationCriteria.systemServices
-                          ?.filter((service) => service.status === StatusEnum.ACTIVE)
+                          ?.filter((service) => service.status === SystemServiceStatusEnum.ACTIVE)
                           ?.map((service) => (
                             <div key={service.id} className='bg-primary/10 p-3 rounded-md space-y-1'>
                               <div className='flex gap-1 items-center'>

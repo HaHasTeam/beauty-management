@@ -9,7 +9,7 @@ import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { cn } from '@/lib/utils'
 import { uploadFilesApi } from '@/network/apis/file'
-import { CustomFile, TFile } from '@/types/file'
+import { CustomFile, FileStatusEnum, TFile } from '@/types/file'
 import { createFiles } from '@/utils/files'
 
 import ImageWithFallback from '../image/ImageWithFallback'
@@ -121,41 +121,41 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
 
   const onFileDrop = async (newFiles: CustomFile[] | null) => {
     try {
-      setFiles(newFiles || [])
       if (fieldType === 'single') {
         const file = newFiles ? newFiles[0] : null
         const fileItem: TFile = {
           fileUrl: file?.fileUrl ?? URL.createObjectURL(file as File),
           name: file?.name as string
         }
+
         if (field.onChange) field.onChange(fileItem as unknown as React.ChangeEvent<HTMLInputElement>)
+        return setFiles([file as CustomFile])
       }
       if (fieldType === 'multiple') {
         const deleteFiles: TFile[] = []
+
         if (newFiles && newFiles.length < files.length) {
           for (let i = 0; i < files.length; i++) {
-            if (!newFiles.find((file) => file.name === files[i].name)) {
-              if (files[i].id) {
-                deleteFiles.push(files[i] as TFile)
-              }
+            if (!newFiles.find((file) => file.id === files[i].id)) {
+              const file = Object.defineProperty(files[i], 'status', {
+                value: FileStatusEnum.INACTIVE,
+                writable: true
+              })
+              deleteFiles.push(file as TFile)
             }
           }
         }
-        const parseDeletedFiles = deleteFiles.map((file) => ({
-          ...file,
-          status: 'inactive'
-        }))
+        const combineFiles = newFiles ? [...newFiles, ...deleteFiles] : [...deleteFiles]
 
-        const fileItems: TFile[] = newFiles?.map((file) => ({
+        const fileValues: TFile[] = combineFiles?.map((file) => ({
           id: file.id ?? undefined,
           fileUrl: file.fileUrl ?? URL.createObjectURL(file as File),
           name: file.name as string,
           status: file.status ?? undefined
         })) as TFile[]
 
-        const combineFiles = fileItems ? [...fileItems, ...parseDeletedFiles] : [...parseDeletedFiles]
-
-        if (field.onChange) field.onChange(combineFiles as unknown as React.ChangeEvent<HTMLInputElement>)
+        if (field.onChange) field.onChange(fileValues as unknown as React.ChangeEvent<HTMLInputElement>)
+        return setFiles(combineFiles as CustomFile[])
       }
     } catch (error) {
       handleServerError({
@@ -169,19 +169,22 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
       const formData = new FormData()
 
       files.forEach((file) => {
-        if (file.fileUrl && file.fileUrl.includes('https://storage.googleapis.com/')) return
+        if (!!file.fileUrl && file.fileUrl.includes('https://firebasestorage.googleapis.com/')) return
+
         formData.append('files', file)
       })
 
       const constructedFiles: TFile[] = await uploadFilesFn(formData).then((res) => {
         const fileItem = res.data
+
         let fileIndex = 0
         const result = files.map((file) => {
-          if (file.fileUrl && file.fileUrl.includes('https://storage.googleapis.com/')) {
+          if (file.fileUrl && file.fileUrl.includes('https://firebasestorage.googleapis.com/')) {
             return {
               id: file.id ?? undefined,
               name: file.name,
-              fileUrl: file.fileUrl
+              fileUrl: file.fileUrl,
+              status: file.status ?? undefined
             }
           }
 
@@ -234,7 +237,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
               <ImagePlusIcon className='size-10 text-muted-foreground max-lg:size-6' />
               <p className='text-foreground tracking-tight flex-1'>
                 Drag & drop or browse files{' '}
-                <b>{`(${files.filter((file) => file.status !== 'inactive').length}/${dropZoneConfig.maxFiles})`}</b>
+                <b>{`(${files.filter((file) => file.status !== FileStatusEnum.INACTIVE).length}/${dropZoneConfig.maxFiles})`}</b>
               </p>
             </div>
           </div>
@@ -252,7 +255,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
                       index={index}
                       className={cn(
                         'flex items-center justify-between rounded-lg hover:bg-primary/30 border bg-background',
-                        { hidden: file.status === 'inactive' }
+                        { hidden: file.status === FileStatusEnum.INACTIVE }
                       )}
                     >
                       <div key={file.name} className='flex items-center space-x-3 w-[95%]'>

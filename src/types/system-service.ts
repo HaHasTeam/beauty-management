@@ -6,9 +6,14 @@ import {
   IUpdateConsultationCriteriaData,
   IUpdateServerConsultationCriteriaData
 } from './consultation-criteria'
-import { ServiceTypeEnum, StatusEnum } from './enum'
+import { ServiceTypeEnum } from './enum'
 import { IImage } from './image'
 import { TMetaData } from './request'
+
+export enum SystemServiceStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
+}
 
 export type IUpdateSystemServiceFormData = ISystemServiceFormData & {
   id: string
@@ -19,18 +24,18 @@ export type IUpdateServerSystemServiceFormData = {
   name: string
   description: string
   type: ServiceTypeEnum
-  status: StatusEnum.ACTIVE | StatusEnum.INACTIVE
+  status: SystemServiceStatusEnum
   consultationCriteria?: string
   images: IImage[]
   category: string
   consultationCriteriaData?: IUpdateServerConsultationCriteriaData
 }
 
-export type ISystemService = {
+export type ISystemService = TMetaData & {
   name: string
   description: string
   type: ServiceTypeEnum
-  status: StatusEnum.ACTIVE | StatusEnum.INACTIVE
+  status: SystemServiceStatusEnum
   consultationCriteria: IResponseConsultationCriteriaData
   images: IImage[]
   category: ICategory

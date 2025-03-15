@@ -8,6 +8,7 @@ export type TGetBrandByIdRequestParams = {
 export type TUpdateStatusBrandRequestParams = TGetBrandByIdRequestParams & {
   reason?: string
   status: string
+  url: string
 }
 
 export type TUpdateBrandRequestParams = TGetBrandByIdRequestParams & IBranch

@@ -21,9 +21,10 @@ export const updateStatusBrandByIdApi = toMutationFetcher<TUpdateStatusBrandRequ
     return privateRequest(`/brands/update-status/`, {
       method: 'PUT',
       data: {
-        reason: 'fdsaf',
+        reason: params.reason || 'Update success',
         brandId: params?.brandId,
-        status: params.status
+        status: params.status,
+        url: params.url
       }
     })
   }
