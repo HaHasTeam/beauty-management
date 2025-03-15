@@ -78,7 +78,7 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
             <TabsContent value='SPECIFIC' className='mt-4'>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center space-x-2'>
-                  <Badge variant='secondary'>{form.watch('selectedProducts').length}</Badge>
+                  <Badge variant='secondary'>{form.watch('selectedProducts')?.length}</Badge>
                   <span className='text-sm text-muted-foreground'>sản phẩm được chọn</span>
                 </div>
                 <Button type='button' size='sm' className='flex items-center' onClick={() => setOpen(true)}>

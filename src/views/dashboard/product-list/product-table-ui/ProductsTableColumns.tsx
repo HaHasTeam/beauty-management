@@ -144,18 +144,24 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem
-                onClick={() => {
-                  setRowAction({ row: row, type: 'view' })
-                }}
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <EyeIcon />
-                  View Details
-                </span>
+              <DropdownMenuItem>
+                <Link
+                  to={routesConfig[Routes.PRODUCT_DETAILS].getPath({
+                    id: row.original.id
+                  })}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <EyeIcon />
+                    View Details
+                  </span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to={routesConfig[Routes.UPDATE_PRODUCT].getPath(row.original.id)}>
+                <Link
+                  to={routesConfig[Routes.UPDATE_PRODUCT].getPath({
+                    id: row.original.id
+                  })}
+                >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
                     <Pen />
                     Update

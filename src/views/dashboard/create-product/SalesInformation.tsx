@@ -30,6 +30,10 @@ export default function SalesInformation({
   setActiveStep,
   mode = 'create'
 }: SalesInformationProps) {
+  const SALE_INFORMATION_INDEX = 3
+  const MAX_CLASSIFICATION_LEVEL = 3
+  const MAX_PRODUCT_CLASSIFICATION_IMAGES = 4
+
   const { t } = useTranslation()
   const [classificationCount, setClassificationCount] = useState<number>(0)
   const [classificationsOptions, setClassificationsOptions] = useState<IClassificationOption[]>([])
@@ -45,8 +49,6 @@ export default function SalesInformation({
   const [usedClassificationTypes, setUsedClassificationTypes] = useState<{ [key: number]: string }>({})
   const selectedCategory = form.watch('category')
   const saleInfoRef = useRef<HTMLDivElement>(null)
-  const SALE_INFORMATION_INDEX = 3
-  const MAX_CLASSIFICATION_LEVEL = 3
   const productClassificationsForm = form.watch('productClassifications')
   const price = form.watch('price') ?? -1
   const quantity = form.watch('quantity') ?? -1
@@ -791,18 +793,23 @@ export default function SalesInformation({
                                               <FormItem className='w-full'>
                                                 <div className='flex w-full'>
                                                   <FormControl>
-                                                    <div className='w-full space-y-1 flex flex-col justify-center items-center'>
+                                                    <div className='relative w-full space-y-1 flex flex-col justify-center items-center'>
+                                                      {!isAllowEditing && (
+                                                        <div className='z-10 absolute w-full h-full bg-primary/40 opacity-50 pointer-events-none'></div>
+                                                      )}
                                                       <UploadProductImages
                                                         field={field}
                                                         vertical={false}
                                                         centerItem
                                                         setIsImagesUpload={setIsImagesUpload}
-                                                        dropZoneConfigOptions={{ maxFiles: 4 }}
+                                                        dropZoneConfigOptions={{
+                                                          maxFiles: MAX_PRODUCT_CLASSIFICATION_IMAGES
+                                                        }}
                                                         renderFileItemUI={(file) => {
                                                           return (
                                                             <div
                                                               key={file?.name}
-                                                              className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
+                                                              className='z-0 hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0'
                                                             >
                                                               <ImageWithFallback
                                                                 fallback={fallBackImage}
@@ -818,7 +825,7 @@ export default function SalesInformation({
                                                         }}
                                                         renderInputUI={(_isDragActive, files, maxFiles) => {
                                                           return (
-                                                            <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                                            <div className='z-0 w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
                                                               <ImagePlus className='w-12 h-12 text-primary' />
 
                                                               <p className='text-sm text-primary'>
@@ -877,6 +884,7 @@ export default function SalesInformation({
                                                     )
                                                   }}
                                                   className='border-primary/40 w-full'
+                                                  disabled={!isAllowEditing}
                                                 />
                                               </FormControl>
                                               <div className='h-5'>
@@ -914,6 +922,7 @@ export default function SalesInformation({
                                                     )
                                                   }}
                                                   className='border-primary/40 w-full'
+                                                  disabled={!isAllowEditing}
                                                 />
                                               </FormControl>
                                               <div className='h-5'>
@@ -947,6 +956,7 @@ export default function SalesInformation({
                                                     field.onChange(e.target.value)
                                                   }}
                                                   className='border-primary/40 w-full'
+                                                  disabled={!isAllowEditing}
                                                 />
                                               </FormControl>
                                               <div className='h-5'>
@@ -964,8 +974,12 @@ export default function SalesInformation({
                                       <TableCell className='align-middle'>
                                         <div className='flex justify-center h-9 align-middle'>
                                           <Trash2
-                                            onClick={() => handleRemoveCombination(index)}
-                                            className='text-destructive cursor-pointer hover:text-destructive/80'
+                                            onClick={() => {
+                                              if (isAllowEditing) {
+                                                handleRemoveCombination(index)
+                                              }
+                                            }}
+                                            className={`${isAllowEditing ? 'text-destructive/40 cursor-default' : 'text-destructive cursor-pointer hover:text-destructive/80'}`}
                                           />
                                         </div>
                                         <div className='h-5'></div>
