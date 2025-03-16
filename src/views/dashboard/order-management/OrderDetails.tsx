@@ -422,6 +422,46 @@ const OrderDetails = () => {
             reasonRejected={cancelAndReturnRequestData?.data?.complaintRequest?.reasonRejected}
           />
         )}
+        {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.refundRequest && (
+          <ConfirmDecisionDialog
+            isLoadingDecisionApproved
+            isLoadingDecisionRejected
+            open={openTrackReturn}
+            onOpenChange={setOpenTrackReturn}
+            onConfirm={() => {}}
+            item={'returnTrackView'}
+            rejectReason={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.reason}
+            rejectMediaFiles={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.mediaFiles}
+            reason={cancelAndReturnRequestData?.data?.refundRequest?.reason}
+            mediaFiles={cancelAndReturnRequestData?.data?.refundRequest?.mediaFiles}
+            returnRequest={cancelAndReturnRequestData?.data?.refundRequest}
+            isRejectRequest={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest !== null}
+            isShowAction={false}
+            status={cancelAndReturnRequestData?.data?.refundRequest?.status}
+            rejectStatus={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status}
+            reasonRejected={cancelAndReturnRequestData?.data?.refundRequest?.reasonRejected}
+          />
+        )}
+        {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.complaintRequest && (
+          <ConfirmDecisionDialog
+            isLoadingDecisionApproved
+            isLoadingDecisionRejected
+            open={openTrackComplaint}
+            onOpenChange={setOpenTrackComplaint}
+            onConfirm={() => {}}
+            item={'complaintTrackView'}
+            rejectReason={''}
+            rejectMediaFiles={[]}
+            reason={cancelAndReturnRequestData?.data?.complaintRequest?.reason}
+            mediaFiles={cancelAndReturnRequestData?.data?.complaintRequest?.mediaFiles}
+            returnRequest={cancelAndReturnRequestData?.data?.complaintRequest}
+            isRejectRequest={false}
+            isShowAction={false}
+            rejectStatus={cancelAndReturnRequestData?.data?.complaintRequest?.status}
+            status={cancelAndReturnRequestData?.data?.complaintRequest?.status}
+            reasonRejected={cancelAndReturnRequestData?.data?.complaintRequest?.reasonRejected}
+          />
+        )}
       </div>
     </>
   )

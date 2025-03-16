@@ -201,6 +201,7 @@ export default function ConfirmDecisionDialog({
           </ScrollArea>
         </DialogContent>
       </Dialog>
+
       {isRejectRequest && rejectRequestId && (
         <RejectRejectReturn
           open={openRejectDialog}
