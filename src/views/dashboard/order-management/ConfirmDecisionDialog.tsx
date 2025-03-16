@@ -60,7 +60,6 @@ export default function ConfirmDecisionDialog({
 }: ConfirmDecisionDialogProps) {
   const { t } = useTranslation()
   const [openRejectDialog, setOpenRejectDialog] = useState<boolean>(false)
-  console.log(item)
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>

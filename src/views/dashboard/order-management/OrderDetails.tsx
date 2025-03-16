@@ -69,9 +69,9 @@ const OrderDetails = () => {
         <div className='flex gap-2 w-full sm:justify-between sm:items-center sm:flex-row flex-col'>
           <div className='flex gap-2 sm:items-center sm:flex-row flex-col'>
             <span className='text-lg text-muted-foreground font-medium'>{t('orderDetail.title')}</span>
-            {!isFetching && useOrderData?.data && (
+            {/* {!isFetching && useOrderData?.data && (
               <span className='text-lg text-muted-foreground'>#{useOrderData?.data?.id}</span>
-            )}
+            )} */}
           </div>
           {!isFetching && useOrderData?.data && (
             <div className='flex gap-2 items-center'>
@@ -89,7 +89,7 @@ const OrderDetails = () => {
                 <UpdateOrderStatus
                   order={useOrderData?.data}
                   setOpenCancelOrderDialog={setOpenCancelOrderDialog}
-                  cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelOrderRequest ?? null}
+                  cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelRequest ?? null}
                   complaintRequest={cancelAndReturnRequestData?.data?.complaintRequest ?? null}
                 />
               )}
@@ -216,11 +216,9 @@ const OrderDetails = () => {
 
               {/* handle cancel request for brand and system role */}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
-                cancelAndReturnRequestData?.data?.cancelOrderRequest &&
-                cancelAndReturnRequestData?.data?.cancelOrderRequest?.status === RequestStatusEnum.PENDING && (
-                  <MakeDecisionOnCancelRequest
-                    cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelOrderRequest}
-                  />
+                cancelAndReturnRequestData?.data?.cancelRequest &&
+                cancelAndReturnRequestData?.data?.cancelRequest?.status === RequestStatusEnum.PENDING && (
+                  <MakeDecisionOnCancelRequest cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelRequest} />
                 )}
 
               {/* order status tracking */}
@@ -351,7 +349,7 @@ const OrderDetails = () => {
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||
                   useOrderData?.data?.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION ||
                   (useOrderData?.data?.status === ShippingStatusEnum.PREPARING_ORDER &&
-                    !cancelAndReturnRequestData?.data?.cancelOrderRequest) ||
+                    !cancelAndReturnRequestData?.data?.cancelRequest) ||
                   useOrderData?.data?.status === ShippingStatusEnum.SHIPPING) &&
                   (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) && (
                     <div className='w-full'>
