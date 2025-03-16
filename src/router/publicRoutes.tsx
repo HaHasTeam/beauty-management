@@ -7,6 +7,8 @@ import Home from '@/views/home'
 import { ForwardLink } from '@/views/others'
 import RegisterBrand from '@/views/register-brand'
 
+import GuestGuard from './guard/GuestGuard'
+
 export const publicRoutes: RouteObject[] = [
   {
     path: '/',
@@ -30,6 +32,10 @@ export const publicRoutes: RouteObject[] = [
   },
   {
     path: '/auth/*',
-    element: <Auth />
+    element: (
+      <GuestGuard>
+        <Auth />
+      </GuestGuard>
+    )
   }
 ]

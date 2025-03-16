@@ -4,8 +4,8 @@ import { TUser } from '@/types/user'
 export type AuthState = {
   isLoading: boolean
   isAuthenticated: boolean
-  user: TUser
-  authData: TAuth
+  user?: TUser
+  authData?: TAuth
 }
 
 export type AuthActions = {

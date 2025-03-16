@@ -107,8 +107,8 @@ export const ReplyFeedbackForm = forwardRef<HTMLDivElement, ReplyFeedbackFormPro
                     {t('feedback.reply')}
                   </FormLabel> */}
                     <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.firstName} />
-                      <AvatarFallback>{user.firstName?.charAt(0) ?? 'A'}</AvatarFallback>
+                      <AvatarImage src={user?.avatar ?? ''} alt={user?.firstName ?? ''} />
+                      <AvatarFallback>{user?.firstName?.charAt(0) ?? 'A'}</AvatarFallback>
                     </Avatar>
                   </div>
                   <div className='w-full space-y-1' ref={ref}>

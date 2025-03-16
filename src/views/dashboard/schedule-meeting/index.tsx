@@ -108,7 +108,7 @@ function ScheduleMeeting() {
         meetUrl: meetUrl,
         status: BookingStatusEnum.WAIT_FOR_CONFIRMATION,
         slot: data.slotId,
-        account: user.id
+        account: user?.id ?? ''
       }
       await mutateCreateBooking(payload)
       // Form will be reset and navigation will happen in onSuccess callback

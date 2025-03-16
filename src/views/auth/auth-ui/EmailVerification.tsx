@@ -9,6 +9,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 import { emailContact } from '@/constants/infor'
+import { useToast } from '@/hooks/useToast'
 import { activateAccountApi, resendMutateApi } from '@/network/apis/auth'
 import type { TEmailDecoded } from '@/types/auth'
 
@@ -17,7 +18,7 @@ const EmailVerification = () => {
   const queryParams = new URLSearchParams(window.location.search)
   const email = queryParams.get('email')
   const code = queryParams.get('code')
-
+  const { successToast } = useToast()
   const accountId = code ? jwtDecode<TEmailDecoded>(code).accountId : undefined
 
   const verifyEmailRedirectUrl = import.meta.env.VITE_SITE_URL + routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath()
@@ -82,7 +83,10 @@ const EmailVerification = () => {
   // }
 
   if (activateAccountData) {
-    return <Navigate to={routesConfig[Routes.DASHBOARD_HOME].getPath()} replace />
+    successToast({
+      message: 'Activate account successfully'
+    })
+    return <Navigate to={routesConfig[Routes.AUTH_LOGIN].getPath()} replace />
   }
 
   if (accountId) {
