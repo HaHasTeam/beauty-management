@@ -6,7 +6,14 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
 
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 import { useToast } from '@/hooks/useToast'
 import { replyFeedbackApi } from '@/network/apis/feedback'
 import { getOrderByIdApi } from '@/network/apis/order'
@@ -110,6 +117,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
           <div className='space-y-3'>
             <DialogHeader>
               <DialogTitle className='text-primary'>{t('feedback.viewReview')}</DialogTitle>
+              <DialogDescription></DialogDescription>
             </DialogHeader>
             {/* Feedback ID */}
             {(user?.role === RoleEnum.ADMIN ||
@@ -140,18 +148,16 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
                 brand={brand}
                 onReplyClick={handleReplyClick}
               />
-              {feedback.replies && feedback.replies.length > 0 && (
-                <BrandAnswer
-                  showRep={showRep}
-                  replies={feedback.replies}
-                  feedback={feedback}
-                  isOpen={isOpen}
-                  setShowRep={setShowRep}
-                  replyFormRef={replyFormRef}
-                  onReplyClick={handleReplyClick}
-                  brand={brand}
-                />
-              )}
+              <BrandAnswer
+                showRep={showRep}
+                replies={feedback.replies}
+                feedback={feedback}
+                isOpen={isOpen}
+                setShowRep={setShowRep}
+                replyFormRef={replyFormRef}
+                onReplyClick={handleReplyClick}
+                brand={brand}
+              />
             </div>
             <DialogFooter>
               <Button

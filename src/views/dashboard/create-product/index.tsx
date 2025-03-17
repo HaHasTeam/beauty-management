@@ -28,7 +28,7 @@ import SalesInformation from './SalesInformation'
 
 const CreateProduct = () => {
   const DEFAULT_TITLE = 'Default'
-  const { t, ready } = useTranslation()
+  const { t } = useTranslation()
   const [resetSignal, setResetSignal] = useState(false)
   const [isValid, setIsValid] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
@@ -180,7 +180,7 @@ const CreateProduct = () => {
   }, [form, resetSignal, useCategoryData])
   return (
     <>
-      {isLoading && !ready && <LoadingLayer />}
+      {isLoading && <LoadingLayer />}
       <div className='space-y-3 relative flex sm:gap-3 gap-0 justify-between'>
         <div className='lg:w-[72%] md:w-[70%] sm:w-[85%] w-full'>
           <Form {...form}>

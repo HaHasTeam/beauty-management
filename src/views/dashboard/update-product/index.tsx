@@ -480,6 +480,7 @@ const UpdateProduct = () => {
                   setActiveStep={setActiveStep}
                   activeStep={activeStep}
                   setCompleteSteps={setCompleteSteps}
+                  mode='update'
                 />
                 <div className='w-full flex flex-row-reverse justify-start gap-3'>
                   <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>

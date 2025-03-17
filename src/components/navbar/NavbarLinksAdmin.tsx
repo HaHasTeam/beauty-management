@@ -50,6 +50,14 @@ export default function HeaderLinks() {
     router(routesConfig[Routes.AUTH_LOGIN].getPath())
   }
 
+  const { userProfile } = useStore(
+    useShallow((state) => {
+      return {
+        userProfile: state.user
+      }
+    })
+  )
+
   return (
     <div className='relative flex min-w-max max-w-max flex-grow items-center justify-around gap-1 rounded-lg md:px-2 md:py-2 md:pl-3 xl:gap-2'>
       <Button
@@ -114,8 +122,8 @@ export default function HeaderLinks() {
       </Button>
       <Link className='w-full' to='/dashboard/profile-settings'>
         <Avatar className='h-9 min-w-9 md:min-h-10 md:min-w-10'>
-          <AvatarImage src={''} />
-          <AvatarFallback className='font-bold'>{'A'}</AvatarFallback>
+          <AvatarImage src={userProfile?.avatar ?? ''} />
+          <AvatarFallback className='font-bold'>{userProfile?.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
         </Avatar>
       </Link>
     </div>

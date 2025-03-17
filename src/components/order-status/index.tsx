@@ -67,10 +67,25 @@ export default function OrderStatus({ tag, text, size = 'medium' }: OrderStatusP
       bgColorClass = 'bg-red-100'
       tagText = t('order.cancelled')
       break
+    case 'PENDING_CANCELLATION':
+      tagColorClass = 'text-amber-600'
+      bgColorClass = 'bg-amber-100'
+      tagText = t('order.pendingCancellation')
+      break
+    case 'PENDING_RETURN_APPROVAL':
+      tagColorClass = 'text-slate-600'
+      bgColorClass = 'bg-slate-100'
+      tagText = t('order.pendingReturnApproval')
+      break
     case ShippingStatusEnum.RETURNING:
       tagColorClass = 'text-indigo-600'
       bgColorClass = 'bg-indigo-100'
       tagText = t('order.returning')
+      break
+    case ShippingStatusEnum.BRAND_RECEIVED:
+      tagColorClass = 'text-emerald-600'
+      bgColorClass = 'bg-emerald-100'
+      tagText = t('order.brandReceived')
       break
     case ShippingStatusEnum.REFUNDED:
       tagColorClass = 'text-gray-600'

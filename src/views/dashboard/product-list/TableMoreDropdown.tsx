@@ -83,7 +83,7 @@ function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; i
                   <span>
                     <AiOutlineUser />
                   </span>
-                  {t('createProduct.hide')}
+                  {t('status.button_INACTIVE')}
                 </p>
               </DropdownMenuItem>
             )}
@@ -93,7 +93,7 @@ function TableMoreDropDown(props: { transparent?: boolean; vertical?: boolean; i
                   <span>
                     <AiOutlineShop />
                   </span>
-                  {t('createProduct.show')}
+                  {t('status.button_ACTIVE')}
                 </p>
               </DropdownMenuItem>
             )}

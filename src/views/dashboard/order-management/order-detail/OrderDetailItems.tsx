@@ -21,10 +21,10 @@ const OrderDetailItems = ({ orderDetails, accountAvatar, accountName, brand }: O
         <div className='w-[70%] md:w-[77%] sm:w-[80%] flex items-center justify-start text-xs sm:text-sm md:text-base text-center'>
           {t('orderDetail.products')} ({orderDetails?.length} {t('cart.products')})
         </div>
-        <div className='w-[10%] md:w-[9%] sm:w-[8%] flex items-center justify-center text-xs sm:text-sm md:text-base text-center'>
+        <div className='w-[10%] md:w-[9%] sm:w-[8%] flex items-center justify-end text-xs sm:text-sm md:text-base text-end'>
           {t('orderDetail.quantity')}
         </div>
-        <div className='w-[20%] md:w-[14%] sm:w-[12%] flex items-center justify-center text-xs sm:text-sm md:text-base text-center'>
+        <div className='w-[20%] md:w-[14%] sm:w-[12%] flex items-center justify-end text-xs sm:text-sm md:text-base text-end'>
           {t('orderDetail.subTotal')}
         </div>
       </div>
@@ -59,7 +59,7 @@ const OrderDetailItems = ({ orderDetails, accountAvatar, accountName, brand }: O
             unitPriceAfterDiscount={orderDetail?.unitPriceAfterDiscount}
             unitPriceBeforeDiscount={orderDetail?.unitPriceBeforeDiscount}
             subTotal={orderDetail?.subTotal}
-            productQuantity={orderDetail?.productClassification?.quantity}
+            productQuantity={orderDetail?.quantity}
             productClassification={orderDetail?.productClassification}
             feedback={orderDetail?.feedback}
             brand={brand || null}

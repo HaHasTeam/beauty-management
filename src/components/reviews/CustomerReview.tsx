@@ -48,13 +48,13 @@ const CustomerReview = ({
         <div className='flex gap-3 items-center'>
           <Avatar>
             <AvatarImage src={authorAvatar} alt={authorName} />
-            <AvatarFallback>{authorName?.charAt(0) ?? 'A'}</AvatarFallback>
+            <AvatarFallback>{authorName?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
           </Avatar>
           <span className='font-semibold'>{authorName}</span>
         </div>
       </div>
       <div className='flex gap-3'>
-        <Ratings rating={rating} variant='yellow' size={13} />
+        <Ratings rating={rating ?? 0} variant='yellow' size={13} />
       </div>
       <div className='flex gap-2 text-sm text-gray-500'>
         {classification && (

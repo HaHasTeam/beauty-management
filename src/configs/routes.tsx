@@ -301,7 +301,7 @@ export const routesConfig: TRoutes = {
     title: 'Order Details',
     description: 'Beauty order',
     path: '/dashboard/orders/:id',
-    getPath: (params) => `/dashboard/orders/${params}`
+    getPath: (params) => `/dashboard/orders/${params.id}`
   },
   [Routes.SYSTEM_SERVICE_LIST]: {
     name: 'System Service List',

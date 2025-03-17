@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, Download, Trash2, Upload } from 'lucide-react'
+import { useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -9,10 +10,13 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllConsultationCriteriaApi, getConsultationCriteriaByIdApi } from '@/network/apis/consultation-criteria'
 import { deleteConsultationCriteriaByIdApi } from '@/network/apis/consultation-criteria-section'
+import { IConsultationCriteriaSectionFormData } from '@/schemas/consultation-criteria.schema'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { IResponseConsultationCriteriaSection } from '@/types/consultation-criteria'
+import { handleDownload } from '@/utils/certificate/handleDownload'
 
 import Button from '../button'
+import PreviewImportFilesDialog from '../dialog/PreviewImportFilesDialog'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Switch } from '../ui/switch'
@@ -27,10 +31,14 @@ const FormConsultationCriteriaInSystemService = ({
   form,
   originalSections = []
 }: FormConsultationCriteriaInSystemServiceContentProps) => {
+  const MAX_EXCEL_FILES = 10
+  const SAMPLE_EXCEL_FILES = ''
+  const SAMPLE_EXCEL_FILES_NAME = 'Consultation Criteria Sections Sample'
   const { t } = useTranslation()
   const { successToast } = useToast()
   const queryClient = useQueryClient()
   const handleServerError = useHandleServerError()
+  const [openUpFiles, setOpenUpFiles] = useState(false)
 
   // Delete section API mutation
   const { mutateAsync: deleteConsultationCriteriaSectionFn } = useMutation({
@@ -42,6 +50,13 @@ const FormConsultationCriteriaInSystemService = ({
       })
     }
   })
+
+  const handleImportedFiles = (sections: IConsultationCriteriaSectionFormData[]) => {
+    // If you want to set the sections from imported files
+    form.setValue('consultationCriteriaData.consultationCriteriaSections', sections)
+
+    setOpenUpFiles(false)
+  }
 
   const handleDeleteSection = async (index: number) => {
     const currentSections = form.getValues('consultationCriteriaData.consultationCriteriaSections')
@@ -149,10 +164,38 @@ const FormConsultationCriteriaInSystemService = ({
           </FormItem>
         )}
       />
+      {/* Result Sheet Sections import */}
+      <PreviewImportFilesDialog
+        open={openUpFiles}
+        onOpenChange={setOpenUpFiles}
+        maxExcelFiles={MAX_EXCEL_FILES}
+        onImportFiles={handleImportedFiles}
+      />
+
       {/* Result Sheet Sections */}
-      <div className='space-y-2'>
-        <div className='flex gap-2'>
+      <div className='space-y-2 mt-2'>
+        <div className='flex gap-2 justify-between items-center'>
           <h4 className='text-base font-semibold'>{t('systemService.sections')}</h4>
+          <div className='flex gap-2'>
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => setOpenUpFiles(true)}
+              className='border-primary text-primary items-center flex gap-1 hover:bg-primary/10 hover:text-primary'
+            >
+              <Upload size={14} />
+              {t('button.importFile')}
+            </Button>
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => handleDownload(SAMPLE_EXCEL_FILES, SAMPLE_EXCEL_FILES_NAME)}
+              className='border-primary text-primary items-center flex gap-1 hover:bg-primary/10 hover:text-primary'
+            >
+              <Download size={14} />
+              {t('button.downloadSample')}
+            </Button>
+          </div>
         </div>
         {sortedSections.map((section, index) => (
           <div key={index} className='space-y-3 p-4 border rounded-lg'>

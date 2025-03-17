@@ -98,8 +98,12 @@ export enum ShippingStatusEnum {
   DELIVERED = 'DELIVERED',
   COMPLETED = 'COMPLETED',
   RETURNING = 'RETURNING',
+  BRAND_RECEIVED = 'BRAND_RECEIVED',
   REFUNDED = 'REFUNDED',
+  RETURNED_FAIL = 'RETURNED_FAIL',
   CANCELLED = 'CANCELLED'
+  // PENDING_CANCELLATION = 'PENDING_CANCELLATION', // FRONT END
+  // PENDING_RETURN_APPROVAL = 'PENDING_RETURN_APPROVAL' // FRONT END
 }
 export enum ProductDiscountEnum {
   ACTIVE = 'ACTIVE',
@@ -143,7 +147,7 @@ export enum ResultEnum {
   FAILURE = 'FAILURE'
 }
 
-export enum CancelOrderRequestStatusEnum {
+export enum RequestStatusEnum {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
@@ -188,4 +192,16 @@ export enum FeedbackFilterEnum {
   RATING = 'RATING',
   IMAGE_VIDEO = 'IMAGE_VIDEO',
   CLASSIFICATION = 'CLASSIFICATION'
+}
+
+export enum OrderRequestTypeEnum {
+  CANCEL = 'CANCEL',
+  REFUND = 'REFUND',
+  REJECT_REFUND = 'REJECT_REFUND',
+  COMPLAINT = 'COMPLAINT'
+}
+
+export enum ActionReceivedEnum {
+  RECEIVED = 'RECEIVED',
+  NOT_RECEIVED = 'NOT_RECEIVED'
 }

@@ -127,10 +127,10 @@ const ProductOrderDetailLandscape = ({
           )}
         </div>
 
-        <div className='w-[10%] md:w-[9%] sm:w-[8%] text-center'>
+        <div className='w-[10%] md:w-[9%] sm:w-[8%] text-end'>
           <span className='lg:text-sm md:text-sm sm:text-xs text-xs'>{productQuantity}</span>
         </div>
-        <span className='font-medium text-red-500 lg:text-base md:text-sm sm:text-xs text-xs w-[20%] md:w-[14%] sm:w-[12%] text-center'>
+        <span className='font-medium text-red-500 lg:text-base md:text-sm sm:text-xs text-xs w-[20%] md:w-[14%] sm:w-[12%] text-end'>
           {t('productCard.currentPrice', { price: subTotal })}
         </span>
       </div>

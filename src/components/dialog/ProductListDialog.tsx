@@ -128,8 +128,8 @@ export default function ProductListDialog({
 
             <DialogFooter className='flex items-center justify-between sm:justify-between'>
               <div className='text-sm text-muted-foreground'>
-                {form.watch('selectedProducts').length} product
-                {form.watch('selectedProducts').length !== 1 ? 's' : ''} selected
+                {form.watch('selectedProducts')?.length} product
+                {form.watch('selectedProducts')?.length !== 1 ? 's' : ''} selected
               </div>
               <div className='flex gap-2'>
                 <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>

@@ -146,7 +146,7 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
             type: classification.type,
             images: classification.images,
             quantity: maxQuantity,
-            sku: classification.sku ?? '',
+            sku: (classification.sku ?? '') + Date.now(),
             originalClassification: classification.id as string
           }
 

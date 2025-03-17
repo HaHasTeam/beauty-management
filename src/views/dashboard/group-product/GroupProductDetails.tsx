@@ -243,9 +243,7 @@ const GroupProductDetails = () => {
                       <FormLabel>Description Of Group Product</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder='
-                         e.g. Invite your friends to join this group and get a special discount. The more friends you invite, the bigger the discount you will get.
-                        '
+                          placeholder='e.g. Invite your friends to join this group and get a special discount. The more friends you invite, the bigger the discount you will get.'
                           {...field}
                           rows={5}
                         />
