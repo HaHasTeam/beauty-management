@@ -1,4 +1,4 @@
-import { IResponseFeedback, ISubmitFeedback } from '@/types/feedback'
+import { IResponseFeedback, IResponseFilterFeedback, ISubmitFeedback } from '@/types/feedback'
 import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
@@ -37,15 +37,20 @@ export const getFeedbackGeneralOfProductApi = toQueryFetcher<string, TServerResp
   }
 )
 
-export const filterFeedbackApi = toMutationFetcher<IFilterFeedback, TServerResponse<string>>(
-  'filterFeedbackApi',
-  async (params, data) => {
-    return privateRequest(`/feedbacks/filter/${params}`, {
-      method: 'POST',
-      data
-    })
-  }
-)
+export const filterFeedbackApi = toMutationFetcher<
+  IFilterFeedback,
+  TServerResponse<{ total: number; totalPages: number }, IResponseFilterFeedback[]>
+>('filterFeedbackApi', async ({ params, data }) => {
+  return privateRequest(`/feedbacks/filter/${params}`, {
+    method: 'POST',
+    data: data
+      ? {
+          type: data?.type,
+          value: data?.value
+        }
+      : {}
+  })
+})
 export const replyFeedbackApi = toMutationFetcher<IReplyFeedback, TServerResponse<string>>(
   'replyFeedbackApi',
   async ({ params, content }) => {

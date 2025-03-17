@@ -151,7 +151,7 @@
     "currency": "$",
     "filterBy": "Filter by",
     "newest": "Newest",
-    "hasImage": "Has image",
+    "hasImage": "Has videos/images",
     "numberOfStar": "{{count}} star"
   },
   "sort": {
@@ -1085,6 +1085,8 @@
     "STANDARD": "Standard"
   },
   "feedback": {
+    "orderId": "Order ID",
+    "viewDetails": "View details",
     "successTitle": "Review submitted successfully!",
     "successRepTitle": "Response Sent!",
     "successDescription": "Thank you for your review! Your review helps other customers make informed decisions and supports brands in improving their products.",
@@ -1117,7 +1119,8 @@
     "order": "Order",
     "reply": "Reply",
     "writeYourRep": "Write your reply...",
-    "yourReply": "Your reply"
+    "yourReply": "Your reply",
+    "customerContent": "Content"
   },
   "media": {
     "previewImage": "Preview Image/Video",
@@ -1125,7 +1128,8 @@
     "images": "Images",
     "imagesFile": "images",
     "videos": "Videos",
-    "videosFile": "videos"
+    "videosFile": "videos",
+    "imagesVideos": "Images/Videos"
   },
   "orderEvidence": {
     "description": {

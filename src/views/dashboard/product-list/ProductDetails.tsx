@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Info, List, Pencil, Store } from 'lucide-react'
+import { Info, List, Package, Pencil, Star, Store } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
@@ -11,6 +11,7 @@ import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import BasicInformationDetails from '@/components/product/BasicInformationDetails'
 import ClassificationDetails from '@/components/product/ClassificationDetails'
 import ProductDetailInfoSection from '@/components/product/ProductDetailInfoSection'
+import ProductFeedbackDetails from '@/components/product/ProductFeedbackDetails'
 import UpdateProductQuantity from '@/components/product/UpdateProductQuantity'
 import UpdateProductStatus from '@/components/product/UpdateProductStatus'
 import SectionCollapsable from '@/components/section-collapsable'
@@ -116,7 +117,29 @@ const ProductDetails = () => {
             </div>
           ) : null}
           {/* Product Variants Section */}
-          <ClassificationDetails classifications={productData.data.productClassifications ?? []} />
+          <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+            <SectionCollapsable
+              header={
+                <div className='flex gap-2 items-center text-primary'>
+                  <Package className='w-5 h-5' />
+                  <h2 className='font-bold text-xl'>{t('createProduct.classificationInformation')}</h2>
+                </div>
+              }
+              content={<ClassificationDetails classifications={productData.data.productClassifications ?? []} />}
+            />
+          </div>
+          {/* Product Feedbacks Section */}
+          <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
+            <SectionCollapsable
+              header={
+                <div className='flex gap-2 items-center text-primary'>
+                  <Star className='w-5 h-5' />
+                  <h2 className='font-bold text-xl'>{t('reviews.title')}</h2>
+                </div>
+              }
+              content={<ProductFeedbackDetails product={productData.data ?? {}} />}
+            />
+          </div>
         </div>
       )}
       {!isGettingProduct && productData && !productData.data && (

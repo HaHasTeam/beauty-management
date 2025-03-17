@@ -284,7 +284,7 @@ const FormSelect = ({
               <div className='flex gap-2 w-full px-3'>
                 <div className='w-full'>
                   <Input
-                    className='w-full border border-primary/40'
+                    className='w-full border-primary/40'
                     placeholder={inputPlaceholder}
                     value={inputValue}
                     onChange={(e) => handleInputValueChange(e.target.value)}
