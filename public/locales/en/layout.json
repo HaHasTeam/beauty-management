@@ -280,6 +280,11 @@
       "description": "The product you're looking for either does not exist, has been removed, or is currently unavailable.",
       "button": "Browse Other Product"
     },
+    "productBanned": {
+      "title": "Product Banned",
+      "description": "The product you’re looking for has been banned and is no longer available.",
+      "button": "Browse Other Products"
+    },
     "systemServiceDetail": {
       "title": "System Service Not Found",
       "description": "The system service you're looking for either does not exist, has been removed, or is currently unavailable.",

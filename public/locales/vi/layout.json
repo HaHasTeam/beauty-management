@@ -280,6 +280,11 @@
       "description": "Sản phẩm bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
       "button": "Xem các sản phẩm khác"
     },
+    "productBanned": {
+      "title": "Sản Phẩm Bị Cấm",
+      "description": "Sản phẩm bạn đang tìm đã bị cấm và không còn khả dụng.",
+      "button": "Xem Sản Phẩm Khác"
+    },
     "systemServiceDetail": {
       "title": "Không tìm thấy dịch vụ hệ thống",
       "description": "Dịch vụ hệ thống bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
