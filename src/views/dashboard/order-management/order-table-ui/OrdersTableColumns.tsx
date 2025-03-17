@@ -1,6 +1,7 @@
 import type { ColumnDef, Row } from '@tanstack/react-table'
 import i18next from 'i18next'
 import { Ellipsis, EyeIcon, SettingsIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -12,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { ShippingStatusEnum } from '@/types/enum'
 import { type IOrder } from '@/types/order'
@@ -110,10 +112,16 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onSelect={() => setRowAction({ row, type: 'view' })}>
-              <EyeIcon className='mr-2 size-4' />
-              View details
-            </DropdownMenuItem>
+            <Link
+              to={routesConfig[Routes.ORDER_DETAILS].getPath({
+                id: row.original.id
+              })}
+            >
+              <DropdownMenuItem>
+                <EyeIcon className='mr-2 size-4' />
+                View details
+              </DropdownMenuItem>
+            </Link>
             {/* <DropdownMenuItem asChild>
               <Link to={routesConfig[Routes.ORDER_INVOICE].getPath(row.original.id)}>
                 <FileText className='mr-2 size-4' />

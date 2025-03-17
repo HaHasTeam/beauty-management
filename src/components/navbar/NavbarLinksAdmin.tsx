@@ -106,7 +106,7 @@ export default function HeaderLinks() {
       <Link className='w-full' to='/dashboard/profile-settings'>
         <Avatar className='h-9 min-w-9 md:min-h-10 md:min-w-10'>
           <AvatarImage src={userProfile?.avatar ?? ''} />
-          <AvatarFallback className='font-bold'>{userProfile.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
+          <AvatarFallback className='font-bold'>{userProfile?.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
         </Avatar>
       </Link>
     </div>

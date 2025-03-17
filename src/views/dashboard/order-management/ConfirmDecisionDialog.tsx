@@ -201,7 +201,8 @@ export default function ConfirmDecisionDialog({
           </ScrollArea>
         </DialogContent>
       </Dialog>
-      {isRejectRequest && rejectRequestId ? (
+
+      {isRejectRequest && rejectRequestId && (
         <RejectRejectReturn
           open={openRejectDialog}
           onOpenChange={setOpenRejectDialog}
@@ -213,15 +214,14 @@ export default function ConfirmDecisionDialog({
           dialogMessage={'rejectRequestRejectOrderMessage'}
           item={item}
         />
-      ) : (
-        item === 'decisionReturn' && (
-          <RejectReturnOrderDialog
-            open={openRejectDialog}
-            onOpenChange={setOpenRejectDialog}
-            returnRequest={returnRequest}
-            setOpen={setOpenRejectDialog}
-          />
-        )
+      )}
+      {item === 'returnTrackView' && (
+        <RejectReturnOrderDialog
+          open={openRejectDialog}
+          onOpenChange={setOpenRejectDialog}
+          returnRequest={returnRequest}
+          setOpen={setOpenRejectDialog}
+        />
       )}
       {item === 'decisionComplaint' && (
         <RejectRejectReturn

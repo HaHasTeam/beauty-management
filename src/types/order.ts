@@ -125,7 +125,7 @@ export interface IReturnRequestOrder extends ICancelRequestOrder {
 }
 
 export interface ICancelAndReturnRequest {
-  cancelOrderRequest: ICancelRequestOrder
+  cancelRequest: ICancelRequestOrder
   refundRequest: IReturnRequestOrder
   complaintRequest: IReturnRequestOrder
 }
