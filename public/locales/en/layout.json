@@ -891,7 +891,7 @@
     "successOfficialDescription": "The product is active and visible on the website after moderator approval.",
     "successInactive": "Product created successfully!",
     "successUpdate": "Product updated successfully!",
-    "successInactiveDescription": "The product is currently inactive and will not be visible until activated.",
+    "successInactiveDescription": "The product is currently unpublished and will not be visible until activated.",
     "title": "Create Product",
     "basicInformation": "Basic Information",
     "productImages": "Product Images",

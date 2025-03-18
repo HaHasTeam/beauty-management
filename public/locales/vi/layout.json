@@ -891,7 +891,7 @@
     "successOfficialDescription": "Sản phẩm đã hoạt động và sẽ hiển thị trên trang web sau khi được duyệt.",
     "successInactive": "Tạo sản phẩm thành công!",
     "successUpdate": "Cập nhật sản phẩm thành công!",
-    "successInactiveDescription": "Sản phẩm hiện đang ở trạng thái không hoạt động và sẽ không hiển thị cho đến khi được kích hoạt.",
+    "successInactiveDescription": "Sản phẩm hiện đang ẩn và sẽ không hiển thị cho đến khi được kích hoạt.",
     "title": "Tạo Sản Phẩm",
     "basicInformation": "Thông Tin Cơ Bản",
     "productImages": "Hình Ảnh Sản Phẩm",

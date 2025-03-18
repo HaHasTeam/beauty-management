@@ -193,6 +193,7 @@ export enum ProductStatusEnum {
   OUT_OF_STOCK = 'OUT_OF_STOCK',
   INACTIVE = 'INACTIVE',
   BANNED = 'BANNED',
-  PENDING = 'PENDING'
+  PENDING = 'PENDING',
+  UN_PUBLISHED = 'UN_PUBLISHED'
 }
 // enum ends
