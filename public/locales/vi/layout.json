@@ -968,7 +968,7 @@
       "SOLD_OUT": "Sản phẩm đã hết hàng do không còn trong kho. Hãy bổ sung ngay để khách hàng có thể tiếp tục mua sắm!",
       "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!",
       "BANNED": "Sản phẩm này đã bị gỡ khỏi nền tảng do vi phạm chính sách hoặc quy định. Hiện tại, khách hàng không thể mua hoặc nhìn thấy sản phẩm này. Quản trị viên hoặc người vận hành có thể dỡ bỏ lệnh cấm, sau đó sản phẩm sẽ chuyển sang trạng thái ẩn.",
-      "FLASH_SALE": "Sản phẩm này đang tham gia chương trình khuyến mãi chớp nhoáng trong thời gian giới hạn, mang đến ưu đãi độc quyền nhằm thúc đẩy doanh số. Thương hiệu cần đảm bảo nguồn hàng và giá cả cạnh tranh, trong khi nền tảng sẽ giám sát hiệu suất cũng như tuân thủ trong suốt chương trình.",
+      "FLASH_SALE": "Sản phẩm này đang tham gia chương trình Flash Sale có thời hạn, mang đến ưu đãi độc quyền để thúc đẩy doanh số. Thương hiệu cần đảm bảo nguồn hàng ổn định và giá cả cạnh tranh, trong khi nền tảng sẽ giám sát hiệu suất và đảm bảo các quy định được tuân thủ trong suốt chương trình.",
       "UN_PUBLISHED": " Sản phẩm này hiện đang ẩn và không hiển thị với khách hàng. Thương hiệu nên kiểm tra các yêu cầu cần thiết để có thể đăng lại nếu cần."
     },
     "brandInformation": "Thông Tin Thương Hiệu",

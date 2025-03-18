@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import ReactQuill from 'react-quill-new'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { StatusEnum } from '@/types/enum'
@@ -47,7 +48,8 @@ const SystemServiceDetailsGeneral = ({ serviceData }: SystemServiceDetailsGenera
       </div>
       <div>
         <h4 className='text-sm font-medium text-gray-500 mb-1'>{t('systemService.description')}</h4>
-        <p className='text-gray-900'>{serviceData.description}</p>
+        {/* <p className='text-gray-900'>{serviceData.description}</p> */}
+        <ReactQuill value={serviceData.description} readOnly={true} theme={'bubble'} />
       </div>
     </div>
   )

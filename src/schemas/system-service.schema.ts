@@ -25,7 +25,13 @@ export const getSystemServiceSchema = () => {
   return z
     .object({
       name: z.string().min(1, { message: i18next.t('systemService.serviceNameRequired') }),
-      description: z.string().min(1, { message: i18next.t('systemService.descriptionRequired') }),
+      description: z
+        .string()
+        .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
+          message: i18next.t('systemService.descriptionRequired')
+        })
+        .refine((val) => val.length <= 80000, { message: i18next.t('productFormMessage.descriptionTooLong') }),
+      // description: z.string().min(1, { message: i18next.t('systemService.descriptionRequired') }),
       images: fileArray.min(1, { message: i18next.t('systemService.imagesRequired') }),
       category: z.string().min(1, { message: i18next.t('systemService.categoryRequired') }),
       type: z.enum([ServiceTypeEnum.STANDARD, ServiceTypeEnum.PREMIUM]),

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Info, List, Package, Pencil, Star, Store } from 'lucide-react'
+import { ChevronLeft, Info, List, Package, Pencil, Star, Store } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
@@ -54,15 +54,24 @@ const ProductDetails = () => {
           {/* Header Section */}
           <div className='flex justify-between items-center gap-2'>
             <h3 className='md:text-xl sm:text-sm text-xs font-bold text-justify'>{productData.data.name}</h3>
-            {productData.data.status !== ProductEnum.INACTIVE && productData.data.status !== ProductEnum.BANNED && (
+            <div className='flex gap-2 items-center'>
+              {productData.data.status !== ProductEnum.INACTIVE && productData.data.status !== ProductEnum.BANNED && (
+                <Link
+                  to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
+                  className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-white hover:text-white flex items-center gap-1 bg-primary hover:bg-primary/80 border border-primary'
+                >
+                  {t('button.edit')}
+                  <Pencil className='w-5 h-5 sm:block hidden' />
+                </Link>
+              )}
               <Link
-                to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
+                to={routesConfig[Routes.PRODUCT_LIST].getPath()}
                 className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'
               >
-                {t('button.edit')}
-                <Pencil className='w-5 h-5 sm:block hidden' />
+                <ChevronLeft className='w-5 h-5 sm:block hidden' />
+                {t('button.backToList')}
               </Link>
-            )}
+            </div>
           </div>
 
           {/* Update product status */}
@@ -144,7 +153,7 @@ const ProductDetails = () => {
           </div>
         </div>
       )}
-      {!isGettingProduct && productData && !productData.data && (
+      {!isGettingProduct && (!productData || (productData && !productData.data)) && (
         <div className='h-[600px] w-full flex justify-center items-center'>
           <Empty title={t('empty.productDetail.title')} description={t('empty.productDetail.description')} />
         </div>
