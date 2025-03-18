@@ -71,6 +71,9 @@ const CreateProduct = () => {
 
   const handleReset = () => {
     form.reset()
+    form.reset({
+      description: '<p><br></p>'
+    })
     setResetSignal((prev) => !prev)
     setActiveStep(1)
     setCompleteSteps([])

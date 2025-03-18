@@ -108,12 +108,15 @@ const ConsultationCriteria = ({ consultationCriteria, mode = 'create', form }: C
                               <div className='flex gap-1 items-center'>
                                 <div className='font-medium text-primary/90 text-base'>{service.name}</div>
                                 <div className='w-fit'>
-                                  <SystemServiceTypeTag type={service.type} />
+                                  <SystemServiceTypeTag type={service.type} size='small' />
                                 </div>
                               </div>
 
-                              <div className='text-sm text-gray-600 mt-1 line-clamp-2 overflow-ellipsis'>
-                                {service.description}
+                              <div>
+                                <div
+                                  className='text-sm text-gray-600 mt-1 line-clamp-2 overflow-ellipsis quill-content'
+                                  dangerouslySetInnerHTML={{ __html: service.description }}
+                                />
                               </div>
                             </div>
                           ))}
