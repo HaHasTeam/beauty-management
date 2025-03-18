@@ -129,3 +129,12 @@ export interface ICancelAndReturnRequest {
   refundRequest: IReturnRequestOrder
   complaintRequest: IReturnRequestOrder
 }
+export interface IOrderFeedback extends IOrderItem {
+  account: TUser
+  productClassification: IClassification
+  quantity: number
+}
+
+export interface IOrderDetailFeedback extends IOrderDetail {
+  order: IOrderFeedback
+}

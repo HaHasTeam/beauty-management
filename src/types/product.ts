@@ -188,7 +188,9 @@ export enum ProductEnum {
   FLASH_SALE = 'FLASH_SALE',
   OFFICIAL = 'OFFICIAL',
   OUT_OF_STOCK = 'OUT_OF_STOCK',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
+  BANNED = 'BANNED',
+  UN_PUBLISHED = 'UN_PUBLISHED'
 }
 export enum ProductClassificationTypeEnum {
   DEFAULT = 'DEFAULT',

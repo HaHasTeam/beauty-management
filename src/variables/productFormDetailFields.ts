@@ -137,6 +137,19 @@ export const getFormProductSchema = () => {
       (data) => {
         if (data.productClassifications && data.productClassifications.length > 0) {
           // If productClassifications exist, ensure quantity  must be at least 1
+          return data.productClassifications.every((item) => item.title && item.title.length !== 0)
+        }
+        return true
+      },
+      {
+        message: i18next.t('createProduct.pleaseChooseClassificationName'),
+        path: ['productClassifications']
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.productClassifications && data.productClassifications.length > 0) {
+          // If productClassifications exist, ensure quantity  must be at least 1
           return data.productClassifications.every((item) => item.sku && skuRegex.test(item.sku))
         }
         return true

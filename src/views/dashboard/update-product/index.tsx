@@ -442,51 +442,55 @@ const UpdateProduct = () => {
   return (
     <>
       {(isGettingProduct || isGettingCategory || isGettingProfile || isLoading) && <LoadingLayer />}
-      {productData && productData?.data ? (
-        <div className='space-y-3 relative flex sm:gap-3 gap-0 justify-between'>
-          <div className='lg:w-[72%] md:w-[70%] sm:w-[85%] w-full'>
-            <Form {...form}>
-              <form
-                noValidate
-                onSubmit={form.handleSubmit(onSubmit)}
-                className='w-full grid gap-4 mb-8'
-                id={`form-${formId}`}
-              >
-                <BasicInformation
-                  form={form}
-                  resetSignal={resetSignal}
-                  defineFormSignal={defineFormSignal}
-                  useCategoryData={categories}
-                  setActiveStep={setActiveStep}
-                  activeStep={activeStep}
-                  setCompleteSteps={setCompleteSteps}
-                />
-                <DetailInformation
-                  form={form}
-                  resetSignal={resetSignal}
-                  useCategoryData={categories}
-                  defineFormSignal={defineFormSignal}
-                  setIsValid={setIsValid}
-                  setActiveStep={setActiveStep}
-                  activeStep={activeStep}
-                  setCompleteSteps={setCompleteSteps}
-                  isValid={isValid}
-                />
-                <SalesInformation
-                  form={form}
-                  resetSignal={resetSignal}
-                  defineFormSignal={defineFormSignal}
-                  setIsValid={setIsValid}
-                  setActiveStep={setActiveStep}
-                  activeStep={activeStep}
-                  setCompleteSteps={setCompleteSteps}
-                  mode='update'
-                />
-                <div className='w-full flex flex-row-reverse justify-start gap-3'>
-                  <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                    {t('button.submit')}
-                  </Button>
-                  {/* <Button
+      {!isGettingProduct &&
+        productData &&
+        productData?.data &&
+        productData?.data?.status !== ProductEnum.INACTIVE &&
+        productData?.data?.status !== ProductEnum.BANNED && (
+          <div className='space-y-3 relative flex sm:gap-3 gap-0 justify-between'>
+            <div className='lg:w-[72%] md:w-[70%] sm:w-[85%] w-full'>
+              <Form {...form}>
+                <form
+                  noValidate
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='w-full grid gap-4 mb-8'
+                  id={`form-${formId}`}
+                >
+                  <BasicInformation
+                    form={form}
+                    resetSignal={resetSignal}
+                    defineFormSignal={defineFormSignal}
+                    useCategoryData={categories}
+                    setActiveStep={setActiveStep}
+                    activeStep={activeStep}
+                    setCompleteSteps={setCompleteSteps}
+                  />
+                  <DetailInformation
+                    form={form}
+                    resetSignal={resetSignal}
+                    useCategoryData={categories}
+                    defineFormSignal={defineFormSignal}
+                    setIsValid={setIsValid}
+                    setActiveStep={setActiveStep}
+                    activeStep={activeStep}
+                    setCompleteSteps={setCompleteSteps}
+                    isValid={isValid}
+                  />
+                  <SalesInformation
+                    form={form}
+                    resetSignal={resetSignal}
+                    defineFormSignal={defineFormSignal}
+                    setIsValid={setIsValid}
+                    setActiveStep={setActiveStep}
+                    activeStep={activeStep}
+                    setCompleteSteps={setCompleteSteps}
+                    mode='update'
+                  />
+                  <div className='w-full flex flex-row-reverse justify-start gap-3'>
+                    <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
+                      {t('button.submit')}
+                    </Button>
+                    {/* <Button
                     variant='outline'
                     type='submit'
                     className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
@@ -494,43 +498,52 @@ const UpdateProduct = () => {
                   >
                     {t('button.submitAndHide')}
                   </Button> */}
-                  <Button
-                    variant='outline'
-                    className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
-                    type='submit'
-                    onClick={() => {
-                      handleReset()
-                      navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
-                    }}
-                  >
-                    {t('button.cancel')}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </div>
-          <div className='lg:w-[28%] md:w-[30%] sm:w-[15%] w-0 sm:block hidden'>
-            <div className='fixed right-8'>
-              <StepTrackingVertical
-                steps={getSteps()}
-                setActiveStep={setActiveStep}
-                activeStep={activeStep}
-                completeSteps={completeSteps}
-              />
+                    <Button
+                      variant='outline'
+                      className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
+                      type='submit'
+                      onClick={() => {
+                        handleReset()
+                        navigate(routesConfig[Routes.PRODUCT_LIST].getPath())
+                      }}
+                    >
+                      {t('button.cancel')}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
             </div>
-          </div>
-          {/* <ConfirmDialog
+            <div className='lg:w-[28%] md:w-[30%] sm:w-[15%] w-0 sm:block hidden'>
+              <div className='fixed right-8'>
+                <StepTrackingVertical
+                  steps={getSteps()}
+                  setActiveStep={setActiveStep}
+                  activeStep={activeStep}
+                  completeSteps={completeSteps}
+                />
+              </div>
+            </div>
+            {/* <ConfirmDialog
             open={openDialog}
             onOpenChange={setOpenDialog}
             onConfirm={handleConfirmedSubmit}
             item={'productClassification'}
           /> */}
-        </div>
-      ) : (
+          </div>
+        )}
+      {!isGettingProduct && productData && productData?.data && productData?.data?.status === ProductEnum.BANNED && (
         <div className='h-[600px] w-full flex justify-center items-center'>
-          <Empty title={t('empty.productDetail.title')} description={t('empty.productDetail.description')} />
+          <Empty title={t('empty.productBanned.title')} description={t('empty.productBanned.description')} />
         </div>
       )}
+      {!isGettingProduct &&
+        (!productData ||
+          !productData?.data ||
+          (productData && productData?.data && productData?.data?.status === ProductEnum.INACTIVE)) && (
+          <div className='h-[600px] w-full flex justify-center items-center'>
+            <Empty title={t('empty.productDetail.title')} description={t('empty.productDetail.description')} />
+          </div>
+        )}
     </>
   )
 }

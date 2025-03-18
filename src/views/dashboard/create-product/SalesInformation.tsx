@@ -432,7 +432,7 @@ export default function SalesInformation({
     setUsedClassificationTypes(newUsedTypes)
 
     // Prevent user edit title, color, size, other
-    if (mode === 'update') {
+    if (mode === 'update' && (classificationsOptions ?? []).length > 0) {
       setIsAllowEditing(false)
     }
   }, [defineFormSignal, form, mode])
@@ -518,7 +518,7 @@ export default function SalesInformation({
             {selectedCategory === '' || selectedCategory === undefined ? (
               <AlertCustom message={t('createProduct.pleaseChooseCategoryToViewInformation')} />
             ) : (
-              <div className='space-y-6'>
+              <div className='space-y-3'>
                 <div>
                   <div className='w-full flex mb-3'>
                     <FormField
@@ -527,10 +527,10 @@ export default function SalesInformation({
                       render={({ field, fieldState }) => (
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
-                            <div className='w-[15%] flex items-center'>
+                            <div className='w-[20%] flex items-center'>
                               <FormLabel required>{t('createProduct.skuProduct')}</FormLabel>
                             </div>
-                            <div className='w-full space-y-1'>
+                            <div className='w-[80%] space-y-1'>
                               <FormControl>
                                 <Input
                                   type='string'
@@ -547,28 +547,30 @@ export default function SalesInformation({
                       )}
                     />
                   </div>
-                  <div className='w-full flex gap-2'>
-                    <div className={`w-[15%] ${classificationCount <= 0 ? 'flex items-center' : 'items-start'}`}>
-                      <FormLabel required={classificationCount > 0}>
-                        {t('createProduct.productClassification')}
-                      </FormLabel>
+                  <div className='w-full space-y-3'>
+                    <div className='w-full flex gap-2 items-center'>
+                      <div className='w-[20%] flex items-center'>
+                        <FormLabel required={classificationCount > 0}>
+                          {t('createProduct.productClassification')}
+                        </FormLabel>
+                      </div>
+                      {classificationCount < MAX_CLASSIFICATION_LEVEL && (
+                        <Button
+                          variant='outline'
+                          size='sm'
+                          type='button'
+                          className='flex items-center gap-1'
+                          onClick={handleAddClassification}
+                          disabled={classificationCount >= MAX_CLASSIFICATION_LEVEL}
+                        >
+                          <Plus className='w-4 h-4' />
+                          {t('createProduct.newProductClassification')}
+                        </Button>
+                      )}
                     </div>
+
                     <div className='w-full space-y-1'>
                       <div className='w-full space-y-3'>
-                        {classificationCount < MAX_CLASSIFICATION_LEVEL && (
-                          <Button
-                            variant='outline'
-                            size='sm'
-                            type='button'
-                            className='flex items-center gap-1'
-                            onClick={handleAddClassification}
-                            disabled={classificationCount >= MAX_CLASSIFICATION_LEVEL}
-                          >
-                            <Plus className='w-4 h-4' />
-                            {t('createProduct.newProductClassification')}
-                          </Button>
-                        )}
-
                         {(classificationsOptions ?? []).length > 0 && (
                           <div className='bg-primary/10 rounded-lg p-4 space-y-3'>
                             <div className='flex items-center justify-between'>
@@ -590,7 +592,7 @@ export default function SalesInformation({
                             </div>
                             {(classificationsOptions ?? []).map((classification, index) => (
                               <div
-                                className={`relative bg-primary/10 rounded-lg p-4 space-y-3 ${!isAllowEditing ? 'opacity-40' : 'opacity-100'}`}
+                                className={`relative rounded-lg p-4 space-y-3 ${!isAllowEditing ? 'opacity-40 bg-gray-100' : 'bg-primary/10 opacity-100'}`}
                                 key={classification?.title || index}
                               >
                                 <X
@@ -725,7 +727,7 @@ export default function SalesInformation({
                             ))}
                           </div>
                         )}
-                        {combinations.length > 0 && (
+                        {(classificationsOptions ?? []).length > 0 && combinations.length > 0 && (
                           <div className='mt-4 bg-primary/10 rounded-lg p-4 space-y-2'>
                             <h3 className='text-md font-semibold text-primary'>
                               {t('createProduct.inputPriceAndQuantity')}
@@ -794,9 +796,6 @@ export default function SalesInformation({
                                                 <div className='flex w-full'>
                                                   <FormControl>
                                                     <div className='relative w-full space-y-1 flex flex-col justify-center items-center'>
-                                                      {!isAllowEditing && (
-                                                        <div className='z-10 absolute w-full h-full bg-primary/40 opacity-50 pointer-events-none'></div>
-                                                      )}
                                                       <UploadProductImages
                                                         field={field}
                                                         vertical={false}
@@ -883,8 +882,7 @@ export default function SalesInformation({
                                                       e.target.value ? parseFloat(e.target.value) : undefined
                                                     )
                                                   }}
-                                                  className='border-primary/40 w-full'
-                                                  disabled={!isAllowEditing}
+                                                  className='border-primary/40 w-full bg-background'
                                                 />
                                               </FormControl>
                                               <div className='h-5'>
@@ -921,8 +919,7 @@ export default function SalesInformation({
                                                       e.target.value ? parseFloat(e.target.value) : undefined
                                                     )
                                                   }}
-                                                  className='border-primary/40 w-full'
-                                                  disabled={!isAllowEditing}
+                                                  className='border-primary/40 w-full bg-background'
                                                 />
                                               </FormControl>
                                               <div className='h-5'>
@@ -956,7 +953,6 @@ export default function SalesInformation({
                                                     field.onChange(e.target.value)
                                                   }}
                                                   className='border-primary/40 w-full'
-                                                  disabled={!isAllowEditing}
                                                 />
                                               </FormControl>
                                               <div className='h-5'>
@@ -975,11 +971,9 @@ export default function SalesInformation({
                                         <div className='flex justify-center h-9 align-middle'>
                                           <Trash2
                                             onClick={() => {
-                                              if (isAllowEditing) {
-                                                handleRemoveCombination(index)
-                                              }
+                                              handleRemoveCombination(index)
                                             }}
-                                            className={`${isAllowEditing ? 'text-destructive/40 cursor-default' : 'text-destructive cursor-pointer hover:text-destructive/80'}`}
+                                            className={`text-destructive cursor-pointer hover:text-destructive/80`}
                                           />
                                         </div>
                                         <div className='h-5'></div>
@@ -1004,10 +998,10 @@ export default function SalesInformation({
                       render={({ field, fieldState }) => (
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
-                            <div className='w-[15%] flex items-center'>
+                            <div className='w-[20%] flex items-center'>
                               <FormLabel required>{t('createProduct.price')}</FormLabel>
                             </div>
-                            <div className='w-full space-y-1'>
+                            <div className='w-[80%] space-y-1'>
                               <FormControl>
                                 <InputNormal
                                   type='number'
@@ -1035,10 +1029,10 @@ export default function SalesInformation({
                       render={({ field }) => (
                         <FormItem className='w-full'>
                           <div className='w-full flex gap-2'>
-                            <div className='w-[15%] flex items-center'>
+                            <div className='w-[20%] flex items-center'>
                               <FormLabel required>{t('createProduct.quantity')}</FormLabel>
                             </div>
-                            <div className='w-full space-y-1'>
+                            <div className='w-[80%] space-y-1'>
                               <FormControl>
                                 <InputNormal
                                   type='number'

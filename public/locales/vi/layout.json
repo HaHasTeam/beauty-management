@@ -151,7 +151,7 @@
     "currency": "đ",
     "filterBy": "Lọc theo",
     "newest": "Mới nhất",
-    "hasImage": "Có hình ảnh",
+    "hasImage": "Có video/hình ảnh",
     "numberOfStar": "{{count}} sao"
   },
   "sort": {
@@ -279,6 +279,11 @@
       "title": "Không tìm thấy sản phẩm",
       "description": "Sản phẩm bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
       "button": "Xem các sản phẩm khác"
+    },
+    "productBanned": {
+      "title": "Sản Phẩm Bị Cấm",
+      "description": "Sản phẩm bạn đang tìm đã bị cấm và không còn khả dụng.",
+      "button": "Xem Sản Phẩm Khác"
     },
     "systemServiceDetail": {
       "title": "Không tìm thấy dịch vụ hệ thống",
@@ -1085,6 +1090,8 @@
     "STANDARD": "Tiêu chuẩn"
   },
   "feedback": {
+    "orderId": "ID Đơn hàng",
+    "viewDetails": "Xem chi tiết",
     "successTitle": "Gửi đánh giá thành công",
     "successRepTitle": "Phản hồi đã gửi!",
     "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
@@ -1117,7 +1124,8 @@
     "order": "Đơn hàng",
     "reply": "Reply",
     "writeYourRep": "Viết phản hồi của bạn...",
-    "yourReply": "Phản hồi của bạn"
+    "yourReply": "Phản hồi của bạn",
+    "customerContent": "Nội dung"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",
@@ -1125,7 +1133,8 @@
     "images": "Hình Ảnh",
     "imagesFile": "hình ảnh",
     "videos": "Videos",
-    "videosFile": "video"
+    "videosFile": "video",
+    "imagesVideos": "Hình ảnh/Video"
   },
   "orderEvidence": {
     "description": {
