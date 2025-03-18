@@ -31,9 +31,12 @@ export enum AddressEnum {
 
 export enum ProductEnum {
   PRE_ORDER = 'PRE_ORDER',
+  FLASH_SALE = 'FLASH_SALE',
   OFFICIAL = 'OFFICIAL',
   OUT_OF_STOCK = 'OUT_OF_STOCK',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
+  BANNED = 'BANNED',
+  UN_PUBLISHED = 'UN_PUBLISHED'
 }
 
 export enum FileEnum {

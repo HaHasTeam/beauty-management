@@ -961,12 +961,15 @@
     "updateProductStatusSuccess": "Thay đổi trạng thái sản phẩm thành công!",
     "statusDescription": {
       "ACTIVE": "Sản phẩm có sẵn để mua và sẵn sàng để đặt hàng.",
-      "INACTIVE": "Sản phẩm hiện không có sẵn để mua và không hiển thị với khách hàng.",
+      "INACTIVE": "Sản phẩm hiện không hoạt động và không hiển thị với khách hàng.",
       "PRE_ORDER": "Sản phẩm chưa được phát hành nhưng có thể đặt trước.",
       "OFFICIAL": "Sản phẩm được xác nhận chính thức từ thương hiệu hoặc nhà sản xuất và được kiểm duyệt bởi kiểm duyệt viên của nền tảng.",
       "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho.",
       "SOLD_OUT": "Sản phẩm đã hết hàng do không còn trong kho. Hãy bổ sung ngay để khách hàng có thể tiếp tục mua sắm!",
-      "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!"
+      "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!",
+      "BANNED": "Sản phẩm này đã bị gỡ khỏi nền tảng do vi phạm chính sách hoặc quy định. Hiện tại, khách hàng không thể mua hoặc nhìn thấy sản phẩm này. Quản trị viên hoặc người vận hành có thể dỡ bỏ lệnh cấm, sau đó sản phẩm sẽ chuyển sang trạng thái ẩn.",
+      "FLASH_SALE": "Sản phẩm này đang tham gia chương trình khuyến mãi chớp nhoáng trong thời gian giới hạn, mang đến ưu đãi độc quyền nhằm thúc đẩy doanh số. Thương hiệu cần đảm bảo nguồn hàng và giá cả cạnh tranh, trong khi nền tảng sẽ giám sát hiệu suất cũng như tuân thủ trong suốt chương trình.",
+      "UN_PUBLISHED": " Sản phẩm này hiện đang ẩn và không hiển thị với khách hàng. Thương hiệu nên kiểm tra các yêu cầu cần thiết để có thể đăng lại nếu cần."
     },
     "brandInformation": "Thông Tin Thương Hiệu",
     "noCertificates": "Không có chứng nhận",
@@ -976,20 +979,26 @@
   },
   "status": {
     "ACTIVE": "Đang hoạt động",
-    "INACTIVE": "Đang ẩn",
+    "INACTIVE": "Đang không hoạt động",
     "DRAFT": "Bản nháp",
     "PUBLIC": "Công khai",
     "DENIED": "Từ chối",
+    "UN_PUBLISHED": "Đang ẩn",
     "BAN": "Bị cấm",
+    "BANNED": "Bị cấm",
     "PENDING": "Đang chờ duyệt",
     "PRE_ORDER": "Đặt trước",
     "OFFICIAL": "Đang hiển thị",
     "OUT_OF_STOCK": "Hết hàng",
+    "FLASH_SALE": "Flash sale",
     "SOLD_OUT": "Hết hàng",
     "ALMOST_OUT": "Sắp hết hàng",
     "button_INACTIVE": "Ngừng hiển thị",
     "button_ACTIVE": "Kích hoạt",
-    "button_OFFICIAL": "Kích hoạt"
+    "button_OFFICIAL": "Kích hoạt",
+    "button_UN_PUBLISHED": "Ẩn",
+    "button_BANNED": "Cấm",
+    "button_UN_BANNED": "Gỡ cấm"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",

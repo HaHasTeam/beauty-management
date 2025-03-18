@@ -3,7 +3,7 @@ import { Image } from 'lucide-react'
 import { ChangeEvent, forwardRef, HTMLAttributes, useEffect, useMemo } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { getProductByIdApi } from '@/network/apis/product'
+import { getProductApi } from '@/network/apis/product'
 import { TFile } from '@/types/file'
 import { ProductClassificationTypeEnum } from '@/types/product'
 
@@ -59,8 +59,8 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
   } = props
 
   const { data: product, isFetching: isGettingProduct } = useQuery({
-    queryKey: [getProductByIdApi.queryKey, productId],
-    queryFn: getProductByIdApi.fn,
+    queryKey: [getProductApi.queryKey, productId],
+    queryFn: getProductApi.fn,
     enabled: !!productId
   })
 

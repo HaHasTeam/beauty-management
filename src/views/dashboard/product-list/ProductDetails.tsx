@@ -54,7 +54,7 @@ const ProductDetails = () => {
           {/* Header Section */}
           <div className='flex justify-between items-center gap-2'>
             <h3 className='md:text-xl sm:text-sm text-xs font-bold text-justify'>{productData.data.name}</h3>
-            {productData.data.status !== ProductEnum.INACTIVE && (
+            {productData.data.status !== ProductEnum.INACTIVE && productData.data.status !== ProductEnum.BANNED && (
               <Link
                 to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
                 className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'
@@ -69,9 +69,11 @@ const ProductDetails = () => {
           <UpdateProductStatus product={productData.data} />
 
           {/* Update product quantity */}
-          {productQuantity <= PRODUCT_QUANTITY_WARNING && productData.data.status !== ProductEnum.INACTIVE && (
-            <UpdateProductQuantity product={productData.data} productQuantityWarning={PRODUCT_QUANTITY_WARNING} />
-          )}
+          {productQuantity <= PRODUCT_QUANTITY_WARNING &&
+            productData.data.status !== ProductEnum.INACTIVE &&
+            productData.data.status !== ProductEnum.BANNED && (
+              <UpdateProductQuantity product={productData.data} productQuantityWarning={PRODUCT_QUANTITY_WARNING} />
+            )}
 
           {/* Basic Information Section */}
           <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
