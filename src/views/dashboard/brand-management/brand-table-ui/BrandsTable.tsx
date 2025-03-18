@@ -7,6 +7,7 @@ import { toSentenceCase } from '@/lib/utils'
 import { BrandStatusEnum, TBrand } from '@/types/brand'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
+import { AssignOperatorDialog } from './AssignOperatorDialog'
 // import { BanBrandsDialog } from './BanBrandsDialog'
 import { DataTableRowAction, getColumns } from './BrandsTableColumns'
 import { BrandsTableFloatingBar } from './BrandsTableFloatingBar'
@@ -22,6 +23,8 @@ interface BrandTableProps {
 }
 
 export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
+  const [assignOperatorOpen, setAssignOperatorOpen] = React.useState(false)
+  const [selectedBrandId, setSelectedBrandId] = React.useState<string | null>(null)
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TBrand> | null>(null)
   const columns = React.useMemo(
     () =>
@@ -102,6 +105,24 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
   //   //   // exact: true
   //   // })
   // }
+  const handleRowAction = (action: DataTableRowAction<TBrand>) => {
+    if (action.type === 'assign-operator') {
+      setSelectedBrandId(action.row.original.id)
+      setAssignOperatorOpen(true)
+    }
+    // ... handle other actions ...
+  }
+
+  const handleAssignOperator = async (email: string) => {
+    if (!selectedBrandId) return
+    // Implement your API call here to assign the operator
+    try {
+      // await assignOperatorToBrand(selectedBrandId, email)
+      // Show success toast
+    } catch (error) {
+      // Handle error
+    }
+  }
   const statusDialogs = [
     { type: 'ban', status: BrandStatusEnum.BANNED },
     { type: 'update-status-pre-approved-for-meeting', status: BrandStatusEnum.PRE_APPROVED_FOR_MEETING },
@@ -144,6 +165,12 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         brandId={rowAction?.row.original.id}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
+      />
+      <AssignOperatorDialog
+        open={assignOperatorOpen}
+        onOpenChange={setAssignOperatorOpen}
+        brandId={selectedBrandId ?? ''}
+        onAssign={handleAssignOperator}
       />
     </>
   )
