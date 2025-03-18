@@ -8,6 +8,7 @@ import { ClassificationTypeEnum } from '@/types/enum'
 import { IImage } from '@/types/image'
 import { IServerProductClassification } from '@/types/product'
 
+import Empty from '../empty/Empty'
 import ImageWithFallback from '../image/ImageWithFallback'
 
 interface ClassificationDetailsProps {
@@ -118,7 +119,7 @@ const ClassificationDetails = ({ classifications }: ClassificationDetailsProps) 
   }
 
   // If no valid classifications found
-  return null
+  return <Empty title={t('empty.classification.title')} description={t('empty.classification.description')} />
 }
 
 export default ClassificationDetails

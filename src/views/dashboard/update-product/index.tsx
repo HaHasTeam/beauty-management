@@ -21,14 +21,13 @@ import { getProductApi, updateProductApi } from '@/network/apis/product'
 import { getUserProfileApi } from '@/network/apis/user'
 import { ICategory } from '@/types/category'
 import { ClassificationStatusEnum } from '@/types/classification'
-import { StatusEnum } from '@/types/enum'
+import { ProductEnum, StatusEnum } from '@/types/enum'
 import { TServerFile } from '@/types/file'
 import {
   ICreateProduct,
   IServerCreateProduct,
   IServerProductClassification,
-  ProductClassificationTypeEnum,
-  ProductEnum
+  ProductClassificationTypeEnum
 } from '@/types/product'
 import { IImage } from '@/types/productImage'
 import { getFormProductSchema } from '@/variables/productFormDetailFields'
@@ -490,14 +489,14 @@ const UpdateProduct = () => {
                     <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
                       {t('button.submit')}
                     </Button>
-                    {/* <Button
-                    variant='outline'
-                    type='submit'
-                    className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
-                    onClick={() => form.setValue('status', ProductEnum.INACTIVE)}
-                  >
-                    {t('button.submitAndHide')}
-                  </Button> */}
+                    <Button
+                      variant='outline'
+                      type='submit'
+                      className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
+                      onClick={() => form.setValue('status', ProductEnum.UN_PUBLISHED)}
+                    >
+                      {t('button.submitAndHide')}
+                    </Button>
                     <Button
                       variant='outline'
                       className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'

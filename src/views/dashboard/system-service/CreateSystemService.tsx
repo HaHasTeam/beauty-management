@@ -55,7 +55,10 @@ const CreateSystemService = () => {
       successToast({
         message: t('systemService.createSuccessMessage')
       })
-      form.reset()
+      form.reset(defaultValues)
+      form.reset({
+        description: '<p><br></p>'
+      })
 
       await Promise.all([
         queryClient.invalidateQueries({

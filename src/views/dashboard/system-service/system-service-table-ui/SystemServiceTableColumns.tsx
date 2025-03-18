@@ -1,7 +1,8 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, FilePenLine, Image, SettingsIcon } from 'lucide-react'
+import { Ellipsis, EyeIcon, FilePenLine, Image, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
+import SystemServiceTypeTag from '@/components/system-service/SystemServiceTypeTag'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -70,7 +71,11 @@ export function getColumns(): ColumnDef<ISystemService>[] {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Type' />,
       cell: ({ row }) => {
         const type = row.original.type
-        return <div className='w-full text-center'>{type}</div>
+        return (
+          <div className='w-full text-center'>
+            <SystemServiceTypeTag type={type} size='small' />
+          </div>
+        )
       }
     },
     {
@@ -140,6 +145,9 @@ export function getColumns(): ColumnDef<ISystemService>[] {
         const handleNavigate = () => {
           navigate(routesConfig[Routes.UPDATE_SYSTEM_SERVICE].getPath({ id: row.original.id }))
         }
+        const handleNavigateDetail = () => {
+          navigate(routesConfig[Routes.SYSTEM_SERVICE_DETAILS].getPath({ id: row.original.id }))
+        }
         return (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -148,6 +156,10 @@ export function getColumns(): ColumnDef<ISystemService>[] {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
+              <DropdownMenuItem onClick={handleNavigateDetail}>
+                <EyeIcon className='mr-2 size-4' />
+                View details
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleNavigate} className='bg-blue-200 text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
                   <FilePenLine size={16} strokeWidth={3} />
