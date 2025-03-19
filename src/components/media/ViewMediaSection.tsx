@@ -16,10 +16,15 @@ interface ViewMediaSectionProps {
 export default function ViewMediaSection({ mediaFiles }: ViewMediaSectionProps) {
   const { t } = useTranslation()
 
+  // const imageFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isImageFile(file.fileUrl))
+
+  // const videoFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isVideoFile(file.fileUrl))
+
+  // const displayableFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl)
+  const videoFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isVideoFile(file.fileUrl))
   const imageFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isImageFile(file.fileUrl))
 
-  const videoFiles = mediaFiles.filter((file: TServerFile) => file.fileUrl && isVideoFile(file.fileUrl))
-
+  const displayableFiles = [...videoFiles, ...imageFiles]
   // Get file type based on file URL
   const getFileContentType = (file: TServerFile) => {
     if (!file.fileUrl) return 'text'
@@ -55,45 +60,69 @@ export default function ViewMediaSection({ mediaFiles }: ViewMediaSectionProps) 
   }
 
   return (
-    <div className='flex gap-2 items-start'>
-      {videoFiles.length > 0 &&
-        videoFiles.map((file) => (
-          <PreviewDialog
-            key={file.id}
-            className='lg:max-w-xl md:max-w-md sm:max-w-sm max-w-xs xl:max-w-xl'
-            content={getPreviewContent(file)}
-            trigger={
-              <div className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'>
+    // <div className='flex gap-2 items-start'>
+    //   {videoFiles.length > 0 &&
+    //     videoFiles.map((file) => (
+    //       <PreviewDialog
+    //         key={file.id}
+    //         className='lg:max-w-xl md:max-w-md sm:max-w-sm max-w-xs xl:max-w-xl'
+    //         content={getPreviewContent(file)}
+    //         trigger={
+    //           <div className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'>
+    //             <VideoThumbnailServer file={file} />
+    //           </div>
+    //         }
+    //         contentType={getFileContentType(file)}
+    //       />
+    //     ))}
+    //   {imageFiles.length > 0 && (
+    //     <div className='w-full flex flex-col gap-2'>
+    //       <div className='w-full space-y-1 flex flex-wrap gap-2'>
+    //         {imageFiles.map((file) => (
+    //           <PreviewDialog
+    //             key={file.id}
+    //             className='lg:max-w-xl md:max-w-md sm:max-w-sm max-w-xs xl:max-w-xl'
+    //             content={getPreviewContent(file)}
+    //             trigger={
+    //               <div className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'>
+    //                 <ImageWithFallback
+    //                   fallback={fallBackImage}
+    //                   src={file.fileUrl}
+    //                   alt={`Image ${file.id}`}
+    //                   className='object-contain w-full h-full rounded-lg'
+    //                 />
+    //               </div>
+    //             }
+    //             contentType={getFileContentType(file)}
+    //           />
+    //         ))}
+    //       </div>
+    //     </div>
+    //   )}
+    // </div>
+    <div className='w-full flex flex-wrap gap-2'>
+      {displayableFiles.map((file) => (
+        <PreviewDialog
+          key={file.id}
+          className='lg:max-w-xl md:max-w-md sm:max-w-sm max-w-xs xl:max-w-xl'
+          content={getPreviewContent(file)}
+          trigger={
+            <div className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'>
+              {isVideoFile(file.fileUrl) ? (
                 <VideoThumbnailServer file={file} />
-              </div>
-            }
-            contentType={getFileContentType(file)}
-          />
-        ))}
-      {imageFiles.length > 0 && (
-        <div className='w-full flex flex-col gap-2'>
-          <div className='w-full space-y-1 flex flex-wrap gap-2'>
-            {imageFiles.map((file) => (
-              <PreviewDialog
-                key={file.id}
-                className='lg:max-w-xl md:max-w-md sm:max-w-sm max-w-xs xl:max-w-xl'
-                content={getPreviewContent(file)}
-                trigger={
-                  <div className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'>
-                    <ImageWithFallback
-                      fallback={fallBackImage}
-                      src={file.fileUrl}
-                      alt={`Image ${file.id}`}
-                      className='object-contain w-full h-full rounded-lg'
-                    />
-                  </div>
-                }
-                contentType={getFileContentType(file)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+              ) : (
+                <ImageWithFallback
+                  fallback={fallBackImage}
+                  src={file.fileUrl}
+                  alt={`File ${file.id}`}
+                  className='object-contain w-full h-full rounded-lg'
+                />
+              )}
+            </div>
+          }
+          contentType={getFileContentType(file)}
+        />
+      ))}
     </div>
   )
 }

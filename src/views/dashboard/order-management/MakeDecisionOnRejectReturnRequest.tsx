@@ -19,10 +19,12 @@ import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 
 const MakeDecisionOnReturnRejectRequest = ({
   rejectReturnRequest,
-  refundRequest
+  refundRequest,
+  pendingAdminCheckRejectRefundRequestTime
 }: {
   refundRequest: IReturnRequestOrder
   rejectReturnRequest: IRejectReturnRequestOrder | null
+  pendingAdminCheckRejectRefundRequestTime: number
 }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -92,7 +94,9 @@ const MakeDecisionOnReturnRejectRequest = ({
                   {t('return.rejectReturnRequestPendingTitle')}
                 </h3>
               </div>
-              <AlertDescription>{t('return.returnOrderRequestMessage')}</AlertDescription>
+              <AlertDescription>
+                {t('return.returnOrderRequestMessage', { count: pendingAdminCheckRejectRefundRequestTime })}
+              </AlertDescription>
             </div>
           </div>
           <div className='flex gap-2 items-center'>
