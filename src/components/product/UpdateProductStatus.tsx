@@ -229,16 +229,20 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
     <div className={`${config.alertVariant} ${config.borderColor}`}>
       <div className='flex items-center gap-2 justify-between'>
         <div className='flex items-center gap-2'>
-          <Siren className='size-4' />
-          <div className='flex flex-col gap-1'>
-            <div>
-              <span
-                className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
-              >
-                {config.alertTitle}
-              </span>
+          <div className='flex gap-2 items-center'>
+            <div className='p-2 bg-white/80 rounded-full'>
+              <Siren className={`${config.titleColor} size-6`} />
             </div>
-            <AlertDescription>{config.alertDescription}</AlertDescription>
+            <div className='flex flex-col gap-1'>
+              <div>
+                <span
+                  className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
+                >
+                  {config.alertTitle}
+                </span>
+              </div>
+              <AlertDescription>{config.alertDescription}</AlertDescription>
+            </div>
           </div>
         </div>
         <div className='flex gap-2 items-center'>

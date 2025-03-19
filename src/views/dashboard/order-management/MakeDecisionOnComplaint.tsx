@@ -17,7 +17,13 @@ import { IReturnRequestOrder } from '@/types/order'
 
 import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 
-const MakeDecisionOnComplaint = ({ complaintRequest }: { complaintRequest: IReturnRequestOrder }) => {
+const MakeDecisionOnComplaint = ({
+  complaintRequest,
+  pendingRequestComplaintTime
+}: {
+  complaintRequest: IReturnRequestOrder
+  pendingRequestComplaintTime: number
+}) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { successToast } = useToast()
@@ -86,7 +92,9 @@ const MakeDecisionOnComplaint = ({ complaintRequest }: { complaintRequest: IRetu
                   {t('return.complaintRequestPendingTitleAdmin')}
                 </h3>
               </div>
-              <AlertDescription>{t('return.complaintRequestPendingMessageAdmin')}</AlertDescription>
+              <AlertDescription>
+                {t('return.complaintRequestPendingMessageAdmin', { count: pendingRequestComplaintTime })}
+              </AlertDescription>
             </div>
           </div>
           <div className='flex gap-2 items-center'>

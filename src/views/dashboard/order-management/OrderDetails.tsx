@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { History, MessageSquareText, Truck } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
@@ -14,9 +14,11 @@ import Empty from '@/components/empty/Empty'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import OrderStatus from '@/components/order-status'
 import { Routes, routesConfig } from '@/configs/routes'
+import { getMasterConfigApi } from '@/network/apis/master-config'
 import { getCancelAndReturnRequestApi, getOrderByIdApi, getStatusTrackingByIdApi } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
 import { RequestStatusEnum, RoleEnum, ShippingStatusEnum } from '@/types/enum'
+import { millisecondsToRoundedDays } from '@/utils/time'
 
 import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 import MakeDecisionOnCancelRequest from './MakeDecisionOnCancelRequest'
@@ -30,8 +32,6 @@ import OrderStatusTrackingDetail from './order-detail/OrderStatusTrackingDetail'
 import OrderSummary from './order-detail/OrderSummary'
 
 const OrderDetails = () => {
-  const WAITING_REFUND_DAYS = 3
-
   const { id } = useParams()
   const { t } = useTranslation()
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = useState<boolean>(false)
@@ -43,6 +43,10 @@ const OrderDetails = () => {
       user: state.user
     }))
   )
+  const { data: masterConfig } = useQuery({
+    queryKey: [getMasterConfigApi.queryKey],
+    queryFn: getMasterConfigApi.fn
+  })
   const { data: useOrderData, isFetching } = useQuery({
     queryKey: [getOrderByIdApi.queryKey, id as string],
     queryFn: getOrderByIdApi.fn,
@@ -62,6 +66,29 @@ const OrderDetails = () => {
     enabled: !!id
   })
 
+  const pendingRequestCancelTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].autoApprovedRequestCancelTime ?? ''))
+  }, [masterConfig?.data])
+
+  const autoApproveRefundRequestTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].autoApproveRefundRequestTime ?? ''))
+  }, [masterConfig?.data])
+  const pendingAdminCheckRejectRefundRequestTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].pendingAdminCheckRejectRefundRequestTime ?? ''))
+  }, [masterConfig?.data])
+
+  const pendingRequestComplaintTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].pendingAdminCheckComplaintRequestTime ?? ''))
+  }, [masterConfig?.data])
+  const expiredReceivedTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].expiredReceivedTime ?? ''))
+  }, [masterConfig?.data])
+  const autoUpdateOrderToRefundedStatusTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].autoUpdateOrderToRefundedStatusTime ?? ''))
+  }, [masterConfig?.data])
+  const pendingCustomerShippingReturnTime = useMemo(() => {
+    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].pendingCustomerShippingReturnTime ?? ''))
+  }, [masterConfig?.data])
   return (
     <>
       {isFetching && <LoadingLayer />}
@@ -91,6 +118,10 @@ const OrderDetails = () => {
                   setOpenCancelOrderDialog={setOpenCancelOrderDialog}
                   cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelRequest ?? null}
                   complaintRequest={cancelAndReturnRequestData?.data?.complaintRequest ?? null}
+                  expiredReceivedTime={expiredReceivedTime}
+                  autoUpdateOrderToRefundedStatusTime={autoUpdateOrderToRefundedStatusTime}
+                  statusTracking={useStatusTrackingData?.data}
+                  masterConfig={masterConfig?.data}
                 />
               )}
               {/* alert complaint request return order */}
@@ -99,7 +130,7 @@ const OrderDetails = () => {
                 cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.PENDING && (
                   <AlertMessage
                     title={t('return.complaintRequestPendingTitleBrand')}
-                    message={t('return.complaintRequestPendingMessageBrand')}
+                    message={t('return.complaintRequestPendingMessageBrand', { count: pendingRequestComplaintTime })}
                     isShowIcon={false}
                     color='warn'
                     buttonText='view'
@@ -123,7 +154,7 @@ const OrderDetails = () => {
                 cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.REJECTED && (
                   <AlertMessage
                     title={t('return.complaintRequestRejectedTitleBrand')}
-                    message={t('return.complaintRequestRejectedMessageBrand', { count: WAITING_REFUND_DAYS })}
+                    message={t('return.complaintRequestRejectedMessageBrand')}
                     isShowIcon={false}
                     color='danger'
                     buttonText='view'
@@ -138,6 +169,7 @@ const OrderDetails = () => {
                 cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.PENDING && (
                   <MakeDecisionOnComplaint
                     complaintRequest={cancelAndReturnRequestData?.data?.complaintRequest || null}
+                    pendingRequestComplaintTime={pendingRequestComplaintTime}
                   />
                 )}
 
@@ -147,8 +179,24 @@ const OrderDetails = () => {
                 cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.PENDING && (
                   <MakeDecisionOnReturnRequest
                     returnRequest={cancelAndReturnRequestData?.data?.refundRequest || null}
+                    pendingRequestReturnTime={autoApproveRefundRequestTime}
                   />
                 )}
+              {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
+                cancelAndReturnRequestData?.data?.refundRequest?.status === RequestStatusEnum.APPROVED && (
+                  <AlertMessage
+                    title={t('return.returnRequestApprovedTitleBrand')}
+                    message={t('return.returnRequestApprovedMessageBrand', {
+                      count: pendingCustomerShippingReturnTime
+                    })}
+                    isShowIcon={false}
+                    color='success'
+                    buttonText='view'
+                    buttonClassName='bg-green-500 hover:bg-green-600'
+                    onClick={() => setOpenTrackReturn(true)}
+                  />
+                )}
+
               {/* brand */}
               {/* alert make decision request reject return order */}
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
@@ -157,7 +205,9 @@ const OrderDetails = () => {
                   RequestStatusEnum.PENDING && (
                   <AlertMessage
                     title={t('return.rejectReturnRequestPendingTitleBrand')}
-                    message={t('return.rejectReturnRequestPendingMessageBrand')}
+                    message={t('return.rejectReturnRequestPendingMessageBrand', {
+                      count: pendingAdminCheckRejectRefundRequestTime
+                    })}
                     isShowIcon={false}
                   />
                 )}
@@ -201,6 +251,30 @@ const OrderDetails = () => {
                     onClick={() => setOpenTrackReturn(true)}
                   />
                 )}
+              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
+                cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.APPROVED && (
+                  <AlertMessage
+                    title={t('return.complaintRequestApprovedTitleAdmin')}
+                    message={t('return.complaintRequestApprovedMessageAdmin')}
+                    isShowIcon={false}
+                    color='success'
+                    buttonText='view'
+                    buttonClassName='bg-green-500 hover:bg-green-600'
+                    onClick={() => setOpenTrackComplaint(true)}
+                  />
+                )}
+              {(user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR) &&
+                cancelAndReturnRequestData?.data?.complaintRequest?.status === RequestStatusEnum.REJECTED && (
+                  <AlertMessage
+                    title={t('return.complaintRequestRejectedTitleAdmin')}
+                    message={t('return.complaintRequestRejectedMessageAdmin')}
+                    isShowIcon={false}
+                    color='danger'
+                    buttonText='view'
+                    buttonClassName='bg-red-500 hover:bg-red-600'
+                    onClick={() => setOpenTrackComplaint(true)}
+                  />
+                )}
 
               {/* alert make decision request reject return order */}
               {/* admin */}
@@ -211,6 +285,7 @@ const OrderDetails = () => {
                   <MakeDecisionOnReturnRejectRequest
                     rejectReturnRequest={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest || null}
                     refundRequest={cancelAndReturnRequestData?.data?.refundRequest}
+                    pendingAdminCheckRejectRefundRequestTime={pendingAdminCheckRejectRefundRequestTime}
                   />
                 )}
 
@@ -218,7 +293,10 @@ const OrderDetails = () => {
               {(user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF) &&
                 cancelAndReturnRequestData?.data?.cancelRequest &&
                 cancelAndReturnRequestData?.data?.cancelRequest?.status === RequestStatusEnum.PENDING && (
-                  <MakeDecisionOnCancelRequest cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelRequest} />
+                  <MakeDecisionOnCancelRequest
+                    cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelRequest}
+                    pendingRequestCancelTime={pendingRequestCancelTime}
+                  />
                 )}
 
               {/* order status tracking */}
@@ -422,7 +500,7 @@ const OrderDetails = () => {
             reasonRejected={cancelAndReturnRequestData?.data?.complaintRequest?.reasonRejected}
           />
         )}
-        {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.refundRequest && (
+        {/* {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.refundRequest && (
           <ConfirmDecisionDialog
             isLoadingDecisionApproved
             isLoadingDecisionRejected
@@ -441,8 +519,8 @@ const OrderDetails = () => {
             rejectStatus={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status}
             reasonRejected={cancelAndReturnRequestData?.data?.refundRequest?.reasonRejected}
           />
-        )}
-        {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.complaintRequest && (
+        )} */}
+        {/* {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.complaintRequest && (
           <ConfirmDecisionDialog
             isLoadingDecisionApproved
             isLoadingDecisionRejected
@@ -461,7 +539,7 @@ const OrderDetails = () => {
             status={cancelAndReturnRequestData?.data?.complaintRequest?.status}
             reasonRejected={cancelAndReturnRequestData?.data?.complaintRequest?.reasonRejected}
           />
-        )}
+        )} */}
       </div>
     </>
   )
