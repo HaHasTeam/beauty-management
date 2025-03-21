@@ -29,6 +29,7 @@ import AddPreOrder from '@/views/dashboard/pre-order/AddPreOrder'
 import ProductList from '@/views/dashboard/product-list'
 import ProductDetails from '@/views/dashboard/product-list/ProductDetails'
 import ProfileSettings from '@/views/dashboard/profile-settings'
+import Reports from '@/views/dashboard/report'
 import RequestsQueue from '@/views/dashboard/requests-queue'
 import ScheduleBooking from '@/views/dashboard/schedule-booking'
 import ScheduleMeeting from '@/views/dashboard/schedule-meeting'
@@ -241,6 +242,15 @@ export const privateRoutes: RouteObject[] = [
           { path: ':id', element: <SystemServiceDetail /> },
           { path: 'add', element: <CreateSystemService /> },
           { path: 'update/:id', element: <UpdateSystemService /> }
+        ]
+      },
+      {
+        path: routesConfig[Routes.REPORTS].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <Reports />
+          }
         ]
       },
       {

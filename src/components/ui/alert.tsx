@@ -19,7 +19,9 @@ const alertVariants = cva(
         success:
           'border-green-900/80 text-green-800 dark:border-green-500 [&>svg]:text-green-500 bg-green-100 dark:bg-green-900 dark:text-green-500 shadow-lg',
         highlight:
-          'border-purple-900/80 text-purple-800 dark:border-purple-500 [&>svg]:text-purple-500 bg-purple-300 dark:bg-purple-900 dark:text-purple-500 shadow-lg'
+          'border-purple-900/80 text-purple-800 dark:border-purple-500 [&>svg]:text-purple-500 bg-purple-300 dark:bg-purple-900 dark:text-purple-500 shadow-lg',
+        information:
+          'border-blue-900/80 text-blue-800 dark:border-blue-500 [&>svg]:text-blue-500 bg-blue-300 dark:bg-blue-900 dark:text-blue-500 shadow-lg'
       }
     },
     defaultVariants: {
@@ -35,7 +37,8 @@ const actionVariants = cva('', {
       destructive: 'border-[1.5px] border-red-700 text-red-600  [&>svg]:text-red-500 bg-red-300',
       warning: 'border-[1.5px] border-yellow-700 text-yellow-600  [&>svg]:text-yellow-500 bg-yellow-300',
       success: 'border-[1.5px] border-green-700 text-green-600  [&>svg]:text-green-500 bg-green-300',
-      highlight: 'border-[1.5px] border-purple-700 text-purple-600  [&>svg]:text-purple-500 bg-purple-300'
+      highlight: 'border-[1.5px] border-purple-700 text-purple-600  [&>svg]:text-purple-500 bg-purple-300',
+      "information": 'border-[1.5px] border-blue-700 text-blue-600  [&>svg]:text-blue-500 bg-blue-300'
     }
   },
   defaultVariants: {

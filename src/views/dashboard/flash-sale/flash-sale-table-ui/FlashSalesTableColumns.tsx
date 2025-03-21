@@ -74,20 +74,20 @@ export function getColumns(): ColumnDef<TFlashSale>[] {
     },
     {
       accessorKey: 'productClassifications',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Classifications' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Classifications | Quantity' />,
       cell: ({ row }) => {
         const classificationList = row.original.productClassifications
         return (
           <div className='flex items-center gap-1 flex-wrap capitalize font-normal'>
             {classificationList
-              .map((classification) => classification.title + `(${classification.quantity})`)
-              .join(', ')}
+              .map((classification) => classification.title + ` | ${classification.quantity}`)
+              .join(',    ')}
           </div>
         )
       },
       enableSorting: false,
       enableHiding: false,
-      size: 150
+      size: 200
     },
 
     {

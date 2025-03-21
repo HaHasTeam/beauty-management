@@ -74,9 +74,17 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
                 onDayClick={() => setIsOpen(false)}
                 fromYear={1950}
                 toYear={new Date().getFullYear() + 100}
-                disabled={(date) =>
-                  (onlyFutureDates && date < new Date()) || (onlyPastDates && date > new Date()) ? true : false
-                }
+                disabled={(date) => {
+                  const nowAtMidnight = new Date()
+                  nowAtMidnight.setHours(0, 0, 0, 0)
+                  if (onlyFutureDates) {
+                    return date < nowAtMidnight
+                  }
+                  if (onlyPastDates) {
+                    return date > nowAtMidnight
+                  }
+                  return false
+                }}
                 required={required}
               />
             </PopoverContent>

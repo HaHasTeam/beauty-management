@@ -54,6 +54,35 @@ export const getAllOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>
   })
 })
 
+export const getOnlyChildOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>>(
+  'getOnlyChildOrderListApi',
+  async () => {
+    const parentOrder = (await getAllOrderListApi.raw()).data
+    const childOrders: IOrder[] = []
+
+    const recursivePush = async (order: IOrder) => {
+      const childrenLength = order?.children?.length
+      if (!childrenLength) {
+        childOrders.push(order)
+        return
+      } else {
+        const children = order.children
+        for (let i = 0; i < (childrenLength ?? 0); i++) {
+          const child = children?.[i]
+          if (child) {
+            recursivePush(child)
+          }
+        }
+      }
+    }
+
+    for (let i = 0; i < parentOrder.length; i++) {
+      await recursivePush(parentOrder[i])
+    }
+    return { data: childOrders, message: 'Success' }
+  }
+)
+
 export const updateOrderApi = toMutationFetcher<IOrder, TServerResponse<IOrder>>('updateOrderApi', async (data) => {
   return privateRequest(`/orders/${data.id}`, {
     method: 'PUT',
