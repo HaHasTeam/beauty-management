@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllCategoryApi } from '@/network/apis/category'
+import { flattenCategoryApi } from '@/network/apis/category'
 import { useStore } from '@/stores/store'
 import { ICategory } from '@/types/category'
 import { DataTableQueryState } from '@/types/table'
@@ -22,8 +22,8 @@ export default function IndexPage() {
   )
 
   const { data: CategoryListData, isLoading: isCategoryListLoading } = useQuery({
-    queryKey: [getAllCategoryApi.queryKey],
-    queryFn: getAllCategoryApi.fn,
+    queryKey: [flattenCategoryApi.queryKey],
+    queryFn: flattenCategoryApi.fn,
     enabled: !!userData?.brands?.length
   })
 

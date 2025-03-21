@@ -1,4 +1,5 @@
 import { Shapes, Tag, Trash2 } from 'lucide-react'
+import { useEffect } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 
 import Button from '@/components/button'
@@ -18,7 +19,7 @@ type Props = {
 }
 
 const ClassificationConfig = ({ form, productId }: Props) => {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control: form.control,
     name: 'productClassifications'
   })
@@ -40,7 +41,17 @@ const ClassificationConfig = ({ form, productId }: Props) => {
   const errorIndex =
     classificationErrors !== undefined
       ? String((classificationErrors as object[]).findIndex((value) => !!value))
-      : undefined
+      : fields.length === 1
+        ? String(fields.length - 1)
+        : undefined
+  const product = form.watch('product')
+
+  useEffect(() => {
+    if (product) {
+      form.setValue('productClassifications', [{}] as unknown as SchemaType['productClassifications'])
+      replace([{}] as unknown as SchemaType['productClassifications'])
+    }
+  }, [product, form, replace])
 
   return (
     <Card>
@@ -52,87 +63,91 @@ const ClassificationConfig = ({ form, productId }: Props) => {
       </CardHeader>
       <CardContent>
         <div className='gap-4 grid grid-flow-row grid-cols-1'>
-          <Accordion type='single' className='w-full' value={errorIndex}>
+          <Accordion type='single' className='w-full space-y-4' value={errorIndex}>
             {fields.map((_, index) => {
               const price = classificationList[index].rawClassification?.price ?? 0
-              const discount = Number(form.watch('discount') ?? 0)
-              const discountPrice = Number(price) * ((100 - discount) / 100)
+              const discount = Number(form.watch('discount') ?? 0) * 100
+              const discountPrice = Number(price) * (100 - discount)
               const quantity = classificationList[index]?.append?.quantity ?? 0
 
               return (
-                <AccordionItem value={String(index)}>
-                  <AccordionTrigger className='hover:no-underline'>
-                    <div className='flex items-center gap-2 w-full'>
-                      <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
-                        <Tag strokeWidth={3} size={16} />
-                        {classificationList[index].rawClassification?.title}{' '}
-                        <span className='text-xs text-red-600 px-1 bg-red-100 rounded-3xl'>
-                          -{formatNumber(discount, '%')}
-                        </span>
-                      </span>
+                <Card>
+                  <CardContent>
+                    <AccordionItem value={String(index)} className='border-none'>
+                      <AccordionTrigger className='hover:no-underline'>
+                        <div className='flex items-center gap-2 w-full'>
+                          <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
+                            <Tag strokeWidth={3} size={16} />
+                            {classificationList[index].rawClassification?.title}{' '}
+                            <span className='text-xs text-red-600 px-1 bg-red-100 rounded-3xl'>
+                              -{formatNumber(discount, '%')}
+                            </span>
+                          </span>
 
-                      <div className='flex items-center gap-1'>
-                        <span className='font-light line-through'>{formatCurrency(price)}</span>
-                        <span className='text-green-500'>{formatCurrency(discountPrice)}</span>
-                        <span className='text-xs text-blue-600 px-1 bg-blue-100 rounded-3xl'>
-                          Only <b>{formatNumber(quantity, ' items available')}</b>
-                        </span>
-                      </div>
+                          <div className='flex items-center gap-1'>
+                            <span className='font-light line-through'>{formatCurrency(price)}</span>
+                            <span className='text-green-500'>{formatCurrency(discountPrice)}</span>
+                            <span className='text-xs text-blue-600 px-1 bg-blue-100 rounded-3xl'>
+                              Only <b>{formatNumber(quantity, ' items available')}</b>
+                            </span>
+                          </div>
 
-                      <button
-                        className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
-                        onClick={handleRemove(index)}
-                        disabled={isRemoveDisabled}
-                      >
-                        <Trash2 color='red' strokeWidth={3} size={20} />
-                      </button>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.rawClassification`}
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel required>Classification Of Product</FormLabel>
-                              <SelectClassification
-                                {...field}
-                                productId={productId}
-                                value={field.value}
-                                initialClassification={classificationList[index].initialClassification}
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )
-                        }}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.append.quantity`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Quantity</FormLabel>
-                            <FormControl>
-                              <Input
-                                type='quantity'
-                                placeholder='e.g. 100'
-                                {...field}
-                                symbol={'Items'}
-                                maxVal={classificationList[index].rawClassification?.quantity ?? 0}
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              This is the quantity of the flash sale that take from initial quantity.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
+                          <button
+                            className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
+                            onClick={handleRemove(index)}
+                            disabled={isRemoveDisabled}
+                          >
+                            <Trash2 color='red' strokeWidth={3} size={20} />
+                          </button>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.rawClassification`}
+                            render={({ field }) => {
+                              return (
+                                <FormItem>
+                                  <FormLabel required>Classification Of Product</FormLabel>
+                                  <SelectClassification
+                                    {...field}
+                                    productId={productId}
+                                    value={field.value}
+                                    initialClassification={classificationList[index].initialClassification}
+                                  />
+                                  <FormMessage />
+                                </FormItem>
+                              )
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.append.quantity`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel required>Quantity</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type='quantity'
+                                    placeholder='e.g. 100'
+                                    {...field}
+                                    symbol={'Items'}
+                                    maxVal={classificationList[index].rawClassification?.quantity ?? 0}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  This is the quantity of the flash sale that take from initial quantity.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </CardContent>
+                </Card>
               )
             })}
           </Accordion>

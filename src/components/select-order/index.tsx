@@ -3,6 +3,7 @@ import { ChangeEvent, forwardRef, HTMLAttributes, useMemo } from 'react'
 
 import { getAllOrderListApi } from '@/network/apis/order'
 import { IOrder } from '@/types/order'
+import { minifyString } from '@/utils/string'
 
 import { InputProps } from '../ui/input'
 import { TOption } from '../ui/react-select'
@@ -13,7 +14,7 @@ type Props = HTMLAttributes<HTMLSelectElement> & InputProps
 const getOrderItemDisplay = (order: IOrder) => {
   return (
     <div className='flex items-center gap-1'>
-      <span>{order?.id}</span>
+      <span>{minifyString(order?.id)}</span>
     </div>
   )
 }

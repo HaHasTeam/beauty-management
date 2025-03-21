@@ -134,7 +134,7 @@ const FlashSaleDetails = () => {
           <Alert variant={'success'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-white'>Active</span>
                   <span className='font-bold uppercase text-xs'>status</span>
@@ -161,7 +161,7 @@ const FlashSaleDetails = () => {
           <Alert variant={'default'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-gray-300 bg-gray-400 text-white'>Inactive</span>
                   <span className='font-bold uppercase text-xs'>status</span>
@@ -187,7 +187,7 @@ const FlashSaleDetails = () => {
           <Alert variant={'warning'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-yellow-300 bg-yellow-400 text-white'>
                     Waiting
@@ -216,7 +216,7 @@ const FlashSaleDetails = () => {
           <Alert variant={'highlight'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-purple-300 bg-purple-400  text-white'>
                     Sold Out
@@ -264,6 +264,7 @@ const FlashSaleDetails = () => {
         )
     }
   }
+
   return (
     <>
       {isGettingFlashSale && <LoadingContentLayer />}
@@ -319,7 +320,7 @@ const FlashSaleDetails = () => {
                   name='startTime'
                   render={({ field, formState }) => {
                     return (
-                      <FormItem className='flex flex-col'>
+                      <FormItem>
                         <FormLabel required>Start Time Of Flash Sale</FormLabel>
                         <FlexDatePicker
                           showTime
@@ -340,7 +341,7 @@ const FlashSaleDetails = () => {
                   name='endTime'
                   render={({ field, formState }) => {
                     return (
-                      <FormItem className='flex flex-col'>
+                      <FormItem>
                         <FormLabel required>End Time Of Flash Sale</FormLabel>
                         <FlexDatePicker
                           showTime
@@ -379,7 +380,7 @@ const FlashSaleDetails = () => {
               </div>
             </CardContent>
           </Card>
-          {form.watch('product') && <ClassificationConfig form={form} productId={form.watch('product')} />}
+          {<ClassificationConfig form={form} productId={form.watch('product')} />}
         </form>
         {getFooter()}
       </Form>

@@ -3,6 +3,7 @@ import { TMetaData } from './request'
 type BaseCategoryField = {
   label: string
   required: boolean
+  order?: number
 }
 
 type Option = {
@@ -44,6 +45,8 @@ export type CategoryType = BaseCategoryField &
       }
     | {
         type: CategoryTypeEnum.date
+        onlyFutureDates?: boolean
+        onlyPastDates?: boolean
       }
   )
 
@@ -55,4 +58,10 @@ export interface ICategory extends TMetaData {
   detail?: ICategoryDetail
   parentCategory?: ICategory | null
   subCategories?: ICategory[]
+  status?: CategoryStatusEnum
+}
+
+export enum CategoryStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
 }

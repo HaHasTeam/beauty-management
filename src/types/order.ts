@@ -66,7 +66,7 @@ export interface IOrder {
   platformVoucherDiscount: number
   shopVoucherDiscount: number
   account: TUser
-  children: IOrderItem[]
+  children?: IOrder[]
 }
 
 // Other interfaces (kept as they were, assuming they're still needed)

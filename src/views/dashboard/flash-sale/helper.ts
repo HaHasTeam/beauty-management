@@ -35,7 +35,7 @@ export const formSchema = z.object({
             id: z.string().optional(),
             title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
             price: z.coerce.number().positive({ message: defaultRequiredRegex.message }),
-            quantity: z.coerce.number().int().positive({ message: defaultRequiredRegex.message }),
+            quantity: z.coerce.number().int().nonnegative({ message: defaultRequiredRegex.message }),
             sku: z.string().optional(),
             images: z.array(
               z.object({
@@ -44,7 +44,10 @@ export const formSchema = z.object({
               })
             ),
             type: z.nativeEnum(ProductClassificationTypeEnum),
-            originalClassification: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+            originalClassification: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+            color: z.string().optional(),
+            size: z.string().optional(),
+            other: z.string().optional()
           },
           {
             message: defaultRequiredRegex.message
@@ -76,13 +79,37 @@ export const formSchema = z.object({
             originalClassification: z
               .string()
               .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
-              .optional()
+              .optional(),
+            color: z.string().optional(),
+            size: z.string().optional(),
+            other: z.string().optional()
           })
           .optional()
       })
     )
     .nonempty({
       message: defaultRequiredRegex.message
+    })
+    .superRefine((value, ctx) => {
+      const rawClassification = value ?? []
+
+      for (let i = rawClassification.length - 1; i >= 0; i--) {
+        const raw = rawClassification[i]
+        const originalClassification = raw.rawClassification.originalClassification
+        const lastIndex = rawClassification.findIndex((item, index) => {
+          return index !== i && item.rawClassification.originalClassification === originalClassification
+        })
+
+        if (lastIndex !== -1) {
+          return ctx.addIssue({
+            message: 'Classification is duplicated.',
+            code: 'custom',
+            path: [i, 'rawClassification']
+          })
+        }
+      }
+
+      return true
     })
 })
 
@@ -93,7 +120,6 @@ export const convertFormToFlashSale = (form: SchemaType) => {
     id: form.id ?? undefined,
     startTime: form.startTime,
     endTime: form.endTime,
-    // images: form.images,
     discount: form.discount,
     productClassifications: form.productClassifications.map((item) => {
       return {
@@ -124,9 +150,15 @@ export const convertFlashSaleToForm = (flashSale: TFlashSale): SchemaType => {
         price: item.price,
         quantity: item.quantity,
         sku: item.sku ?? '',
-        images: item.images,
+        images: item.images?.map((image) => ({
+          name: image.name ?? image.fileUrl,
+          fileUrl: image.fileUrl
+        })),
         type: item.type,
-        originalClassification: item.id
+        originalClassification: item.id,
+        color: item.color,
+        size: item.size,
+        other: item.other
       },
       append: {
         quantity: item.quantity
@@ -137,9 +169,15 @@ export const convertFlashSaleToForm = (flashSale: TFlashSale): SchemaType => {
         price: item.price,
         quantity: item.quantity,
         sku: item.sku ?? '',
-        images: item.images,
+        images: item.images?.map((image) => ({
+          name: image.name ?? image.fileUrl,
+          fileUrl: image.fileUrl
+        })),
         type: item.type,
-        originalClassification: item.id
+        originalClassification: item.id,
+        color: item.color,
+        size: item.size,
+        other: item.other
       }
     })) as SchemaType['productClassifications']
   }

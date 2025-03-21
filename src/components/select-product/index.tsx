@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Image } from 'lucide-react'
-import { ChangeEvent, forwardRef, HTMLAttributes, useMemo } from 'react'
+import { ChangeEvent, forwardRef, HTMLAttributes, useMemo, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -45,7 +45,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       userData: state.user
     }))
   )
-
+  const [searchKey, setSearchKey] = useState('')
   const brandId = useMemo(() => (userData?.brands?.length ? userData.brands[0].id : ''), [userData])
 
   const { data: productList, isFetching: isGettingProductList } = useQuery({
@@ -66,7 +66,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       label: product.name,
       display: getProductItemDisplay(product)
     }))
-  }, [productList])
+  }, [productList, searchKey])
 
   const selectedOptions = useMemo(() => {
     if (multiple) {
@@ -95,10 +95,13 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
     <AsyncSelect
       defaultOptions={productOptions}
       isMulti={multiple}
+      inputValue={searchKey}
+      onInputChange={(inputValue) => setSearchKey(inputValue)}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingProductList}
       isClearable
+      isSearchable
       value={selectedOptions}
       onChange={(options) => {
         if (multiple) {

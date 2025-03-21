@@ -23,7 +23,7 @@ export const formSchema = z
   .object({
     images: z.array(
       z.object({
-        name: z.string(),
+        name: z.string().nullable(),
         fileUrl: z.string()
       })
     )

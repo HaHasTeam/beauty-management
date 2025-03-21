@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { formatDate } from '@/lib/utils'
-import { IOrder, IOrderItem } from '@/types/order'
+import { IOrder } from '@/types/order'
 
 import { getStatusIcon } from './helper'
 
@@ -52,9 +52,7 @@ export function ViewDetailsOrderSheet({ order, ...props }: ViewDetailsOrderSheet
             <div>
               <p className='text-sm font-medium mb-2'>Order Details</p>
               <div className='space-y-2'>
-                {order.children.map((child) => (
-                  <OrderItemDetails key={child.id} item={child} />
-                ))}
+                {order?.children?.map((child) => <OrderItemDetails key={child.id} item={child} />)}
               </div>
             </div>
             <Separator />
@@ -92,7 +90,7 @@ export function ViewDetailsOrderSheet({ order, ...props }: ViewDetailsOrderSheet
   )
 }
 
-function OrderItemDetails({ item }: { item: IOrderItem }) {
+function OrderItemDetails({ item }: { item: IOrder }) {
   const { t } = useTranslation()
 
   return (

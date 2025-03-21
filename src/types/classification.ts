@@ -14,6 +14,9 @@ export type TClassification = TMetaData & {
   sku: string
   type: ProductClassificationTypeEnum
   status: ClassificationStatusEnum
+  color?: string | null
+  size?: string | null
+  other?: string | null
 }
 
 export enum ClassificationStatusEnum {

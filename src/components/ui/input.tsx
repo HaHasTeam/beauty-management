@@ -62,12 +62,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }
             if (inputValue <= 100 && inputValue >= 0) {
               setFormattedValue(formattedInputValue)
-              if (onChange) onChange(inputValue as unknown as React.ChangeEvent<HTMLInputElement>)
+              if (onChange) onChange(inputValue/100 as unknown as React.ChangeEvent<HTMLInputElement>)
               return
             }
             if (inputValue > 100) {
               setFormattedValue('100')
-              if (onChange) onChange(100 as unknown as React.ChangeEvent<HTMLInputElement>)
+              if (onChange) onChange(100/100 as unknown as React.ChangeEvent<HTMLInputElement>)
             }
             if (inputValue < 0) {
               setFormattedValue('0')
@@ -122,11 +122,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     React.useEffect(() => {
       if (value !== undefined) {
+        const numberValue= type==="percentage" ? Number(value)*100 : Number(value)
         const formValue = isNumberInput
-          ? formatCurrency(maxVal !== undefined ? (Number(value) > maxVal ? maxVal : Number(value)) : Number(value))
+          ? formatCurrency(maxVal !== undefined ? (numberValue > maxVal ? maxVal : numberValue) : numberValue)
           : value
         setFormattedValue(formValue)
-        if (isNumberInput && onChange && maxVal !== undefined && Number(value) > maxVal) {
+        if (isNumberInput && onChange && maxVal !== undefined && numberValue > maxVal) {
           onChange(maxVal as unknown as React.ChangeEvent<HTMLInputElement>)
         }
       }
