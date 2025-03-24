@@ -15,8 +15,8 @@ export default function SystemServiceTypeTag({ type, text, size = 'medium' }: Sy
   let tagColorClass = ''
   let icon
   const sizeClasses = {
-    small: 'px-1 text-xs',
-    medium: 'px-3 py-1 sm:text-sm text-xs',
+    small: 'px-1 py-1 text-xs',
+    medium: 'px-3 py-1 sm:text-xs text-xs',
     large: 'p-3 lg:text-base md:text-sm sm:text-xs'
   }
 

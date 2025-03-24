@@ -1,5 +1,4 @@
 import CategoryDetails from './CategoryDetails'
-import CategorySummary from './CategorySummary'
 
 const AddCategory = () => {
   return (
@@ -8,9 +7,7 @@ const AddCategory = () => {
         <div className='w-full md:w-3/5 lg:w-3/4 flex flex-col gap-8'>
           <CategoryDetails />
         </div>
-        <div className='w-full md:w-2/5 lg:w-1/4 flex flex-col gap-8'>
-          <CategorySummary />
-        </div>
+        <div className='w-full md:w-2/5 lg:w-1/4 flex flex-col gap-8'>{/* <CategorySummary /> */}</div>
       </div>
     </div>
   )

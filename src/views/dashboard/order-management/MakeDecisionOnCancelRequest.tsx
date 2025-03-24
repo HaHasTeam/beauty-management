@@ -18,7 +18,13 @@ import { ICancelRequestOrder } from '@/types/order'
 
 import ReasonDialog from './ReasonDialog'
 
-const MakeDecisionOnCancelRequest = ({ cancelOrderRequest }: { cancelOrderRequest: ICancelRequestOrder | null }) => {
+const MakeDecisionOnCancelRequest = ({
+  cancelOrderRequest,
+  pendingRequestCancelTime
+}: {
+  cancelOrderRequest: ICancelRequestOrder | null
+  pendingRequestCancelTime: number
+}) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { successToast } = useToast()
@@ -121,7 +127,9 @@ const MakeDecisionOnCancelRequest = ({ cancelOrderRequest }: { cancelOrderReques
                     {t('order.cancelRequestPendingBrandTitle')}
                   </h3>
                 </div>
-                <AlertDescription>{t('order.CancelOrderRequestBrandMessage')}</AlertDescription>
+                <AlertDescription>
+                  {t('order.CancelOrderRequestBrandMessage', { count: pendingRequestCancelTime })}
+                </AlertDescription>
               </div>
             </div>
             <div className='flex gap-2 items-center'>

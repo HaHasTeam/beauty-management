@@ -35,7 +35,7 @@ export function UserSelect({ onSelect, disabled = false }: UserSelectProps) {
     queryFn: getAccountFilterApi.fn,
     enabled: open,
     select(data) {
-      return data.data
+      return data.data.items
     }
   })
 

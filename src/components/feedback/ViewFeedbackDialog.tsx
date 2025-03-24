@@ -17,7 +17,7 @@ import {
 import { useToast } from '@/hooks/useToast'
 import { replyFeedbackApi } from '@/network/apis/feedback'
 import { getOrderByIdApi } from '@/network/apis/order'
-import { getProductByIdApi } from '@/network/apis/product'
+import { getProductApi } from '@/network/apis/product'
 import { getReplyFeedbackSchema } from '@/schemas/feedback.schema'
 import { useStore } from '@/stores/store'
 import { IBrand } from '@/types/brand'
@@ -86,7 +86,7 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
         queryKey: [getOrderByIdApi.queryKey]
       })
       queryClient.invalidateQueries({
-        queryKey: [getProductByIdApi.queryKey]
+        queryKey: [getProductApi.queryKey]
       })
       handleReset()
     }

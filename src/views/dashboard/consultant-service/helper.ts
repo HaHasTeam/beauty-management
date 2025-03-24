@@ -63,6 +63,8 @@ const consultantServiceTypeSchema = z
     }
   })
 
+export type QuestionType = z.infer<typeof consultantServiceTypeSchema>
+
 export const formSchema = z.object({
   id: z.string().optional(),
   price: z.coerce

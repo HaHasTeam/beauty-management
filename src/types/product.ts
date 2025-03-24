@@ -183,13 +183,6 @@ export interface ProductTableProps {
 // components interface ends
 
 // enum starts
-export enum ProductEnum {
-  PRE_ORDER = 'PRE_ORDER',
-  FLASH_SALE = 'FLASH_SALE',
-  OFFICIAL = 'OFFICIAL',
-  OUT_OF_STOCK = 'OUT_OF_STOCK',
-  INACTIVE = 'INACTIVE'
-}
 export enum ProductClassificationTypeEnum {
   DEFAULT = 'DEFAULT',
   CUSTOM = 'CUSTOM'
@@ -200,6 +193,7 @@ export enum ProductStatusEnum {
   OUT_OF_STOCK = 'OUT_OF_STOCK',
   INACTIVE = 'INACTIVE',
   BANNED = 'BANNED',
-  PENDING = 'PENDING'
+  PENDING = 'PENDING',
+  UN_PUBLISHED = 'UN_PUBLISHED'
 }
 // enum ends

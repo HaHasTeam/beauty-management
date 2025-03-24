@@ -23,7 +23,7 @@ export const formSchema = z
   .object({
     images: z.array(
       z.object({
-        name: z.string(),
+        name: z.string().nullable(),
         fileUrl: z.string()
       })
     )
@@ -258,7 +258,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
                         { hidden: file.status === FileStatusEnum.INACTIVE }
                       )}
                     >
-                      <div key={file.name} className='flex items-center space-x-3 w-[95%]'>
+                      <div key={file.name} className='flex items-center space-x-3 w-[85%]'>
                         <div
                           className='rounded-md flex items-center justify-center'
                           onClick={() => {
@@ -278,7 +278,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
                           )}
                         </div>
                         <span className='text-sm font-medium flex-1 flex overflow-hidden flex-col'>
-                          <span className='text-ellipsis overflow-hidden'>{file.name}</span>
+                          <span className='text-ellipsis overflow-hidden'>{file.name.substring(0, 100)}</span>
                           <span className='text-muted-foreground text-xs font-bold'>
                             {Math.round(file.size / 1024)} KB
                           </span>

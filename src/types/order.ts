@@ -66,7 +66,7 @@ export interface IOrder {
   platformVoucherDiscount: number
   shopVoucherDiscount: number
   account: TUser
-  children: IOrderItem[]
+  children?: IOrder[]
 }
 
 // Other interfaces (kept as they were, assuming they're still needed)
@@ -128,4 +128,13 @@ export interface ICancelAndReturnRequest {
   cancelRequest: ICancelRequestOrder
   refundRequest: IReturnRequestOrder
   complaintRequest: IReturnRequestOrder
+}
+export interface IOrderFeedback extends IOrderItem {
+  account: TUser
+  productClassification: IClassification
+  quantity: number
+}
+
+export interface IOrderDetailFeedback extends IOrderDetail {
+  order: IOrderFeedback
 }

@@ -18,6 +18,9 @@
     "release:local": "npm docker:build && npm docker:run",
     "log:tree": "tree -N -I \"node_modules|.git|.idea\" -a"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  },
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.17.0",
     "@dnd-kit/core": "^6.1.0",
@@ -26,6 +29,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.2",
+    "@radix-ui/react-alert-dialog": "1.1.6",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-collapsible": "^1.1.2",
@@ -48,7 +52,6 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.5",
     "@react-pdf-viewer/core": "^3.12.0",
-    "@rollup/rollup-darwin-arm64": "^4.34.9",
     "@stepperize/react": "^3.1.1",
     "@swc/core": "^1.11.5",
     "@tanstack/react-query": "^5.60.5",
@@ -65,6 +68,8 @@
     "esbuild": "^0.25.0",
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "i18n-iso-countries": "^7.13.0",
     "i18next": "^24.1.0",
     "i18next-browser-languagedetector": "^8.0.2",
@@ -112,6 +117,7 @@
     "@eslint/js": "^9.17.0",
     "@faker-js/faker": "^9.0.3",
     "@tanstack/eslint-plugin-query": "^5.59.7",
+    "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.7.5",
     "@types/react": "^18.3.10",

@@ -1,16 +1,17 @@
 import { ImagePlus } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import ReactQuill from 'react-quill-new'
 import { z } from 'zod'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import FormLabel from '@/components/form-label'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { SystemServiceSchema } from '@/schemas/system-service.schema'
 import { ICategory } from '@/types/category'
 import { ServiceTypeEnum } from '@/types/enum'
 import { SystemServiceStatusEnum } from '@/types/system-service'
+import { modules } from '@/variables/textEditor'
 import UploadProductImages from '@/views/dashboard/create-product/UploadProductImages'
 
 import FormCategorySelection from '../form-category-selection'
@@ -113,15 +114,34 @@ const GeneralSystemService = ({ form, categories, resetSignal, defineFormSignal 
         render={({ field }) => (
           <FormItem>
             <div className='flex gap-2'>
-              <div className='w-[15%] flex items-center'>
+              <div className='w-[15%] flex items-start'>
                 <FormLabel required>{t('systemService.description')}</FormLabel>
               </div>
               <div className='w-full space-y-1'>
                 <FormControl>
-                  <Textarea
+                  {/* <Textarea
                     {...field}
                     className='border-primary/40'
                     placeholder={t('systemService.enterServiceDescription')}
+                  /> */}
+                  <ReactQuill
+                    modules={{
+                      ...modules,
+                      clipboard: {
+                        ...modules.clipboard,
+                        matchVisual: false
+                      }
+                    }}
+                    placeholder={t('systemService.enterServiceDescription')}
+                    // style={{ borderRadius: 10, borderColor: '#F8C0CE' }}
+                    className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
+                    theme='snow'
+                    {...field}
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    onChange={(content, _delta, _source, _editor) => {
+                      // Truncate if exceeds limit
+                      field.onChange(content.trim())
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

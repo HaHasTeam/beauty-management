@@ -19,8 +19,13 @@ import { IReturnRequestOrder } from '@/types/order'
 
 import ConfirmDecisionDialog from './ConfirmDecisionDialog'
 
-const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturnRequestOrder | null }) => {
-  const WAITING_DECISION_ON_REQUEST_RETURN_DAYS = 2
+const MakeDecisionOnReturnRequest = ({
+  returnRequest,
+  pendingRequestReturnTime
+}: {
+  returnRequest: IReturnRequestOrder | null
+  pendingRequestReturnTime: number
+}) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { successToast } = useToast()
@@ -94,7 +99,7 @@ const MakeDecisionOnReturnRequest = ({ returnRequest }: { returnRequest: IReturn
                 </h3>
               </div>
               <AlertDescription>
-                {t('return.returnOrderRequestMessageBrand', { count: WAITING_DECISION_ON_REQUEST_RETURN_DAYS })}
+                {t('return.returnOrderRequestMessageBrand', { count: pendingRequestReturnTime })}
               </AlertDescription>
             </div>
           </div>

@@ -35,9 +35,9 @@ export async function createFiles(files: TFile[] | string[]): Promise<CustomFile
         const data = await response.blob()
         const metadata = {
           type: data.type,
-          name: file.name
+          name: file.name ?? file.fileUrl
         }
-        const newFile = new File([data], file.name, metadata)
+        const newFile = new File([data], file.name ?? file.fileUrl, metadata)
 
         Object.defineProperty(newFile, 'fileUrl', {
           value: file.fileUrl,

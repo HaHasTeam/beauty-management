@@ -45,7 +45,8 @@ export enum Routes {
   SCHEDULE_BOOKING = 'schedule-booking',
   CONSULTANT_SERVICE = 'consultant-service',
   ADD_CONSULTANT_SERVICE = 'add-consultant-service',
-  CONSULTANT_SERVICE_DETAILS = 'consultant-service-details'
+  CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
+  REPORTS = 'reports'
 }
 
 export const routesConfig: TRoutes = {
@@ -351,5 +352,12 @@ export const routesConfig: TRoutes = {
     description: 'Consultant Service Details',
     path: '/dashboard/consultant-service/:id',
     getPath: (params) => `/dashboard/consultant-service/${params.id}`
+  },
+  [Routes.REPORTS]: {
+    name: 'Reports',
+    title: 'Reports',
+    description: 'Reports',
+    path: '/dashboard/reports',
+    getPath: () => '/dashboard/reports'
   }
 }

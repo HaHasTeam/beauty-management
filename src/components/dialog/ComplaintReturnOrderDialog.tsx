@@ -151,7 +151,7 @@ export const ComplaintReturnOrderDialog: React.FC<ComplaintReturnOrderDialogProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='md:max-w-xl sm:max-w-lg'>
+      <DialogContent className='md:max-w-2xl sm:max-w-lg'>
         <ScrollArea className='max-h-[80vh]'>
           <div className='space-y-3 mr-2'>
             <DialogHeader>

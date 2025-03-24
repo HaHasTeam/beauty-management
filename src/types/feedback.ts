@@ -1,4 +1,5 @@
 import { TServerFile } from './file'
+import { IOrderDetailFeedback } from './order'
 import { TMetaData } from './request'
 import { TUser, TUserFeedback } from './user'
 
@@ -24,3 +25,10 @@ export type IResponseFeedback = TMetaData & {
 }
 
 export type ISubmitFeedback = ISubmitFeedbackScheme
+export type IResponseFilterFeedback = TMetaData & {
+  rating: number
+  content: string
+  mediaFiles: TServerFile[]
+  replies: IReplyFeedback[]
+  orderDetail: IOrderDetailFeedback
+}

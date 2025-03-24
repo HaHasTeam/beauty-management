@@ -110,12 +110,12 @@ export const updateUsersListStatusApi = toMutationFetcher<TUpdateUsersListStatus
   }
 )
 
-export const getAccountFilterApi = toQueryFetcher<TGetAccountFilterRequestParams, TServerResponse<TUserResponse[]>>(
-  'getProductFilterApi',
-  async (params) => {
-    return privateRequest(`/accounts/filter-account`, {
-      method: 'GET',
-      params: params
-    })
-  }
-)
+export const getAccountFilterApi = toQueryFetcher<
+  TGetAccountFilterRequestParams,
+  TServerResponse<{ total: string; limit: string; pages: string; items: TUserResponse[] }>
+>('getProductFilterApi', async (params) => {
+  return privateRequest(`/accounts/filter-account`, {
+    method: 'GET',
+    params: params
+  })
+})

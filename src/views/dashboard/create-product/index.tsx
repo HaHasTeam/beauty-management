@@ -19,7 +19,8 @@ import { uploadFilesApi } from '@/network/apis/file'
 import { createProductApi } from '@/network/apis/product'
 import { getUserProfileApi } from '@/network/apis/user'
 import { ICategory } from '@/types/category'
-import { IServerCreateProduct, ProductClassificationTypeEnum, ProductEnum } from '@/types/product'
+import { ProductEnum } from '@/types/enum'
+import { IServerCreateProduct, ProductClassificationTypeEnum } from '@/types/product'
 import { getFormProductSchema } from '@/variables/productFormDetailFields'
 
 import BasicInformation from './BasicInformation'
@@ -70,6 +71,9 @@ const CreateProduct = () => {
 
   const handleReset = () => {
     form.reset()
+    form.reset({
+      description: '<p><br></p>'
+    })
     setResetSignal((prev) => !prev)
     setActiveStep(1)
     setCompleteSteps([])
@@ -220,14 +224,14 @@ const CreateProduct = () => {
                 <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
                   {t('button.submit')}
                 </Button>
-                {/* <Button
+                <Button
                   variant='outline'
                   className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'
                   type='submit'
-                  onClick={() => form.setValue('status', ProductEnum.INACTIVE)}
+                  onClick={() => form.setValue('status', ProductEnum.UN_PUBLISHED)}
                 >
                   {t('button.submitAndHide')}
-                </Button> */}
+                </Button>
                 <Button
                   variant='outline'
                   className='border border-primary hover:bg-primary/10 text-primary hover:text-primary'

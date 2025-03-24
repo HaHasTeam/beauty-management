@@ -22,13 +22,7 @@ interface CategoryTableProps {
 
 export function CategoryTable({ data, pageCount, queryStates }: CategoryTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<ICategory> | null>(null)
-  const columns = React.useMemo(
-    () =>
-      getColumns({
-        setRowAction
-      }),
-    []
-  )
+  const columns = React.useMemo(() => getColumns(), [])
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.

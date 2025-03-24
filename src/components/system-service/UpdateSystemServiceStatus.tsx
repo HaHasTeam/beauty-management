@@ -105,23 +105,28 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
     <div className={`${config.alertVariant} ${config.borderColor}`}>
       <div className='flex md:items-center gap-2 md:justify-between md:flex-row flex-col justify-start items-start'>
         <div className='flex items-center gap-2'>
-          <Siren className='size-4' />
-          <div className='flex flex-col gap-1'>
-            {/* <AlertTitle className='flex items-center gap-2'>
+          <div className='flex gap-2 items-center'>
+            <div className='p-2 bg-white/80 rounded-full'>
+              <Siren className={`${config.titleColor} size-6`} />
+            </div>
+            <Siren className='size-4' />
+            <div className='flex flex-col gap-1'>
+              {/* <AlertTitle className='flex items-center gap-2'>
             <span
               className={`p-0.5 px-2 rounded-lg border ${config.borderColor} ${config.bgColor} ${config.titleColor}`}
             >
               {config.alertTitle}
             </span>
           </AlertTitle> */}
-            <div>
-              <span
-                className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
-              >
-                {config.alertTitle}
-              </span>
+              <div>
+                <span
+                  className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
+                >
+                  {config.alertTitle}
+                </span>
+              </div>
+              <AlertDescription>{config.alertDescription}</AlertDescription>
             </div>
-            <AlertDescription>{config.alertDescription}</AlertDescription>
           </div>
         </div>
         <div className='flex gap-2 items-center md:m-0 ml-3'>

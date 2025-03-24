@@ -32,6 +32,15 @@ export default function ProductState({ state, text, size = 'medium' }: ProductSt
     case ProductEnum.PRE_ORDER:
       tagColorClass = 'text-yellow-500 bg-yellow-50 border border-yellow-500'
       break
+    case ProductEnum.FLASH_SALE:
+      tagColorClass = 'text-orange-500 bg-orange-50 border border-orange-500'
+      break
+    case ProductEnum.BANNED:
+      tagColorClass = 'text-red-700 bg-red-200 border border-red-700'
+      break
+    case ProductEnum.UN_PUBLISHED:
+      tagColorClass = 'text-purple-500 bg-purple-50 border border-purple-500'
+      break
     default:
       tagColorClass = 'bg-gray-200 text-gray-800' // Default color
       break

@@ -36,7 +36,10 @@ export const formSchema = z
                     fileUrl: z.string()
                   })
                 ),
-                type: z.nativeEnum(ProductClassificationTypeEnum)
+                type: z.nativeEnum(ProductClassificationTypeEnum),
+                color: z.string().optional(),
+                size: z.string().optional(),
+                other: z.string().optional()
               },
               {
                 message: defaultRequiredRegex.message
@@ -45,6 +48,9 @@ export const formSchema = z
             .partial()
             .optional(),
           append: z.object({
+            color: z.string().optional(),
+            size: z.string().optional(),
+            other: z.string().optional(),
             quantity: z.coerce
               .number({
                 message: defaultRequiredRegex.message
@@ -83,6 +89,17 @@ export const formSchema = z
         path: ['endTime']
       })
     }
+
+    const isDupplicateSku = data.productClassifications.findIndex((item, index) => {
+      return data.productClassifications.findIndex((i) => i.append.sku === item.append.sku) !== index
+    })
+    if (isDupplicateSku !== -1) {
+      return ctx.addIssue({
+        code: 'custom',
+        message: 'SKU is duplicated',
+        path: ['productClassifications', isDupplicateSku, 'append', 'sku']
+      })
+    }
   })
 
 export type SchemaType = z.infer<typeof formSchema>
@@ -116,15 +133,29 @@ export const convertPreProductToForm = (preProduct: TPreOrder): SchemaType => {
         price: item.price,
         quantity: item.quantity,
         sku: item.sku ?? '',
-        type: item.type
+        type: item.type,
+        color: item.color ?? '',
+        size: item.size ?? '',
+        other: item.other ?? '',
+        images: item.images.map((image) => ({
+          name: image.name ?? image.fileUrl,
+          fileUrl: image.fileUrl
+        }))
       },
       append: {
         sku: item.sku ?? '',
         title: item.title,
         price: item.price,
         type: item.type,
-        images: item.images ?? [],
-        quantity: item.quantity
+        images: item.images.map((image) => ({
+          id: image.id,
+          name: image.name ?? image.fileUrl,
+          fileUrl: image.fileUrl
+        })),
+        quantity: item.quantity,
+        color: item.color ?? '',
+        size: item.size ?? '',
+        other: item.other ?? ''
       }
     })) as SchemaType['productClassifications']
   }

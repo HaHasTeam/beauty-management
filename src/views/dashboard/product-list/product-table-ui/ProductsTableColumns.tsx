@@ -1,4 +1,5 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
+import i18next from 'i18next'
 import { Ellipsis, EyeIcon, Pen, SettingsIcon } from 'lucide-react'
 import { GrRevert } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
@@ -18,7 +19,6 @@ import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { StatusEnum } from '@/types/enum'
 import { IResponseProduct, ProductStatusEnum } from '@/types/product'
-import { getDisplayString } from '@/utils/string'
 
 import { getStatusIcon } from './helper'
 
@@ -66,7 +66,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
       cell: ({ row }) => {
         const displayName = row.original.name
         const image =
-          row.original.images[0].fileUrl ||
+          row.original.images?.[0]?.fileUrl ||
           'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg'
         return (
           <div className='flex space-x-2 items-center'>
@@ -114,7 +114,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
               className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
               aria-hidden='true'
             />
-            <span className='capitalize'>{getDisplayString(statusValue)}</span>
+            <span className='capitalize'>{i18next.t(`status.${statusValue}`)}</span>
           </div>
         )
       },

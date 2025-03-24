@@ -112,7 +112,7 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
       voucher: {
         name: 'Group voucher' + code,
         code: 'group-voucher-' + code,
-        discountType: DiscountTypeEnum.AMOUNT,
+        discountType: DiscountTypeEnum.PERCENTAGE,
         applyType: VoucherApplyTypeEnum.ALL
       }
     } as formSchemaType['criterias'][0])
@@ -168,7 +168,7 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                                         <Select
                                           onValueChange={discountTypeField.onChange}
                                           value={discountTypeField.value}
-                                          defaultValue={DiscountTypeEnum.AMOUNT}
+                                          defaultValue={DiscountTypeEnum.PERCENTAGE}
                                         >
                                           <SelectTrigger className='inline-flex items-center rounded-none rounded-l-lg border border-input disabled:cursor-not-allowed disabled:opacity-50'>
                                             <SelectValue placeholder='Select discount type' />

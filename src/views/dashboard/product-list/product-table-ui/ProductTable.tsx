@@ -1,11 +1,11 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
-import { toSentenceCase } from '@/lib/utils'
 import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
@@ -26,6 +26,7 @@ interface ProductTableProps {
 }
 
 export function ProductTable({ data, pageCount, queryStates }: ProductTableProps) {
+  const { t } = useTranslation()
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<IResponseProduct> | null>(null)
   const columns = React.useMemo(() => getColumns({ setRowAction }), [])
 
@@ -52,7 +53,7 @@ export function ProductTable({ data, pageCount, queryStates }: ProductTableProps
       options: Object.keys(ProductStatusEnum).map((status) => {
         const value = ProductStatusEnum[status as keyof typeof ProductStatusEnum]
         return {
-          label: toSentenceCase(value),
+          label: t(`status.${value}`),
           value: value,
           icon: getStatusIcon(value).icon
         }

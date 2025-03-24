@@ -3,7 +3,7 @@ import { Image } from 'lucide-react'
 import { ChangeEvent, forwardRef, HTMLAttributes, useEffect, useMemo } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { getProductByIdApi } from '@/network/apis/product'
+import { getProductApi } from '@/network/apis/product'
 import { TFile } from '@/types/file'
 import { ProductClassificationTypeEnum } from '@/types/product'
 
@@ -19,6 +19,9 @@ export type TClassificationItem = {
   sku?: string
   images: TFile[]
   type: ProductClassificationTypeEnum
+  color?: string
+  size?: string
+  other?: string
   originalClassification?: string
 }
 
@@ -59,8 +62,8 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
   } = props
 
   const { data: product, isFetching: isGettingProduct } = useQuery({
-    queryKey: [getProductByIdApi.queryKey, productId],
-    queryFn: getProductByIdApi.fn,
+    queryKey: [getProductApi.queryKey, productId],
+    queryFn: getProductApi.fn,
     enabled: !!productId
   })
 
@@ -80,6 +83,8 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
 
     if (!multiple) {
       const option = value as TClassificationItem
+      if (option.id && option.originalClassification && option.title) return undefined
+
       const selectedClassification = classificationList?.find((item) => {
         if (option.title) {
           return item.title === option.title
@@ -87,16 +92,17 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
         return item.id === (option.originalClassification || option.id)
       }) as TClassificationItem
 
-      return classificationOptions.find((o) => o.value === selectedClassification.id)
+      return classificationOptions.find((o) => o.value === selectedClassification?.id)
     }
-    return undefined
+    return []
   }, [value, multiple, classificationOptions, classificationList])
 
   const currentClassification = useMemo(() => {
     const option = value as TClassificationItem
+
     const selectedClassification = classificationList?.find((item) => {
       if (option?.title) {
-        return item.title === option.title
+        return item.title === option?.title
       }
       return item.id === (option?.originalClassification || option?.id)
     }) as TClassificationItem
@@ -144,9 +150,13 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
             title: classification.title,
             price: classification.price,
             type: classification.type,
-            images: classification.images,
+            images: classification.images.map((image) => ({
+              ...image,
+              name: image.name ?? image.fileUrl,
+              fileUrl: image.fileUrl
+            })),
             quantity: maxQuantity,
-            sku: (classification.sku ?? '') + Date.now(),
+            sku: (classification.sku ?? '') + +new Date().getTime(),
             originalClassification: classification.id as string
           }
 

@@ -48,7 +48,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
   setOpen,
   onOpenChange
 }) => {
-  const MAX_IMAGES = 4
+  const MAX_IMAGES = 4 // constants
   const MAX_VIDEOS = 1
   // const MAX_FILES = MAX_IMAGES + MAX_VIDEOS
   const MAX_SIZE_NUMBER = 10
@@ -156,7 +156,7 @@ export const RejectReturnOrderDialog: React.FC<RejectReturnOrderDialogProps> = (
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='md:max-w-xl sm:max-w-lg'>
+      <DialogContent className='md:max-w-2xl sm:max-w-lg'>
         <ScrollArea className='max-h-[80vh]'>
           <div className='space-y-3 mr-2'>
             <DialogHeader>

@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllOrderListApi } from '@/network/apis/order'
+import { getOnlyChildOrderListApi } from '@/network/apis/order'
 import { useStore } from '@/stores/store'
 import { IOrder } from '@/types/order'
 import { DataTableQueryState } from '@/types/table'
@@ -20,8 +20,8 @@ export default function IndexPage() {
   )
 
   const { data: orderListData, isLoading: isOrderListLoading } = useQuery({
-    queryKey: [getAllOrderListApi.queryKey],
-    queryFn: getAllOrderListApi.fn,
+    queryKey: [getOnlyChildOrderListApi.queryKey],
+    queryFn: getOnlyChildOrderListApi.fn,
     enabled: !!userData?.id
   })
   const queryStates = useState<DataTableQueryState<IOrder>>({} as DataTableQueryState<IOrder>)

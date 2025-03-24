@@ -142,7 +142,7 @@ const PreOrderDetails = () => {
           <Alert variant={'success'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-white'>Active</span>
                   <span className='font-bold uppercase text-xs'>status</span>
@@ -169,7 +169,7 @@ const PreOrderDetails = () => {
           <Alert variant={'default'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-gray-300 bg-gray-400 text-white'>Inactive</span>
                   <span className='font-bold uppercase text-xs'>status</span>
@@ -195,7 +195,7 @@ const PreOrderDetails = () => {
           <Alert variant={'warning'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-yellow-300 bg-yellow-400 text-white'>
                     Waiting
@@ -224,7 +224,7 @@ const PreOrderDetails = () => {
           <Alert variant={'highlight'}>
             <div className='flex items-center gap-2'>
               <Siren className='size-4' />
-              <div className='flex flex-col'>
+              <div>
                 <AlertTitle className='flex items-center gap-2'>
                   <span className='p-0.5 px-2 rounded-lg border border-purple-300 bg-purple-400  text-white'>
                     Sold Out
@@ -297,7 +297,7 @@ const PreOrderDetails = () => {
                   name='product'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>Pre-order Product</FormLabel>
+                      <FormLabel required>Product</FormLabel>
                       <SelectProduct {...field} multiple={false} />
                       <FormMessage />
                     </FormItem>
@@ -308,8 +308,8 @@ const PreOrderDetails = () => {
                   name='startTime'
                   render={({ field, formState }) => {
                     return (
-                      <FormItem className='flex flex-col'>
-                        <FormLabel required>Start Time Of Pre-order Product</FormLabel>
+                      <FormItem>
+                        <FormLabel required>Start Time Of Event</FormLabel>
                         <FlexDatePicker
                           showTime
                           onlyFutureDates
@@ -329,8 +329,8 @@ const PreOrderDetails = () => {
                   name='endTime'
                   render={({ field, formState }) => {
                     return (
-                      <FormItem className='flex flex-col'>
-                        <FormLabel required>End Time Of Pre-order Product</FormLabel>
+                      <FormItem>
+                        <FormLabel required>End Time Of Event</FormLabel>
                         <FlexDatePicker
                           showTime
                           onlyFutureDates
@@ -368,9 +368,7 @@ const PreOrderDetails = () => {
               </div>
             </CardContent>
           </Card>
-          {form.watch('product') && (
-            <ClassificationConfig form={form} productId={form.watch('product')} triggerImageUploadRef={triggerRef} />
-          )}
+          {<ClassificationConfig form={form} productId={form.watch('product')} triggerImageUploadRef={triggerRef} />}
         </form>
         {getFooter()}
       </Form>

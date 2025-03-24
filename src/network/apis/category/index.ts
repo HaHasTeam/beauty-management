@@ -22,7 +22,19 @@ export const addCategoryApi = toMutationFetcher<AddCategoryRequestParams, TServe
 export const getCategoryByIdApi = toQueryFetcher<GetCategoryByIdRequestParams, TServerResponse<ICategory[]>>(
   'getCategoryByIdApi',
   async (params) => {
-    return privateRequest(`/category/get-by-id/${params?.categoryId}`)
+    const result = (await privateRequest(`/category/get-by-id/${params?.categoryId}`)) as TServerResponse<ICategory[]>
+    const flatData: ICategory[] = ((await flattenCategoryApi.raw()) as TServerResponse<ICategory[]>).data
+    const data = result.data as ICategory[]
+    const item = data[0]
+    const parsedItem = {
+      ...item,
+      parentCategory: flatData.find((category) => {
+        return category.subCategories?.some((sub) => {
+          return sub.id === item.id
+        })
+      })
+    }
+    return { data: [parsedItem], message: 'success' }
   }
 )
 
@@ -35,3 +47,21 @@ export const updateCategoryByIdApi = toMutationFetcher<UpdateCategoryByIdRequest
     })
   }
 )
+
+export const flattenCategoryApi = toQueryFetcher<void, TServerResponse<ICategory[]>>('flattenCategoryApi', async () => {
+  const parents = (await getAllCategoryApi.raw()).data as ICategory[]
+  const flatData: ICategory[] = []
+  const intervalPush = (parent: ICategory) => {
+    flatData.push(parent)
+    const subs = parent.subCategories ?? []
+    for (const child of subs) {
+      intervalPush(child)
+    }
+  }
+
+  for (const parent of parents) {
+    intervalPush(parent)
+  }
+
+  return { data: flatData, message: 'success' }
+})

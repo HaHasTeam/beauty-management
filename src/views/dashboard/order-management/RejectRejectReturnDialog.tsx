@@ -148,7 +148,7 @@ export default function RejectRejectReturn({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[425px] md:max-w-[700px]'>
+      <DialogContent className='sm:max-w-lg md:max-w-2xl'>
         <DialogHeader className='flex flex-row items-start gap-4'>
           <AlertTriangle className='mt-2 h-6 w-6 text-orange-500' />
           <div className='flex-1 gap-2 items-start'>

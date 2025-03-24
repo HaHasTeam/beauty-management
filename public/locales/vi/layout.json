@@ -151,7 +151,7 @@
     "currency": "đ",
     "filterBy": "Lọc theo",
     "newest": "Mới nhất",
-    "hasImage": "Có hình ảnh",
+    "hasImage": "Có video/hình ảnh",
     "numberOfStar": "{{count}} sao"
   },
   "sort": {
@@ -279,6 +279,11 @@
       "title": "Không tìm thấy sản phẩm",
       "description": "Sản phẩm bạn đang tìm kiếm không tồn tại, đã bị xoá hoặc hiện không khả dụng.",
       "button": "Xem các sản phẩm khác"
+    },
+    "productBanned": {
+      "title": "Sản Phẩm Bị Cấm",
+      "description": "Sản phẩm bạn đang tìm đã bị cấm và không còn khả dụng.",
+      "button": "Xem Sản Phẩm Khác"
     },
     "systemServiceDetail": {
       "title": "Không tìm thấy dịch vụ hệ thống",
@@ -700,13 +705,13 @@
       "delivered": "Đơn hàng đã được giao thành công đến tay khách hàng.",
       "completed": "Khách hàng đã xác nhận nhận hàng, giao dịch hoàn tất.",
       "cancelled": "Đơn hàng đã bị hủy và sẽ không được xử lý hoặc giao hàng.",
-      "returning": "Khách hàng đã yêu cầu trả hàng và đơn hàng đang trong quá trình hoàn trả về cho người bán.",
+      "returning": "Khách hàng đã yêu cầu trả hàng, và đơn hàng hiện đang được gửi trả lại cho thương hiệu. Thương hiệu cần thực hiện hành động trong vòng {{count}} ngày; nếu không, hệ thống sẽ tự động cập nhật trạng thái thành \"Đã nhận\". Nếu thương hiệu nhấp vào nút \"Chưa nhận được\", thời gian sẽ được gia hạn. Nếu có vấn đề, thương hiệu có thể gửi khiếu nại.",
       "refunded": "Khoản tiền hoàn trả đã được xử lý và gửi lại cho khách hàng.",
-      "brandReceived": "Đơn hàng trả lại đã được thương hiệu nhận thành công. Quá trình hoàn trả đang chờ xem xét thêm. Nếu thương hiệu không khiếu nại, xu sẽ được hoàn vào ví của khách hàng sau 3-5 ngày. Nếu thương hiệu khiếu nại, đội ngũ hỗ trợ sẽ xem xét và giải quyết.",
+      "brandReceived": "Đơn hàng trả lại đã được thương hiệu nhận thành công và đang chờ xem xét thêm. Nếu thương hiệu gửi khiếu nại, đội ngũ hỗ trợ sẽ xem xét và giải quyết vấn đề. Nếu thương hiệu không gửi khiếu nại, xu sẽ được hoàn vào ví của khách hàng trong vòng {{count}} ngày kể từ ngày nhận hàng trả. Sau thời gian này, thương hiệu sẽ không thể khiếu nại nữa.",
       "returnFailed": "Quá trình trả hàng không thành công do các vấn đề như gửi sai kiện hàng, sản phẩm bị hư hỏng khi trả lại hoặc không đáp ứng điều kiện hoàn trả."
     },
     "cancelRequestPendingBrandTitle": "Yêu Cầu Hủy Đơn Hàng",
-    "CancelOrderRequestBrandMessage": "Khách hàng đã yêu cầu hủy đơn hàng. Vui lòng xem xét và đưa ra quyết định. Bạn có thể phê duyệt để hủy đơn hoặc từ chối để tiếp tục xử lý.",
+    "CancelOrderRequestBrandMessage": "Khách hàng đã yêu cầu hủy đơn hàng. Vui lòng xem xét và phản hồi trong vòng {{count}} ngày. Bạn có thể chấp nhận hủy đơn hoặc từ chối để tiếp tục xử lý đơn hàng. Nếu không có hành động nào trong {{count}} ngày, đơn hàng sẽ tự động bị hủy.",
     "updateOrderStatusSuccess": "Thay đổi trạng thái đơn hàng thành công!",
     "orderCancellationUpdate": "Cập nhật hủy đơn hàng thành công!",
     "approvedCancelRequest": "Yêu cầu hủy được chấp nhận. Đơn hàng đã bị hủy.",
@@ -886,7 +891,7 @@
     "successOfficialDescription": "Sản phẩm đã hoạt động và sẽ hiển thị trên trang web sau khi được duyệt.",
     "successInactive": "Tạo sản phẩm thành công!",
     "successUpdate": "Cập nhật sản phẩm thành công!",
-    "successInactiveDescription": "Sản phẩm hiện đang ở trạng thái không hoạt động và sẽ không hiển thị cho đến khi được kích hoạt.",
+    "successInactiveDescription": "Sản phẩm hiện đang ẩn và sẽ không hiển thị cho đến khi được kích hoạt.",
     "title": "Tạo Sản Phẩm",
     "basicInformation": "Thông Tin Cơ Bản",
     "productImages": "Hình Ảnh Sản Phẩm",
@@ -956,12 +961,15 @@
     "updateProductStatusSuccess": "Thay đổi trạng thái sản phẩm thành công!",
     "statusDescription": {
       "ACTIVE": "Sản phẩm có sẵn để mua và sẵn sàng để đặt hàng.",
-      "INACTIVE": "Sản phẩm hiện không có sẵn để mua và không hiển thị với khách hàng.",
+      "INACTIVE": "Sản phẩm hiện không hoạt động và không hiển thị với khách hàng.",
       "PRE_ORDER": "Sản phẩm chưa được phát hành nhưng có thể đặt trước.",
       "OFFICIAL": "Sản phẩm được xác nhận chính thức từ thương hiệu hoặc nhà sản xuất và được kiểm duyệt bởi kiểm duyệt viên của nền tảng.",
       "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho.",
       "SOLD_OUT": "Sản phẩm đã hết hàng do không còn trong kho. Hãy bổ sung ngay để khách hàng có thể tiếp tục mua sắm!",
-      "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!"
+      "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!",
+      "BANNED": "Sản phẩm này đã bị gỡ khỏi nền tảng do vi phạm chính sách hoặc quy định. Hiện tại, khách hàng không thể mua hoặc nhìn thấy sản phẩm này. Quản trị viên hoặc người vận hành có thể dỡ bỏ lệnh cấm, sau đó sản phẩm sẽ chuyển sang trạng thái ẩn.",
+      "FLASH_SALE": "Sản phẩm này đang tham gia chương trình Flash Sale có thời hạn, mang đến ưu đãi độc quyền để thúc đẩy doanh số. Thương hiệu cần đảm bảo nguồn hàng ổn định và giá cả cạnh tranh, trong khi nền tảng sẽ giám sát hiệu suất và đảm bảo các quy định được tuân thủ trong suốt chương trình.",
+      "UN_PUBLISHED": " Sản phẩm này hiện đang ẩn và không hiển thị với khách hàng. Thương hiệu nên kiểm tra các yêu cầu cần thiết để có thể đăng lại nếu cần."
     },
     "brandInformation": "Thông Tin Thương Hiệu",
     "noCertificates": "Không có chứng nhận",
@@ -971,20 +979,26 @@
   },
   "status": {
     "ACTIVE": "Đang hoạt động",
-    "INACTIVE": "Đang ẩn",
+    "INACTIVE": "Đang không hoạt động",
     "DRAFT": "Bản nháp",
     "PUBLIC": "Công khai",
     "DENIED": "Từ chối",
+    "UN_PUBLISHED": "Đang ẩn",
     "BAN": "Bị cấm",
+    "BANNED": "Bị cấm",
     "PENDING": "Đang chờ duyệt",
     "PRE_ORDER": "Đặt trước",
     "OFFICIAL": "Đang hiển thị",
     "OUT_OF_STOCK": "Hết hàng",
+    "FLASH_SALE": "Flash sale",
     "SOLD_OUT": "Hết hàng",
     "ALMOST_OUT": "Sắp hết hàng",
     "button_INACTIVE": "Ngừng hiển thị",
     "button_ACTIVE": "Kích hoạt",
-    "button_OFFICIAL": "Kích hoạt"
+    "button_OFFICIAL": "Kích hoạt",
+    "button_UN_PUBLISHED": "Ẩn",
+    "button_BANNED": "Cấm",
+    "button_UN_BANNED": "Gỡ cấm"
   },
   "systemService": {
     "generalInformation": "Thông Tin Chung",
@@ -1085,6 +1099,8 @@
     "STANDARD": "Tiêu chuẩn"
   },
   "feedback": {
+    "orderId": "ID Đơn hàng",
+    "viewDetails": "Xem chi tiết",
     "successTitle": "Gửi đánh giá thành công",
     "successRepTitle": "Phản hồi đã gửi!",
     "successDescription": "Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn sẽ giúp khách hàng khác đưa ra quyết định chính xác và hỗ trợ các thương hiệu cải thiện sản phẩm của họ.",
@@ -1117,7 +1133,8 @@
     "order": "Đơn hàng",
     "reply": "Reply",
     "writeYourRep": "Viết phản hồi của bạn...",
-    "yourReply": "Phản hồi của bạn"
+    "yourReply": "Phản hồi của bạn",
+    "customerContent": "Nội dung"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",
@@ -1125,7 +1142,8 @@
     "images": "Hình Ảnh",
     "imagesFile": "hình ảnh",
     "videos": "Videos",
-    "videosFile": "video"
+    "videosFile": "video",
+    "imagesVideos": "Hình ảnh/Video"
   },
   "orderEvidence": {
     "description": {
@@ -1269,7 +1287,7 @@
     "rejectReturnSuccess": "Từ Chối Yêu Cầu Trả Hàng Thành Công",
     "rejectReturnSuccessMessage": "Bạn đã từ chối yêu cầu trả hàng thành công. Đội ngũ hỗ trợ của chúng tôi sẽ xem xét quyết định này và phản hồi kết quả cho bạn sớm nhất có thể.",
     "rejectReturnRequestPendingTitleBrand": "Yêu Cầu Từ chối Trả Hàng Đang Chờ Xét Duyệt",
-    "rejectReturnRequestPendingMessageBrand": "Yêu cầu từ chối trả hàng của bạn đang được đội ngũ hỗ trợ xem xét. Chúng tôi sẽ thông báo cho bạn khi có quyết định cuối cùng.",
+    "rejectReturnRequestPendingMessageBrand": "Yêu cầu từ chối trả hàng của bạn đang được đội ngũ hỗ trợ xem xét. Chúng tôi sẽ thông báo cho bạn khi có quyết định cuối cùng trong khoảng {{count}} ngày.",
     "rejectReturnRequestApprovedTitleBrand": "Yêu Cầu Từ Chối Trả Hàng Được Phê Duyệt",
     "rejectReturnRequestApprovedMessageBrand": "Yêu cầu từ chối trả hàng của bạn đã được phê duyệt. Khách hàng sẽ nhận được thông báo tương ứng.",
     "rejectReturnRequestRejectedTitleBrand": "Yêu Cầu Từ Chối Trả Hàng Bị Từ Chối",
@@ -1278,24 +1296,26 @@
     "returnRequestPendingMessageAdmin": "Khách hàng đã yêu cầu trả hàng cho đơn hàng này. Thương hiệu sẽ xem xét và đưa ra quyết định. Bạn có thể kiểm tra chính sách trả hàng của nền tảng để tham khảo.",
     "successMakeDecisionOnReject": "Xử lý thành công yêu cầu từ chối trả hàng của thương hiệu!",
     "rejectReturnRequestPendingTitle": "Yêu Cầu Từ chối Trả Hàng Đang Chờ Xét Duyệt",
-    "returnOrderRequestMessage": "Thương hiệu đã từ chối yêu cầu trả hàng của khách hàng. Vui lòng xem xét tất cả các chi tiết liên quan và chính sách của nền tảng trước khi đưa ra quyết định cuối cùng.",
-    "successMakeDecisionOnReturn": "Đã xử lý thành công yêu cầu trả hàng",
-    "returnRequestPendingTitleBrand": "Yêu Cầu Từ chối Trả Hàng Đang Chờ Xét Duyệt",
+    "returnOrderRequestMessage": "Thương hiệu đã từ chối yêu cầu trả hàng của khách hàng. Vui lòng xem xét tất cả các chi tiết liên quan và chính sách của nền tảng trước khi đưa ra quyết định cuối cùng trong vòng {{count}} ngày.",
+    "successMakeDecisionOnReturn": "Đã xử lý thành công yêu cầu trả hàng!",
+    "returnRequestPendingTitleBrand": "Yêu Cầu Trả Hàng Đang Chờ Xét Duyệt",
     "returnOrderRequestMessageBrand": "Khách hàng đã yêu cầu trả hàng cho đơn hàng này. Bạn có thể xem xét yêu cầu và đưa ra quyết định. Nếu không có hành động nào được thực hiện trong {{count}} ngày, yêu cầu sẽ tự động được chấp thuận. Nếu được chấp thuận, khách hàng sẽ tiếp tục gửi hàng trả lại. Nếu bị từ chối, quản trị viên sẽ xem xét và đưa ra quyết định cuối cùng.",
     "complaintRequestPendingTitleBrand": "Yêu Cầu Khiếu Nại Đã Gửi",
-    "complaintRequestPendingMessageBrand": "Yêu cầu khiếu nại của bạn đã được gửi và đang chờ quản trị viên xem xét.",
-    "complaintRequestApprovedTitleBrand": "Khiếu Nại Được Chấp Nhận",
-    "complaintRequestApprovedMessageBrand": "Khiếu nại của bạn đã được quản trị viên chấp nhận. Các bước xử lý tiếp theo sẽ được tiến hành.",
+    "complaintRequestPendingMessageBrand": "Yêu cầu khiếu nại của bạn đã được gửi và đang chờ quản trị viên/người vận hành xem xét. Bạn sẽ nhận được kết quả trong vòng {{count}} ngày.",
+    "complaintRequestApprovedTitleBrand": "Khiếu Nại Được Phê Duyệt",
+    "complaintRequestApprovedMessageBrand": "Khiếu nại của bạn đã được quản trị viên chấp thuận. Các bước xử lý tiếp theo sẽ được tiến hành.",
     "complaintRequestRejectedTitleBrand": "Khiếu Nại Bị Từ Chối",
-    "complaintRequestRejectedMessageBrand": "Khiếu nại của bạn đã được quản trị viên xem xét và từ chối. Xu sẽ được hoàn vào ví của khách hàng trong vòng {{count}} ngày.",
+    "complaintRequestRejectedMessageBrand": "Khiếu nại của bạn đã được quản trị viên xem xét và từ chối. Xu sẽ được hoàn vào ví của khách hàng.",
     "complaintRequestPendingTitleAdmin": "Yêu Cầu Khiếu Nại Mới",
-    "complaintRequestPendingMessageAdmin": "Một thương hiệu đã gửi khiếu nại về đơn hàng trả lại. Vui lòng xem xét và đưa ra quyết định.",
-    "complaintRequestApprovedTitleAdmin": "Khiếu Nại Được Chấp Nhận Thành Công",
-    "complaintRequestApprovedMessageAdmin": "Bạn đã chấp nhận khiếu nại của thương hiệu. Các bước xử lý cần thiết sẽ được thực hiện.",
-    "complaintRequestRejectedTitleAdmin": "Khiếu Nại Bị Từ Chối Thành Công",
-    "complaintRequestRejectedMessageAdmin": "Bạn đã từ chối khiếu nại của thương hiệu. Xu sẽ được hoàn vào ví của khách hàng trong vòng {{count}} ngày.",
-    "complaintRequestApprovedTitleCustomer": "Khiếu Nại Được Chấp Nhận",
-    "complaintRequestApprovedMessageCustomer": "Khiếu nại của thương hiệu đã được quản trị viên chấp nhận. Bạn sẽ không được hoàn xu cho đơn hàng này. Bạn có thể xem lại chi tiết khiếu nại và liên hệ đội ngũ hỗ trợ nếu cần."
+    "complaintRequestPendingMessageAdmin": "Thương hiệu đã gửi khiếu nại về đơn hàng trả lại. Vui lòng xem xét và đưa ra quyết định trong vòng {{count}} ngày.",
+    "complaintRequestApprovedTitleAdmin": "Khiếu Nại Được Phê Duyệt",
+    "complaintRequestApprovedMessageAdmin": "Bạn đã chấp thuận khiếu nại của thương hiệu. Các bước xử lý cần thiết sẽ được thực hiện.",
+    "complaintRequestRejectedTitleAdmin": "Khiếu Nại Bị Từ Chối",
+    "complaintRequestRejectedMessageAdmin": "Bạn đã từ chối khiếu nại của thương hiệu. Xu sẽ được hoàn vào ví của khách hàng.",
+    "complaintRequestApprovedTitleCustomer": "Khiếu Nại Được Phê Duyệt",
+    "complaintRequestApprovedMessageCustomer": "Khiếu nại của thương hiệu đã được quản trị viên chấp thuận. Bạn sẽ không được hoàn xu cho đơn hàng này. Bạn có thể xem lại chi tiết khiếu nại và liên hệ đội ngũ hỗ trợ nếu cần.",
+    "returnRequestApprovedTitleBrand": "Yêu Cầu Trả Hàng Được Phê Duyệt",
+    "returnRequestApprovedMessageBrand": "Yêu cầu trả hàng đã được chấp thuận. Khách hàng sẽ gửi trả đơn hàng trong vòng {{count}} ngày."
   },
   "booking": {
     "waitConfirm": "Đang chờ xác nhận",

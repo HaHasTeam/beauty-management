@@ -49,7 +49,9 @@ import {
 import { ConsultantServiceStatusEnum, ConsultantServiceTypeEnum } from '@/types/consultant-service'
 import { TFile } from '@/types/file'
 
+import DownloadSample from './DownloadSample'
 import { convertConsultantServiceToForm, formSchema, SchemaType } from './helper'
+import UploadConsultantFile from './UploadConsultantFile'
 
 const ConsultantServiceDetails = () => {
   const { id: consultantServiceId } = useParams()
@@ -387,9 +389,15 @@ const ConsultantServiceDetails = () => {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center gap-1'>
-                <ClipboardType />
-                Survey information
+              <CardTitle className='flex items-center gap-1 w-full justify-between'>
+                <div className='flex items-center gap-1'>
+                  <ClipboardType />
+                  Service Questions
+                </div>
+                <div className='flex items-center gap-4'>
+                  <UploadConsultantFile form={form} />
+                  <DownloadSample />
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -507,7 +515,7 @@ const ConsultantServiceDetails = () => {
                                                     </FormControl>
                                                     <FormMessage />
                                                   </FormItem>
-                                                  <FormLabel>Optional?</FormLabel>
+                                                  <FormLabel>Required</FormLabel>
                                                 </div>
                                               )}
                                             />

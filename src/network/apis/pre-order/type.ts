@@ -3,7 +3,9 @@ import { TPreOrder } from '@/types/pre-order'
 
 export type TAddPreOderRequestParams = Pick<TPreOrder, 'startTime' | 'endTime'> & {
   product: string
-  productClassifications: Partial<Pick<TClassification, 'images' | 'price' | 'quantity' | 'title' | 'sku' | 'type'>>[]
+  productClassifications: Partial<
+    Pick<TClassification, 'images' | 'price' | 'quantity' | 'title' | 'sku' | 'type' | 'color' | 'size' | 'other'>
+  >[]
 }
 
 export type TUpdatePreOrderRequestParams = Partial<

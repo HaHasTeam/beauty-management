@@ -61,40 +61,46 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
       </CardHeader>
       <CardContent>
         <div className='gap-4 grid grid-flow-row grid-cols-1'>
-          <Accordion type='multiple' className='w-full' value={classificationList.map((_, index) => String(index))}>
+          <Accordion
+            type='multiple'
+            className='w-full border-none space-y-4'
+            value={classificationList.map((_, index) => String(index))}
+          >
             {fields.map((_, index) => {
               const quantity = classificationList[index]?.append?.quantity ?? 0
 
               return (
-                <AccordionItem value={String(index)} key={index}>
-                  <AccordionTrigger className='hover:no-underline'>
-                    <div className='flex items-center gap-2 w-full'>
-                      <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
-                        <Tag strokeWidth={3} size={16} />
-                        {classificationList[index].append?.title}{' '}
-                      </span>
+                <Card>
+                  <CardContent>
+                    <AccordionItem value={String(index)} key={index} className='border-none'>
+                      <AccordionTrigger className='hover:no-underline'>
+                        <div className='flex items-center gap-2 w-full'>
+                          <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
+                            <Tag strokeWidth={3} size={16} />
+                            {classificationList[index].append?.title}{' '}
+                          </span>
 
-                      <div className='flex items-center gap-1'>
-                        <span className='font-light'>
-                          {formatCurrency(classificationList[index].append?.price ?? 0)}
-                        </span>
-                        <span className='text-xs text-blue-600 px-1 bg-blue-100 rounded-3xl'>
-                          Only <b>{formatNumber(quantity, ' items available')}</b>
-                        </span>
-                      </div>
+                          <div className='flex items-center gap-1'>
+                            <span className='font-light'>
+                              {formatCurrency(classificationList[index].append?.price ?? 0)}
+                            </span>
+                            <span className='text-xs text-blue-600 px-1 bg-blue-100 rounded-3xl'>
+                              Only <b>{formatNumber(quantity, ' items available')}</b>
+                            </span>
+                          </div>
 
-                      <button
-                        className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
-                        onClick={handleRemove(index)}
-                        disabled={isRemoveDisabled}
-                      >
-                        <Trash2 color='red' strokeWidth={3} size={20} />
-                      </button>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
-                      {/* <FormField
+                          <button
+                            className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
+                            onClick={handleRemove(index)}
+                            disabled={isRemoveDisabled}
+                          >
+                            <Trash2 color='red' strokeWidth={3} size={20} />
+                          </button>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                          {/* <FormField
                         control={form.control}
                         name={`productClassifications.${index}.rawClassification`}
                         render={({ field }) => {
@@ -107,81 +113,124 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           )
                         }}
                       /> */}
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.append.title`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Title Of Pre-order Product</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder='e.g. Blue' />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.append.sku`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>SKU Of Pre-order Product</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder='e.g. BLUE-2025' />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.append.quantity`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Quantity Of Pre-order Product</FormLabel>
-                            <FormControl>
-                              <Input type='quantity' placeholder='e.g. 100' {...field} symbol={'Items'} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.append.price`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Price Of Pre-order Product</FormLabel>
-                            <FormControl>
-                              <Input type='currency' placeholder='e.g. 100,000' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`productClassifications.${index}.append.images`}
-                        render={({ field }) => {
-                          return (
-                            <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
-                              <FormLabel>Images Of Pre-order Product</FormLabel>
-                              <UploadFiles
-                                triggerRef={triggerImageUploadRef}
-                                form={form}
-                                field={field}
-                                dropZoneConfigOptions={{
-                                  maxFiles: 6
-                                }}
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )
-                        }}
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.append.title`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel required>Title Of Product</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder='e.g. Blue' />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.append.sku`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel required>SKU Of Product</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder='e.g. BLUE-2025' />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.append.quantity`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel required>Quantity Of Product</FormLabel>
+                                <FormControl>
+                                  <Input type='quantity' placeholder='e.g. 100' {...field} symbol={'Items'} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.append.price`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel required>Price Of Product</FormLabel>
+                                <FormControl>
+                                  <Input type='currency' placeholder='e.g. 100,000' {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className='col-span-2 grid grid-cols-3 gap-4 max-sm:grid-cols-1'>
+                            <FormField
+                              control={form.control}
+                              name={`productClassifications.${index}.append.color`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Color</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder='e.g. red' {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`productClassifications.${index}.append.size`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Size</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder='e.g. XXL' {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`productClassifications.${index}.append.other`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Other</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder='e.g. Other classification type' {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <FormField
+                            control={form.control}
+                            name={`productClassifications.${index}.append.images`}
+                            render={({ field }) => {
+                              return (
+                                <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
+                                  <FormLabel>Images Of Product</FormLabel>
+                                  <UploadFiles
+                                    triggerRef={triggerImageUploadRef}
+                                    form={form}
+                                    field={field}
+                                    dropZoneConfigOptions={{
+                                      maxFiles: 6
+                                    }}
+                                  />
+                                  <FormMessage />
+                                </FormItem>
+                              )
+                            }}
+                          />
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </CardContent>
+                </Card>
               )
             })}
           </Accordion>

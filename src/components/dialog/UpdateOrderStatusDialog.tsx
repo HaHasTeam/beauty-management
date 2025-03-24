@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CircleChevronRight, Siren } from 'lucide-react'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
@@ -16,9 +16,12 @@ import {
 } from '@/network/apis/order'
 import { UpdateOrderStatusSchema } from '@/schemas/order.schema'
 import { ActionReceivedEnum, ShippingStatusEnum } from '@/types/enum'
+import { IMasterConfig } from '@/types/master-config'
 import { ICancelRequestOrder, IOrderItem, IReturnRequestOrder } from '@/types/order'
+import { IStatusTracking } from '@/types/status-tracking'
 
 import Button from '../button'
+import LoadingIcon from '../loading-icon'
 import { AlertDescription } from '../ui/alert'
 import { ComplaintReturnOrderDialog } from './ComplaintReturnOrderDialog'
 import { UploadOrderEvidenceDialog } from './UploadOrderEvidenceDialog'
@@ -28,20 +31,28 @@ interface UpdateOrderStatusProps {
   setOpenCancelOrderDialog: Dispatch<SetStateAction<boolean>>
   cancelOrderRequest: ICancelRequestOrder | null
   complaintRequest: IReturnRequestOrder | null
+  expiredReceivedTime: number
+  autoUpdateOrderToRefundedStatusTime: number
+  statusTracking?: IStatusTracking[]
+  masterConfig?: IMasterConfig[]
 }
 
 export default function UpdateOrderStatus({
   order,
   setOpenCancelOrderDialog,
   cancelOrderRequest,
-  complaintRequest
+  expiredReceivedTime,
+  complaintRequest,
+  autoUpdateOrderToRefundedStatusTime,
+  statusTracking,
+  masterConfig
 }: UpdateOrderStatusProps) {
-  const REFUND_WAITING_DAYS = 5
-
   const { t } = useTranslation()
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoadingYes, setIsLoadingYes] = useState<boolean>(false)
+  const [isLoadingNo, setIsLoadingNo] = useState<boolean>(false)
   const [isOpenOrderEvidence, setIsOpenOrderEvidence] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
@@ -98,16 +109,47 @@ export default function UpdateOrderStatus({
   }
   async function handleTakeReceivedAction(action: ActionReceivedEnum) {
     try {
-      setIsLoading(true)
+      if (action === ActionReceivedEnum.NOT_RECEIVED) {
+        setIsLoadingNo(true)
+      }
+      if (action === ActionReceivedEnum.RECEIVED) {
+        setIsLoadingYes(true)
+      }
       await takeReceivedActionFn({ id: order?.id, action: action })
-      setIsLoading(false)
+      if (action === ActionReceivedEnum.NOT_RECEIVED) {
+        setIsLoadingNo(false)
+      }
+      if (action === ActionReceivedEnum.RECEIVED) {
+        setIsLoadingYes(false)
+      }
     } catch (error) {
-      setIsLoading(false)
+      if (action === ActionReceivedEnum.NOT_RECEIVED) {
+        setIsLoadingNo(false)
+      }
+      if (action === ActionReceivedEnum.RECEIVED) {
+        setIsLoadingYes(false)
+      }
       handleServerError({
         error
       })
     }
   }
+  const showComplaintButton = useMemo(() => {
+    const isOrderDeliveredRecently = () => {
+      const deliveredStatusTrack = statusTracking?.find((track) => track.status === ShippingStatusEnum.BRAND_RECEIVED)
+
+      if (!deliveredStatusTrack?.createdAt) return false
+
+      const deliveredDate = new Date(deliveredStatusTrack.createdAt)
+      const currentDate = new Date()
+      const allowedTimeInMs =
+        masterConfig && masterConfig[0].autoUpdateOrderToRefundedStatusTime
+          ? parseInt(masterConfig[0].autoUpdateOrderToRefundedStatusTime)
+          : null
+      return allowedTimeInMs ? currentDate.getTime() - deliveredDate.getTime() <= allowedTimeInMs : true
+    }
+    return isOrderDeliveredRecently()
+  }, [masterConfig, statusTracking])
 
   if (!order) return null
   const statusConfig = {
@@ -228,7 +270,7 @@ export default function UpdateOrderStatus({
       buttonBg: '',
       alertTitle: t('order.returning'),
       buttonText: '',
-      alertDescription: t('order.statusDescription.returning'),
+      alertDescription: t('order.statusDescription.returning', { count: expiredReceivedTime }),
       nextStatus: ''
     },
     [ShippingStatusEnum.BRAND_RECEIVED]: {
@@ -240,7 +282,7 @@ export default function UpdateOrderStatus({
       buttonBg: '',
       alertTitle: t('order.brandReceived'),
       buttonText: '',
-      alertDescription: t('order.statusDescription.brandReceived', { count: REFUND_WAITING_DAYS }),
+      alertDescription: t('order.statusDescription.brandReceived', { count: autoUpdateOrderToRefundedStatusTime }),
       nextStatus: ''
     },
     [ShippingStatusEnum.RETURNED_FAIL]: {
@@ -271,27 +313,25 @@ export default function UpdateOrderStatus({
 
   const config = statusConfig[order.status]
   if (!config) return null
+
   return (
     <div className={`${config.alertVariant} ${config.borderColor}`}>
       <div className='flex md:items-center gap-2 md:justify-between md:flex-row flex-col justify-start items-start'>
         <div className='flex items-center gap-2'>
-          <Siren className='size-4' />
-          <div className='flex flex-col gap-1'>
-            {/* <AlertTitle className='flex items-center gap-2'>
-            <span
-              className={`p-0.5 px-2 rounded-lg border ${config.borderColor} ${config.bgColor} ${config.titleColor}`}
-            >
-              {config.alertTitle}
-            </span>
-          </AlertTitle> */}
-            <div>
-              <span
-                className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
-              >
-                {config.alertTitle}
-              </span>
+          <div className='flex gap-2 items-center'>
+            <div className='p-2 bg-white/70 rounded-full'>
+              <Siren className={`${config.titleColor} size-6`} />
             </div>
-            <AlertDescription>{config.alertDescription}</AlertDescription>
+            <div className='flex flex-col gap-1'>
+              <div>
+                <span
+                  className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
+                >
+                  {config.alertTitle}
+                </span>
+              </div>
+              <AlertDescription>{config.alertDescription}</AlertDescription>
+            </div>
           </div>
         </div>
         <div className='flex gap-2 items-center md:m-0 ml-3'>
@@ -346,37 +386,45 @@ export default function UpdateOrderStatus({
               </Button>
             </div>
           )}
-          {order?.status === ShippingStatusEnum.RETURNING && !complaintRequest && (
-            <div className='flex items-center gap-1'>
-              <Button
-                variant='default'
-                className='w-full bg-emerald-600 hover:bg-emerald-800'
-                onClick={() => {
-                  handleTakeReceivedAction(ActionReceivedEnum.RECEIVED)
-                }}
-                loading={isLoading}
-              >
-                {t('button.received')}
-              </Button>
-              <Button
-                variant='outline'
-                className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                onClick={() => {
-                  handleTakeReceivedAction(ActionReceivedEnum.NOT_RECEIVED)
-                }}
-              >
-                {t('button.notReceived')}
-              </Button>
-              <Button
-                className='w-full bg-yellow-500 hover:bg-yellow-600'
-                onClick={() => {
-                  setIsOpenOrderEvidence(true)
-                }}
-              >
-                {t('button.complaint')}
-              </Button>
-            </div>
-          )}
+          {(order?.status === ShippingStatusEnum.RETURNING || order?.status === ShippingStatusEnum.BRAND_RECEIVED) &&
+            !complaintRequest && (
+              <div className='flex items-center gap-1'>
+                {order?.status === ShippingStatusEnum.RETURNING && (
+                  <Button
+                    variant='default'
+                    className='w-full bg-emerald-600 hover:bg-emerald-800'
+                    onClick={() => {
+                      handleTakeReceivedAction(ActionReceivedEnum.RECEIVED)
+                    }}
+                    loading={isLoadingYes}
+                  >
+                    {t('button.received')}
+                  </Button>
+                )}
+                {order?.status === ShippingStatusEnum.RETURNING && (
+                  <Button
+                    variant='outline'
+                    className='w-full border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                    onClick={() => {
+                      handleTakeReceivedAction(ActionReceivedEnum.NOT_RECEIVED)
+                    }}
+                  >
+                    {isLoadingNo ? <LoadingIcon color='primaryBackground' /> : t('button.notReceived')}
+                  </Button>
+                )}
+                {(order?.status === ShippingStatusEnum.RETURNING ||
+                  (order?.status === ShippingStatusEnum.BRAND_RECEIVED && showComplaintButton)) && (
+                  <Button
+                    className='w-full bg-yellow-500 hover:bg-yellow-600'
+                    onClick={() => {
+                      setIsOpenOrderEvidence(true)
+                    }}
+                  >
+                    {t('button.complaint')}
+                  </Button>
+                )}
+              </div>
+            )}
         </div>
       </div>
       {order.status === ShippingStatusEnum.TO_SHIP ? (
@@ -398,7 +446,7 @@ export default function UpdateOrderStatus({
           status={config.nextStatus}
         />
       ) : (
-        order.status === ShippingStatusEnum.RETURNING && (
+        (order.status === ShippingStatusEnum.RETURNING || order.status === ShippingStatusEnum.BRAND_RECEIVED) && (
           <ComplaintReturnOrderDialog
             open={isOpenOrderEvidence}
             setOpen={setIsOpenOrderEvidence}

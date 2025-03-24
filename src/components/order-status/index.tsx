@@ -92,6 +92,11 @@ export default function OrderStatus({ tag, text, size = 'medium' }: OrderStatusP
       bgColorClass = 'bg-gray-100'
       tagText = t('order.refunded')
       break
+    case ShippingStatusEnum.RETURNED_FAIL:
+      tagColorClass = 'text-rose-600'
+      bgColorClass = 'bg-rose-300'
+      tagText = t('order.returnedFail')
+      break
 
     default:
       tagColorClass = 'bg-gray-100 text-gray-800' // Default color

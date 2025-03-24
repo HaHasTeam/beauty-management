@@ -77,7 +77,7 @@ const GroupProductDetails = () => {
             applyType: VoucherApplyTypeEnum.ALL,
             name: "Group's Voucher " + initialCode,
             description: undefined,
-            discountType: DiscountTypeEnum.AMOUNT,
+            discountType: DiscountTypeEnum.PERCENTAGE,
             code: 'group-voucher-' + initialCode
           }
         }
