@@ -46,8 +46,9 @@ export interface DataTableRowAction<TData> {
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TBrand> | null>>
+  isAdmin: boolean
 }
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>[] {
+export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDef<TBrand>[] {
   return [
     {
       id: 'select',
@@ -188,7 +189,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
             icon: UserPlus,
             action: () => setRowAction({ row: row, type: 'assign-operator' }),
             className: 'bg-blue-500 text-white hover:bg-blue-600',
-            showAlways: true
+            showAlways: isAdmin
           },
           {
             label: 'Ban',

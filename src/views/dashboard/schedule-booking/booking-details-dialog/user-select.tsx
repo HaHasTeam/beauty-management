@@ -15,10 +15,9 @@ import { RoleEnum, StatusEnum } from '@/types/enum'
 interface UserSelectProps {
   onSelect: (userId: string) => void
   disabled?: boolean
-  bookingId?: string | number
 }
 
-export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelectProps) {
+export function UserSelect({ onSelect, disabled = false }: UserSelectProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -34,9 +33,9 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
       }
     ],
     queryFn: getAccountFilterApi.fn,
-    enabled: open && !!bookingId,
+    enabled: open,
     select(data) {
-      return data.data.items
+      return data.data
     }
   })
 
@@ -50,7 +49,7 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen} modal={true}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           variant='outline'

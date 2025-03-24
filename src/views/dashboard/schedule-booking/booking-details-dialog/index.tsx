@@ -246,7 +246,7 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
 
             {showUserSelect && (
               <div className='mb-4'>
-                <UserSelect onSelect={handleUserSelect} disabled={isAssigning} bookingId={selectedEvent?.id} />
+                <UserSelect onSelect={handleUserSelect} disabled={isAssigning} />
                 {isAssigning && (
                   <div className='flex items-center justify-center mt-2'>
                     <Loader2 className='h-4 w-4 animate-spin mr-2' />
