@@ -12,3 +12,8 @@ export type TUpdateStatusBrandRequestParams = TGetBrandByIdRequestParams & {
 }
 
 export type TUpdateBrandRequestParams = TGetBrandByIdRequestParams & IBranch
+
+export type RequestAssignOperatorParams = {
+  brandId: string
+  operatorId: string
+}

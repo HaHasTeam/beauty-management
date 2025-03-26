@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Routes, routesConfig } from '@/configs/routes'
 import { OpenContext } from '@/contexts/layout'
+import { useToast } from '@/hooks/useToast'
 import { useStore } from '@/stores/store'
 import { UserRoleEnum } from '@/types/role'
 import { IRoute } from '@/types/types'
@@ -31,14 +32,21 @@ function Sidebar(props: SidebarProps) {
   const { routes } = props
   const { open, setOpen } = useContext(OpenContext)
   const router = useNavigate()
-  const { userProfile } = useStore(
+  const { successToast } = useToast()
+  const { userProfile, resetAuth } = useStore(
     useShallow((state) => {
       return {
-        userProfile: state.user
+        userProfile: state.user,
+        resetAuth: state.resetAuth
       }
     })
   )
   const handleLogout = () => {
+    resetAuth()
+    successToast({
+      message: 'You have been successfully logged out',
+      description: 'Thank you for using our service. See you again soon!'
+    })
     router(routesConfig[Routes.AUTH_LOGIN].getPath())
   }
   // SIDEBAR

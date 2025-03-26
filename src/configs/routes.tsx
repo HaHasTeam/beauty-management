@@ -46,7 +46,8 @@ export enum Routes {
   CONSULTANT_SERVICE = 'consultant-service',
   ADD_CONSULTANT_SERVICE = 'add-consultant-service',
   CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
-  REPORTS = 'reports'
+  REPORTS = 'reports',
+  MY_BRAND_DASHBOARD = 'my-brand'
 }
 
 export const routesConfig: TRoutes = {
@@ -86,6 +87,13 @@ export const routesConfig: TRoutes = {
     description: 'Brand Management',
     path: '/dashboard/brand',
     getPath: () => '/dashboard/brand'
+  },
+  [Routes.MY_BRAND_DASHBOARD]: {
+    name: 'My Brand',
+    title: 'My Brand',
+    description: 'My Brand',
+    path: '/dashboard/my-brand',
+    getPath: () => '/dashboard/my-brand'
   },
   [Routes.ADD_BRAND]: {
     name: 'Add Brand',

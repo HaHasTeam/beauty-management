@@ -279,8 +279,8 @@ const ProductFeedbackDetails = ({ product }: ProductFeedbackDetailsProps) => {
                           replies: review.replies
                         }}
                         brand={product?.brand || null}
-                        accountAvatar={user.avatar ?? ''}
-                        accountName={user.username ?? ''}
+                        accountAvatar={user?.avatar ?? ''}
+                        accountName={user?.username ?? ''}
                         orderDetailId={review.orderDetail.id}
                       />
                     )}

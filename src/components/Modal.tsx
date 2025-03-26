@@ -20,70 +20,70 @@ import { TCreateReportRequestParams } from '@/network/apis/report/type'
 import { FileStatusEnum } from '@/types/file'
 import { ReportTypeEnum } from '@/types/report'
 
-const formSchema = z.object({
-  type: z.string({
-    message: defaultRequiredRegex.message,
-  }),
-  reason: z.string({
-    message: defaultRequiredRegex.message,
-  }),
-  files: z
-    .array(
-      z.object({
-        id: z.string().optional(),
-        name: z.string(),
-        fileUrl: z.string(),
-        status: z.nativeEnum(FileStatusEnum).optional(),
-      }),
-    )
-    .min(1, {
-      message: defaultRequiredRegex.message,
+const formSchema = z
+  .object({
+    type: z.string({
+      message: defaultRequiredRegex.message
     }),
-  orderId: z.string().optional(),
-  bookingId: z.string().optional(),
-}).superRefine((data,ctx) => {
-  if (data.type === ReportTypeEnum.ORDER && !data.orderId) {
-    return ctx.addIssue({
-      code:"custom",
-      path: ["orderId"],
-      message:defaultRequiredRegex.message
-    })
-  }
-  if (data.type === ReportTypeEnum.BOOKING && !data.bookingId) {
-    return ctx.addIssue({
-      code:"custom",
-      path: ["bookingId"],
-      message:defaultRequiredRegex.message
-    })
-  }
-})
+    reason: z.string({
+      message: defaultRequiredRegex.message
+    }),
+    files: z
+      .array(
+        z.object({
+          id: z.string().optional(),
+          name: z.string(),
+          fileUrl: z.string(),
+          status: z.nativeEnum(FileStatusEnum).optional()
+        })
+      )
+      .min(1, {
+        message: defaultRequiredRegex.message
+      }),
+    orderId: z.string().optional(),
+    bookingId: z.string().optional()
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === ReportTypeEnum.ORDER && !data.orderId) {
+      return ctx.addIssue({
+        code: 'custom',
+        path: ['orderId'],
+        message: defaultRequiredRegex.message
+      })
+    }
+    if (data.type === ReportTypeEnum.BOOKING && !data.bookingId) {
+      return ctx.addIssue({
+        code: 'custom',
+        path: ['bookingId'],
+        message: defaultRequiredRegex.message
+      })
+    }
+  })
 
 type formType = z.infer<typeof formSchema>
 
-type Props={
-setOpen:(value:boolean)=>void
+type Props = {
+  setOpen: (value: boolean) => void
 }
 
-export default function Modal({
-  setOpen
-}:Props) {
-  const handleServerError=useHandleServerError()
-  const {successToast}=useToast()
+export default function Modal({ setOpen }: Props) {
+  const handleServerError = useHandleServerError()
+  const { successToast } = useToast()
   const triggerRef = useRef<TriggerUploadRef>(null)
   const queryClient = useQueryClient()
   const form = useForm<formType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      files: [],
-    },
+      files: []
+    }
   })
 
-  const {mutateAsync:createReportFn}=useMutation({
-    mutationKey:[createReport.mutationKey],
-    mutationFn:createReport.fn,
-    onSuccess:()=>{
+  const { mutateAsync: createReportFn } = useMutation({
+    mutationKey: [createReport.mutationKey],
+    mutationFn: createReport.fn,
+    onSuccess: () => {
       successToast({
-        message:"Report created successfully"
+        message: 'Report created successfully'
       })
       setOpen(false)
     }
@@ -91,38 +91,38 @@ export default function Modal({
 
   const onSubmit: SubmitHandler<formType> = async () => {
     try {
-     const triggerFns = triggerRef.current?.triggers
-    if (triggerFns) {
-      await Promise.all(triggerFns.map((trigger) => trigger()))
-    }
-    const images= form.getValues().files.map((file)=>file.fileUrl)
-    const value={...form.getValues(),files:images}
-    await createReportFn(value as TCreateReportRequestParams)
-    queryClient.invalidateQueries({
-       queryKey: [getFilteredReports.queryKey,{}],
-    })
+      const triggerFns = triggerRef.current?.triggers
+      if (triggerFns) {
+        await Promise.all(triggerFns.map((trigger) => trigger()))
+      }
+      const images = form.getValues().files.map((file) => file.fileUrl)
+      const value = { ...form.getValues(), files: images }
+      await createReportFn(value as TCreateReportRequestParams)
+      queryClient.invalidateQueries({
+        queryKey: [getFilteredReports.queryKey, {}]
+      })
     } catch (error) {
       handleServerError({ error, form })
     }
   }
 
   return (
-    <div className="w-full mx-auto space-y-6">
+    <div className='w-full mx-auto space-y-6'>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex-col gap-8 flex">
-          <div className="gap-4 flex w-full flex-col">
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full flex-col gap-8 flex'>
+          <div className='gap-4 flex w-full flex-col'>
             <FormField
               control={form.control}
-              name="type"
+              name='type'
               render={({ field }) => (
-                <FormItem className="col-span-1">
+                <FormItem className='col-span-1'>
                   <FormLabel required>Type Of Report</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue
-                          placeholder="Select type of report
-                        "
+                          placeholder='Select type of report
+                        '
                         />
                       </SelectTrigger>
                     </FormControl>
@@ -143,7 +143,7 @@ export default function Modal({
               <FormField
                 control={form.control}
                 shouldUnregister
-                name="orderId"
+                name='orderId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>Report For Order</FormLabel>
@@ -153,11 +153,11 @@ export default function Modal({
                 )}
               />
             )}
-             {form.watch('type') === ReportTypeEnum.BOOKING && (
+            {form.watch('type') === ReportTypeEnum.BOOKING && (
               <FormField
                 control={form.control}
                 shouldUnregister
-                name="bookingId"
+                name='bookingId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>Report For Booking</FormLabel>
@@ -167,18 +167,18 @@ export default function Modal({
                 )}
               />
             )}
-            
+
             <FormField
               control={form.control}
               name={`reason`}
               render={({ field }) => (
-                <FormItem className="col-span-1">
+                <FormItem className='col-span-1'>
                   <FormLabel required>Reason Of Report</FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
-                      placeholder="Explain your reason for reporting...
-                  "
+                      placeholder='Explain your reason for reporting...
+                  '
                       rows={6}
                     />
                   </FormControl>
@@ -188,17 +188,17 @@ export default function Modal({
             />
             <FormField
               control={form.control}
-              name="files"
+              name='files'
               render={({ field }) => {
                 return (
-                  <FormItem className="flex flex-col sm:col-span-2 col-span-1">
+                  <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
                     <FormLabel required>Evidence For Report</FormLabel>
                     <UploadFiles
                       triggerRef={triggerRef}
                       form={form}
                       field={field}
                       dropZoneConfigOptions={{
-                        maxFiles: 6,
+                        maxFiles: 6
                       }}
                     />
                     <FormMessage />
@@ -207,7 +207,11 @@ export default function Modal({
               }}
             />
           </div>
-          <Button type="submit" className="w-full bg-primary hover:bg-primary/70 text-white" loading={form.formState.isSubmitting}>
+          <Button
+            type='submit'
+            className='w-full bg-primary hover:bg-primary/70 text-white'
+            loading={form.formState.isSubmitting}
+          >
             Submit
           </Button>
         </form>

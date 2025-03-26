@@ -25,7 +25,7 @@ import { getAllBrandsApi, getBrandByIdApi, requestCreateBrandApi, updateBrandByI
 import { uploadFilesApi } from '@/network/apis/file'
 import { brandCreateSchema } from '@/schemas'
 import { IBranch2 } from '@/types/Branch'
-import { StatusEnum } from '@/types/brand'
+import { BrandStatusEnum } from '@/types/brand'
 
 const BrandDetail = ({
   form,
@@ -95,7 +95,7 @@ const BrandDetail = ({
           businessRegistrationCode: values.businessRegistrationCode,
           establishmentDate: values.establishmentDate ? new Date(values.establishmentDate) : '',
           businessRegistrationAddress: values.businessRegistrationAddress,
-          status: StatusEnum.PENDING,
+          status: BrandStatusEnum.PENDING_REVIEW,
           logo: values.logo && values.logo?.length > 0 ? imgUrls[0] : '',
           documents: values.logo && values.logo?.length > 0 ? imgUrls.slice(1) : imgUrls
         }

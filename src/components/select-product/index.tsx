@@ -66,6 +66,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       label: product.name,
       display: getProductItemDisplay(product)
     }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productList, searchKey])
 
   const selectedOptions = useMemo(() => {

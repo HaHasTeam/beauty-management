@@ -1,5 +1,16 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ban, CalendarCheck, EyeIcon, FileText, MoreVertical, Pen, Power, PowerOff, SettingsIcon } from 'lucide-react'
+import {
+  Ban,
+  CalendarCheck,
+  EyeIcon,
+  FileText,
+  MoreVertical,
+  Pen,
+  Power,
+  PowerOff,
+  SettingsIcon,
+  UserPlus
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -31,11 +42,13 @@ export interface DataTableRowAction<TData> {
     | 'update-status-pre-approved-for-meeting'
     | 'update-status-needs-additional-documents'
     | 'update-status-pending-review'
+    | 'assign-operator'
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TBrand> | null>>
+  isAdmin: boolean
 }
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>[] {
+export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDef<TBrand>[] {
   return [
     {
       id: 'select',
@@ -170,6 +183,13 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
             icon: Pen,
             link: routesConfig[Routes.UPDATE_BRAND].getPath(row.original.id),
             showAlways: true
+          },
+          {
+            label: 'Assign Operator',
+            icon: UserPlus,
+            action: () => setRowAction({ row: row, type: 'assign-operator' }),
+            className: 'bg-blue-500 text-white hover:bg-blue-600',
+            showAlways: isAdmin
           },
           {
             label: 'Ban',
