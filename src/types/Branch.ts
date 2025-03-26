@@ -1,4 +1,5 @@
-import { BrandStatusEnum, StatusEnum } from './brand'
+import { BrandStatusEnum } from './brand'
+import { TUser } from './user'
 
 export type IBranch = {
   id?: string
@@ -16,7 +17,7 @@ export type IBranch = {
   businessRegistrationCode?: string
   establishmentDate?: string | Date
   businessRegistrationAddress?: string
-  status?: StatusEnum
+  status?: BrandStatusEnum
 }
 interface Document {
   id: string
@@ -48,4 +49,5 @@ export interface IBranch2 {
   currentUpdateProfileTime: number
   status: BrandStatusEnum
   documents: Document[]
+  reviewer?: TUser
 }

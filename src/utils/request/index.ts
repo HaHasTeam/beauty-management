@@ -8,7 +8,7 @@ import { getAuthData } from '../auth'
 const GET_SESSION_CACHE_TIME = 1_000
 
 const getAccessToken = mem(
-  async (keepPrevious = true) => {
+  async (keepPrevious = false) => {
     const authData = await getAuthData({ keepPrevious })
     return authData.accessToken
   },

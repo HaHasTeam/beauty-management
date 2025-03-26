@@ -1,60 +1,16 @@
+import { useQuery } from '@tanstack/react-query'
 import { AlertCircle, Building, Calendar, FileCheck, FileText, Mail, MapPin, Phone } from 'lucide-react'
+import { useShallow } from 'zustand/react/shallow'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/lib/utils'
+import { getBrandByIdApi } from '@/network/apis/brand'
+import { useStore } from '@/stores/store'
 
-// This would typically come from an API call
-const brandData = {
-  id: '02fda8f0-1cc8-4c91-b61d-e2fcc9560977',
-  createdAt: '2025-03-24T03:16:01.422Z',
-  updatedAt: '2025-03-25T10:31:12.610Z',
-  name: 'FaceReco',
-  logo: 'https://storage.googleapis.com/dev-storage-c9d70.appspot.com/1742786159911.png',
-  description: 'xin chao',
-  email: 'facereco@gmail.com',
-  phone: '+84348485167',
-  address: 'k3/21/x, Phường Ngọc Sơn, Quận Kiến An, Thành phố Hải Phòng',
-  businessTaxCode: '312313213123123',
-  businessRegistrationCode: '231312q3123',
-  establishmentDate: '2018-03-06',
-  province: 'Thành phố Hải Phòng',
-  district: 'Quận Kiến An',
-  ward: 'Phường Ngọc Sơn',
-  businessRegistrationAddress: 'Biên hòa',
-  currentUpdateProfileTime: 1,
-  status: 'NEED_ADDITIONAL_DOCUMENTS',
-  documents: [
-    {
-      id: '4cd348d0-67d5-47f5-a32a-31eb349d79c0',
-      createdAt: '2025-03-24T03:16:01.422Z',
-      updatedAt: '2025-03-24T03:16:01.422Z',
-      name: null,
-      fileUrl: 'https://storage.googleapis.com/dev-storage-c9d70.appspot.com/1742786159921.docx',
-      type: 'BRAND_DOCUMENT',
-      status: 'ACTIVE'
-    }
-  ],
-  reviewer: {
-    id: 'd2f96ceb-15ff-458f-80e1-89928eb66891',
-    createdAt: '2025-03-20T06:17:02.968Z',
-    updatedAt: '2025-03-20T06:17:02.968Z',
-    firstName: 'operator',
-    lastName: '02',
-    username: 'oprator02',
-    avatar: null,
-    email: 'operator2@gmail.com',
-    isEmailVerify: true,
-    password: '$2b$08$BZ4JYDyXKRvgOicobEyB4uMOpv/IfV7HNRVWgRx7q/wpTv42LstXS',
-    gender: null,
-    phone: null,
-    dob: null,
-    status: 'ACTIVE',
-    yoe: null
-  }
-}
+import { UploadDocumentDialog } from './UploadDocumentDialog'
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -72,28 +28,78 @@ const getStatusColor = (status: string) => {
 }
 
 export default function BrandDashboard() {
+  const { user } = useStore(
+    useShallow((state) => {
+      return {
+        user: state.user
+      }
+    })
+  )
+
+  // Get brand ID from user
+  const brandId = user?.brands?.[0]?.id
+
+  // Fetch brand details using the ID
+  const { data: brand, isLoading } = useQuery({
+    queryKey: [getBrandByIdApi.queryKey, brandId ?? ''],
+    queryFn: getBrandByIdApi.fn,
+    enabled: !!brandId,
+    select(data) {
+      return data.data
+    }
+  })
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className='container mx-auto py-8 px-4'>
+        <Card className='p-8'>
+          <div className='flex flex-col items-center justify-center py-10 text-center'>
+            <p className='text-muted-foreground mb-4'>Loading brand information...</p>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // If no user or brand information is available
+  if (!user || !brandId || !brand) {
+    return (
+      <div className='container mx-auto py-8 px-4'>
+        <Card className='p-8'>
+          <div className='flex flex-col items-center justify-center py-10 text-center'>
+            <p className='text-muted-foreground mb-4'>No brand information available</p>
+            <Button asChild>
+              <a href='/dashboard/brand/create'>Create Brand</a>
+            </Button>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className='container mx-auto py-8 px-4'>
       <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-gradient-to-r from-primary/10 to-primary/5 p-6 rounded-lg'>
         <div className='flex items-center gap-4'>
           <div className='relative h-20 w-20 rounded-full overflow-hidden border-4 border-white shadow-md'>
             <img
-              src={brandData.logo || '/placeholder.svg'}
-              alt={`${brandData.name} logo`}
+              src={brand.logo || '/placeholder.svg'}
+              alt={`${brand.name} logo`}
               className='absolute inset-0 w-full h-full object-cover'
             />
           </div>
           <div>
-            <h1 className='text-3xl font-bold'>{brandData.name}</h1>
-            <p className='text-muted-foreground'>{brandData.description}</p>
-            <p className='text-xs text-muted-foreground mt-1'>ID: {brandData.id.substring(0, 8)}</p>
+            <h1 className='text-3xl font-bold'>{brand.name}</h1>
+            <p className='text-muted-foreground'>{brand.description || 'No description available'}</p>
+            <p className='text-xs text-muted-foreground mt-1'>ID: {brand.id?.substring(0, 8) || 'N/A'}</p>
           </div>
         </div>
         <div className='flex flex-col items-end gap-2'>
-          <Badge className={`${getStatusColor(brandData.status)} px-3 py-1 text-xs font-medium`}>
-            {brandData.status.replace(/_/g, ' ')}
+          <Badge className={`${getStatusColor(brand.status)} px-3 py-1 text-xs font-medium`}>
+            {(brand.status || 'UNKNOWN').replace(/_/g, ' ')}
           </Badge>
-          <p className='text-xs text-muted-foreground'>Last updated: {formatDate(brandData.updatedAt)}</p>
+          <p className='text-xs text-muted-foreground'>Last updated: {formatDate(brand.updatedAt || '')}</p>
         </div>
       </div>
 
@@ -115,9 +121,8 @@ export default function BrandDashboard() {
                 <Button asChild className='w-full'>
                   <a href='/dashboard/update'>Update Brand Information</a>
                 </Button>
-                <Button asChild className='w-full'>
-                  <a href='/dashboard/documents/update'>Update Documents</a>
-                </Button>
+
+                <UploadDocumentDialog brand={brand} buttonText='Upload New Document' buttonClassName='w-full' />
                 <Button asChild className='w-full'>
                   <a href='/dashboard/products/create'>Create Product</a>
                 </Button>
@@ -130,7 +135,7 @@ export default function BrandDashboard() {
             <Card className='md:col-span-2'>
               <CardHeader className='bg-primary/5 pb-2'>
                 <CardTitle>Brand Information</CardTitle>
-                <CardDescription>Last updated on {formatDate(brandData.updatedAt)}</CardDescription>
+                <CardDescription>Last updated on {formatDate(brand.updatedAt || '')}</CardDescription>
               </CardHeader>
               <CardContent className='grid grid-cols-1 md:grid-cols-2 gap-4 pt-4'>
                 <div className='flex items-start gap-3'>
@@ -139,7 +144,7 @@ export default function BrandDashboard() {
                   </div>
                   <div>
                     <p className='text-sm font-medium'>Email</p>
-                    <p className='text-sm text-muted-foreground'>{brandData.email}</p>
+                    <p className='text-sm text-muted-foreground'>{brand.email || 'Not provided'}</p>
                   </div>
                 </div>
                 <div className='flex items-start gap-3'>
@@ -148,7 +153,7 @@ export default function BrandDashboard() {
                   </div>
                   <div>
                     <p className='text-sm font-medium'>Phone</p>
-                    <p className='text-sm text-muted-foreground'>{brandData.phone}</p>
+                    <p className='text-sm text-muted-foreground'>{brand.phone || 'Not provided'}</p>
                   </div>
                 </div>
                 <div className='flex items-start gap-3'>
@@ -157,7 +162,7 @@ export default function BrandDashboard() {
                   </div>
                   <div>
                     <p className='text-sm font-medium'>Address</p>
-                    <p className='text-sm text-muted-foreground'>{brandData.address}</p>
+                    <p className='text-sm text-muted-foreground'>{brand.address || 'Not provided'}</p>
                   </div>
                 </div>
                 <div className='flex items-start gap-3'>
@@ -166,7 +171,7 @@ export default function BrandDashboard() {
                   </div>
                   <div>
                     <p className='text-sm font-medium'>Establishment Date</p>
-                    <p className='text-sm text-muted-foreground'>{formatDate(brandData.establishmentDate)}</p>
+                    <p className='text-sm text-muted-foreground'>{formatDate(brand.establishmentDate || '')}</p>
                   </div>
                 </div>
               </CardContent>
@@ -179,45 +184,59 @@ export default function BrandDashboard() {
               <CardDescription>Your brand reviewer details</CardDescription>
             </CardHeader>
             <CardContent className='pt-4'>
-              <div className='flex items-center gap-4'>
-                <div className='h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center shadow-sm'>
-                  {brandData.reviewer.avatar ? (
-                    <img
-                      src={brandData.reviewer.avatar || '/placeholder.svg'}
-                      alt={`${brandData.reviewer.firstName} ${brandData.reviewer.lastName}`}
-                      className='w-full h-full rounded-full object-cover'
-                    />
-                  ) : (
-                    <span className='text-xl font-medium text-primary'>
-                      {brandData.reviewer.firstName.charAt(0)}
-                      {brandData.reviewer.lastName.charAt(0)}
-                    </span>
-                  )}
+              {brand.reviewer ? (
+                <div className='flex items-center gap-4'>
+                  <div className='h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center shadow-sm'>
+                    {brand.reviewer.avatar ? (
+                      <img
+                        src={brand.reviewer.avatar || '/placeholder.svg'}
+                        alt={`${brand.reviewer.firstName || ''} ${brand.reviewer.lastName || ''}`}
+                        className='w-full h-full rounded-full object-cover'
+                      />
+                    ) : (
+                      <span className='text-xl font-medium text-primary'>
+                        {brand.reviewer.firstName?.charAt(0) || ''}
+                        {brand.reviewer.lastName?.charAt(0) || ''}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <p className='font-medium text-lg'>
+                      {brand.reviewer.firstName || ''} {brand.reviewer.lastName || ''}
+                    </p>
+                    <p className='text-sm text-muted-foreground'>{brand.reviewer.email || ''}</p>
+                    <Badge variant='outline' className='mt-1'>
+                      Reviewer
+                    </Badge>
+                  </div>
                 </div>
-                <div>
-                  <p className='font-medium text-lg'>
-                    {brandData.reviewer.firstName} {brandData.reviewer.lastName}
-                  </p>
-                  <p className='text-sm text-muted-foreground'>{brandData.reviewer.email}</p>
-                  <Badge variant='outline' className='mt-1'>
-                    Reviewer
-                  </Badge>
+              ) : (
+                <div className='flex flex-col items-center justify-center py-6 text-center bg-muted/20 rounded-lg'>
+                  <p className='text-muted-foreground'>No reviewer assigned yet</p>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value='documents'>
           <Card>
-            <CardHeader className='bg-primary/5 pb-2'>
-              <CardTitle>Documents</CardTitle>
-              <CardDescription>Uploaded brand documents</CardDescription>
+            <CardHeader className='bg-primary/5 pb-2 flex flex-col sm:flex-row justify-between sm:items-center'>
+              <div>
+                <CardTitle>Documents</CardTitle>
+                <CardDescription>Uploaded brand documents</CardDescription>
+              </div>
+              <UploadDocumentDialog
+                brand={brand}
+                buttonText='Upload New Document'
+                buttonClassName='mt-2 sm:mt-0'
+                buttonVariant='default'
+              />
             </CardHeader>
             <CardContent className='pt-4'>
-              {brandData.documents.length > 0 ? (
+              {brand.documents && brand.documents.length > 0 ? (
                 <div className='space-y-3'>
-                  {brandData.documents.map((doc) => (
+                  {brand.documents.map((doc) => (
                     <div
                       key={doc.id}
                       className='flex items-center justify-between p-4 border rounded-md hover:bg-muted/50 transition-colors'
@@ -248,13 +267,13 @@ export default function BrandDashboard() {
                 <div className='flex flex-col items-center justify-center py-10 text-center bg-muted/20 rounded-lg'>
                   <FileText className='h-12 w-12 text-muted-foreground mb-3' />
                   <p className='text-muted-foreground'>No documents uploaded</p>
-                  <Button className='mt-4' asChild>
-                    <a href='/dashboard/documents/upload'>Upload Documents</a>
-                  </Button>
+                  <div className='mt-4'>
+                    <UploadDocumentDialog brand={brand} buttonText='Upload Document' />
+                  </div>
                 </div>
               )}
 
-              {brandData.status === 'NEED_ADDITIONAL_DOCUMENTS' && (
+              {brand.status === 'NEED_ADDITIONAL_DOCUMENTS' && (
                 <div className='mt-6 p-4 bg-amber-50 border border-amber-200 rounded-md flex items-start gap-3'>
                   <AlertCircle className='h-6 w-6 text-amber-500 mt-0.5 flex-shrink-0' />
                   <div>
@@ -262,9 +281,12 @@ export default function BrandDashboard() {
                     <p className='text-sm text-amber-700 mt-1'>
                       Please upload the required documents to complete your brand verification.
                     </p>
-                    <Button size='sm' className='mt-3' asChild>
-                      <a href='/dashboard/documents/upload'>Upload Documents</a>
-                    </Button>
+                    <UploadDocumentDialog
+                      brand={brand}
+                      buttonText='Upload Required Documents'
+                      buttonClassName='mt-3'
+                      buttonVariant='default'
+                    />
                   </div>
                 </div>
               )}
@@ -286,7 +308,7 @@ export default function BrandDashboard() {
                   </div>
                   <div>
                     <p className='text-sm font-medium'>Business Tax Code</p>
-                    <p className='text-sm text-muted-foreground'>{brandData.businessTaxCode}</p>
+                    <p className='text-sm text-muted-foreground'>{brand.businessTaxCode || 'Not provided'}</p>
                   </div>
                 </div>
                 <div className='flex items-start gap-3'>
@@ -295,7 +317,7 @@ export default function BrandDashboard() {
                   </div>
                   <div>
                     <p className='text-sm font-medium'>Business Registration Code</p>
-                    <p className='text-sm text-muted-foreground'>{brandData.businessRegistrationCode}</p>
+                    <p className='text-sm text-muted-foreground'>{brand.businessRegistrationCode || 'Not provided'}</p>
                   </div>
                 </div>
               </div>
@@ -306,8 +328,10 @@ export default function BrandDashboard() {
                     <MapPin className='h-5 w-5 text-primary' />
                   </div>
                   <div>
-                    <p className='text-sm font-medium'>Business Registration Address</p>
-                    <p className='text-sm text-muted-foreground'>{brandData.businessRegistrationAddress}</p>
+                    <p className='text-sm font-medium'>Location</p>
+                    <p className='text-sm text-muted-foreground'>
+                      {brand.ward || 'N/A'}, {brand.district || 'N/A'}, {brand.province || 'N/A'}
+                    </p>
                   </div>
                 </div>
                 <div className='flex items-start gap-3'>
@@ -315,10 +339,19 @@ export default function BrandDashboard() {
                     <MapPin className='h-5 w-5 text-primary' />
                   </div>
                   <div>
-                    <p className='text-sm font-medium'>Location</p>
+                    <p className='text-sm font-medium'>Business Registration Address</p>
                     <p className='text-sm text-muted-foreground'>
-                      {brandData.ward}, {brandData.district}, {brandData.province}
+                      {brand.businessRegistrationAddress || 'Not provided'}
                     </p>
+                  </div>
+                </div>
+                <div className='flex items-start gap-3'>
+                  <div className='bg-primary/10 p-2 rounded-full'>
+                    <Calendar className='h-5 w-5 text-primary' />
+                  </div>
+                  <div>
+                    <p className='text-sm font-medium'>Establishment Date</p>
+                    <p className='text-sm text-muted-foreground'>{formatDate(brand.establishmentDate || '')}</p>
                   </div>
                 </div>
               </div>

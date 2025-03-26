@@ -65,18 +65,6 @@ export const voucherCreateSchema = z.object({
     .int('Amount must be integer')
     .positive('Amount must be positive')
     .optional(),
-  // startTime: z
-  //   .string()
-  //   .transform((str) => (str ? new Date(str) : undefined))
-  //   .refine((date) => !date || date > new Date(), {
-  //     message: 'Start Time must be greater than the current time.'
-  //   }),
-  // endTime: z
-  //   .string()
-  //   .transform((str) => (str ? new Date(str) : undefined))
-  //   .refine((date) => !date || date > new Date(), {
-  //     message: 'End Time must be greater than the current time.'
-  //   }),
   startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
   applyType: z.nativeEnum(VoucherApplyTypeEnum).optional().default(VoucherApplyTypeEnum.ALL),
   endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
