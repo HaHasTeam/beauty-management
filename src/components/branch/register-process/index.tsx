@@ -102,7 +102,7 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
     queryKey: [getStatusBookingsApi.queryKey],
     queryFn: getStatusBookingsApi.fn,
     enabled: hasBrands,
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    retry: false
   })
 
   const isInterviewSlotSelected =

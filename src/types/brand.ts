@@ -1,4 +1,5 @@
 import { TMetaData } from './request'
+import { TUser } from './user'
 
 export type TBrand = TMetaData & {
   name: string
@@ -23,7 +24,8 @@ export enum BrandStatusEnum {
   PENDING_REVIEW = 'PENDING_REVIEW', // chờ xét duyệt hồ sơ
   NEED_ADDITIONAL_DOCUMENTS = 'NEED_ADDITIONAL_DOCUMENTS', // cần bổ sung hồ sơ
   PRE_APPROVED_FOR_MEETING = 'PRE_APPROVED_FOR_MEETING', // Được chấp thuận hồ sơ trước khi xác nhận lại trong buổi meeting
-  DENIED = 'DENIED', // từ chối
+  DONE_MEETING = 'DONE_MEETING',
+  DENIED = 'DENIED',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   BANNED = 'BANNED'
@@ -54,4 +56,5 @@ export type IBrand = {
   ward: string
   district: string
   province: string
+  reviewer?: TUser
 }

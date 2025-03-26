@@ -24,6 +24,13 @@ export function getStatusInfo(status: BrandStatusEnum): StatusInfo {
       textColor: 'text-green-500',
       bgColor: 'bg-green-100'
     },
+    [BrandStatusEnum.DONE_MEETING]: {
+      icon: CheckCircle2,
+      label: 'Active',
+      iconColor: 'text-green-700',
+      textColor: 'text-green-700',
+      bgColor: 'bg-green-300'
+    },
     [BrandStatusEnum.PENDING_REVIEW]: {
       icon: CircleDashed,
       label: 'Pending Review',

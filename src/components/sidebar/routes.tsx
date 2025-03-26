@@ -1,5 +1,15 @@
 // Auth Imports
-import { Boxes, Brush, CalendarClock, Flag, Layers2Icon, Package, ReceiptText, TicketPercent } from 'lucide-react'
+import {
+  BookA,
+  Boxes,
+  Brush,
+  CalendarClock,
+  Flag,
+  Layers2Icon,
+  Package,
+  ReceiptText,
+  TicketPercent
+} from 'lucide-react'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
@@ -14,6 +24,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.DASHBOARD_HOME].name,
     path: routesConfig[Routes.DASHBOARD_HOME].path,
     icon: <HiOutlineHome className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.MY_BRAND_DASHBOARD].name,
+    path: routesConfig[Routes.MY_BRAND_DASHBOARD].path,
+    icon: <BookA className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {
