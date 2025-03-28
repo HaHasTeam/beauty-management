@@ -12,7 +12,7 @@ export type TRequestCreateBookingParams = {
   type: BookingTypeEnum
   status: BookingStatusEnum
   slot: string
-  account: string
+  brandId: string
 }
 export type TUpdateStatusBookingParams = {
   id: string

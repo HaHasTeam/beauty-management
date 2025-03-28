@@ -18,6 +18,9 @@
     "release:local": "npm docker:build && npm docker:run",
     "log:tree": "tree -N -I \"node_modules|.git|.idea\" -a"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  },
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.17.0",
     "@dnd-kit/core": "^6.1.0",
@@ -35,6 +38,7 @@
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.4",
+    "@radix-ui/react-portal": "^1.1.4",
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-scroll-area": "^1.2.0",
@@ -79,6 +83,7 @@
     "lucide-react": "^0.451.0",
     "mem": "^9.0.2",
     "moment": "^2.30.1",
+    "nanoid": "^5.1.4",
     "next-themes": "^0.4.3",
     "nuqs": "^2.2.3",
     "pdfjs-dist": "^3.4.120",

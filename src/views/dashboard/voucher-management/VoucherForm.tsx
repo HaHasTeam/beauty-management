@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Info } from 'lucide-react'
-import { useId } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { useEffect, useId, useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
 import { LuSaveAll } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
@@ -19,13 +19,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
 import { createVoucherApi, getAllVouchersApi, getVoucherByIdApi, updateVoucherByIdApi } from '@/network/apis/voucher'
-import { voucherCreateSchema } from '@/schemas'
+import type { voucherCreateSchema } from '@/schemas'
 import { useStore } from '@/stores/store'
 import {
   DiscountTypeEnum,
@@ -35,7 +34,7 @@ import {
   voucherEnumArray,
   VoucherVisibilityEnum
 } from '@/types/enum'
-import { TVoucher } from '@/types/voucher'
+import type { TVoucher } from '@/types/voucher'
 import { generateCouponCode } from '@/utils'
 
 import VoucherProductsCard from './VoucherProductsSection'
@@ -55,6 +54,11 @@ function VoucherForm({
   function formatCurrency(value: string) {
     const number = value.replace(/\D/g, '')
     return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  }
+
+  // Function to convert formatted currency back to number
+  function parseCurrency(value: string): number {
+    return Number.parseInt(value.replace(/\./g, ''), 10) || 0
   }
 
   const { successToast } = useToast()
@@ -123,6 +127,14 @@ function VoucherForm({
     }
   }
   const orderValueType = form.watch('orderValueType')
+  const [displayValue, setDisplayValue] = useState<string>('')
+
+  useEffect(() => {
+    if (form.getValues('minOrderValue')) {
+      setDisplayValue(formatCurrency(form.getValues('minOrderValue')?.toString() || ''))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.getValues('minOrderValue')])
   return (
     <>
       <Form {...form}>
@@ -314,7 +326,12 @@ function VoucherForm({
                     <FormLabel>Loại giảm giá</FormLabel>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value)
+                          // Reset discount value to 0 when changing type
+                          form.setValue('discountValue', 0)
+                          form.clearErrors('discountValue')
+                        }}
                         defaultValue={field.value}
                         className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 sm:space-x-4'
                       >
@@ -343,17 +360,60 @@ function VoucherForm({
                     <FormLabel required>Giá trị giảm giá</FormLabel>
                     <FormDescription className='flex items-center gap-2'>
                       <Info className='h-4 w-4 text-primary' />
-                      <span className='text-sm'>Mức đề xuất: 10.000 đ</span>
-                      <span className='text-sm text-primary'>Áp dụng</span>
+                      {form.watch('discountType') === DiscountTypeEnum.PERCENTAGE ? (
+                        <span className='text-sm'>Mức đề xuất: 10%</span>
+                      ) : (
+                        <span className='text-sm'>Mức đề xuất: 10.000 đ</span>
+                      )}
+                      <button
+                        type='button'
+                        className='text-sm text-primary'
+                        onClick={() => {
+                          if (form.watch('discountType') === DiscountTypeEnum.PERCENTAGE) {
+                            form.setValue('discountValue', 10)
+                          } else {
+                            form.setValue('discountValue', 10000)
+                          }
+                          form.clearErrors('discountValue')
+                        }}
+                      >
+                        Áp dụng
+                      </button>
                     </FormDescription>
                     <FormControl>
-                      <InputNormal
-                        type='number'
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                        placeholder='Điền số tiền'
-                        // className='max-w-md'
-                      />
+                      <div className='relative'>
+                        <InputNormal
+                          type='number'
+                          {...field}
+                          value={field.value || ''}
+                          onChange={(e) => {
+                            const value = e.target.valueAsNumber
+                            if (form.watch('discountType') === DiscountTypeEnum.PERCENTAGE) {
+                              // Validate percentage value (0-100)
+                              if (isNaN(value) || value < 0 || value > 100) {
+                                form.setError('discountValue', {
+                                  type: 'manual',
+                                  message: 'Giá trị phần trăm phải từ 0 đến 100'
+                                })
+                              } else {
+                                form.clearErrors('discountValue')
+                              }
+                            }
+                            field.onChange(isNaN(value) ? 0 : value)
+                          }}
+                          placeholder={
+                            form.watch('discountType') === DiscountTypeEnum.PERCENTAGE
+                              ? 'Điền phần trăm (0-100)'
+                              : 'Điền số tiền'
+                          }
+                        />
+                        {form.watch('discountType') === DiscountTypeEnum.PERCENTAGE && (
+                          <span className='absolute right-3 top-1/2 -translate-y-1/2'>%</span>
+                        )}
+                        {form.watch('discountType') === DiscountTypeEnum.AMOUNT && (
+                          <span className='absolute right-3 top-1/2 -translate-y-1/2'>đ</span>
+                        )}
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -368,9 +428,10 @@ function VoucherForm({
                       <FormLabel>Số tiền giảm giá tối đa</FormLabel>
                       <FormControl>
                         <InputNormal
-                          // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                          type='number'
                           placeholder='Max Discount'
                           {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -405,7 +466,13 @@ function VoucherForm({
                     <FormLabel>Giá trị đơn hàng tối thiểu</FormLabel>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value)
+                          if (value === 'noLimit') {
+                            // Clear minOrderValue when selecting "no limit"
+                            form.setValue('minOrderValue', undefined)
+                          }
+                        }}
                         defaultValue={field.value}
                         className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 sm:space-x-4'
                       >
@@ -426,43 +493,48 @@ function VoucherForm({
                 <FormField
                   control={form.control}
                   name='minOrderValue'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Giá trị tối thiểu</FormLabel>
-                      <FormControl>
-                        <div className='relative'>
-                          <InputNormal
-                            {...field}
-                            className='pr-8'
-                            onChange={(e) => {
-                              const formatted = formatCurrency(e.target.value)
-                              field.onChange(formatted)
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Giá trị tối thiểu</FormLabel>
+                        <FormControl>
+                          <div className='relative'>
+                            <InputNormal
+                              className='pr-8'
+                              value={displayValue}
+                              onChange={(e) => {
+                                const formatted = formatCurrency(e.target.value)
+                                setDisplayValue(formatted)
+
+                                // Store the actual integer value in the form
+                                const numericValue = parseCurrency(formatted)
+                                field.onChange(numericValue)
+                              }}
+                              placeholder='Điền số tiền'
+                            />
+                            <span className='absolute right-3 top-1/2 -translate-y-1/2'>đ</span>
+                          </div>
+                        </FormControl>
+                        <FormDescription className='flex items-center gap-1.5 text-xs'>
+                          <Info className='h-3 w-3' />
+                          Mức đề xuất: 100.000 đ
+                          <button
+                            type='button'
+                            className='text-primary text-xs ml-1'
+                            onClick={() => {
+                              // Set both the display value and the actual form value
+                              setDisplayValue('100.000')
+                              form.setValue('minOrderValue', 100000)
+                              form.clearErrors('minOrderValue')
                             }}
-                            placeholder='Điền số tiền'
-                          />
-                          <span className='absolute right-3 top-1/2 -translate-y-1/2'>đ</span>
-                        </div>
-                      </FormControl>
-                      <FormDescription className='flex items-center gap-1.5 text-xs'>
-                        <Info className='h-3 w-3' />
-                        Mức đề xuất: 100.000 đ
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger
-                              className='text-primary underline'
-                              onClick={() => form.setValue('minOrderValue', 100000)}
-                            >
-                              Áp dụng
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Click to apply suggested value</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                          >
+                            Áp dụng
+                          </button>
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
                 />
               )}
 
@@ -476,9 +548,8 @@ function VoucherForm({
                       <InputNormal
                         type='number'
                         {...field}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
                         placeholder='Điền số lượng'
-                        // className='max-w-md'
                       />
                     </FormControl>
                     <FormMessage />

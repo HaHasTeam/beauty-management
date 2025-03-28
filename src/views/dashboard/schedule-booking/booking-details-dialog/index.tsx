@@ -1,6 +1,17 @@
-'use client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CalendarIcon, Check, Clock, FileText, Loader2, MapPin, Plus, X } from 'lucide-react'
+import {
+  AlertCircle,
+  Building,
+  CalendarIcon,
+  Check,
+  Clock,
+  FileText,
+  Loader2,
+  MapPin,
+  Star,
+  User,
+  X
+} from 'lucide-react'
 import moment from 'moment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,21 +20,14 @@ import { useShallow } from 'zustand/react/shallow'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/useToast'
-import {
-  assignUserToBookingApi,
-  getAllBookingsApi,
-  saveInterviewNotesApi,
-  updateBookingStatusApi
-} from '@/network/apis/booking/index'
+import { getMyBookingsApi, saveInterviewNotesApi, updateBookingStatusApi } from '@/network/apis/booking/index'
 import { useStore } from '@/stores/store'
 import type { CalendarEvent } from '@/types/booking'
-import { BookingStatusEnum } from '@/types/enum'
+import { BookingStatusEnum, BookingTypeEnum } from '@/types/enum'
 
 import { eventStyleGetter, getStatusBookingText, getStatusClass } from '../helper'
-import { UserSelect } from './user-select'
 
 interface BookingDetailsDialogProps {
   selectedEvent: CalendarEvent | null
@@ -39,7 +43,6 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
     }))
   )
   const { t } = useTranslation()
-  const [showUserSelect, setShowUserSelect] = useState(false)
   // Add state for interview notes
   const [interviewNotes, setInterviewNotes] = useState(selectedEvent?.resource.notes || '')
 
@@ -77,31 +80,12 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
       successToast({
         message: `The booking has been successfully ${action}.`
       })
-      queryClient.invalidateQueries({ queryKey: [getAllBookingsApi.queryKey] })
+      queryClient.invalidateQueries({ queryKey: [getMyBookingsApi.queryKey] })
       onOpenChange(false)
     },
     onError: () => {
       errorToast({
         message: 'Failed to update booking status. Please try again.'
-      })
-    }
-  })
-
-  // Assign user mutation
-  const { mutate: assignUser, isPending: isAssigning } = useMutation({
-    mutationKey: [assignUserToBookingApi.mutationKey],
-    mutationFn: assignUserToBookingApi.fn,
-    onSuccess: () => {
-      successToast({
-        message: 'User has been successfully assigned to the booking.'
-      })
-      setShowUserSelect(false)
-
-      queryClient.invalidateQueries({ queryKey: [getAllBookingsApi.queryKey] })
-    },
-    onError: (error) => {
-      errorToast({
-        message: error instanceof Error ? error.message : 'Failed to assign user to booking. Please try again.'
       })
     }
   })
@@ -114,7 +98,7 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
       successToast({
         message: 'Interview notes have been successfully saved.'
       })
-      queryClient.invalidateQueries({ queryKey: [getAllBookingsApi.queryKey] })
+      queryClient.invalidateQueries({ queryKey: [getMyBookingsApi.queryKey] })
     },
     onError: (error) => {
       errorToast({
@@ -141,13 +125,6 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
     }
   }
 
-  const handleUserSelect = (userId: string) => {
-    assignUser({
-      id: selectedEvent?.id.toString() ?? '',
-      assigneeId: userId
-    })
-  }
-
   // Add handler for saving notes
   const handleSaveNotes = () => {
     if (selectedEvent) {
@@ -161,120 +138,294 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
   const isWaitingForConfirmation = selectedEvent?.resource.status === BookingStatusEnum.WAIT_FOR_CONFIRMATION
   const isConfirmed = selectedEvent?.resource.status === BookingStatusEnum.BOOKING_CONFIRMED
   const isCancelled = selectedEvent?.resource.status === BookingStatusEnum.CANCELLED
+  const isInterview = selectedEvent?.resource.type === BookingTypeEnum.INTERVIEW
 
   const eventStyle = selectedEvent ? eventStyleGetter(selectedEvent, t).style : {}
 
   return (
     <Dialog open={!!selectedEvent} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[500px]'>
-        <DialogHeader>
-          <DialogTitle>{selectedEvent?.resource.type}</DialogTitle>
+      <DialogContent
+        className={`sm:max-w-[750px] md:max-w-[850px] p-0 overflow-hidden bg-white rounded-xl shadow-lg border-2 ${
+          isCancelled ? 'border-red-200' : 'border-primary/20'
+        }`}
+      >
+        <DialogHeader
+          className={`px-6 pt-6 pb-4 ${isCancelled ? 'bg-red-50' : 'bg-gradient-to-r from-primary/5 to-primary/10'}`}
+        >
+          <DialogTitle className='text-xl font-bold flex items-center'>
+            {selectedEvent?.resource.type === BookingTypeEnum.INTERVIEW ? (
+              <span
+                className={`${isCancelled ? 'bg-red-100 text-red-700' : 'bg-blue-50 text-blue-700'} px-3 py-1 rounded-full text-sm mr-2`}
+              >
+                Interview
+              </span>
+            ) : (
+              <span
+                className={`${isCancelled ? 'bg-red-100 text-red-700' : 'bg-green-50 text-green-700'} px-3 py-1 rounded-full text-sm mr-2`}
+              >
+                Service
+              </span>
+            )}
+            {selectedEvent?.resource.type}
+          </DialogTitle>
         </DialogHeader>
-        <div className='grid gap-4 py-4'>
-          {/* Booking Information Section with Labels */}
-          <div className='space-y-3'>
-            <div className='grid grid-cols-3 gap-2 items-center'>
-              <Label className='text-xs text-muted-foreground'>{t('Date')}:</Label>
-              <div className='col-span-2 flex items-center'>
-                <CalendarIcon className='h-4 w-4 opacity-70 mr-2' />
-                <span>{selectedEvent && moment(selectedEvent.start).format('MMMM D, YYYY')}</span>
-              </div>
-            </div>
 
-            <div className='grid grid-cols-3 gap-2 items-center'>
-              <Label className='text-xs text-muted-foreground'>{t('Time')}:</Label>
-              <div className='col-span-2 flex items-center'>
-                <Clock className='h-4 w-4 opacity-70 mr-2' />
-                <span>
-                  {selectedEvent &&
-                    `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-                </span>
-              </div>
-            </div>
-
-            {selectedEvent?.resource.meetUrl && (
-              <div className='grid grid-cols-3 gap-2 items-center'>
-                <Label className='text-xs text-muted-foreground'>{t('Meeting Link')}:</Label>
-                <div className='col-span-2 flex items-center'>
-                  <MapPin className='h-4 w-4 opacity-70 mr-2' />
-                  <a
-                    href={selectedEvent.resource.meetUrl}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-blue-500 hover:underline'
-                  >
-                    {t('Join Meeting')}
-                  </a>
+        <div className={`px-6 py-4 max-h-[70vh] overflow-y-auto custom-scrollbar ${isCancelled ? 'bg-gray-50' : ''}`}>
+          {/* Cancellation Notice - Only shown for cancelled bookings */}
+          {isCancelled && (
+            <div className='mb-5 bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm'>
+              <div className='flex items-start'>
+                <AlertCircle className='h-5 w-5 text-red-500 mr-3 mt-0.5 flex-shrink-0' />
+                <div>
+                  <h3 className='text-sm font-semibold text-red-700 mb-1'>{t('Booking Cancelled')}</h3>
+                  <p className='text-xs text-red-600'>
+                    {t('This booking has been cancelled and is no longer active. No further actions can be taken.')}
+                  </p>
                 </div>
               </div>
-            )}
-
-            <div className='grid grid-cols-3 gap-2 items-center'>
-              <Label className='text-xs text-muted-foreground'>{t('Status')}:</Label>
-              <div className='col-span-2'>
-                {selectedEvent && (
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(selectedEvent.resource.status, t)}`}
-                    style={eventStyle}
-                  >
-                    {getStatusBookingText(selectedEvent.resource.status, t)}
-                  </span>
-                )}
-              </div>
             </div>
-          </div>
+          )}
 
-          <Separator className='my-2' />
+          {/* Booking Information Card */}
+          <div
+            className={`${
+              isCancelled
+                ? 'bg-gray-100 border-gray-200 opacity-90'
+                : 'bg-gradient-to-r from-white to-primary/5 border-primary/20'
+            } rounded-xl p-5 shadow-sm mb-5 border transition-all duration-200 hover:shadow`}
+          >
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4'>
+              <h3 className='text-sm font-semibold text-gray-700 flex items-center'>
+                <CalendarIcon className={`h-4 w-4 mr-2 ${isCancelled ? 'text-gray-500' : 'text-primary'}`} />
+                {t('Booking Details')}
+              </h3>
 
-          {/* Participants Section */}
-          <div>
-            <div className='flex items-center justify-between mb-2'>
-              <h3 className='text-sm font-medium'>{t('Interview Participants')}</h3>
-              {/* Only show Assign User button if user is admin and booking is not cancelled */}
-              {isAdmin && !isCancelled && (
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => setShowUserSelect(!showUserSelect)}
-                  disabled={isAssigning}
+              {/* Status Badge - Moved to Booking Details */}
+              {selectedEvent && (
+                <span
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${getStatusClass(
+                    selectedEvent.resource.status,
+                    t
+                  )} shadow-sm transition-all duration-200 hover:shadow-md border border-primary/20 whitespace-nowrap`}
+                  style={{ ...eventStyle, minWidth: '150px', textAlign: 'center' }}
                 >
-                  {showUserSelect ? <X className='h-4 w-4 mr-1' /> : <Plus className='h-4 w-4 mr-1' />}
-                  {showUserSelect ? t('Cancel') : t('Assign User')}
-                </Button>
+                  {getStatusBookingText(selectedEvent.resource.status, t)}
+                </span>
               )}
             </div>
 
-            {showUserSelect && (
-              <div className='mb-4'>
-                <UserSelect onSelect={handleUserSelect} disabled={isAssigning} bookingId={selectedEvent?.id} />
-                {isAssigning && (
-                  <div className='flex items-center justify-center mt-2'>
-                    <Loader2 className='h-4 w-4 animate-spin mr-2' />
-                    <span className='text-xs'>{t('Assigning user...')}</span>
+            <div className='space-y-4 pl-6'>
+              <div className='flex items-center'>
+                <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Date')}:</div>
+                <div className='w-2/3 flex items-center text-sm'>
+                  <CalendarIcon className={`h-4 w-4 mr-2 ${isCancelled ? 'text-gray-400' : 'text-blue-500'}`} />
+                  <span className={`font-medium ${isCancelled ? 'text-gray-500' : ''}`}>
+                    {selectedEvent && moment(selectedEvent.start).format('MMMM D, YYYY')}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-center'>
+                <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Time')}:</div>
+                <div className='w-2/3 flex items-center text-sm'>
+                  <Clock className={`h-4 w-4 mr-2 ${isCancelled ? 'text-gray-400' : 'text-primary'}`} />
+                  <span className={`font-medium ${isCancelled ? 'text-gray-500' : ''}`}>
+                    {selectedEvent &&
+                      `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
+                  </span>
+                </div>
+              </div>
+
+              {selectedEvent?.resource.meetUrl && (
+                <div className='flex items-center'>
+                  <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Meeting')}:</div>
+                  <div className='w-2/3 flex items-center text-sm'>
+                    <MapPin className={`h-4 w-4 mr-2 ${isCancelled ? 'text-gray-400' : 'text-primary'}`} />
+                    {isCancelled ? (
+                      <span className='text-gray-500'>{t('Meeting link unavailable')}</span>
+                    ) : (
+                      <a
+                        href={selectedEvent.resource.meetUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors duration-200'
+                      >
+                        {t('Join Meeting')}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Brand and Reviewer Information for INTERVIEW type - Now in 2 columns */}
+          {isInterview && selectedEvent?.resource.brand && (
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mb-5'>
+              {/* Brand Information */}
+              <div
+                className={`bg-white rounded-xl p-5 shadow-sm border ${
+                  isCancelled ? 'border-gray-200 opacity-90' : 'border-primary/30'
+                } transition-all duration-200 hover:shadow h-full`}
+              >
+                <div className='flex items-center mb-4'>
+                  <Building className={`h-5 w-5 mr-2 ${isCancelled ? 'text-gray-500' : 'text-primary'}`} />
+                  <h4 className='text-sm font-semibold text-gray-800'>{t('Brand Information')}</h4>
+                </div>
+
+                {selectedEvent.resource.brand.logo && (
+                  <div className='flex justify-center mb-4'>
+                    <div
+                      className={`p-2 bg-white rounded-lg shadow-sm border ${isCancelled ? 'border-gray-200' : 'border-gray-100'} w-24 h-24 flex items-center justify-center ${isCancelled ? 'opacity-70' : ''}`}
+                    >
+                      <img
+                        src={selectedEvent.resource.brand.logo || '/placeholder.svg'}
+                        alt={selectedEvent.resource.brand.name}
+                        className='max-h-20 max-w-20 object-contain'
+                      />
+                    </div>
                   </div>
                 )}
+
+                <div className='space-y-3 pl-2'>
+                  <div className='flex items-center'>
+                    <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Name')}:</div>
+                    <div className={`w-2/3 text-sm font-semibold ${isCancelled ? 'text-gray-600' : 'text-gray-800'}`}>
+                      {selectedEvent.resource.brand.name}
+                    </div>
+                  </div>
+
+                  {selectedEvent.resource.brand.star > 0 && (
+                    <div className='flex items-center'>
+                      <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Rating')}:</div>
+                      <div className='w-2/3 flex items-center'>
+                        <div className='flex items-center'>
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                isCancelled
+                                  ? selectedEvent.resource.brand && i < selectedEvent.resource.brand.star
+                                    ? 'text-gray-400 fill-gray-400'
+                                    : 'text-gray-300'
+                                  : i < (selectedEvent.resource.brand?.star || 0)
+                                    ? 'text-yellow-400 fill-yellow-400'
+                                    : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className={`ml-2 text-sm font-medium ${isCancelled ? 'text-gray-500' : ''}`}>
+                          {selectedEvent.resource.brand.star.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedEvent.resource.brand.description && (
+                    <div className='flex'>
+                      <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Description')}:</div>
+                      <div className={`w-2/3 text-sm line-clamp-3 ${isCancelled ? 'text-gray-500' : 'text-gray-700'}`}>
+                        {selectedEvent.resource.brand.description}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className='flex items-center'>
+                    <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Email')}:</div>
+                    <div className={`w-2/3 text-sm ${isCancelled ? 'text-gray-500' : 'text-blue-600'}`}>
+                      {selectedEvent.resource.brand.email}
+                    </div>
+                  </div>
+
+                  {selectedEvent.resource.brand.phone && (
+                    <div className='flex items-center'>
+                      <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Phone')}:</div>
+                      <div className={`w-2/3 text-sm ${isCancelled ? 'text-gray-500' : ''}`}>
+                        {selectedEvent.resource.brand.phone}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedEvent.resource.brand.address && (
+                    <div className='flex'>
+                      <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Address')}:</div>
+                      <div className={`w-2/3 text-sm ${isCancelled ? 'text-gray-500' : 'text-gray-700'}`}>
+                        {selectedEvent.resource.brand.address}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
+
+              {/* Reviewer Information */}
+              {selectedEvent.resource.brand.reviewer ? (
+                <div
+                  className={`bg-white rounded-xl p-5 shadow-sm border ${
+                    isCancelled ? 'border-gray-200 opacity-90' : 'border-primary/20'
+                  } transition-all duration-200 hover:shadow h-full`}
+                >
+                  <div className='flex items-center mb-4'>
+                    <User className={`h-5 w-5 mr-2 ${isCancelled ? 'text-gray-500' : 'text-primary'}`} />
+                    <h4 className='text-sm font-semibold text-gray-800'>{t('Reviewer Information')}</h4>
+                  </div>
+
+                  <div className='space-y-3 pl-2'>
+                    <div className='flex items-center'>
+                      <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Name')}:</div>
+                      <div className={`w-2/3 text-sm font-semibold ${isCancelled ? 'text-gray-600' : 'text-gray-800'}`}>
+                        {selectedEvent.resource.brand.reviewer.firstName}{' '}
+                        {selectedEvent.resource.brand.reviewer.lastName}
+                      </div>
+                    </div>
+
+                    {selectedEvent.resource.brand.reviewer.email && (
+                      <div className='flex items-center'>
+                        <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Email')}:</div>
+                        <div className={`w-2/3 text-sm ${isCancelled ? 'text-gray-500' : 'text-blue-600'}`}>
+                          {selectedEvent.resource.brand.reviewer.email}
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedEvent.resource.brand.reviewer.phone && (
+                      <div className='flex items-center'>
+                        <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Phone')}:</div>
+                        <div className={`w-2/3 text-sm ${isCancelled ? 'text-gray-500' : ''}`}>
+                          {selectedEvent.resource.brand.reviewer.phone}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className='hidden md:block'></div> // Empty div to maintain grid layout when no reviewer
+              )}
+            </div>
+          )}
 
           {/* Interview Notes Section when booking is confirmed */}
           {isConfirmed && (
-            <div className='space-y-4 bg-gray-50 p-4 rounded-lg border'>
-              <div className='flex items-center justify-between'>
-                <h3 className='text-sm font-medium flex items-center'>
-                  <FileText className='h-4 w-4 mr-2' />
+            <div
+              className={`bg-white rounded-xl p-5 shadow-sm border ${
+                isCancelled ? 'border-gray-200 opacity-90' : 'border-primary/20'
+              } mb-5 transition-all duration-200 hover:shadow`}
+            >
+              <div className='flex items-center justify-between mb-4'>
+                <h3 className='text-sm font-semibold text-gray-800 flex items-center'>
+                  <FileText className={`h-5 w-5 mr-2 ${isCancelled ? 'text-gray-500' : 'text-primary'}`} />
                   {t('Interview Notes')}
                 </h3>
                 {selectedEvent?.resource.notes && (
-                  <span className='text-xs text-muted-foreground'>
-                    {t('Last updated')}: {moment(selectedEvent.resource.updatedAt).format('MMM D, YYYY HH:mm')}
+                  <span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'>
+                    {t('Updated')}: {moment(selectedEvent.resource.updatedAt).format('MMM D, YYYY HH:mm')}
                   </span>
                 )}
               </div>
 
               <div className='space-y-3'>
                 <div>
-                  <Label htmlFor='interview-summary' className='text-xs font-medium'>
+                  <Label htmlFor='interview-summary' className='text-xs font-medium text-gray-700 mb-2 block'>
                     {t('Summary & Key Points')}
                   </Label>
                   <Textarea
@@ -282,19 +433,21 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
                     placeholder={t('Summarize the key points discussed in the interview...')}
                     value={interviewNotes}
                     onChange={(e) => setInterviewNotes(e.target.value)}
-                    className='min-h-[150px] mt-1'
-                    readOnly={!hasOperationalAccess}
+                    className={`min-h-[150px] border-gray-200 focus:border-primary/50 focus:ring focus:ring-primary/20 focus:ring-opacity-50 rounded-lg resize-none transition-all duration-200 ${
+                      isCancelled ? 'bg-gray-100 text-gray-500' : ''
+                    }`}
+                    readOnly={!hasOperationalAccess || isCancelled}
                   />
                 </div>
 
-                {/* Only show Save Notes button if user is admin or operator */}
-                {hasOperationalAccess && (
+                {/* Only show Save Notes button if user is admin or operator and booking is not cancelled */}
+                {hasOperationalAccess && !isCancelled && (
                   <div className='flex justify-center mt-4'>
                     <Button
                       onClick={handleSaveNotes}
                       disabled={isSavingNotes || !interviewNotes.trim()}
                       size='default'
-                      className='w-full max-w-xs bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md transition-all duration-200 hover:shadow-lg'
+                      className='w-full max-w-xs bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/90 text-white shadow-md transition-all duration-300 hover:shadow-lg rounded-lg'
                     >
                       {isSavingNotes ? (
                         <>
@@ -314,56 +467,90 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
             </div>
           )}
         </div>
-        <DialogFooter className='flex flex-col sm:flex-row gap-2'>
-          {isWaitingForConfirmation && (
+
+        <DialogFooter
+          className={`flex flex-col sm:flex-row gap-2 p-4 ${
+            isCancelled
+              ? 'bg-red-50 border-t border-red-100'
+              : 'bg-gradient-to-r from-primary/5 to-primary/10 border-t border-primary/20'
+          }`}
+        >
+          {/* Show cancellation reason for cancelled bookings */}
+          {isCancelled && (
+            <div className='w-full text-center text-sm text-red-600 mb-2'>
+              {t('This booking has been cancelled and cannot be modified.')}
+            </div>
+          )}
+
+          {/* Only show action buttons if booking is not cancelled */}
+          {isWaitingForConfirmation && !isCancelled && (
             <>
-              <Button onClick={handleAcceptBooking} disabled={isUpdating} className='w-full sm:w-auto'>
+              <Button
+                onClick={handleAcceptBooking}
+                disabled={isUpdating}
+                className='w-full sm:w-auto bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/90 text-white shadow-md transition-all duration-300 hover:shadow-lg rounded-lg'
+              >
                 {isUpdating ? (
                   <>
                     <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    Accepting...
+                    {t('Accepting...')}
                   </>
                 ) : (
                   <>
                     <Check className='mr-2 h-4 w-4' />
-                    Accept Booking
+                    {t('Accept Booking')}
                   </>
                 )}
               </Button>
               <Button
                 onClick={handleDenyBooking}
                 disabled={isUpdating}
-                className='w-full sm:w-auto'
+                className='w-full sm:w-auto bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md transition-all duration-300 hover:shadow-lg rounded-lg'
                 variant='destructive'
               >
                 {isUpdating ? (
                   <>
                     <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    Denying...
+                    {t('Denying...')}
                   </>
                 ) : (
                   <>
                     <X className='mr-2 h-4 w-4' />
-                    Deny Booking
+                    {t('Deny Booking')}
                   </>
                 )}
               </Button>
             </>
           )}
-          {/* Only show Mark as Completed button if user is admin or operator */}
-          {isConfirmed && hasOperationalAccess && (
-            <Button onClick={handleCompleteBooking} disabled={isUpdating} className='w-full sm:w-auto'>
+
+          {/* Only show Mark as Completed button if user is admin or operator and booking is confirmed and not cancelled */}
+          {isConfirmed && hasOperationalAccess && !isCancelled && (
+            <Button
+              onClick={handleCompleteBooking}
+              disabled={isUpdating}
+              className='w-full sm:w-auto bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/90 text-white shadow-md transition-all duration-300 hover:shadow-lg rounded-lg'
+            >
               {isUpdating ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                  Completing...
+                  {t('Completing...')}
                 </>
               ) : (
                 <>
                   <Check className='mr-2 h-4 w-4' />
-                  Mark as Completed
+                  {t('Mark as Completed')}
                 </>
               )}
+            </Button>
+          )}
+
+          {/* Close button for cancelled bookings */}
+          {isCancelled && (
+            <Button
+              onClick={() => onOpenChange(false)}
+              className='w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white shadow-md transition-all duration-300 hover:shadow-lg rounded-lg'
+            >
+              {t('Close')}
             </Button>
           )}
         </DialogFooter>

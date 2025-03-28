@@ -9,7 +9,7 @@ const useAvailableGrantRoles = () => {
   const { rolesData } = useAppProvider()
   const { currentUserRole } = useStore(
     useShallow((state) => ({
-      currentUserRole: state.user.role
+      currentUserRole: state?.user?.role ?? ''
     }))
   )
 

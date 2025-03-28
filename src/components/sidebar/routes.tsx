@@ -1,9 +1,10 @@
 // Auth Imports
+import { Clock } from 'lucide-react'
 import {
+  BookA,
   Boxes,
   Brush,
   CalendarClock,
-  Clock,
   Flag,
   Layers2Icon,
   Package,
@@ -24,6 +25,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.DASHBOARD_HOME].name,
     path: routesConfig[Routes.DASHBOARD_HOME].path,
     icon: <HiOutlineHome className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.MY_BRAND_DASHBOARD].name,
+    path: routesConfig[Routes.MY_BRAND_DASHBOARD].path,
+    icon: <BookA className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

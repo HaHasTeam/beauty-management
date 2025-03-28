@@ -115,8 +115,8 @@ export const ReplyFeedbackForm = forwardRef<HTMLDivElement, ReplyFeedbackFormPro
                       </Avatar>
                     ) : (
                       <Avatar>
-                        <AvatarImage src={user.avatar} alt={user.username} />
-                        <AvatarFallback>{user.username?.charAt(0).toUpperCase() ?? 'A'}</AvatarFallback>
+                        <AvatarImage src={user?.avatar ?? ''} alt={user?.firstName ?? ''} />
+                        <AvatarFallback>{user?.firstName?.charAt(0) ?? 'A'}</AvatarFallback>
                       </Avatar>
                     )}
                   </div>

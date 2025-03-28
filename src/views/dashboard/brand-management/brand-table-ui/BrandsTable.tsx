@@ -1,12 +1,18 @@
+import { useMutation } from '@tanstack/react-query'
 import * as React from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { assignOperateToBrandApi } from '@/network/apis/brand'
+import { useStore } from '@/stores/store'
 import { BrandStatusEnum, TBrand } from '@/types/brand'
+import { RoleEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
+import { AssignOperatorDialog } from './AssignOperatorDialog'
 // import { BanBrandsDialog } from './BanBrandsDialog'
 import { DataTableRowAction, getColumns } from './BrandsTableColumns'
 import { BrandsTableFloatingBar } from './BrandsTableFloatingBar'
@@ -22,15 +28,27 @@ interface BrandTableProps {
 }
 
 export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
+  const { user } = useStore(
+    useShallow((state) => {
+      return {
+        user: state.user
+      }
+    })
+  )
+  const isAdmin = user?.role === RoleEnum.ADMIN
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TBrand> | null>(null)
   const columns = React.useMemo(
     () =>
       getColumns({
-        setRowAction
+        setRowAction,
+        isAdmin
       }),
-    []
+    [isAdmin]
   )
-
+  const { mutateAsync: assignOperatorToBrand } = useMutation({
+    mutationFn: assignOperateToBrandApi.fn,
+    mutationKey: [assignOperateToBrandApi.mutationKey]
+  })
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -102,6 +120,18 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
   //   //   // exact: true
   //   // })
   // }
+
+  const handleAssignOperator = async (operatorId: string, brandId: string) => {
+    if (!brandId) return
+
+    // Implement your API call here
+    await assignOperatorToBrand({
+      brandId: brandId,
+      operatorId: operatorId
+    })
+    // Reset states after successful assignment
+    setRowAction(null)
+  }
   const statusDialogs = [
     { type: 'ban', status: BrandStatusEnum.BANNED },
     { type: 'update-status-pre-approved-for-meeting', status: BrandStatusEnum.PRE_APPROVED_FOR_MEETING },
@@ -144,6 +174,16 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         brandId={rowAction?.row.original.id}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
+      />
+      <AssignOperatorDialog
+        open={rowAction?.type === 'assign-operator'}
+        onOpenChange={(open) => {
+          if (!open) {
+            setRowAction(null)
+          }
+        }}
+        brandId={rowAction?.row.original.id || ''}
+        onAssign={handleAssignOperator}
       />
     </>
   )

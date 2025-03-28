@@ -423,3 +423,21 @@ video {
 .rbc-agenda-view table.rbc-agenda-table {
   border: 1px solid hsl(var(--border));
 }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* scroll bar */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

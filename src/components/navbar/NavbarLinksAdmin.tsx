@@ -13,13 +13,25 @@ import { useShallow } from 'zustand/react/shallow'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Routes, routesConfig } from '@/configs/routes'
 import { OpenContext } from '@/contexts/layout'
 import { useTheme } from '@/contexts/ThemeProvider'
+import { useToast } from '@/hooks/useToast'
 import { useStore } from '@/stores/store'
 
 export default function HeaderLinks() {
   const { open, setOpen } = useContext(OpenContext)
   const { theme, setTheme } = useTheme()
+
+  const { successToast } = useToast()
+  const { resetAuth } = useStore(
+    useShallow((state) => {
+      return {
+        userProfile: state.user,
+        resetAuth: state.resetAuth
+      }
+    })
+  )
   const router = useNavigate()
   const onOpen = () => {
     setOpen(!open)
@@ -30,7 +42,12 @@ export default function HeaderLinks() {
   }
 
   const handleSignOut = () => {
-    router('/auth/password_signin')
+    resetAuth()
+    successToast({
+      message: 'You have been successfully logged out',
+      description: 'Thank you for using our service. See you again soon!'
+    })
+    router(routesConfig[Routes.AUTH_LOGIN].getPath())
   }
 
   const { userProfile } = useStore(

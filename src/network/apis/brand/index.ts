@@ -4,7 +4,12 @@ import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
-import { TRequestCreateBrandParams, TUpdateBrandRequestParams, TUpdateStatusBrandRequestParams } from './type'
+import {
+  RequestAssignOperatorParams,
+  TRequestCreateBrandParams,
+  TUpdateBrandRequestParams,
+  TUpdateStatusBrandRequestParams
+} from './type'
 
 export const requestCreateBrandApi = toMutationFetcher<TRequestCreateBrandParams, TServerResponse<IBranch>>(
   'requestCreateBrand',
@@ -12,6 +17,18 @@ export const requestCreateBrandApi = toMutationFetcher<TRequestCreateBrandParams
     return privateRequest('/brands/create', {
       method: 'POST',
       data: params
+    })
+  }
+)
+
+export const assignOperateToBrandApi = toMutationFetcher<RequestAssignOperatorParams, TServerResponse<IBranch>>(
+  'assignOperateToBrandApi',
+  async (params) => {
+    return privateRequest(`/brands/assign-interview/${params.brandId}`, {
+      method: 'POST',
+      data: {
+        reviewerId: params.operatorId
+      }
     })
   }
 )

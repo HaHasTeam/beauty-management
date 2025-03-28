@@ -1,5 +1,7 @@
 import { StateCreator } from 'zustand'
 
+import { BrandStatusEnum } from '@/types/brand'
+
 import { BranchesState, BranchSlice } from './branch.type'
 
 const initialState: BranchesState = {
@@ -12,7 +14,7 @@ const initialState: BranchesState = {
     email: '',
     phone: '',
     address: '',
-    status: 'PENDING'
+    status: BrandStatusEnum.PENDING_REVIEW
   }
 } as BranchesState
 

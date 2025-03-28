@@ -9,7 +9,7 @@ import { useCallback, useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { useTranslation } from 'react-i18next'
 
-import { getAllBookingsApi } from '@/network/apis/booking'
+import { getMyBookingsApi } from '@/network/apis/booking'
 import type { CalendarEvent, TBooking } from '@/types/booking'
 
 import { BookingDetailsDialog } from './booking-details-dialog'
@@ -22,8 +22,8 @@ function ScheduleBooking() {
   const { t } = useTranslation()
 
   const { data: eventsdata } = useQuery({
-    queryKey: [getAllBookingsApi.queryKey],
-    queryFn: getAllBookingsApi.fn,
+    queryKey: [getMyBookingsApi.queryKey],
+    queryFn: getMyBookingsApi.fn,
     select: (data) => {
       return data.data.map(
         (booking: TBooking): CalendarEvent => ({
@@ -31,11 +31,12 @@ function ScheduleBooking() {
           title: booking.type,
           start: new Date(booking.startTime),
           end: new Date(booking.endTime),
-          resource: booking // Store the original booking data here
+          resource: booking
         })
       )
     }
   })
+
   const EventComponent = useCallback(
     ({ event }: { event: CalendarEvent }) => (
       <div className='p-2 overflow-hidden'>

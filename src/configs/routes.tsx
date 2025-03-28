@@ -46,8 +46,9 @@ export enum Routes {
   CONSULTANT_SERVICE = 'consultant-service',
   ADD_CONSULTANT_SERVICE = 'add-consultant-service',
   CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
+  WORKING_TIME = 'working-time',
   REPORTS = 'reports',
-  WORKING_TIME = 'working-time'
+  MY_BRAND_DASHBOARD = 'my-brand'
 }
 
 export const routesConfig: TRoutes = {
@@ -87,6 +88,13 @@ export const routesConfig: TRoutes = {
     description: 'Brand Management',
     path: '/dashboard/brand',
     getPath: () => '/dashboard/brand'
+  },
+  [Routes.MY_BRAND_DASHBOARD]: {
+    name: 'My Brand',
+    title: 'My Brand',
+    description: 'My Brand',
+    path: '/dashboard/my-brand',
+    getPath: () => '/dashboard/my-brand'
   },
   [Routes.ADD_BRAND]: {
     name: 'Add Brand',
@@ -353,19 +361,5 @@ export const routesConfig: TRoutes = {
     description: 'Consultant Service Details',
     path: '/dashboard/consultant-service/:id',
     getPath: (params) => `/dashboard/consultant-service/${params.id}`
-  },
-  [Routes.REPORTS]: {
-    name: 'Reports',
-    title: 'Reports',
-    description: 'Reports',
-    path: '/dashboard/reports',
-    getPath: () => '/dashboard/reports'
-  },
-  [Routes.WORKING_TIME]: {
-    name: 'Working Time',
-    title: 'Working Time',
-    description: 'Manage your working time slots',
-    path: '/dashboard/working-time',
-    getPath: () => '/dashboard/working-time'
   }
 }

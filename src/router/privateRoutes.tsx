@@ -20,6 +20,7 @@ import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
 import MerchantsDirectory from '@/views/dashboard/merchants-directory'
+import MyBrandDashBoard from '@/views/dashboard/my-brand-dashboard'
 import OrderList from '@/views/dashboard/order-management'
 import OrderDetails from '@/views/dashboard/order-management/OrderDetails'
 import { RedirectToMainDashboard } from '@/views/dashboard/others'
@@ -162,6 +163,10 @@ export const privateRoutes: RouteObject[] = [
       {
         path: 'merchants-directory',
         element: <MerchantsDirectory />
+      },
+      {
+        path: routesConfig[Routes.MY_BRAND_DASHBOARD].path.replace('/dashboard/', ''),
+        element: <MyBrandDashBoard />
       },
       {
         path: routesConfig[Routes.ACCOUNTS_DIRECTORY].path.replace('/dashboard/', ''),

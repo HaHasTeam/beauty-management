@@ -37,8 +37,7 @@ const actionVariants = cva('', {
       destructive: 'border-[1.5px] border-red-700 text-red-600  [&>svg]:text-red-500 bg-red-300',
       warning: 'border-[1.5px] border-yellow-700 text-yellow-600  [&>svg]:text-yellow-500 bg-yellow-300',
       success: 'border-[1.5px] border-green-700 text-green-600  [&>svg]:text-green-500 bg-green-300',
-      highlight: 'border-[1.5px] border-purple-700 text-purple-600  [&>svg]:text-purple-500 bg-purple-300',
-      "information": 'border-[1.5px] border-blue-700 text-blue-600  [&>svg]:text-blue-500 bg-blue-300'
+      highlight: 'border-[1.5px] border-purple-700 text-purple-600  [&>svg]:text-purple-500 bg-purple-300'
     }
   },
   defaultVariants: {

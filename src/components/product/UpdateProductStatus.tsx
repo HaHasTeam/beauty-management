@@ -163,7 +163,7 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
     }
   }
   const getNextStatusButtons = (currentStatus: ProductEnum) => {
-    if (currentStatus === ProductEnum.BANNED && (user.role === RoleEnum.MANAGER || user.role === RoleEnum.STAFF)) {
+    if (currentStatus === ProductEnum.BANNED && (user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF)) {
       return []
     }
     const buttons = []
@@ -186,7 +186,7 @@ export default function UpdateProductStatus({ product }: UpdateProductStatusProp
         bg: 'bg-purple-500 hover:bg-purple-400'
       })
     }
-    if (currentStatus === ProductEnum.BANNED && (user.role === RoleEnum.ADMIN || user.role === RoleEnum.OPERATOR)) {
+    if (currentStatus === ProductEnum.BANNED && (user?.role === RoleEnum.ADMIN || user?.role === RoleEnum.OPERATOR)) {
       buttons.push({
         status: ProductEnum.UN_PUBLISHED,
         text: t(`status.button_UN_BANNED`),

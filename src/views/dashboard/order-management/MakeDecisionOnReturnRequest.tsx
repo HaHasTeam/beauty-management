@@ -121,7 +121,7 @@ const MakeDecisionOnReturnRequest = ({
           open={openConfirmDialog}
           onOpenChange={setOpenConfirmDialog}
           onConfirm={() => handleMakeDecisionOnReturnRequest(RequestStatusEnum.APPROVED)}
-          item={user.role === RoleEnum.MANAGER || user.role === RoleEnum.STAFF ? 'returnTrackView' : 'decisionReturn'}
+          item={user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF ? 'returnTrackView' : 'decisionReturn'}
           isShowAction={user?.role === RoleEnum.MANAGER || user?.role === RoleEnum.STAFF}
           reason={returnRequest.reason}
           mediaFiles={returnRequest.mediaFiles}

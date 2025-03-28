@@ -4,7 +4,9 @@ import { AuthSlice, AuthState } from './auth.type'
 
 const initialState: AuthState = {
   isLoading: false,
-  isAuthenticated: false
+  isAuthenticated: false,
+  authData: undefined,
+  user: undefined
 } as AuthState
 
 export const createAuthSlice: StateCreator<AuthSlice, [['zustand/immer', never]], [], AuthSlice> = (set) => ({
