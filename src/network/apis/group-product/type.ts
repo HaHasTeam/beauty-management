@@ -26,3 +26,15 @@ export type TUpdateGroupProductRequestParams = Pick<
   criterias: GroupProductCriteria[]
   brandId: string
 }
+
+export type GetGroupProductFilterRequestParams = {
+  page?: number
+  limit?: number
+  sortBy?: string
+  order?: 'ASC' | 'DESC'
+  statuses?: string
+  startTime?: string
+  endTime?: string
+  productIds?: string[]
+  name?: string
+}

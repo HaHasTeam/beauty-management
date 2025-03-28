@@ -5,13 +5,14 @@ import * as React from 'react'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
-import { IConsultantService } from '@/types/consultant-service'
+import { toSentenceCase } from '@/lib/utils'
+import { ConsultantServiceStatusEnum, IConsultantService } from '@/types/consultant-service'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { BanConsultantServicesDialog } from './BanConsultantServiceDialog'
 import { DataTableRowAction, getColumns } from './ConsultantServiceTableColumns'
-import { ConsultantServiceTableFloatingBar } from './ConsultantServiceTableFloatingBar'
 import { ConsultantServiceTableToolbarActions } from './ConsultantServiceTableToolbarActions'
+import { getStatusIcon } from './helper'
 import { ViewDetailsConsultantServiceSheet } from './ViewConsultantServiceSheet'
 
 interface ConsultantServiceTableProps {
@@ -38,7 +39,20 @@ export function ConsultantServiceTable({ data, pageCount, queryStates }: Consult
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<IConsultantService>[] = []
+  const filterFields: DataTableFilterField<IConsultantService>[] = [
+    {
+      id: 'status',
+      label: 'Status',
+      options: Object.keys(ConsultantServiceStatusEnum).map((status) => {
+        const value = ConsultantServiceStatusEnum[status as keyof typeof ConsultantServiceStatusEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value,
+          icon: getStatusIcon(value).icon
+        }
+      })
+    }
+  ]
 
   /**
    * Advanced filter fields for the data table.
@@ -68,7 +82,7 @@ export function ConsultantServiceTable({ data, pageCount, queryStates }: Consult
 
   return (
     <>
-      <DataTable table={table} floatingBar={<ConsultantServiceTableFloatingBar table={table} />}>
+      <DataTable table={table}>
         <DataTableToolbar table={table} filterFields={filterFields}>
           <ConsultantServiceTableToolbarActions table={table} />
         </DataTableToolbar>

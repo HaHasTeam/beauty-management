@@ -14,3 +14,13 @@ export type GetConsultantServiceByIdRequestParams = {
 export type UpdateConsultantServiceByIdRequestParams = Partial<Omit<IConsultantService, 'systemService'>> & {
   systemService?: string
 }
+
+export interface GetConsultantServiceFilterRequestParams {
+  page?: number
+  limit?: number
+  sortBy?: string
+  order?: 'ASC' | 'DESC'
+  price?: string | number
+  statuses?: string
+  systemService?: string
+}

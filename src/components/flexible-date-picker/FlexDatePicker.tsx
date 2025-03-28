@@ -1,6 +1,6 @@
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, HtmlHTMLAttributes, useEffect, useState } from 'react'
 import { ControllerFieldState, FieldValues, useForm, UseFormReturn } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -21,10 +21,24 @@ type Props<TFieldValues extends FieldValues> = {
   showTime?: boolean
   buttonClassName?: string
   required?: boolean
+  label?: string
+  className?: HtmlHTMLAttributes<HTMLDivElement>['className']
 }
 // eslint-disable-next-line
 const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
-  ({ field, onlyFutureDates, onlyPastDates, showTime = false, buttonClassName, required = false }, ref) => {
+  (
+    {
+      field,
+      onlyFutureDates,
+      onlyPastDates,
+      showTime = false,
+      buttonClassName,
+      required = false,
+      label = 'Select Date',
+      className
+    },
+    ref
+  ) => {
     const [isOpen, setIsOpen] = useState(false)
     const [date, setDate] = useState<Date | undefined>(field.value ? new Date(field.value as string) : undefined)
     const [time, setTime] = useState<string>('21:00')
@@ -36,9 +50,11 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
 
     useEffect(() => {
       if (field.value) {
-        setDate(new Date(field.value as string))
+        setDate(field.value ? new Date(field.value as string) : undefined)
         const time = format(new Date(field.value as string), 'HH:mm')
         setTime(time)
+      } else {
+        setDate(undefined)
       }
     }, [field.value])
 
@@ -52,11 +68,13 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
                   ref={ref}
                   variant={'outline'}
                   className={cn(
-                    `flex-1 font-normal overflow-clip ${buttonClassName} rounded-none rounded-l-lg`,
-                    !field.value && 'text-muted-foreground'
+                    `flex-1 space-x-2 font-normal overflow-clip ${buttonClassName} `,
+                    showTime ? 'rounded-none rounded-l-lg' : 'rounded-lg',
+                    !field.value && 'text-muted-foreground',
+                    className
                   )}
                 >
-                  {date ? `${format(date, 'PPP')} ` : <span>{'Select Date'}</span>}
+                  <span className='flex-1'>{date ? `${format(date, 'PPP')} ` : <span>{label}</span>}</span>
                   <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                 </Button>
               </FormControl>

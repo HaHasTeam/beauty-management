@@ -10,7 +10,6 @@ export function getStatusIcon(status: CategoryStatusEnum) {
       textColor: 'text-green-500',
       bgColor: 'bg-green-100'
     },
-
     [CategoryStatusEnum.INACTIVE]: {
       icon: CircleMinus,
       iconColor: 'text-gray-500',

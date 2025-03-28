@@ -1,9 +1,13 @@
 import { TGroupProduct } from '@/types/group-product'
-import { TServerResponse } from '@/types/request'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-import { TCreateGroupProductRequestParams, TUpdateGroupProductRequestParams } from './type'
+import {
+  GetGroupProductFilterRequestParams,
+  TCreateGroupProductRequestParams,
+  TUpdateGroupProductRequestParams
+} from './type'
 
 export const getAllGroupProductsListApi = toQueryFetcher<void, TServerResponse<TGroupProduct[]>>(
   'getAllGroupProductsApi',
@@ -47,3 +51,12 @@ export const toggleGroupProductStatusApi = toMutationFetcher<string, TServerResp
     })
   }
 )
+
+export const getGroupProductFilterApi = toQueryFetcher<
+  GetGroupProductFilterRequestParams,
+  TServerResponseWithPaging<TGroupProduct[]>
+>('getGroupProductFilterApi', async (params) => {
+  return privateRequest('/group-products/filter', {
+    params
+  })
+})

@@ -52,6 +52,11 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
       placeholder: 'Filter usernames...'
     },
     {
+      id: 'email',
+      label: 'Email',
+      placeholder: 'Filter emails...'
+    },
+    {
       id: 'status',
       label: 'Status',
       options: Object.keys(UserStatusEnum).map((status) => {

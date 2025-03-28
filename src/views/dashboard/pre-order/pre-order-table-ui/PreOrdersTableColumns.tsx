@@ -1,10 +1,9 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, FilePenLine, Image, SettingsIcon } from 'lucide-react'
+import { Ellipsis, Eye, FilePenLine, Image, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -18,32 +17,36 @@ export interface DataTableRowAction<TData> {
   type: 'ban' | 'view' | 'publish'
 }
 
-export function getColumns(): ColumnDef<TPreOrder>[] {
+interface GetColumnsProps {
+  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TPreOrder> | null>>
+}
+
+export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrder>[] {
   return [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 20
-    },
+    // {
+    //   id: 'select',
+    //   header: ({ table }) => (
+    //     <Checkbox
+    //       className='-translate-x-2'
+    //       checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //       aria-label='Select all'
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label='Select row'
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableHiding: false,
+    //   size: 20
+    // },
     {
       id: 'product',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Flash Sale Product' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Pre-Order Product' />,
       cell: ({ row }) => {
         const productName = row.original.product.name
         const image = row.original.product.images ? row.original.product.images[0].fileUrl : ''
@@ -60,25 +63,25 @@ export function getColumns(): ColumnDef<TPreOrder>[] {
           </div>
         )
       },
-      size: 620,
+      size: 600,
       enableHiding: false
     },
     {
       accessorKey: 'productClassifications',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Classifications' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Classification | Quantity' />,
       cell: ({ row }) => {
         const classificationList = row.original.productClassifications
         return (
           <div className='flex items-center gap-1 flex-wrap capitalize font-normal'>
             {classificationList
-              .map((classification) => classification.title + `(${classification.quantity})`)
+              .map((classification) => `${classification.title} | ${classification.quantity}`)
               .join(', ')}
           </div>
         )
       },
       enableSorting: false,
       enableHiding: false,
-      size: 350
+      size: 300
     },
     {
       accessorKey: 'status',
@@ -161,7 +164,16 @@ export function getColumns(): ColumnDef<TPreOrder>[] {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem onClick={handleNavigate} className='bg-blue-200 text-blue-500'>
+              <DropdownMenuItem
+                onClick={() => setRowAction({ row, type: 'view' })}
+                className='bg-blue-200 text-blue-500'
+              >
+                <span className='w-full flex gap-2 items-center cursor-pointer'>
+                  <Eye size={16} strokeWidth={3} />
+                  <span className='font-semibold'>View</span>
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleNavigate} className='text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
                   <FilePenLine size={16} strokeWidth={3} />
                   <span className='font-semibold'>Edit</span>
