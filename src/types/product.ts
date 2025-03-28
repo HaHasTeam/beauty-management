@@ -103,7 +103,7 @@ export type IServerCreateProduct = {
   certificates?: IImage[]
 }
 export type IResponseProduct = {
-  id?: string
+  id: string
   name: string
   brand?: IBrand
   category?: ICategory
@@ -123,10 +123,10 @@ export type IResponseProduct = {
 
 export type IProductTable = {
   checked?: string
-  id?: string
+  id: string
   name: string
   price?: number
-  quantity?: number
+  quantity: number
   status?: string
   updatedAt?: string
   description: string

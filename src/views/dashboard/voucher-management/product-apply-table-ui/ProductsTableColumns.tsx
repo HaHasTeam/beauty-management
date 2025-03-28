@@ -1,21 +1,26 @@
-import { type ColumnDef, Row } from '@tanstack/react-table'
+'use client'
+
+// Update the getColumns function to properly handle product selection
+// Keep all imports and interface definitions
+
+import type { ColumnDef } from '@tanstack/react-table'
 import { Image, SettingsIcon, Trash } from 'lucide-react'
 
-import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import ImageWithFallback from '@/components/image/ImageWithFallback'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { IProductTable } from '@/types/product'
 
-export interface DataTableRowAction<TData> {
-  row: Row<TData>
-  type: 'ban' | 'view' | 'unbanned' | 'update-status'
-}
+const fallBackImage = '/product-placeholder.webp'
+
+// Update the IProductTable interface to match the actual data structure
+
 interface GetColumnsProps {
-  onDelete: (productId: string) => void
-  handleProductSelect?: (productId: string) => void
+  onDelete: (id: string) => void
+  handleProductSelect?: (id: string) => void
 }
+
 export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): ColumnDef<IProductTable>[] {
   return [
     {
@@ -26,6 +31,13 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
           onCheckedChange={(value) => {
             table.toggleAllPageRowsSelected(!!value)
+            // When selecting all, update all product IDs
+            if (handleProductSelect && value) {
+              const allProductIds = table.getRowModel().rows.map((row) => row.original.id || '')
+              allProductIds.forEach((id) => {
+                if (id) handleProductSelect(id)
+              })
+            }
           }}
           aria-label='Select all'
         />
@@ -35,7 +47,9 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
           checked={row.getIsSelected()}
           onCheckedChange={(value) => {
             row.toggleSelected(!!value)
-            handleProductSelect?.(row.original.id || '')
+            if (handleProductSelect && row.original.id) {
+              handleProductSelect(row.original.id)
+            }
           }}
           aria-label='Select row'
         />
@@ -44,44 +58,27 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
       enableHiding: false,
       size: 1
     },
+    // Update the cell rendering for the product image to handle IImage[] correctly
     {
       id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name
-        const productImage = row?.original?.images[0].fileUrl ?? ''
+        // Handle the case where images might be an array or undefined
+        const productImage =
+          row.original.images && row.original.images.length > 0 ? row.original.images[0].fileUrl || '' : ''
+
         return (
           <div className='flex items-center gap-2'>
             <div className='w-8 h-8 rounded bg-muted flex items-center justify-center'>
               <Image className='w-4 h-4 text-muted-foreground' />
-
-              <ImageWithFallback fallback={fallBackImage} src={productImage} alt={displayName} />
+              <ImageWithFallback fallback={fallBackImage} src={productImage || '/placeholder.svg'} alt={displayName} />
             </div>
             <span>{displayName}</span>
           </div>
         )
       }
     },
-    // {
-    //   accessorKey: 'title',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Classification' />,
-    //   cell: ({ row }) => {
-    //     const displayName = row.original.title
-    //     return (
-    //       <div className='flex space-x-2 items-center'>
-    //         <span className='max-w-[31.25rem] truncate'>{displayName}</span>
-    //       </div>
-    //     )
-    //   }
-    // },
-    // {
-    //   accessorKey: 'sku',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='SKU' />,
-    //   cell: ({ cell }) => <div>{cell.row.original.sku || '--'}</div>,
-    //   size: 100,
-    //   enableSorting: false,
-    //   enableHiding: false
-    // },
     {
       accessorKey: 'quantity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Quantity' />,
@@ -90,14 +87,6 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
       enableSorting: false,
       enableHiding: false
     },
-    // {
-    //   accessorKey: 'price',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Price' />,
-    //   cell: ({ cell }) => <div>{cell.row.original.price}</div>,
-    //   size: 10,
-    //   enableSorting: false,
-    //   enableHiding: false
-    // },
     {
       accessorKey: 'createdAt',
       id: 'createdAt'

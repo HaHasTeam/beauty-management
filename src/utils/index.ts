@@ -78,7 +78,7 @@ export function convertToProductTable(data: IResponseProduct[]): IProductTable[]
         detail, // Serialized detail information of the product
         sku: sku == productSku ? productSku : sku, // SKU of the classification
         price, // Price of the classification
-        quantity, // Quantity available for the classification
+        quantity: quantity ? quantity : 0, // Quantity available for the classification
         status, // Status of the classification
         updatedAt, // Last updated timestamp
         createdAt, // Creation timestamp
@@ -97,6 +97,8 @@ export function convertToProductTable(data: IResponseProduct[]): IProductTable[]
 }
 
 export function convertToProductTable2(data: IResponseProduct[]): IProductTable[] {
+  if (!data || !Array.isArray(data)) return []
+
   const products: IProductTable[] = []
 
   // Iterate through each product in the input data
@@ -117,32 +119,30 @@ export function convertToProductTable2(data: IResponseProduct[]): IProductTable[
     } = product
 
     // Calculate the total quantity for this product from its classifications
-    const productQuantity = productClassifications.reduce(
-      (sum, classification) => sum + (classification.quantity ?? 0),
-      0
-    )
+    const productQuantity =
+      productClassifications?.reduce((sum, classification) => sum + (classification.quantity ?? 0), 0) || 0
 
     // Add the product information to the list
     products.push({
-      id: productId,
-      name: productName,
-      description,
-      detail,
+      id: productId || '',
+      name: productName || '',
+      description: description || '',
+      detail: detail,
       sku: productSku,
       price: 0, // Price is not applicable here since we are listing only products
       quantity: productQuantity, // Total quantity from classifications
       status: status, // Status is not applicable here
       updatedAt,
-      createdAt,
+      createdAt: createdAt || '',
       brand,
       category,
-      images: productImages,
-      productClassifications: [],
+      images: productImages || [],
+      productClassifications: productClassifications || [],
       certificates: []
     })
   })
 
-  return products // Return the product list and total quantity
+  return products
 }
 
 export function convertToSlug(text: string): string {

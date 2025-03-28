@@ -1,6 +1,10 @@
-import { useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
-import { z } from 'zod'
+'use client'
+
+// Update the IndexPage component to handle product selection
+
+import { useEffect, useMemo, useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import type { z } from 'zod'
 
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table/data-table'
@@ -8,7 +12,8 @@ import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleto
 import { Shell } from '@/components/ui/shell'
 import { useDataTable } from '@/hooks/useDataTable'
 import { voucherCreateSchema } from '@/schemas'
-import { IProductTable, IResponseProduct } from '@/types/product'
+// Update the type imports to match your actual types
+import type { IProductTable, IResponseProduct } from '@/types/product'
 import { DataTableQueryState } from '@/types/table'
 import { convertToProductTable2 } from '@/utils'
 
@@ -36,9 +41,32 @@ export default function IndexPage({
       form.setValue('selectedProducts', Array.from(currentSelected))
     }
 
-    return getColumns({ onDelete: deleteProduct, handleProductSelect: handleProductSelect })
+    return getColumns({
+      onDelete: deleteProduct,
+      handleProductSelect: (productId: string) => {
+        // Get current selected products
+        const currentSelected: Set<string> = new Set(form.getValues('selectedProducts') || [])
+
+        // Toggle selection
+        if (currentSelected.has(productId)) {
+          currentSelected.delete(productId)
+        } else {
+          currentSelected.add(productId)
+        }
+
+        // Update form value
+        form.setValue('selectedProducts', Array.from(currentSelected))
+
+        // Call external handler if provided
+        if (handleProductSelect) {
+          handleProductSelect(productId)
+        }
+      }
+    })
   }, [form, handleProductSelect])
+
   const queryStates = useState<DataTableQueryState<IProductTable>>({} as DataTableQueryState<IProductTable>)
+  // Update the data table initialization to handle the type correctly
   const { table } = useDataTable({
     queryStates,
     data: convertToProductTable2(list) ?? [],
@@ -57,6 +85,17 @@ export default function IndexPage({
     shallow: false,
     clearOnDefault: true
   })
+
+  // Set row selection based on form values
+  useEffect(() => {
+    const selectedProducts = form.getValues('selectedProducts') || []
+    if (table) {
+      table.getRowModel().rows.forEach((row) => {
+        const isSelected = selectedProducts.includes(row.original.id || '')
+        row.toggleSelected(isSelected)
+      })
+    }
+  }, [form, table])
 
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
