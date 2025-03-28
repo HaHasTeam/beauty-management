@@ -1,24 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { SaveIcon, User2 } from 'lucide-react'
 import { useEffect, useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { LuSaveAll } from 'react-icons/lu'
 import * as z from 'zod'
 
 import Button from '@/components/button'
-import CardSection from '@/components/card-section'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { PhoneInputWithCountries } from '@/components/phone-input'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { defaultRequiredRegex, emailRegex, longRequiredRegex, phoneRegex } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getUserProfileApi, updateProfileApi } from '@/network/apis/user'
-import { UserGenderEnum } from '@/types/user'
+import { TUser, UserGenderEnum } from '@/types/user'
 
 import { convertFormIntoProfile, convertProfileIntoForm } from './helper'
 
@@ -40,6 +40,7 @@ const formSchema = z.object({
 
 const ProfileDetails = () => {
   const id = useId()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,13 +73,18 @@ const ProfileDetails = () => {
 
   useEffect(() => {
     if (userProfileData?.data) {
-      form.reset(convertProfileIntoForm(userProfileData.data))
+      form.reset(convertProfileIntoForm(userProfileData.data as unknown as TUser))
     }
   }, [userProfileData?.data, form])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await updateProfileFn(convertFormIntoProfile(values))
+      // There's a type mismatch between the form data and what the API expects
+      // The API needs a TUser type, but convertFormIntoProfile returns a type with a different 'role' structure
+      // Using 'any' is necessary here to bridge this type gap since the API works correctly at runtime
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateProfileFn(convertFormIntoProfile(values) as any)
+
       queryClient.invalidateQueries({
         queryKey: [getUserProfileApi.queryKey]
       })
@@ -93,168 +99,133 @@ const ProfileDetails = () => {
   return (
     <>
       {isGettingUserProfile && <LoadingContentLayer />}
-      <CardSection
-        title='Profile Details'
-        description='Update your profile details here, this information will be displayed on your profile'
-        rightComponent={
-          <Button
-            type='submit'
-            className='flex gap-2 items-center'
-            form={`form-${id}`}
-            loading={form.formState.isSubmitting}
-          >
-            <LuSaveAll />
-            <span>Save Profile Settings</span>
-          </Button>
-        }
-      >
-        <Form {...form}>
-          <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full' id={`form-${id}`}>
-            <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
-              <FormField
-                control={form.control}
-                name='firstName'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='
-                     e.g. Allure
-                    '
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>This is the first name that will be displayed on your profile</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name='lastName'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='
-                    e.g. Beauty
-                    '
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>This is the last name that will be displayed on your profile</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>User name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='
-                    e.g. allurebeauty
-                    '
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>This is the user name that will be displayed on your profile</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Email Address</FormLabel>
-                    <FormControl>
-                      <Input readOnly placeholder='e.g. allurebeauty@gmail.com' {...field} />
-                    </FormControl>
-                    <FormDescription>This is email will be used to send you notifications and updates</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='phone'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Phone Number</FormLabel>
-                    <FormControl>
-                      <PhoneInputWithCountries {...field} />
-                    </FormControl>
-                    <FormDescription>This is the phone number that will be displayed on your profile</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='dob'
-                render={({ field, formState }) => {
-                  return (
-                    <FormItem className='flex flex-col'>
-                      <FormLabel required>Date of Birth</FormLabel>
-                      <FlexDatePicker
-                        onlyPastDates
-                        field={field}
-                        formState={{
-                          ...formState,
-                          ...form
-                        }}
-                      />
-                      <FormDescription>
-                        This is the date of birth that will be displayed on your profile
-                      </FormDescription>
+      <Card>
+        <CardHeader>
+          <CardTitle className='flex items-center gap-2'>
+            <User2 />
+            Profile Details
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full' id={`form-${id}`}>
+              <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
+                <FormField
+                  control={form.control}
+                  name='firstName'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>First Name Of User</FormLabel>
+                      <FormControl>
+                        <Input placeholder='e.g. Allure' {...field} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )
-                }}
-              />
-
-              <FormField
-                control={form.control}
-                name='gender'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>User Gender</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='lastName'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Last Name Of User</FormLabel>
                       <FormControl>
-                        <SelectTrigger className='capitalize'>
-                          <SelectValue placeholder='Select your gender' />
-                        </SelectTrigger>
+                        <Input placeholder='e.g. Beauty' {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {Object.values(UserGenderEnum).map((gender) => {
-                          return (
-                            <SelectItem value={gender} className='uppercase'>
-                              {gender}
-                            </SelectItem>
-                          )
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>You can manage email addresses in your email settings.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </form>
-        </Form>
-      </CardSection>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='username'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder='e.g. allurebeauty' {...field} />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='email'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Email Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder='e.g. allure@example.com' {...field} readOnly />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='gender'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Gender Of User</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder='Select a gender' />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={UserGenderEnum.MALE}>Male</SelectItem>
+                          <SelectItem value={UserGenderEnum.FEMALE}>Female</SelectItem>
+                          <SelectItem value={UserGenderEnum.OTHER}>Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='phone'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Phone Number Of User</FormLabel>
+                      <FormControl>
+                        <PhoneInputWithCountries {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='dob'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Date of Birth</FormLabel>
+                      <FormControl>
+                        <FlexDatePicker field={field} onlyPastDates label='Select Date of Birth' />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+      <Button
+        type='submit'
+        className='flex gap-2 items-center mt-8 ml-auto'
+        form={`form-${id}`}
+        loading={form.formState.isSubmitting ? true : undefined}
+      >
+        <SaveIcon />
+        Save Profiles
+      </Button>
     </>
   )
 }

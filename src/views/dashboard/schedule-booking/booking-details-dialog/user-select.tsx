@@ -29,8 +29,8 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
       getAccountFilterApi.queryKey,
       {
         search: searchTerm,
-        role: RoleEnum.OPERATOR,
-        status: StatusEnum.ACTIVE
+        roles: RoleEnum.OPERATOR,
+        statuses: StatusEnum.ACTIVE
       }
     ],
     queryFn: getAccountFilterApi.fn,
@@ -38,6 +38,9 @@ export function UserSelect({ onSelect, disabled = false, bookingId }: UserSelect
     select(data) {
       return data.data.items
     }
+    // select(data) {
+    //   return data.data.items
+    // }
   })
 
   const handleSelect = (userId: string, userName: string, userEmail: string) => {

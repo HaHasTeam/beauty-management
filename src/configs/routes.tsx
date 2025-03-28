@@ -46,7 +46,8 @@ export enum Routes {
   CONSULTANT_SERVICE = 'consultant-service',
   ADD_CONSULTANT_SERVICE = 'add-consultant-service',
   CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
-  REPORTS = 'reports'
+  REPORTS = 'reports',
+  WORKING_TIME = 'working-time'
 }
 
 export const routesConfig: TRoutes = {
@@ -359,5 +360,12 @@ export const routesConfig: TRoutes = {
     description: 'Reports',
     path: '/dashboard/reports',
     getPath: () => '/dashboard/reports'
+  },
+  [Routes.WORKING_TIME]: {
+    name: 'Working Time',
+    title: 'Working Time',
+    description: 'Manage your working time slots',
+    path: '/dashboard/working-time',
+    getPath: () => '/dashboard/working-time'
   }
 }

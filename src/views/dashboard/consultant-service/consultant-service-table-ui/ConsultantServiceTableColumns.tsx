@@ -22,7 +22,7 @@ export interface DataTableRowAction<TData> {
 // interface GetColumnsProps {
 //   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<IConsultantService> | null>>
 // }
-export function getColumns(): ColumnDef<IConsultantService>[] {
+export const getColumns = (): ColumnDef<IConsultantService>[] => {
   return [
     {
       id: 'select',

@@ -66,7 +66,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       label: product.name,
       display: getProductItemDisplay(product)
     }))
-  }, [productList, searchKey])
+  }, [productList])
 
   const selectedOptions = useMemo(() => {
     if (multiple) {

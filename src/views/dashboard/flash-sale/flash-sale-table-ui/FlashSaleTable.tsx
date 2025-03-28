@@ -1,11 +1,13 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllProductApi } from '@/network/apis/product'
 import { FlashSaleStatusEnum, TFlashSale } from '@/types/flash-sale'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
@@ -36,7 +38,25 @@ export function FlashSaleTable({ data, pageCount, queryStates }: FlashSaleTableP
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
+  const { data: productData } = useQuery({
+    queryKey: [getAllProductApi.queryKey],
+    queryFn: getAllProductApi.fn
+  })
+  const products = productData?.data ?? []
+
   const filterFields: DataTableFilterField<TFlashSale>[] = [
+    {
+      id: 'product',
+      label: 'Product',
+      placeholder: 'Search by product',
+      options: products.map((product) => {
+        return {
+          label: product.name,
+          value: product.id
+        }
+      }),
+      isSingleChoice: true
+    },
     {
       id: 'status',
       label: 'Status',
@@ -48,6 +68,16 @@ export function FlashSaleTable({ data, pageCount, queryStates }: FlashSaleTableP
           icon: getStatusIcon(value).icon
         }
       })
+    },
+    {
+      id: 'startTime',
+      label: 'Start Time',
+      isDate: true
+    },
+    {
+      id: 'endTime',
+      label: 'End Time',
+      isDate: true
     }
   ]
 

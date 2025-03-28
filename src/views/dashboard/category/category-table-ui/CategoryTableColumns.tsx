@@ -3,7 +3,6 @@ import { Ellipsis, FilePenLine, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -17,35 +16,11 @@ export interface DataTableRowAction<TData> {
   row: Row<TData>
   type: 'ban' | 'view' | 'unbanned'
 }
-// interface GetColumnsProps {
-//   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<ICategory> | null>>
-// }
 
 export function getColumns(): ColumnDef<ICategory>[] {
   return [
     {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 20
-    },
-    {
-      id: 'product',
+      id: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Category' />,
       cell: ({ row }) => {
         const displayName = row.original.name
@@ -138,38 +113,12 @@ export function getColumns(): ColumnDef<ICategory>[] {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem onClick={handleNavigate} className='bg-blue-200 text-blue-500'>
+              <DropdownMenuItem onClick={handleNavigate} className='text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
                   <FilePenLine size={16} strokeWidth={3} />
                   <span className='font-semibold'>Edit</span>
                 </span>
               </DropdownMenuItem>
-              {/* <DropdownMenuSeparator />
-              {row.original.status !== FlashSaleStatusEnum.INACTIVE ? (
-                <DropdownMenuItem
-                  className='bg-red-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'ban' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <XIcon />
-                    Unpublish PreOrder
-                  </span>
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  className='bg-green-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'unbanned' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <GrRevert />
-                    Publish PreOrder
-                  </span>
-                </DropdownMenuItem>
-              )} */}
             </DropdownMenuContent>
           </DropdownMenu>
         )

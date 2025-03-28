@@ -1,10 +1,20 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ban, CalendarCheck, EyeIcon, FileText, MoreVertical, Pen, Power, PowerOff, SettingsIcon } from 'lucide-react'
+import {
+  Ban,
+  CalendarCheck,
+  EyeIcon,
+  FileText,
+  Image,
+  MoreVertical,
+  Pen,
+  Power,
+  PowerOff,
+  SettingsIcon
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
   DropdownMenu,
@@ -38,50 +48,24 @@ interface GetColumnsProps {
 export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>[] {
   return [
     {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 1
-    },
-    {
-      id: 'index',
-      accessorKey: 'STT',
-      cell: ({ row }) => {
-        return <span className='text-center'>{row.index + 1}</span>
-      },
-      size: 1
-    },
-    {
       id: 'brand',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Brand Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name ?? 'brand'
         const image = row.original.logo
         return (
-          <div className='flex space-x-2 items-center'>
-            <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
-              <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
+          <div className='flex gap-1 items-center'>
+            <Avatar className='rounded-lg'>
+              <AvatarImage src={image} className='bg-transparent size-5' />
+              <AvatarFallback className='bg-transparent'>
+                <Image size={24} />
+              </AvatarFallback>
             </Avatar>
-            <span className='max-w-[30.25rem] truncate'>{displayName}</span>
+            <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
         )
-      }
+      },
+      size: 300
     },
     {
       accessorKey: 'email',
@@ -103,9 +87,9 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
       accessorKey: 'address',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Address' />,
       cell: ({ cell }) => <div>{cell.row.original.address}</div>,
-      size: 10,
       enableSorting: false,
-      enableHiding: false
+      enableHiding: false,
+      size: 250
     },
     {
       accessorKey: 'status',
@@ -145,11 +129,16 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
     {
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Created At' />,
-      cell: ({ cell }) =>
-        formatDate(cell.getValue() as Date, {
-          hour: 'numeric',
-          minute: 'numeric'
-        }),
+      cell: ({ cell }) => (
+        <div>
+          {formatDate(cell.getValue() as Date, {
+            hour: 'numeric',
+            minute: 'numeric',
+            month: '2-digit'
+          })}
+        </div>
+      ),
+
       size: 30
     },
     {
@@ -259,7 +248,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TBrand>
           </DropdownMenu>
         )
       },
-      size: 40,
+      size: 30,
       enableSorting: false,
       enableHiding: false
     }

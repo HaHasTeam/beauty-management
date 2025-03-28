@@ -155,6 +155,8 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IReport
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
+        const isAssigned = !!row.original.assignee?.id
+        const isResolved = !!row.original.resultNote
         return (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -174,28 +176,32 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IReport
                   <span className='font-semibold'>View</span>
                 </span>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setRowAction({ row: row, type: 'assign' })
-                }}
-                className='bg-gray-200 text-gray-500'
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <SpeechIcon size={16} strokeWidth={3} />
-                  <span className='font-semibold'>Assign</span>
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setRowAction({ row: row, type: 'resolve' })
-                }}
-                className='bg-green-200 text-green-500'
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <ActivitySquareIcon size={16} strokeWidth={3} />
-                  <span className='font-semibold'>Resolve</span>
-                </span>
-              </DropdownMenuItem>
+              {!isAssigned && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'assign' })
+                  }}
+                  className='bg-gray-200 text-gray-500'
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <SpeechIcon size={16} strokeWidth={3} />
+                    <span className='font-semibold'>Assign</span>
+                  </span>
+                </DropdownMenuItem>
+              )}
+              {!isResolved && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'resolve' })
+                  }}
+                  className='bg-green-200 text-green-500'
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <ActivitySquareIcon size={16} strokeWidth={3} />
+                    <span className='font-semibold'>Resolve</span>
+                  </span>
+                </DropdownMenuItem>
+              )}
               {/* <DropdownMenuSeparator />
               {row.original.status !== FlashSaleStatusEnum.INACTIVE ? (
                 <DropdownMenuItem

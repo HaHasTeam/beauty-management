@@ -1,6 +1,7 @@
 import { Routes, routesConfig } from '@/configs/routes'
 import { TAuth } from '@/types/auth'
-import { TServerResponse } from '@/types/request'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
+import { TUser } from '@/types/user'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
@@ -110,12 +111,39 @@ export const updateUsersListStatusApi = toMutationFetcher<TUpdateUsersListStatus
   }
 )
 
-export const getAccountFilterApi = toQueryFetcher<
-  TGetAccountFilterRequestParams,
-  TServerResponse<{ total: string }, TUserResponse[]>
->('getProductFilterApi', async (params) => {
-  return privateRequest(`/accounts/filter-account`, {
-    method: 'GET',
-    params: params
-  })
+export const getAccountFilterApi = toQueryFetcher<TGetAccountFilterRequestParams, TServerResponseWithPaging<TUser[]>>(
+  'getAccountFilterApi',
+  async (params) => {
+    const res = (await privateRequest(`/accounts/filter-account`, {
+      method: 'GET',
+      params: params
+    })) as TServerResponseWithPaging<TUserResponse[]>
+    const { data: userData } = res
+
+    const parsedData = userData.items.map<TUser>((user) => {
+      return {
+        ...user,
+        role: user.role?.role
+      } as TUser
+    })
+
+    const result = {
+      message: res.message,
+      data: {
+        ...res.data,
+        items: parsedData
+      }
+    } as TServerResponseWithPaging<TUser[]>
+    return result
+  }
+)
+
+// New API function to get user statistics for charts
+export const getUserStatsApi = toQueryFetcher<void, TServerResponse<TUserResponse[]>>('getUserStatsApi', async () => {
+  // First, fetch all users
+  const response = (await privateRequest('/accounts')) as TServerResponse<TUserResponse[]>
+
+  // Return the response directly
+  // We'll process this data in the component to create chart data
+  return response
 })

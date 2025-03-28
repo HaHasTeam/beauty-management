@@ -1,9 +1,10 @@
 import { TFlashSale } from '@/types/flash-sale'
-import { TServerResponse } from '@/types/request'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 import {
+  GetFlashSaleFilterRequestParams,
   TAddFlashSaleRequestParams,
   TGetAllFlashSaleByBrandIdRequestParams,
   TUpdateFlashSaleRequestParams
@@ -56,3 +57,13 @@ export const updateFlashSaleApi = toMutationFetcher<TUpdateFlashSaleRequestParam
     })
   }
 )
+
+export const getFlashSaleFilterApi = toQueryFetcher<
+  GetFlashSaleFilterRequestParams,
+  TServerResponseWithPaging<TFlashSale[]>
+>('getFlashSaleFilterApi', async (params) => {
+  return privateRequest('/product-discount/filter-product-discount', {
+    method: 'GET',
+    params: params
+  })
+})

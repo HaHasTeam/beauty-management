@@ -4,7 +4,6 @@ import { GrRevert } from 'react-icons/gr'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
   DropdownMenu,
@@ -28,27 +27,27 @@ interface GetColumnsProps {
 }
 export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[] {
   return [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 100
-    },
+    // {
+    //   id: 'select',
+    //   header: ({ table }) => (
+    //     <Checkbox
+    //       className='-translate-x-2'
+    //       checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //       aria-label='Select all'
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label='Select row'
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableHiding: false,
+    //   size: 100
+    // },
     {
       id: 'displayName',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
@@ -97,7 +96,14 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
     {
       accessorKey: 'dob',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Date Of Birth' />,
-      cell: ({ cell }) => <div>{formatDate(cell.getValue() as Date)}</div>,
+      cell: ({ cell }) => (
+        <div>
+          {' '}
+          {formatDate(cell.getValue() as Date, {
+            month: '2-digit'
+          })}
+        </div>
+      ),
       size: 200
     },
     {
@@ -119,9 +125,6 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
             <span className='capitalize'>{roleValue}</span>
           </div>
         )
-      },
-      filterFn: (row, id, value) => {
-        return Array.isArray(value) && value.includes(row.getValue(id))
       }
     },
     {
@@ -166,7 +169,8 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
       cell: ({ cell }) =>
         formatDate(cell.getValue() as Date, {
           hour: 'numeric',
-          minute: 'numeric'
+          minute: 'numeric',
+          month: '2-digit'
         })
     },
     {

@@ -7,6 +7,7 @@ import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getUserProfileApi } from '@/network/apis/user'
 import { useStore } from '@/stores/store'
+import { TUser } from '@/types/user'
 // AuthGuard is component that will be used to protect routes
 // that should only be accessed by authenticated users.
 const AuthGuard: FC<PropsWithChildren> = ({ children }) => {
@@ -27,7 +28,7 @@ const AuthGuard: FC<PropsWithChildren> = ({ children }) => {
     // fetch user profile if user is authenticated on first load
     if (isAuthenticated && useProfileData?.data) {
       setAuthState({
-        user: useProfileData.data
+        user: useProfileData.data as unknown as TUser
       })
     }
 

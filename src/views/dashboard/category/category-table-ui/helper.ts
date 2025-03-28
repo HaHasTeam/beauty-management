@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleMinus } from 'lucide-react'
+import { CheckCircle2, CircleIcon, CircleMinus } from 'lucide-react'
 
 import { CategoryStatusEnum } from '@/types/category'
 
@@ -10,7 +10,6 @@ export function getStatusIcon(status: CategoryStatusEnum) {
       textColor: 'text-green-500',
       bgColor: 'bg-green-100'
     },
-
     [CategoryStatusEnum.INACTIVE]: {
       icon: CircleMinus,
       iconColor: 'text-gray-500',
@@ -18,5 +17,5 @@ export function getStatusIcon(status: CategoryStatusEnum) {
       bgColor: 'bg-gray-100'
     }
   }
-  return statusIcons[status] || CheckCircle2
+  return statusIcons[status] || CircleIcon
 }

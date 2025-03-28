@@ -63,7 +63,7 @@ const PhoneInputWithCountries = (() => {
 
     return (
       <div className={cn('not-prose mt-8 flex flex-col gap-4', field.className)}>
-        <div className='flex gap-2'>
+        <div className='flex gap-2 w-full [&>:last-child]:w-full'>
           {isShowCountry && (
             <ComboboxCountryInput
               value={country}

@@ -41,27 +41,47 @@ interface UseDataTableProps<TData>
   /**
    * Defines filter fields for the table. Supports both dynamic faceted filters and search filters.
    * - Faceted filters are rendered when `options` are provided for a filter field.
-   * - Otherwise, search filters are rendered.
+   * - Search filters are rendered when no options are provided.
+   * - Date filters can be enabled by setting `isDate` to true.
+   * - Single-choice faceted filters can be enabled by setting `isSingleChoice` to true.
    *
-   * The indie filter field `value` represents the corresponding column name in the database table.
+   * The id field represents the corresponding column name in the database table.
    * @default []
-   * @type { label: string, value: keyof TData, placeholder?: string, options?: { label: string, value: string, icon?: React.ComponentType<{ className?: string }> }[] }[]
    * @example
    * ```ts
    * // Render a search filter
    * const filterFields = [
-   *   { label: "Title", value: "title", placeholder: "Search titles" }
+   *   { id: "title", label: "Title", placeholder: "Search titles" }
    * ];
-   * // Render a faceted filter
+   *
+   * // Render a faceted filter (multi-select by default)
    * const filterFields = [
    *   {
+   *     id: "status",
    *     label: "Status",
-   *     value: "status",
    *     options: [
    *       { label: "Todo", value: "todo" },
    *       { label: "In Progress", value: "in-progress" },
    *     ]
    *   }
+   * ];
+   *
+   * // Render a single-choice faceted filter
+   * const filterFields = [
+   *   {
+   *     id: "priority",
+   *     label: "Priority",
+   *     isSingleChoice: true,
+   *     options: [
+   *       { label: "Low", value: "low" },
+   *       { label: "High", value: "high" },
+   *     ]
+   *   }
+   * ];
+   *
+   * // Render a date filter
+   * const filterFields = [
+   *   { id: "dueDate", label: "Due Date", isDate: true }
    * ];
    * ```
    */
@@ -177,10 +197,17 @@ export function useDataTable<TData>({
   const filterParsers = React.useMemo(() => {
     return filterFields.reduce<Record<string, Parser<string> | Parser<string[]>>>((acc, field) => {
       if (field.options) {
-        // Faceted filter
-        acc[field.id] = parseAsArrayOf(parseAsString, ',').withOptions(queryStateOptions)
+        // Faceted filter - use array parser for multi-select, string parser for single-choice
+        if (field.isSingleChoice) {
+          acc[field.id] = parseAsString.withOptions(queryStateOptions)
+        } else {
+          acc[field.id] = parseAsArrayOf(parseAsString, ',').withOptions(queryStateOptions)
+        }
+      } else if (field.isDate) {
+        // Date filter
+        acc[field.id] = parseAsString.withOptions(queryStateOptions)
       } else {
-        // Search filter
+        // Default search filter
         acc[field.id] = parseAsString.withOptions(queryStateOptions)
       }
       return acc
@@ -238,24 +265,49 @@ export function useDataTable<TData>({
       ? []
       : Object.entries(filterValues).reduce<ColumnFiltersState>((filters, [key, value]) => {
           if (value !== null) {
-            filters.push({
-              id: key,
-              value: Array.isArray(value) ? value : [value]
-            })
+            // Find matching filter field to check for special properties
+            const filterField = filterFields.find((field) => field.id === key)
+
+            if (filterField?.isDate) {
+              // For date filters, use the value directly
+              filters.push({
+                id: key,
+                value: value
+              })
+            } else if (filterField?.options && filterField?.isSingleChoice) {
+              // For single-choice faceted filters, use the value directly
+              filters.push({
+                id: key,
+                value: value
+              })
+            } else if (filterField?.options) {
+              // For multi-choice faceted filters, use the array of values
+              filters.push({
+                id: key,
+                value: Array.isArray(value) ? value : [value]
+              })
+            } else {
+              // For search filters, use the value directly
+              filters.push({
+                id: key,
+                value: Array.isArray(value) ? value : [value]
+              })
+            }
           }
           return filters
         }, [])
-  }, [filterValues, enableAdvancedFilter])
+  }, [filterValues, enableAdvancedFilter, filterFields])
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(initialColumnFilters)
 
   // Memoize computation of searchableColumns and filterableColumns
-  const { searchableColumns, filterableColumns } = React.useMemo(() => {
+  const { searchableColumns, filterableColumns, dateColumns } = React.useMemo(() => {
     return enableAdvancedFilter
-      ? { searchableColumns: [], filterableColumns: [] }
+      ? { searchableColumns: [], filterableColumns: [], dateColumns: [] }
       : {
-          searchableColumns: filterFields.filter((field) => !field.options),
-          filterableColumns: filterFields.filter((field) => field.options)
+          searchableColumns: filterFields.filter((field) => !field.options && !field.isDate),
+          filterableColumns: filterFields.filter((field) => field.options),
+          dateColumns: filterFields.filter((field) => field.isDate)
         }
   }, [filterFields, enableAdvancedFilter])
 
@@ -268,11 +320,22 @@ export function useDataTable<TData>({
         const next = typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue
 
         const filterUpdates = next.reduce<Record<string, string | string[] | null>>((acc, filter) => {
-          if (searchableColumns.find((col) => col.id === filter.id)) {
+          const filterField = filterFields.find((field) => field.id === filter.id)
+
+          if (dateColumns.find((col) => col.id === filter.id)) {
+            // For date filter, use value directly
+            acc[filter.id] = filter.value as string
+          } else if (filterField?.options && filterField?.isSingleChoice) {
+            // For single choice filter, use value directly
+            acc[filter.id] = filter.value as string
+          } else if (filterField?.options) {
+            // For faceted multi-choice filters, use the array of values
+            acc[filter.id] = filter.value as string[]
+          } else if (searchableColumns.find((col) => col.id === filter.id)) {
             // For search filters, use the value directly
             acc[filter.id] = filter.value as string
           } else if (filterableColumns.find((col) => col.id === filter.id)) {
-            // For faceted filters, use the array of values
+            // For other faceted filters, use the array of values
             acc[filter.id] = filter.value as string[]
           }
           return acc
@@ -290,7 +353,15 @@ export function useDataTable<TData>({
         return next
       })
     },
-    [debouncedSetFilterValues, enableAdvancedFilter, filterableColumns, searchableColumns, setPage]
+    [
+      debouncedSetFilterValues,
+      enableAdvancedFilter,
+      filterableColumns,
+      filterFields,
+      searchableColumns,
+      dateColumns,
+      setPage
+    ]
   )
 
   const table = useReactTable({

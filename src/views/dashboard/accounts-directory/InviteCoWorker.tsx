@@ -1,15 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { UploadIcon, UserPlus } from 'lucide-react'
+import { UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { PiMicrosoftExcelLogoBold } from 'react-icons/pi'
 import { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
 
 import FormLabel from '@/components/form-label'
 import { TagsInput } from '@/components/tags-input'
-import CompoundTooltip from '@/components/tooltip'
 import {
   Dialog,
   DialogContent,
@@ -119,7 +117,7 @@ const InviteCoWorker = () => {
                         placeholder='Enter your member email'
                         className='flex-1'
                       />
-                      <CompoundTooltip
+                      {/* <CompoundTooltip
                         trigger={
                           <Button className='px-3'>
                             <UploadIcon />
@@ -134,7 +132,7 @@ const InviteCoWorker = () => {
                           </Button>
                         }
                         content='Download a CSV template to fill in the list of emails to invite multiple members.'
-                      />
+                      /> */}
                     </div>
                   </FormControl>
                   <FormDescription>You can invite multiple members by entering their email addresses.</FormDescription>
@@ -147,7 +145,7 @@ const InviteCoWorker = () => {
               name='role'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>members role</FormLabel>
+                  <FormLabel required>Members role</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>

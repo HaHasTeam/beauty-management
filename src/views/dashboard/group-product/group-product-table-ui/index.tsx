@@ -4,18 +4,32 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllGroupProductsListApi } from '@/network/apis/group-product'
+import { getGroupProductFilterApi } from '@/network/apis/group-product'
 import { TGroupProduct } from '@/types/group-product'
 import { DataTableQueryState } from '@/types/table'
 
 import { GroupProductTable } from './GroupProductTable'
 
 export default function IndexPage() {
-  const { data: GroupProductListData, isLoading: isGroupProductListLoading } = useQuery({
-    queryKey: [getAllGroupProductsListApi.queryKey],
-    queryFn: getAllGroupProductsListApi.fn
-  })
   const queryStates = useState<DataTableQueryState<TGroupProduct>>({} as DataTableQueryState<TGroupProduct>)
+  const { data: GroupProductListData, isLoading: isGroupProductListLoading } = useQuery({
+    queryKey: [
+      getGroupProductFilterApi.queryKey,
+      {
+        page: queryStates[0].page,
+        limit: queryStates[0].perPage,
+        sortBy: queryStates[0].sort?.[0]?.id,
+        order: queryStates[0].sort?.[0]?.desc ? 'DESC' : 'ASC',
+        statuses: ((queryStates[0].fieldFilters?.status ?? []) as string[]).join(','),
+        startTime: queryStates[0].fieldFilters?.startTime as string,
+        endTime: queryStates[0].fieldFilters?.endTime as string,
+        productIds: (queryStates[0].fieldFilters?.products ?? []) as string[],
+        name: queryStates[0].fieldFilters?.name as string
+      }
+    ],
+    queryFn: getGroupProductFilterApi.fn
+  })
+
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
       <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
@@ -30,7 +44,15 @@ export default function IndexPage() {
                 shrinkZero
               />
             ) : (
-              <GroupProductTable data={GroupProductListData?.data ?? []} pageCount={1} queryStates={queryStates} />
+              <GroupProductTable
+                data={GroupProductListData?.data?.items ?? []}
+                pageCount={
+                  GroupProductListData?.data?.total
+                    ? Math.ceil(GroupProductListData.data.total / queryStates[0].perPage)
+                    : 0
+                }
+                queryStates={queryStates}
+              />
             )}
           </Shell>
         </div>

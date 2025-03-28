@@ -1,11 +1,13 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllProductApi } from '@/network/apis/product'
 import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
@@ -15,6 +17,7 @@ import { DataTableRowAction, getColumns } from './PreOrdersTableColumns'
 import { PreOrdersTableFloatingBar } from './PreOrdersTableFloatingBar'
 import { PreOrderTableToolbarActions } from './PreOrdersTableToolbarActions'
 import { PublishPreOrdersDialog } from './PublishPreOrdersDialog'
+import { ViewPreOrderDetailsSheet } from './ViewPreOrderDetailsSheet'
 
 interface PreOrderTableProps {
   data: TPreOrder[]
@@ -24,7 +27,7 @@ interface PreOrderTableProps {
 
 export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TPreOrder> | null>(null)
-  const columns = React.useMemo(() => getColumns(), [])
+  const columns = React.useMemo(() => getColumns({ setRowAction }), [])
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
@@ -37,7 +40,24 @@ export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTablePro
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
+  const { data: productData } = useQuery({
+    queryKey: [getAllProductApi.queryKey],
+    queryFn: getAllProductApi.fn
+  })
+
+  const products = productData?.data ?? []
   const filterFields: DataTableFilterField<TPreOrder>[] = [
+    {
+      id: 'product',
+      label: 'Products',
+      placeholder: 'Filter by products...',
+      options: products.map((product) => {
+        return {
+          label: product.name,
+          value: product.id
+        }
+      })
+    },
     {
       id: 'status',
       label: 'Status',
@@ -49,6 +69,16 @@ export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTablePro
           icon: getStatusIcon(value).icon
         }
       })
+    },
+    {
+      id: 'startTime',
+      label: 'Start Date',
+      isDate: true
+    },
+    {
+      id: 'endTime',
+      label: 'End Date',
+      isDate: true
     }
   ]
 
@@ -85,6 +115,11 @@ export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTablePro
           <PreOrderTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
+      <ViewPreOrderDetailsSheet
+        open={rowAction?.type === 'view'}
+        onOpenChange={() => setRowAction(null)}
+        preOrder={rowAction?.row.original}
+      />
       <BanPreOrdersDialog
         open={rowAction?.type === 'ban'}
         onOpenChange={() => setRowAction(null)}

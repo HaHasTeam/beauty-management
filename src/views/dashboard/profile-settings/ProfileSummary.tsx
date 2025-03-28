@@ -34,7 +34,6 @@ const ProfileSummary = () => {
           value={userProfileData?.dob && format(new Date(userProfileData?.dob), 'PPP')}
         />
         <SummeryItem label='User Gender' value={userProfileData?.gender} />
-        <SummeryItem label='Current Role' value={userProfileData?.role} />
       </div>
     </CardSection>
   )

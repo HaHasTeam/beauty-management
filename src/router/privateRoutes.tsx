@@ -41,6 +41,7 @@ import UpdateSystemService from '@/views/dashboard/system-service/UpdateSystemSe
 import UpdateProduct from '@/views/dashboard/update-product'
 import Vouchers from '@/views/dashboard/voucher-management'
 import ViewVoucherDetail from '@/views/dashboard/voucher-management/ViewVoucherDetail'
+import WorkingTime from '@/views/dashboard/working-time'
 
 import AuthGuard from './guard/AuthGuard'
 // import Brands from '@/views/dashboard/brand-management'
@@ -203,6 +204,10 @@ export const privateRoutes: RouteObject[] = [
       {
         path: routesConfig[Routes.SCHEDULE_BOOKING].path.replace('/dashboard/', ''),
         element: <ScheduleBooking />
+      },
+      {
+        path: routesConfig[Routes.WORKING_TIME].path.replace('/dashboard/', ''),
+        element: <WorkingTime />
       },
       {
         path: routesConfig[Routes.GROUP_PRODUCT].path.replace('/dashboard/', ''),

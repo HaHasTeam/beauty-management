@@ -1,3 +1,5 @@
+import { BaseParams } from '@/types/request'
+import { TRoleResponse } from '@/types/role'
 import { TUser, UserStatusEnum } from '@/types/user'
 
 export type TCreateUserRequestParams = Pick<TUser, 'username' | 'email' | 'password' | 'phone'> & {
@@ -25,7 +27,9 @@ export type TInviteMultipleCoWorkersRequestParams = {
   redirectUrl?: string
 }
 
-export type TUserResponse = TUser
+export type TUserResponse = Omit<TUser, 'role'> & {
+  role?: TRoleResponse
+}
 
 export type TUpdateUserStatusRequestParams = {
   id: string
@@ -38,14 +42,9 @@ export type TUpdateUsersListStatusRequestParams = {
   status: UserStatusEnum
   reason: string
 }
-export type TGetAccountFilterRequestParams = {
+export type TGetAccountFilterRequestParams = BaseParams<TUser> & {
+  brand?: string
+  roles?: string
+  statuses?: string
   search?: string
-  brandId?: string
-  categoryId?: string
-  role?: string
-  status?: string
-  sortBy?: string
-  order?: string
-  page?: string
-  limit?: string
 }

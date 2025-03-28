@@ -1,5 +1,15 @@
 // Auth Imports
-import { Boxes, Brush, CalendarClock, Flag, Layers2Icon, Package, ReceiptText, TicketPercent } from 'lucide-react'
+import {
+  Boxes,
+  Brush,
+  CalendarClock,
+  Clock,
+  Flag,
+  Layers2Icon,
+  Package,
+  ReceiptText,
+  TicketPercent
+} from 'lucide-react'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
@@ -72,6 +82,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.SCHEDULE_BOOKING].name,
     path: routesConfig[Routes.SCHEDULE_BOOKING].path,
     icon: <CalendarClock className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.WORKING_TIME].name,
+    path: routesConfig[Routes.WORKING_TIME].path,
+    icon: <Clock className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

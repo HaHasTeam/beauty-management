@@ -7,8 +7,6 @@ import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
 import { ICategory } from '@/types/category'
 
-import { BanCategoriesDialog } from './BanCategoryDialog'
-
 interface CategoryTableToolbarActionsProps {
   table: Table<ICategory>
 }
@@ -21,12 +19,6 @@ export function CategoryTableToolbarActions({ table }: CategoryTableToolbarActio
 
   return (
     <div className='flex items-center gap-2'>
-      {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-        <BanCategoriesDialog
-          Categories={table.getFilteredSelectedRowModel().rows.map((row) => row.original)}
-          onSuccess={() => table.toggleAllRowsSelected(false)}
-        />
-      ) : null}
       <Button size={'sm'} onClick={handleAddCategory}>
         <ListPlusIcon />
         Add Category

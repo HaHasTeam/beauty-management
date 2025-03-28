@@ -1,22 +1,26 @@
 'use client'
 
 import type { Table } from '@tanstack/react-table'
-import { X } from 'lucide-react'
+import {  X } from 'lucide-react'
 import * as React from 'react'
 
 import { DataTableFacetedFilter } from '@/components/ui/data-table/data-table-faceted-filter'
 import { DataTableViewOptions } from '@/components/ui/data-table/data-table-view-options'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+
 import { cn } from '@/lib/utils'
 import type { DataTableFilterField } from '@/types/table'
+import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 
 interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   /**
    * An array of filter field configurations for the data table.
-   * When options are provided, a faceted filter is rendered.
-   * Otherwise, a search filter is rendered.
+   * - When options are provided, a faceted filter is rendered.
+   * - When isDate is true, a date picker is rendered.
+   * - When isSingleChoice is true with options, a single-choice faceted filter is rendered.
+   * - Otherwise, a search filter is rendered.
    *
    * @example
    * const filterFields = [
@@ -32,6 +36,21 @@ interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivEleme
    *       { label: 'Active', value: 'active', icon: ActiveIcon, count: 10 },
    *       { label: 'Inactive', value: 'inactive', icon: InactiveIcon, count: 5 }
    *     ]
+   *   },
+   *   {
+   *     id: 'priority',
+   *     label: 'Priority',
+   *     isSingleChoice: true,
+   *     options: [
+   *       { label: 'Low', value: 'low' },
+   *       { label: 'Medium', value: 'medium' },
+   *       { label: 'High', value: 'high' }
+   *     ]
+   *   },
+   *   {
+   *     id: 'dueDate',
+   *     label: 'Due Date',
+   *     isDate: true
    *   }
    * ]
    */
@@ -47,14 +66,14 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
-  // Memoize computation of searchableColumns and filterableColumns
-  const { searchableColumns, filterableColumns } = React.useMemo(() => {
+  // Memoize computation of searchableColumns, filterableColumns, and dateColumns
+  const { searchableColumns, filterableColumns, dateColumns } = React.useMemo(() => {
     return {
-      searchableColumns: filterFields.filter((field) => !field.options),
-      filterableColumns: filterFields.filter((field) => field.options)
+      searchableColumns: filterFields.filter((field) => !field.options && !field.isDate),
+      filterableColumns: filterFields.filter((field) => field.options),
+      dateColumns: filterFields.filter((field) => field.isDate)
     }
   }, [filterFields])
-  console.log('searchableColumns', searchableColumns)
 
   return (
     <div className={cn('flex w-full items-center justify-between gap-2 overflow-auto p-1', className)} {...props}>
@@ -80,7 +99,23 @@ export function DataTableToolbar<TData>({
                   key={String(column.id)}
                   column={table.getColumn(column.id ? String(column.id) : '')}
                   title={column.label}
+                  placeholder={column.placeholder}
                   options={column.options ?? []}
+                  isSingleChoice={column.isSingleChoice}
+                />
+              )
+          )}
+        {dateColumns.length > 0 &&
+          dateColumns.map(
+            (column) =>
+              table.getColumn(column.id ? String(column.id) : '') && (
+                <FlexDatePicker
+                  key={String(column.id)}
+                  field={{
+                    value: table.getColumn(String(column.id))?.getFilterValue() as string,
+                    onChange: (value) => table.getColumn(String(column.id))?.setFilterValue(new Date(value as unknown as string).toISOString())
+                  }}
+                  label={column.label}
                 />
               )
           )}

@@ -53,6 +53,16 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TGroupP
       enableHiding: false
     },
     {
+      accessorKey: 'products',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Products' />,
+      cell: ({ row }) => {
+        const products = row.original.products.map((product) => product.name).join(', ')
+        return <div>{products}</div>
+      },
+      size: 220,
+      enableHiding: false
+    },
+    {
       accessorKey: 'criterias',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Strategy Of Group' />,
       cell: ({ row }) => {
