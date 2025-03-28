@@ -1,5 +1,4 @@
 import { Shapes, Tag, Trash2 } from 'lucide-react'
-import { useEffect } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 
 import Button from '@/components/button'
@@ -9,6 +8,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
+import { ProductClassificationTypeEnum } from '@/types/product'
 import { formatCurrency, formatNumber } from '@/utils/number'
 
 import { SchemaType } from './helper'
@@ -19,7 +20,7 @@ type Props = {
 }
 
 const ClassificationConfig = ({ form, productId }: Props) => {
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'productClassifications'
   })
@@ -44,14 +45,6 @@ const ClassificationConfig = ({ form, productId }: Props) => {
       : fields.length === 1
         ? String(fields.length - 1)
         : undefined
-  const product = form.watch('product')
-
-  useEffect(() => {
-    if (product) {
-      form.setValue('productClassifications', [{}] as unknown as SchemaType['productClassifications'])
-      replace([{}] as unknown as SchemaType['productClassifications'])
-    }
-  }, [product, form, replace])
 
   return (
     <Card>
@@ -107,8 +100,11 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                             control={form.control}
                             name={`productClassifications.${index}.rawClassification`}
                             render={({ field }) => {
+                              const isDefault =
+                                classificationList[index].rawClassification?.type ===
+                                ProductClassificationTypeEnum.DEFAULT
                               return (
-                                <FormItem>
+                                <FormItem className={cn(isDefault && 'hidden')}>
                                   <FormLabel required>Classification Of Product</FormLabel>
                                   <SelectClassification
                                     {...field}

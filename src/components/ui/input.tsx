@@ -127,14 +127,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ? formatCurrency(maxVal !== undefined ? (numberValue > maxVal ? maxVal : numberValue) : numberValue)
           : value
         setFormattedValue(formValue)
-        if (isNumberInput && onChange && maxVal !== undefined && numberValue > maxVal) {
-          onChange(maxVal as unknown as React.ChangeEvent<HTMLInputElement>)
-        }
       }
     }, [value, maxVal])
 
     const symbolRef = React.useRef<HTMLDivElement>(null)
-    const maxValRef = React.useRef<HTMLButtonElement>(null)
 
     if (isFileInput) {
       return (
@@ -154,12 +150,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
       )
-    }
-    const handleSetMaxValue = () => {
-      if (isNumberInput && !!maxVal) {
-        setFormattedValue(formatCurrency(maxVal))
-        if (onChange) onChange(maxVal as unknown as React.ChangeEvent<HTMLInputElement>)
-      }
     }
 
     return (
@@ -181,7 +171,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           style={{
             ...style,
             paddingRight: !!finalSymbol ? `${symbolRef.current?.offsetWidth ?? 0 + 16}px` : '',
-            paddingLeft: maxVal !== undefined ? `62px` : ''
           }}
         />
 
@@ -193,16 +182,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {finalSymbol}
             {`${maxVal !== undefined ? ` / ${maxVal}` : ''}`}
           </div>
-        )}
-        {maxVal !== undefined && (
-          <button
-            disabled={(value ? Number(value) : 0) >= maxVal}
-            className='inline-flex items-center rounded-none disabled:opacity-30 disabled:cursor-pointer rounded-l-lg border border-input  px-3 text-sm text-muted-foreground absolute inset-y-0 left-0 gap-1 cursor-pointer bg-primary text-white hover:opacity-50'
-            ref={maxValRef}
-            onClick={handleSetMaxValue}
-          >
-            {'MAX'}
-          </button>
         )}
       </div>
     )

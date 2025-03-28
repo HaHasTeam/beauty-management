@@ -45,7 +45,8 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
     const form = useForm()
     const handlePickDate = (selectedDate: Date) => {
       setDate(selectedDate)
-      if (field.onChange) field.onChange(selectedDate.toString() as unknown as React.ChangeEvent<HTMLInputElement>)
+      if (field.onChange)
+        field.onChange(selectedDate.toLocaleString() as unknown as React.ChangeEvent<HTMLInputElement>)
     }
 
     useEffect(() => {

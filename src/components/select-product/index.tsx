@@ -18,7 +18,7 @@ type Props = HTMLAttributes<HTMLSelectElement> &
   }
 
 const getProductItemDisplay = (product: TProduct) => {
-  const imgUrl = product.images[0]?.fileUrl
+  const imgUrl = product?.images[0]?.fileUrl
   return (
     <div className='flex items-center gap-1'>
       <Avatar className='bg-transparent size-5'>
@@ -38,7 +38,8 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
     className,
     onChange,
     value,
-    multiple = false
+    multiple = false,
+    readOnly = false
   } = props
   const { userData } = useStore(
     useShallow((state) => ({
@@ -101,7 +102,8 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       placeholder={placeholder}
       className={className}
       isLoading={isGettingProductList}
-      isClearable
+      isClearable={!readOnly}
+      isDisabled={readOnly}
       isSearchable
       value={selectedOptions}
       onChange={(options) => {
