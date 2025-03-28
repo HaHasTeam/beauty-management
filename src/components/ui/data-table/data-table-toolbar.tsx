@@ -116,7 +116,7 @@ export function DataTableToolbar<TData>({
                     onChange: (value) =>
                       table
                         .getColumn(String(column.id))
-                        ?.setFilterValue(new Date(value as unknown as string).toISOString())
+                        ?.setFilterValue(new Date(value as unknown as string).toLocaleString())
                   }}
                   label={column.label}
                 />

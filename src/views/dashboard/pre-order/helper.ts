@@ -47,31 +47,41 @@ export const formSchema = z
             )
             .partial()
             .optional(),
-          append: z.object({
-            color: z.string().optional(),
-            size: z.string().optional(),
-            other: z.string().optional(),
-            quantity: z.coerce
-              .number({
-                message: defaultRequiredRegex.message
-              })
-              .positive({ message: defaultRequiredRegex.message }),
-            sku: z.string({ message: defaultRequiredRegex.message }),
-            type: z.nativeEnum(ProductClassificationTypeEnum),
-            images: z.array(
-              z.object({
-                id: z.string().optional(),
-                name: z.string(),
-                fileUrl: z.string()
-              })
-            ),
-            title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-            price: z.coerce
-              .number({
-                message: defaultRequiredRegex.message
-              })
-              .positive({ message: defaultRequiredRegex.message })
-          })
+          append: z
+            .object({
+              color: z.string().optional(),
+              size: z.string().optional(),
+              other: z.string().optional(),
+              quantity: z.coerce
+                .number({
+                  message: defaultRequiredRegex.message
+                })
+                .positive({ message: defaultRequiredRegex.message }),
+              sku: z.string({ message: defaultRequiredRegex.message }),
+              type: z.nativeEnum(ProductClassificationTypeEnum),
+              images: z.array(
+                z.object({
+                  id: z.string().optional(),
+                  name: z.string(),
+                  fileUrl: z.string()
+                })
+              ),
+              title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+              price: z.coerce
+                .number({
+                  message: defaultRequiredRegex.message
+                })
+                .positive({ message: defaultRequiredRegex.message })
+            })
+            .superRefine((data, ctx) => {
+              if (!data.color && !data.size && !data.other) {
+                ctx.addIssue({
+                  code: 'custom',
+                  message: 'Please fill out at least one of color, size, or other.',
+                  path: ['color']
+                })
+              }
+            })
         })
       )
       .nonempty({
