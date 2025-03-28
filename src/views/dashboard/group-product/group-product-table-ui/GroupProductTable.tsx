@@ -1,12 +1,15 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllProductApi } from '@/network/apis/product'
 import { GroupProductStatusEnum, TGroupProduct } from '@/types/group-product'
+import { TProduct } from '@/types/product'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { BanGroupProductsDialog } from './BanGroupProductsDialog'
@@ -47,7 +50,39 @@ export function GroupProductTable({ data, pageCount, queryStates }: GroupProduct
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
+  const { data: productListData } = useQuery({
+    queryKey: [getAllProductApi.queryKey],
+    queryFn: getAllProductApi.fn
+  })
+  const productList = (productListData?.data as TProduct[]) ?? []
+
   const filterFields: DataTableFilterField<TGroupProduct>[] = [
+    {
+      id: 'name',
+      label: 'Name',
+      placeholder: 'Search by name'
+    },
+    {
+      id: 'startTime',
+      label: 'Start Time',
+      isDate: true
+    },
+    {
+      id: 'endTime',
+      label: 'End Time',
+      isDate: true
+    },
+    {
+      id: 'products',
+      label: 'Products',
+      placeholder: 'Search by products',
+      options: productList.map((product) => {
+        return {
+          label: product.name,
+          value: product.id
+        }
+      })
+    },
     {
       id: 'status',
       label: 'Status',

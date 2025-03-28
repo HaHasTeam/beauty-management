@@ -5,13 +5,13 @@ import * as React from 'react'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
-import { ICategory } from '@/types/category'
+import { toSentenceCase } from '@/lib/utils'
+import { CategoryStatusEnum, ICategory } from '@/types/category'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
-import { BanCategoriesDialog } from './BanCategoryDialog'
 import { DataTableRowAction, getColumns } from './CategoryTableColumns'
-import { CategoryTableFloatingBar } from './CategoryTableFloatingBar'
 import { CategoryTableToolbarActions } from './CategoryTableToolbarActions'
+import { getStatusIcon } from './helper'
 import { ViewDetailsCategorySheet } from './ViewDetailsCategorySheet'
 
 interface CategoryTableProps {
@@ -35,7 +35,25 @@ export function CategoryTable({ data, pageCount, queryStates }: CategoryTablePro
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<ICategory>[] = []
+  const filterFields: DataTableFilterField<ICategory>[] = [
+    {
+      id: 'name',
+      label: 'Category Name',
+      placeholder: 'Filter by name...'
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      options: Object.keys(CategoryStatusEnum).map((status) => {
+        const value = CategoryStatusEnum[status as keyof typeof CategoryStatusEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value,
+          icon: getStatusIcon(value).icon
+        }
+      })
+    }
+  ]
 
   /**
    * Advanced filter fields for the data table.
@@ -64,24 +82,16 @@ export function CategoryTable({ data, pageCount, queryStates }: CategoryTablePro
   })
 
   return (
-    <>
-      <DataTable table={table} floatingBar={<CategoryTableFloatingBar table={table} />}>
-        <DataTableToolbar table={table} filterFields={filterFields}>
-          <CategoryTableToolbarActions table={table} />
-        </DataTableToolbar>
-      </DataTable>
-      <BanCategoriesDialog
-        open={rowAction?.type === 'ban'}
-        onOpenChange={() => setRowAction(null)}
-        Categories={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-        onSuccess={() => rowAction?.row.toggleSelected(false)}
-      />
+    <div className='space-y-4'>
+      <DataTableToolbar table={table} filterFields={filterFields}>
+        <CategoryTableToolbarActions table={table} />
+      </DataTableToolbar>
+      <DataTable table={table} />
       <ViewDetailsCategorySheet
-        Category={rowAction?.row.original}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
+        category={rowAction?.row.original}
       />
-    </>
+    </div>
   )
 }

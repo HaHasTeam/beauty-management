@@ -7,6 +7,7 @@ import { useId, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import { useShallow } from 'zustand/react/shallow'
 
 import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
@@ -19,9 +20,11 @@ import { defaultRequiredRegex, emailRegex, phoneRegex } from '@/constants/regex'
 import { useAppProvider } from '@/contexts/AppProvider'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { createUserApi } from '@/network/apis/user'
+import { createUserApi, signInWithPasswordApi } from '@/network/apis/user'
+import { useStore } from '@/stores/store'
 import type { TInviteSignupDecoded } from '@/types/auth'
 import { UserRoleEnum } from '@/types/role'
+import { UserStatusEnum } from '@/types/user'
 
 import OauthSignIn from './OauthSignIn'
 
@@ -51,6 +54,7 @@ export default function SignUp() {
   const navigate = useNavigate()
   const { successToast } = useToast()
   const code = new URLSearchParams(window.location.search).get('code')
+  const authenticate = useStore(useShallow((state) => state.setAuthState))
 
   const prefillData = useMemo(() => {
     if (code) {
@@ -83,27 +87,27 @@ export default function SignUp() {
     }
   })
 
-  // const { mutateAsync: signInWithPasswordFn } = useMutation({
-  //   mutationKey: [signInWithPasswordApi.mutationKey],
-  //   mutationFn: signInWithPasswordApi.fn
-  // })
+  const { mutateAsync: signInWithPasswordFn } = useMutation({
+    mutationKey: [signInWithPasswordApi.mutationKey],
+    mutationFn: signInWithPasswordApi.fn
+  })
 
-  // const handleLogin = async (email: string, password: string) => {
-  //   try {
-  //     const { data } = await signInWithPasswordFn({
-  //       email,
-  //       password
-  //     })
-  //     authenticate({
-  //       isAuthenticated: true,
-  //       authData: data
-  //     })
-  //   } catch (error) {
-  //     handleServerError({
-  //       error
-  //     })
-  //   }
-  // }
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const { data } = await signInWithPasswordFn({
+        email,
+        password
+      })
+      authenticate({
+        isAuthenticated: true,
+        authData: data
+      })
+    } catch (error) {
+      handleServerError({
+        error
+      })
+    }
+  }
 
   const handleServerError = useHandleServerError()
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -114,10 +118,17 @@ export default function SignUp() {
         username: values.username,
         phone: '0' + values?.phone?.slice(3),
         role: prefillData ? prefillData.role : rolesData[UserRoleEnum.MANAGER].id,
-        brands: prefillData ? [prefillData.brand] : undefined
+        brands: prefillData?.brand ? [prefillData.brand] : undefined,
+        isEmailVerify: prefillData ? true : false,
+        status: UserStatusEnum.PENDING
       })
-      // await handleLogin(values.email, values.password)
-      navigate(routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath({ email: values.email }))
+      await handleLogin(values.email, values.password)
+      const isManager = prefillData?.role === rolesData[UserRoleEnum.MANAGER].id
+      if (isManager) {
+        navigate(routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath({ email: values.email }))
+      } else {
+        navigate(routesConfig[Routes.DASHBOARD_HOME].getPath())
+      }
     } catch (error) {
       handleServerError({
         error,

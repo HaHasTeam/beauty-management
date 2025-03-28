@@ -4,18 +4,32 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { getAllUserApi } from '@/network/apis/user'
+import { getAccountFilterApi } from '@/network/apis/user'
 import { DataTableQueryState } from '@/types/table'
 import { TUser } from '@/types/user'
 
 import { AccountTable } from './AccountTable'
 
 export default function IndexPage() {
-  const { data: userListData, isLoading: isUserListLoading } = useQuery({
-    queryKey: [getAllUserApi.queryKey],
-    queryFn: getAllUserApi.fn
-  })
   const queryStates = useState<DataTableQueryState<TUser>>({} as DataTableQueryState<TUser>)
+
+  const { data: userListData, isLoading: isUserListLoading } = useQuery({
+    queryKey: [
+      getAccountFilterApi.queryKey,
+      {
+        page: queryStates[0].page,
+        limit: queryStates[0].perPage,
+        sortBy: queryStates[0].sort?.[0]?.id,
+        order: queryStates[0].sort?.[0].desc && queryStates[0].sort?.[0].desc ? 'DESC' : 'ASC',
+        roles: (queryStates[0].fieldFilters?.role as string[])?.join(','),
+        statuses: (queryStates[0].fieldFilters?.status as string[])?.join(','),
+        username: queryStates[0].fieldFilters?.username as string,
+        email: queryStates[0].fieldFilters?.email as string
+      }
+    ],
+    queryFn: getAccountFilterApi.fn
+  })
+
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
       <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
@@ -30,7 +44,11 @@ export default function IndexPage() {
                 shrinkZero
               />
             ) : (
-              <AccountTable data={userListData?.data ?? []} pageCount={1} queryStates={queryStates} />
+              <AccountTable
+                data={userListData?.data.items ?? []}
+                pageCount={userListData?.data.total ? Math.ceil(userListData?.data.total / queryStates[0].perPage) : 0}
+                queryStates={queryStates}
+              />
             )}
           </Shell>
         </div>

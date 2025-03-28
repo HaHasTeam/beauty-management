@@ -1,9 +1,14 @@
 import { ICategory } from '@/types/category'
-import { TServerResponse } from '@/types/request'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-import { AddCategoryRequestParams, GetCategoryByIdRequestParams, UpdateCategoryByIdRequestParams } from './type'
+import {
+  AddCategoryRequestParams,
+  GetCategoryByIdRequestParams,
+  GetCategoryFilterRequestParams,
+  UpdateCategoryByIdRequestParams
+} from './type'
 
 export const getAllCategoryApi = toQueryFetcher<void, TServerResponse<ICategory[]>>('getAllCategoryApi', async () => {
   return privateRequest('/category')
@@ -64,4 +69,14 @@ export const flattenCategoryApi = toQueryFetcher<void, TServerResponse<ICategory
   }
 
   return { data: flatData, message: 'success' }
+})
+
+export const getCategoryFilterApi = toQueryFetcher<
+  GetCategoryFilterRequestParams,
+  TServerResponseWithPaging<ICategory[]>
+>('getCategoryFilterApi', async (params) => {
+  return privateRequest(`/category/filter-category`, {
+    method: 'GET',
+    params: params
+  })
 })

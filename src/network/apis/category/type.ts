@@ -16,3 +16,12 @@ export type CategoryResponse = Omit<ICategory, 'parentCategory' | 'subCategories
 export type UpdateCategoryByIdRequestParams = Partial<Omit<ICategory, 'parentCategory'>> & {
   parentCategory?: string
 }
+
+export interface GetCategoryFilterRequestParams {
+  page?: number
+  limit?: number
+  sortBy?: string
+  order?: 'ASC' | 'DESC'
+  name?: string
+  statuses?: string
+}

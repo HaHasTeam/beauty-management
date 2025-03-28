@@ -22,8 +22,9 @@ export function toSentenceCase(str: string) {
     .replace(/([A-Z])/g, ' $1')
     .toLowerCase()
     .replace(/^\w/, (c) => c.toUpperCase())
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, '')
     .trim()
+    .toUpperCase()
 }
 
 /**

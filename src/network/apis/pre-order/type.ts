@@ -14,3 +14,15 @@ export type TUpdatePreOrderRequestParams = Partial<
     status: TPreOrder['status']
   }
 >
+
+export interface GetPreOrderFilterRequestParams {
+  page?: number
+  limit?: number
+  sortBy?: string
+  order?: 'ASC' | 'DESC'
+  productIds?: string
+  brandId?: string
+  statuses?: string
+  startTime?: string
+  endTime?: string
+}

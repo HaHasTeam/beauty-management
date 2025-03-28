@@ -21,16 +21,31 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>
   title?: string
   options: Option[]
+  /**
+   * Whether the filter should be a single-choice filter.
+   * When true, selecting an option will deselect any previously selected option.
+   * @default false
+   */
+  isSingleChoice?: boolean
+  placeholder?: string
 }
 
 export function DataTableFacetedFilter<TData, TValue>({
   column,
   title,
-  options
+  options,
+  isSingleChoice = false,
+  placeholder
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const unknownValue = column?.getFilterValue()
-  const selectedValues = new Set(Array.isArray(unknownValue) ? unknownValue : [])
-
+  const selectedValues = new Set(
+    Array.isArray(unknownValue) 
+      ? unknownValue 
+      : unknownValue !== undefined 
+        ? [unknownValue] 
+        : []
+  )
+  
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -62,26 +77,35 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[12.5rem] p-0' align='start'>
+      <PopoverContent className='w-fit max-w-[400px] p-0' align='start'>
         <Command>
-          <CommandInput placeholder={title} />
+          <CommandInput placeholder={placeholder ?? title} />
           <CommandList className='max-h-full'>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup className='max-h-[18.75rem] overflow-y-auto overflow-x-hidden'>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value)
-
                 return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
-                      if (isSelected) {
-                        selectedValues.delete(option.value)
+                      if (isSingleChoice) {
+                        // For single choice, set just this value or clear if already selected
+                        if (isSelected) {
+                          column?.setFilterValue(undefined)
+                        } else {
+                          column?.setFilterValue(option.value)
+                        }
                       } else {
-                        selectedValues.add(option.value)
+                        // For multi-choice, add or remove from the set
+                        if (isSelected) {
+                          selectedValues.delete(option.value)
+                        } else {
+                          selectedValues.add(option.value)
+                        }
+                        const filterValues = Array.from(selectedValues)
+                        column?.setFilterValue(filterValues.length ? filterValues : undefined)
                       }
-                      const filterValues = Array.from(selectedValues)
-                      column?.setFilterValue(filterValues.length ? filterValues : undefined)
                     }}
                   >
                     <div
@@ -93,7 +117,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Check className='size-4' aria-hidden='true' />
                     </div>
                     {option.icon && <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />}
-                    <span>{option.label}</span>
+                    <span className="flex-1 truncate">{option.label}</span>
                     {option.count && (
                       <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>
                         {option.count}

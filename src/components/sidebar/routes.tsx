@@ -4,6 +4,7 @@ import {
   Boxes,
   Brush,
   CalendarClock,
+  Clock,
   Flag,
   Layers2Icon,
   Package,
@@ -88,6 +89,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.SCHEDULE_BOOKING].name,
     path: routesConfig[Routes.SCHEDULE_BOOKING].path,
     icon: <CalendarClock className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.WORKING_TIME].name,
+    path: routesConfig[Routes.WORKING_TIME].path,
+    icon: <Clock className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

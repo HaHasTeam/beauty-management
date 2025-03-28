@@ -1,6 +1,6 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
 import i18next from 'i18next'
-import { Ellipsis, EyeIcon, Pen, SettingsIcon } from 'lucide-react'
+import { Ellipsis, EyeIcon, Image, Pen, SettingsIcon } from 'lucide-react'
 import { GrRevert } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 
@@ -70,9 +70,11 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
           'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg'
         return (
           <div className='flex space-x-2 items-center'>
-            <Avatar className='size-10 object-cover aspect-square p-0.5 rounded-lg border bg-accent shadow-lg'>
-              <AvatarImage src={image} />
-              <AvatarFallback>{displayName[0].toUpperCase() ?? 'A'}</AvatarFallback>
+            <Avatar className='rounded-lg'>
+              <AvatarImage src={image} className='bg-transparent size-5' />
+              <AvatarFallback className='bg-transparent'>
+                <Image size={24} />
+              </AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
@@ -126,11 +128,11 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
     {
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Created At' />,
-      cell: ({ cell }) =>
-        formatDate(cell.getValue() as Date, {
-          hour: 'numeric',
-          minute: 'numeric'
-        })
+      cell: ({ cell }) => {
+        const time = cell.getValue() as Date
+
+        return <div>{time && formatDate(time, { hour: 'numeric', minute: 'numeric', month: '2-digit' })}</div>
+      }
     },
     {
       id: 'actions',

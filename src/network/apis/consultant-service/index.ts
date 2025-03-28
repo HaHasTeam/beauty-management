@@ -1,11 +1,12 @@
 import { IConsultantService } from '@/types/consultant-service'
-import { TServerResponse } from '@/types/request'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 import {
   AddConsultantServiceRequestParams,
   GetConsultantServiceByIdRequestParams,
+  GetConsultantServiceFilterRequestParams,
   UpdateConsultantServiceByIdRequestParams
 } from './type'
 
@@ -41,4 +42,20 @@ export const updateConsultantServiceByIdApi = toMutationFetcher<
     method: 'PUT',
     data
   })
+})
+
+export const getConsultantServiceFilterApi = toQueryFetcher<
+  GetConsultantServiceFilterRequestParams,
+  TServerResponseWithPaging<IConsultantService[]>
+>('getConsultantServiceFilterApi', async (params) => {
+  const response = await privateRequest(`/consultant-services/filter-consultant-services`, {
+    method: 'GET',
+    params: params
+  })
+  return {
+    message: 'sucess',
+    data: {
+      ...(response as TServerResponseWithPaging<IConsultantService[]>['data'])
+    }
+  }
 })

@@ -1,6 +1,17 @@
+type Paging = {
+  page: number
+  limit: number
+  total: number
+}
+
 export type TServerResponse<T, TItems = undefined> = {
   message: string
   data: T & (TItems extends undefined ? object : { items: TItems })
+}
+
+export type TServerResponseWithPaging<TItems = undefined> = {
+  message: string
+  data: (TItems extends undefined ? object : { items: TItems }) & Paging
 }
 
 export type TMetaData = {
@@ -22,3 +33,10 @@ export class ResponseError<TErrorResponse = unknown> extends Error {
     this.errors = response.errors
   }
 }
+
+export type BaseParams<T> = {
+  page?: number
+  limit?: number
+  sortBy?: string
+  order?: 'ASC' | 'DESC'
+} & Partial<T>

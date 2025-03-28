@@ -38,6 +38,8 @@ export interface DataTableFilterField<TData> {
   label: string
   placeholder?: string
   options?: Option[]
+  isDate?: boolean
+  isSingleChoice?: boolean
 }
 
 export interface DataTableAdvancedFilterField<TData> extends DataTableFilterField<TData> {

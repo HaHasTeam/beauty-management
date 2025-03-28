@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { LockIcon, SaveIcon } from 'lucide-react'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
-import { MdOutlinePassword } from 'react-icons/md'
 import * as z from 'zod'
 
-import CardSection from '@/components/card-section'
+import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
 import { PasswordInput } from '@/components/password-input'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { requiredRegex } from '@/constants/regex'
 
@@ -36,83 +36,87 @@ const ChangePassword = () => {
   function onSubmit() {}
 
   return (
-    <CardSection
-      title='Change Password'
-      description='
-        You can change your password here. Make sure you remember your new password.'
-      rightComponent={
-        <Button type='submit' className='flex gap-2 items-center' form={`form-${id}`}>
-          <MdOutlinePassword />
-          <span>Change Password</span>
-        </Button>
-      }
-    >
-      <Form {...form}>
-        <form
-          id={`form-${id}`}
-          noValidate
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'
-        >
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>Verify Current Password</FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    placeholder='
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className='flex items-center gap-2'>
+            <LockIcon />
+            Change Password
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form
+              id={`form-${id}`}
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+            >
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Verify Current Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder='
                     e.g. ********
                   '
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name='newPassword'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>New Password</FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    placeholder='
+              <FormField
+                control={form.control}
+                name='newPassword'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>New Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder='
                     e.g. ********
                   '
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name='confirmPassword'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>Confirm Password</FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    placeholder='
+              <FormField
+                control={form.control}
+                name='confirmPassword'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Confirm Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder='
                     e.g. ********
                   '
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
-    </CardSection>
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+      <Button type='submit' className='flex gap-2 items-center mt-8 ml-auto' form={`form-${id}`}>
+        <SaveIcon />
+        Change Password
+      </Button>
+    </>
   )
 }
 
