@@ -9,7 +9,8 @@ import {
   Pen,
   Power,
   PowerOff,
-  SettingsIcon
+  SettingsIcon,
+  UserPlus
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 

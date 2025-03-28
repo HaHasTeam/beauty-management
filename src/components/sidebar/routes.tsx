@@ -1,10 +1,10 @@
 // Auth Imports
-import { Clock } from 'lucide-react'
 import {
   BookA,
   Boxes,
   Brush,
   CalendarClock,
+  Clock,
   Flag,
   Layers2Icon,
   Package,

@@ -110,3 +110,17 @@ export const getWorkingSlotsOfConsultantApi = toQueryFetcher<string, TServerResp
     })
   }
 )
+
+export const getSomeoneSlotApi = toMutationFetcher<
+  {
+    startDate: string
+    endDate: string
+    id?: string
+  },
+  TServerResponse<TSlot[]>
+>('getSomeoneSlotApi', async (data) => {
+  return privateRequest(`/bookings/get-someone-slots/${data.id}`, {
+    method: 'POST',
+    data: data
+  })
+})

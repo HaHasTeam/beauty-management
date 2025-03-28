@@ -66,8 +66,8 @@ const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
     if (!listUser) return []
     return listUser.map((user) => ({
       value: user?.id,
-      label: self.id === user.id ? 'Me' + ` | ${user.email}` : user?.email,
-      display: getItemDisplay({ ...user, email: self.id === user.id ? 'Me' + ` | ${user.email}` : user?.email })
+      label: self?.id === user.id ? 'Me' + ` | ${user.email}` : user?.email,
+      display: getItemDisplay({ ...user, email: self?.id === user.id ? 'Me' + ` | ${user.email}` : user?.email })
     }))
   }, [listUser, self])
 
@@ -81,10 +81,10 @@ const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
           if (!item) return null
           return {
             value: item?.id,
-            label: self.id === item.id ? 'Me' + ` | ${item.email}` : item?.email,
+            label: self?.id === item.id ? 'Me' + ` | ${item.email}` : item?.email,
             display: getItemDisplay({
               ...item,
-              email: self.id === item.id ? 'Me' + ` | ${item.email}` : item?.email
+              email: self?.id === item.id ? 'Me' + ` | ${item.email}` : item?.email
             })
           }
         })
@@ -95,7 +95,7 @@ const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
       if (!item) return null
       return {
         value: item?.id,
-        label: self.id === item.id ? 'Me' + ` | ${item.email}` : item?.email,
+        label: self?.id === item.id ? 'Me' + ` | ${item.email}` : item?.email,
         display: getItemDisplay(item as TUser)
       }
     }

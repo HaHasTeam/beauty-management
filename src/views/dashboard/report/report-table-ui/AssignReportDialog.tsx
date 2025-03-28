@@ -77,7 +77,7 @@ export function AssignReportDialog({ Report, showTrigger = true, onSuccess, ...p
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      assigneeId: userData.id
+      assigneeId: userData?.id
     }
   })
 
@@ -103,7 +103,7 @@ export function AssignReportDialog({ Report, showTrigger = true, onSuccess, ...p
       })
 
       form.reset({
-        assigneeId: userData.id
+        assigneeId: userData?.id
       })
       queryClient.invalidateQueries({
         queryKey: [getFilteredReports.queryKey]
