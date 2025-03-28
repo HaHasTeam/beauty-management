@@ -255,10 +255,6 @@ const PreOrderDetails = () => {
 
   const getFooter = () => {
     switch (preProductData?.status) {
-      case PreOrderStatusEnum.ACTIVE:
-      case PreOrderStatusEnum.SOLD_OUT:
-      case PreOrderStatusEnum.WAITING:
-        return null
       default:
         return (
           <div className='flex items-center justify-end'>

@@ -20,6 +20,7 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { addFlashSaleApi, getFlashSaleByIdApi, updateFlashSaleApi } from '@/network/apis/flash-sale'
 import { TAddFlashSaleRequestParams, TUpdateFlashSaleRequestParams } from '@/network/apis/flash-sale/type'
+import { getProductApi } from '@/network/apis/product'
 import { FlashSaleStatusEnum } from '@/types/flash-sale'
 
 import ClassificationConfig from './ClassificationConfig'
@@ -81,6 +82,9 @@ const FlashSaleDetails = () => {
         queryClient.invalidateQueries({
           queryKey: [getFlashSaleByIdApi.queryKey, itemId as string]
         })
+        queryClient.invalidateQueries({
+          queryKey: [getProductApi.queryKey]
+        })
       } else {
         // await triggerImageUploadRef.current?.trigger()
         // const newImages = form.watch('images')
@@ -117,6 +121,9 @@ const FlashSaleDetails = () => {
       })
       queryClient.invalidateQueries({
         queryKey: [getFlashSaleByIdApi.queryKey, itemId as string]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [getProductApi.queryKey]
       })
     } catch (error) {
       handleServerError({
@@ -247,10 +254,6 @@ const FlashSaleDetails = () => {
 
   const getFooter = () => {
     switch (flashSaleData?.status) {
-      case FlashSaleStatusEnum.ACTIVE:
-      case FlashSaleStatusEnum.SOLD_OUT:
-      case FlashSaleStatusEnum.WAITING:
-        return null
       default:
         return (
           <div className='flex items-center justify-end'>
@@ -291,7 +294,7 @@ const FlashSaleDetails = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel required>Flash Sale Product</FormLabel>
-                      <SelectProduct {...field} multiple={false} />
+                      <SelectProduct {...field} multiple={false} readOnly={!!itemId} />
                       <FormMessage />
                     </FormItem>
                   )}

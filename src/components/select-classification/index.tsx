@@ -19,9 +19,9 @@ export type TClassificationItem = {
   sku?: string
   images: TFile[]
   type: ProductClassificationTypeEnum
-  color?: string
-  size?: string
-  other?: string
+  color?: string | null
+  size?: string | null
+  other?: string | null
   originalClassification?: string
 }
 
@@ -83,7 +83,7 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
 
     if (!multiple) {
       const option = value as TClassificationItem
-      if (option.id && option.originalClassification && option.title) return undefined
+      if (!(option.id && option.originalClassification && option.title)) return undefined
 
       const selectedClassification = classificationList?.find((item) => {
         if (option.title) {
@@ -130,6 +130,33 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maxQuantity])
 
+  // if type is default auto selected
+  useEffect(() => {
+    if (!value?.id && classificationList?.length === 1) {
+      const classification = classificationList[0] as TClassificationItem
+      const formValue: TClassificationItem = {
+        ...(value as TClassificationItem),
+        title: classification.title,
+        price: classification.price,
+        type: classification.type,
+        images: classification.images.map((image) => ({
+          ...image,
+          name: image.name ?? image.fileUrl,
+          fileUrl: image.fileUrl
+        })),
+        quantity: maxQuantity,
+        sku: value?.sku ?? (classification.sku ?? '') + +new Date().getTime(),
+        originalClassification: classification.id as string,
+        color: classification.color,
+        size: classification.size,
+        other: classification.other
+      }
+      if (onChange) {
+        onChange(formValue as unknown as ChangeEvent<HTMLInputElement>)
+      }
+    }
+  }, [classificationList, value, onChange, maxQuantity])
+
   return (
     <AsyncSelect
       defaultOptions={classificationOptions}
@@ -156,8 +183,11 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
               fileUrl: image.fileUrl
             })),
             quantity: maxQuantity,
-            sku: (classification.sku ?? '') + +new Date().getTime(),
-            originalClassification: classification.id as string
+            sku: value?.sku ?? (classification.sku ?? '') + +new Date().getTime(),
+            originalClassification: classification.id as string,
+            color: classification.color,
+            size: classification.size,
+            other: classification.other
           }
 
           onChange(formValue as unknown as ChangeEvent<HTMLInputElement>)

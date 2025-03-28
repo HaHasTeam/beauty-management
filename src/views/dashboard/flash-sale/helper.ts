@@ -45,9 +45,9 @@ export const formSchema = z.object({
             ),
             type: z.nativeEnum(ProductClassificationTypeEnum),
             originalClassification: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-            color: z.string().optional(),
-            size: z.string().optional(),
-            other: z.string().optional()
+            color: z.string().optional().nullable(),
+            size: z.string().optional().nullable(),
+            other: z.string().optional().nullable()
           },
           {
             message: defaultRequiredRegex.message
@@ -80,9 +80,9 @@ export const formSchema = z.object({
               .string()
               .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
               .optional(),
-            color: z.string().optional(),
-            size: z.string().optional(),
-            other: z.string().optional()
+            color: z.string().optional().nullable(),
+            size: z.string().optional().nullable(),
+            other: z.string().optional().nullable()
           })
           .optional()
       })

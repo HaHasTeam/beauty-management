@@ -69,7 +69,7 @@ export function getColumns(): ColumnDef<TFlashSale>[] {
       accessorKey: 'discount',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Discount %' />,
       cell: ({ row }) => {
-        return <div className='text-center font-bold'>{formatNumber(row.original.discount, '%')}</div>
+        return <div className='text-center font-bold'>{formatNumber(row.original.discount * 100, '%')}</div>
       }
     },
     {

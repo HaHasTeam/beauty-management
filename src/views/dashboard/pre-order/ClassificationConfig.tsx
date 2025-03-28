@@ -68,7 +68,13 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
           >
             {fields.map((_, index) => {
               const quantity = classificationList[index]?.append?.quantity ?? 0
+              const color = classificationList[index]?.append?.color ?? ''
+              const size = classificationList[index]?.append?.size ?? ''
+              const other = classificationList[index]?.append?.other ?? ''
 
+              const cmpArray = [color, size, other]
+              const autoTitle = cmpArray.filter((item) => item).join(' - ')
+              // form.setValue(`productClassifications.${index}.append.title`, autoTitle)
               return (
                 <Card>
                   <CardContent>
@@ -118,9 +124,9 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             name={`productClassifications.${index}.append.title`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel required>Title Of Product</FormLabel>
+                                <FormLabel required>Title Of Classification</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder='e.g. Blue' />
+                                  <Input {...field} placeholder='e.g. Blue' value={[autoTitle]} readOnly />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -131,7 +137,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             name={`productClassifications.${index}.append.sku`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel required>SKU Of Product</FormLabel>
+                                <FormLabel required>SKU Of Classification</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder='e.g. BLUE-2025' />
                                 </FormControl>
@@ -157,7 +163,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             name={`productClassifications.${index}.append.price`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel required>Price Of Product</FormLabel>
+                                <FormLabel required>Price Of Classification</FormLabel>
                                 <FormControl>
                                   <Input type='currency' placeholder='e.g. 100,000' {...field} />
                                 </FormControl>
