@@ -280,6 +280,7 @@ const WorkingTimeTab = () => {
 
       debugLog('Selected slots set directly from consultant data:', consultantWorkingSlots)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consultantSlotsData?.data])
 
   // Helper function to match slots by day and time - we'll use this in UI display logic
@@ -317,6 +318,7 @@ const WorkingTimeTab = () => {
       const convertedNonActiveSlots = convertApiSlotsToComponentFormat(nonActiveSlots)
       setDisabledSlots(convertedNonActiveSlots)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slotsData?.data])
 
   // Check if there are no available slots even after loading

@@ -149,6 +149,7 @@ export function WorkingTimeForm() {
       })
       setSelectedSlots(activeSlots)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slotsData?.data])
 
   // Use React Query mutation for updating active slots
