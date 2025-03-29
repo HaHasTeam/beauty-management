@@ -18,10 +18,10 @@ const consultantServiceTypeSchema = z
     id: z.string().optional(),
     question: z
       .string({
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       })
       .min(1, {
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       }),
     orderIndex: z.number().optional(),
     mandatory: z.boolean(),
@@ -34,7 +34,7 @@ const consultantServiceTypeSchema = z
       })
     ),
     type: z.nativeEnum(ConsultantServiceTypeEnum, {
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
     answers: optionSchema
       .array()
@@ -55,7 +55,7 @@ const consultantServiceTypeSchema = z
     ) {
       if (!data.answers || Object.keys(data.answers).length < 1) {
         return ctx.addIssue({
-          message: defaultRequiredRegex.message,
+          message: defaultRequiredRegex.message(),
           code: 'custom',
           path: ['answers']
         })
@@ -67,10 +67,10 @@ export const formSchema = z.object({
   id: z.string().optional(),
   price: z.coerce
     .number({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     })
     .nonnegative({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
   images: z
     .array(
@@ -82,24 +82,24 @@ export const formSchema = z.object({
       })
     )
     .min(1, {
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
   systemService: z
     .string({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     })
     .min(1, {
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
   serviceBookingFormData: z.object({
     id: z.string().optional(),
     title: z
       .string({
-        message: defaultRequiredRegex.message,
-        required_error: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message(),
+        required_error: defaultRequiredRegex.message()
       })
       .min(1, {
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       }),
     questions: z.array(consultantServiceTypeSchema)
   })

@@ -23,19 +23,19 @@ import { TUser, UserGenderEnum } from '@/types/user'
 import { convertFormIntoProfile, convertProfileIntoForm } from './helper'
 
 const formSchema = z.object({
-  firstName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message),
-  lastName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message),
-  username: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message),
+  firstName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message()),
+  lastName: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message()),
+  username: z.string().regex(longRequiredRegex.pattern, longRequiredRegex.message()),
   email: z
     .string()
-    .regex(longRequiredRegex.pattern, longRequiredRegex.message)
-    .regex(emailRegex.pattern, emailRegex.message),
-  gender: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    .regex(longRequiredRegex.pattern, longRequiredRegex.message())
+    .regex(emailRegex.pattern, emailRegex.message()),
+  gender: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   phone: z
     .string()
-    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
-    .refine(phoneRegex.pattern, phoneRegex.message),
-  dob: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+    .refine(phoneRegex.pattern, phoneRegex.message()),
+  dob: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
 })
 
 const ProfileDetails = () => {

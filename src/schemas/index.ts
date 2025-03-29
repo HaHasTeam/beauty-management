@@ -41,19 +41,19 @@ export const getCreateVoucherSchema = () => {
     discountType: z.nativeEnum(DiscountTypeEnum),
     discountValue: z.coerce
       .number({
-        message: numberRequiredRegex.message
+        message: numberRequiredRegex.message()
       })
       .nonnegative('Discount Value must be non-negative'),
     maxDiscount: z.coerce
       .number({
-        message: numberRequiredRegex.message
+        message: numberRequiredRegex.message()
       })
       .int('Max Discount must be integer')
       .nonnegative('Max Discount must be non-negative')
       .optional(),
     minOrderValue: z.coerce
       .number({
-        message: numberRequiredRegex.message
+        message: numberRequiredRegex.message()
       })
       .int('Min Order Value must be integer')
       .nonnegative('Min Order Value must be non-negative')
@@ -61,14 +61,14 @@ export const getCreateVoucherSchema = () => {
     description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
     amount: z.coerce
       .number({
-        message: numberRequiredRegex.message
+        message: numberRequiredRegex.message()
       })
       .int('Amount must be integer')
       .positive('Amount must be positive')
       .optional(),
-    startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
     applyType: z.nativeEnum(VoucherApplyTypeEnum).optional().default(VoucherApplyTypeEnum.ALL),
-    endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
     status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE),
     visibility: z.boolean().default(false).optional(),
     selectedProducts: z.array(z.string())
@@ -82,19 +82,19 @@ export const voucherCreateSchema = z.object({
   discountType: z.nativeEnum(DiscountTypeEnum),
   discountValue: z.coerce
     .number({
-      message: numberRequiredRegex.message
+      message: numberRequiredRegex.message()
     })
     .nonnegative('Discount Value must be non-negative'),
   maxDiscount: z.coerce
     .number({
-      message: numberRequiredRegex.message
+      message: numberRequiredRegex.message()
     })
     .int('Max Discount must be integer')
     .nonnegative('Max Discount must be non-negative')
     .optional(),
   minOrderValue: z.coerce
     .number({
-      message: numberRequiredRegex.message
+      message: numberRequiredRegex.message()
     })
     .int('Min Order Value must be integer')
     .nonnegative('Min Order Value must be non-negative')
@@ -102,23 +102,23 @@ export const voucherCreateSchema = z.object({
   description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
   amount: z.coerce
     .number({
-      message: numberRequiredRegex.message
+      message: numberRequiredRegex.message()
     })
     .int('Amount must be integer')
     .positive('Amount must be positive')
     .optional(),
-  startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   applyType: z.nativeEnum(VoucherApplyTypeEnum).optional().default(VoucherApplyTypeEnum.ALL),
-  endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE),
   visibility: z.boolean().default(false).optional(),
   selectedProducts: z.array(z.string())
 })
 
 export const CreateAddressBrandSchema = z.object({
-  detailAddress: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  ward: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  district: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  province: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  detailAddress: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+  ward: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+  district: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+  province: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   fullAddress: z.string().optional()
 })

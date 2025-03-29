@@ -13,9 +13,9 @@ import { defaultRequiredRegex, emailRegex } from '@/constants/regex'
 const formSchema = z.object({
   email: z
     .string()
-    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
-    .regex(emailRegex.pattern, emailRegex.message),
-  password: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+    .regex(emailRegex.pattern, emailRegex.message()),
+  password: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
 })
 
 export default function UpdatePassword() {

@@ -51,7 +51,7 @@ interface AssignReportDialogProps extends React.ComponentPropsWithoutRef<typeof 
 
 const formSchema = z.object({
   assigneeId: z.string({
-    message: defaultRequiredRegex.message
+    message: defaultRequiredRegex.message()
   })
 })
 
