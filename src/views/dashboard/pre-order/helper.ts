@@ -22,7 +22,8 @@ export const formSchema = z
                   .string({
                     message: defaultRequiredRegex.message
                   })
-                  .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+                  .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+                  .optional(),
                 price: z.coerce
                   .number({
                     message: defaultRequiredRegex.message
@@ -66,7 +67,7 @@ export const formSchema = z
                   fileUrl: z.string()
                 })
               ),
-              title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+              title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message).optional(),
               price: z.coerce
                 .number({
                   message: defaultRequiredRegex.message

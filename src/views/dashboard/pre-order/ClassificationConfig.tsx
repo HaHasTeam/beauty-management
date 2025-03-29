@@ -26,7 +26,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
     name: 'productClassifications'
   })
 
-  const classificationList = form.watch('productClassifications')
+  const classificationList = fields
 
   const isRemoveDisabled = fields.length === 1
 
@@ -51,6 +51,10 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
   //     ? String((classificationErrors as object[]).findIndex((value) => !!value))
   //     : undefined
 
+  const handleChangeTitle = (index: number, title: string) => {
+    form.setValue(`productClassifications.${index}.append.title`, title)
+  }
+
   return (
     <Card>
       <CardHeader className='text-primary mb-0'>
@@ -74,7 +78,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
 
               const cmpArray = [color, size, other]
               const autoTitle = cmpArray.filter((item) => item).join(' - ')
-              // form.setValue(`productClassifications.${index}.append.title`, autoTitle)
+
               return (
                 <Card>
                   <CardContent>
@@ -83,7 +87,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                         <div className='flex items-center gap-2 w-full'>
                           <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
                             <Tag strokeWidth={3} size={16} />
-                            {classificationList[index].append?.title}{' '}
+                            {autoTitle}
                           </span>
 
                           <div className='flex items-center gap-1'>
@@ -99,13 +103,14 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
                             onClick={handleRemove(index)}
                             disabled={isRemoveDisabled}
+                            type='button'
                           >
                             <Trash2 color='red' strokeWidth={3} size={20} />
                           </button>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-3'>
                           {/* <FormField
                         control={form.control}
                         name={`productClassifications.${index}.rawClassification`}
@@ -119,7 +124,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           )
                         }}
                       /> */}
-                          <FormField
+                          {/* <FormField
                             control={form.control}
                             name={`productClassifications.${index}.append.title`}
                             render={({ field }) => (
@@ -131,10 +136,11 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          />
+                          /> */}
                           <FormField
                             control={form.control}
                             name={`productClassifications.${index}.append.sku`}
+                            shouldUnregister
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel required>SKU Of Classification</FormLabel>
@@ -148,6 +154,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           <FormField
                             control={form.control}
                             name={`productClassifications.${index}.append.quantity`}
+                            shouldUnregister
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel required>Quantity Of Product</FormLabel>
@@ -159,6 +166,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             )}
                           />
                           <FormField
+                            shouldUnregister
                             control={form.control}
                             name={`productClassifications.${index}.append.price`}
                             render={({ field }) => (
@@ -171,15 +179,23 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                               </FormItem>
                             )}
                           />
-                          <div className='col-span-2 grid grid-cols-3 gap-4 max-sm:grid-cols-1'>
+                          <div className='col-span-3 grid grid-cols-3 gap-4 max-sm:grid-cols-1'>
                             <FormField
                               control={form.control}
+                              shouldUnregister
                               name={`productClassifications.${index}.append.color`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>Color</FormLabel>
                                   <FormControl>
-                                    <Input placeholder='e.g. red' {...field} />
+                                    <Input
+                                      placeholder='e.g. red'
+                                      {...field}
+                                      onChange={(value) => {
+                                        handleChangeTitle(index, autoTitle)
+                                        field.onChange(value)
+                                      }}
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -187,12 +203,20 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             />
                             <FormField
                               control={form.control}
+                              shouldUnregister
                               name={`productClassifications.${index}.append.size`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>Size</FormLabel>
                                   <FormControl>
-                                    <Input placeholder='e.g. XXL' {...field} />
+                                    <Input
+                                      placeholder='e.g. XXL'
+                                      {...field}
+                                      onChange={(value) => {
+                                        handleChangeTitle(index, autoTitle)
+                                        field.onChange(value)
+                                      }}
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -200,12 +224,20 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             />
                             <FormField
                               control={form.control}
+                              shouldUnregister
                               name={`productClassifications.${index}.append.other`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>Other</FormLabel>
                                   <FormControl>
-                                    <Input placeholder='e.g. Other classification type' {...field} />
+                                    <Input
+                                      placeholder='e.g. Other classification type'
+                                      {...field}
+                                      onChange={(value) => {
+                                        handleChangeTitle(index, autoTitle)
+                                        field.onChange(value)
+                                      }}
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -214,6 +246,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           </div>
                           <FormField
                             control={form.control}
+                            shouldUnregister
                             name={`productClassifications.${index}.append.images`}
                             render={({ field }) => {
                               return (
