@@ -24,7 +24,9 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
 import { createVoucherApi, getAllVouchersApi, getVoucherByIdApi, updateVoucherByIdApi } from '@/network/apis/voucher'
-import type { voucherCreateSchema } from '@/schemas'
+import { voucherCreateSchema } from '@/schemas'
+// import { voucherCreateSchema } from '@/schemas'
+// import type { voucherCreateSchema } from '@/schemas'
 import { useStore } from '@/stores/store'
 import {
   DiscountTypeEnum,

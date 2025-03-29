@@ -1,5 +1,6 @@
 import { TBrand } from './brand'
 import { StatusEnum, VoucherApplyTypeEnum, VoucherVisibilityEnum } from './enum'
+import { IResponseProduct } from './product'
 import { TMetaData } from './request'
 
 export type TVoucher = TMetaData & {
@@ -29,4 +30,5 @@ export type TVoucher = TMetaData & {
   brand?: TBrand | string
   applyType: VoucherApplyTypeEnum
   visibility: VoucherVisibilityEnum
+  applyProducts?: IResponseProduct[]
 }

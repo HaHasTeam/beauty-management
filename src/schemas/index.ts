@@ -32,6 +32,48 @@ export const brandCreateSchema = z.object({
   status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING)
 })
 
+export const getCreateVoucherSchema = () => {
+  return z.object({
+    orderValueType: z.enum(['noLimit', 'limited']),
+    name: z.string().min(1, 'Name is required').max(100, 'Name cannot exceed 100 characters'),
+    code: z.string().min(1, 'Code is required').max(50, 'Code cannot exceed 50 characters'),
+    type: z.nativeEnum(VoucherEnum).default(VoucherEnum.NORMAL),
+    discountType: z.nativeEnum(DiscountTypeEnum),
+    discountValue: z.coerce
+      .number({
+        message: numberRequiredRegex.message
+      })
+      .nonnegative('Discount Value must be non-negative'),
+    maxDiscount: z.coerce
+      .number({
+        message: numberRequiredRegex.message
+      })
+      .int('Max Discount must be integer')
+      .nonnegative('Max Discount must be non-negative')
+      .optional(),
+    minOrderValue: z.coerce
+      .number({
+        message: numberRequiredRegex.message
+      })
+      .int('Min Order Value must be integer')
+      .nonnegative('Min Order Value must be non-negative')
+      .optional(),
+    description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
+    amount: z.coerce
+      .number({
+        message: numberRequiredRegex.message
+      })
+      .int('Amount must be integer')
+      .positive('Amount must be positive')
+      .optional(),
+    startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    applyType: z.nativeEnum(VoucherApplyTypeEnum).optional().default(VoucherApplyTypeEnum.ALL),
+    endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.ACTIVE),
+    visibility: z.boolean().default(false).optional(),
+    selectedProducts: z.array(z.string())
+  })
+}
 export const voucherCreateSchema = z.object({
   orderValueType: z.enum(['noLimit', 'limited']),
   name: z.string().min(1, 'Name is required').max(100, 'Name cannot exceed 100 characters'),

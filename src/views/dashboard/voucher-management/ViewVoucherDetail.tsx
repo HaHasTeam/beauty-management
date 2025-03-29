@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/lib/utils'
 import { getVoucherByIdApi } from '@/network/apis/voucher'
-import { voucherCreateSchema } from '@/schemas'
+import { getCreateVoucherSchema } from '@/schemas'
 import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from '@/types/enum'
 
 import VoucherForm from './VoucherForm'
@@ -20,14 +20,16 @@ function ViewVoucherDetail() {
   const { id } = useParams()
   const voucherId = id ?? ''
 
+  const VoucherCreateSchema = getCreateVoucherSchema()
+
   const { data: voucherData } = useQuery({
     queryKey: [getVoucherByIdApi.queryKey, voucherId as string],
     queryFn: getVoucherByIdApi.fn,
     enabled: !!voucherId,
     select: (data) => data.data
   })
-  const form = useForm<z.infer<typeof voucherCreateSchema>>({
-    resolver: zodResolver(voucherCreateSchema),
+  const form = useForm<z.infer<typeof VoucherCreateSchema>>({
+    resolver: zodResolver(VoucherCreateSchema),
     defaultValues: {
       orderValueType: 'noLimit',
       name: '',
@@ -75,7 +77,8 @@ function ViewVoucherDetail() {
           amount: voucherData.amount,
           startTime: voucherData.startTime,
           endTime: voucherData.endTime,
-          brand: voucherData.brand
+          brand: voucherData.brand,
+          applyType: voucherData.applyType
         }
         form.reset(formatData)
       }
@@ -87,7 +90,7 @@ function ViewVoucherDetail() {
     <div className='relative flex w-full flex-col md:pt-[unset]'>
       <div className='max-w-full mx-auto w-full flex-col justify-center md:w-full md:flex-row xl:w-full gap-8 flex'>
         <div className='w-full md:w-3/5 lg:w-3/4 flex flex-col gap-8'>
-          <VoucherForm form={form} />
+          <VoucherForm form={form} voucherData={voucherData} />
         </div>
         <div className='max-w-2xl mx-auto p-4 space-y-6'>
           <div>

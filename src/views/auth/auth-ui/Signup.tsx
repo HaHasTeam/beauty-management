@@ -255,10 +255,10 @@ export default function SignUp() {
               >
                 Sign up
               </Button>
-              <OauthSignIn />
             </div>
           </form>
         </Form>
+        <OauthSignIn />
       </div>
 
       <div className='px-8 py-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600'>

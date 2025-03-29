@@ -1,3 +1,5 @@
+'use client'
+
 import { useQuery } from '@tanstack/react-query'
 import { Box, Plus, Store } from 'lucide-react'
 import { useState } from 'react'
@@ -48,10 +50,12 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
     }
   }
 
+  // Ensure selectedProducts is always an array
+  const selectedProductIds = form.getValues('selectedProducts') || []
+
   // Get the selected products data for display in the table
   const selectedProducts =
-    productData?.filter((product: IResponseProduct) => form.getValues('selectedProducts').includes(product.id || '')) ||
-    []
+    productData?.filter((product: IResponseProduct) => selectedProductIds.includes(product.id || '')) || []
 
   return (
     <>
@@ -86,7 +90,7 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
             <TabsContent value='SPECIFIC' className='mt-4'>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center space-x-2'>
-                  <Badge variant='secondary'>{form.watch('selectedProducts')?.length || 0}</Badge>
+                  <Badge variant='secondary'>{selectedProductIds.length}</Badge>
                   <span className='text-sm text-muted-foreground'>sản phẩm được chọn</span>
                 </div>
                 <Button type='button' size='sm' className='flex items-center' onClick={() => setOpen(true)}>

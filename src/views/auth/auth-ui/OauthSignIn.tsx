@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { getOauthGoogleUrl } from '@/configs/contants'
 import { Provider } from '@/types/types'
 
 type OAuthProviders = {
@@ -20,19 +19,18 @@ export default function OauthSignIn() {
     }
     /* Add desired OAuth providers here */
   ]
-  const [, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true) // Disable the button while the request is being handled
-
-    setIsSubmitting(false)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    // setIsSubmitting(true)
+    window.location.href = getOauthGoogleUrl()
+    // setIsSubmitting(false)
   }
 
   return (
     <div className='mt-8'>
       {oAuthProviders.map((provider) => (
         <form key={provider.name} className='pb-2' onSubmit={handleSubmit}>
-          <Input type='hidden' name='provider' value={provider.name} />
           <Button variant='outline' type='submit' className='w-full border-primary text-zinc-950 py-6 dark:text-white'>
             <span className='mr-2'>{provider.icon}</span>
             <span>{provider.displayName}</span>

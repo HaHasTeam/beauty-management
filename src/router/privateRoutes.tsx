@@ -42,6 +42,7 @@ import UpdateSystemService from '@/views/dashboard/system-service/UpdateSystemSe
 import UpdateProduct from '@/views/dashboard/update-product'
 import Vouchers from '@/views/dashboard/voucher-management'
 import ViewVoucherDetail from '@/views/dashboard/voucher-management/ViewVoucherDetail'
+import VoucherDetailPage from '@/views/dashboard/voucher-management/VoucherDetailPage'
 import WorkingTime from '@/views/dashboard/working-time'
 
 import AuthGuard from './guard/AuthGuard'
@@ -92,6 +93,10 @@ export const privateRoutes: RouteObject[] = [
             element: <Vouchers />
           },
           { path: routesConfig[Routes.ADD_VOUCHER].path, element: <ViewVoucherDetail /> },
+          {
+            path: ':id',
+            element: <VoucherDetailPage />
+          },
           {
             path: 'update/:id',
             element: <ViewVoucherDetail />
