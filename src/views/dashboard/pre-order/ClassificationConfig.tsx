@@ -54,6 +54,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
   const handleChangeTitle = (index: number, title: string) => {
     form.setValue(`productClassifications.${index}.append.title`, title)
   }
+  console.log(form.formState.errors, 'DSAFSA')
 
   return (
     <Card>
@@ -72,9 +73,9 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
           >
             {fields.map((_, index) => {
               const quantity = classificationList[index]?.append?.quantity ?? 0
-              const color = classificationList[index]?.append?.color ?? ''
-              const size = classificationList[index]?.append?.size ?? ''
-              const other = classificationList[index]?.append?.other ?? ''
+              const color = form.watch(`productClassifications.${index}.append.color`)
+              const size = form.watch(`productClassifications.${index}.append.size`)
+              const other = form.watch(`productClassifications.${index}.append.other`)
 
               const cmpArray = [color, size, other]
               const autoTitle = cmpArray.filter((item) => item).join(' - ')
