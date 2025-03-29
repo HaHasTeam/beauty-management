@@ -82,7 +82,7 @@ const AlertAction = React.forwardRef<
   <button
     ref={ref}
     className={cn(
-      'rounded-3xl shadow-2xl px-3 py-1 font-semibold flex items-center text-nowrap justify-center min-w-32',
+      'rounded-3xl shadow-2xl px-3 py-1 font-semibold flex items-center justify-start min-w-32  text-ellipsis lg:text-nowrap',
       actionVariants({ variant }),
       className
     )}
