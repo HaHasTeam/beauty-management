@@ -26,7 +26,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
     name: 'productClassifications'
   })
 
-  const classificationList = form.watch('productClassifications')
+  const classificationList = fields
 
   const isRemoveDisabled = fields.length === 1
 
@@ -103,6 +103,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
                             onClick={handleRemove(index)}
                             disabled={isRemoveDisabled}
+                            type='button'
                           >
                             <Trash2 color='red' strokeWidth={3} size={20} />
                           </button>
@@ -139,6 +140,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           <FormField
                             control={form.control}
                             name={`productClassifications.${index}.append.sku`}
+                            shouldUnregister
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel required>SKU Of Classification</FormLabel>
@@ -152,6 +154,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           <FormField
                             control={form.control}
                             name={`productClassifications.${index}.append.quantity`}
+                            shouldUnregister
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel required>Quantity Of Product</FormLabel>
@@ -163,6 +166,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             )}
                           />
                           <FormField
+                            shouldUnregister
                             control={form.control}
                             name={`productClassifications.${index}.append.price`}
                             render={({ field }) => (
@@ -178,6 +182,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           <div className='col-span-3 grid grid-cols-3 gap-4 max-sm:grid-cols-1'>
                             <FormField
                               control={form.control}
+                              shouldUnregister
                               name={`productClassifications.${index}.append.color`}
                               render={({ field }) => (
                                 <FormItem>
@@ -198,6 +203,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             />
                             <FormField
                               control={form.control}
+                              shouldUnregister
                               name={`productClassifications.${index}.append.size`}
                               render={({ field }) => (
                                 <FormItem>
@@ -218,6 +224,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             />
                             <FormField
                               control={form.control}
+                              shouldUnregister
                               name={`productClassifications.${index}.append.other`}
                               render={({ field }) => (
                                 <FormItem>
@@ -239,6 +246,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                           </div>
                           <FormField
                             control={form.control}
+                            shouldUnregister
                             name={`productClassifications.${index}.append.images`}
                             render={({ field }) => {
                               return (
