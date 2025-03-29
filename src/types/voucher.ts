@@ -26,7 +26,6 @@ export type TVoucher = TMetaData & {
   startTime: string
 
   endTime: string
-
   brand?: TBrand | string
   applyType: VoucherApplyTypeEnum
   visibility: VoucherVisibilityEnum
