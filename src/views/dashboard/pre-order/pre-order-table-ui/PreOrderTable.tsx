@@ -11,13 +11,10 @@ import { getAllProductApi } from '@/network/apis/product'
 import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
-import { BanPreOrdersDialog } from './BanPreOrdersDialog'
 import { getStatusIcon } from './helper'
-import { DataTableRowAction, getColumns } from './PreOrdersTableColumns'
+import { getColumns } from './PreOrdersTableColumns'
 import { PreOrdersTableFloatingBar } from './PreOrdersTableFloatingBar'
 import { PreOrderTableToolbarActions } from './PreOrdersTableToolbarActions'
-import { PublishPreOrdersDialog } from './PublishPreOrdersDialog'
-import { ViewPreOrderDetailsSheet } from './ViewPreOrderDetailsSheet'
 
 interface PreOrderTableProps {
   data: TPreOrder[]
@@ -26,8 +23,7 @@ interface PreOrderTableProps {
 }
 
 export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTableProps) {
-  const [rowAction, setRowAction] = React.useState<DataTableRowAction<TPreOrder> | null>(null)
-  const columns = React.useMemo(() => getColumns({ setRowAction }), [])
+  const columns = React.useMemo(() => getColumns(), [])
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
@@ -115,25 +111,6 @@ export function PreOrderTable({ data, pageCount, queryStates }: PreOrderTablePro
           <PreOrderTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-      <ViewPreOrderDetailsSheet
-        open={rowAction?.type === 'view'}
-        onOpenChange={() => setRowAction(null)}
-        preOrder={rowAction?.row.original}
-      />
-      <BanPreOrdersDialog
-        open={rowAction?.type === 'ban'}
-        onOpenChange={() => setRowAction(null)}
-        PreOrders={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-        onSuccess={() => rowAction?.row.toggleSelected(false)}
-      />
-      <PublishPreOrdersDialog
-        open={rowAction?.type === 'publish'}
-        onOpenChange={() => setRowAction(null)}
-        PreOrders={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-        onSuccess={() => rowAction?.row.toggleSelected(false)}
-      />
     </>
   )
 }

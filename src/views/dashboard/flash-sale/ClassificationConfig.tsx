@@ -38,13 +38,6 @@ const ClassificationConfig = ({ form, productId }: Props) => {
   const handleRemove = (index: number) => () => {
     remove(index)
   }
-  const classificationErrors = form.formState.errors.productClassifications
-  const errorIndex =
-    classificationErrors !== undefined
-      ? String((classificationErrors as object[]).findIndex((value) => !!value))
-      : fields.length === 1
-        ? String(fields.length - 1)
-        : undefined
 
   return (
     <Card>
@@ -56,7 +49,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
       </CardHeader>
       <CardContent>
         <div className='gap-4 grid grid-flow-row grid-cols-1'>
-          <Accordion type='single' className='w-full space-y-4' value={errorIndex}>
+          <Accordion type='multiple' className='w-full space-y-4' value={fields.map((_, index) => String(index))}>
             {fields.map((_, index) => {
               const price = classificationList[index].rawClassification?.price ?? 0
               const discount = Number(form.watch('discount') ?? 0) * 100

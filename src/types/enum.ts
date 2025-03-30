@@ -208,3 +208,8 @@ export enum ActionReceivedEnum {
   RECEIVED = 'RECEIVED',
   NOT_RECEIVED = 'NOT_RECEIVED'
 }
+
+export enum ModeEnum {
+  VIEW = 'VIEW',
+  EDIT = 'EDIT'
+}

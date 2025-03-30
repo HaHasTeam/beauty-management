@@ -27,7 +27,7 @@ const getProductItemDisplay = (product: TProduct) => {
           <Image className='size-4' />
         </AvatarFallback>
       </Avatar>
-      <span>{product.name}</span>
+      <span>{product?.name}</span>
     </div>
   )
 }

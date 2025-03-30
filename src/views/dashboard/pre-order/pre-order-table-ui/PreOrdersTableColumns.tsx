@@ -1,5 +1,5 @@
-import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, Eye, FilePenLine, Image, SettingsIcon } from 'lucide-react'
+import { type ColumnDef } from '@tanstack/react-table'
+import { Ellipsis, FilePenLine, Image, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -12,16 +12,7 @@ import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 
 import { getStatusIcon } from './helper'
 
-export interface DataTableRowAction<TData> {
-  row: Row<TData>
-  type: 'ban' | 'view' | 'publish'
-}
-
-interface GetColumnsProps {
-  setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TPreOrder> | null>>
-}
-
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrder>[] {
+export function getColumns(): ColumnDef<TPreOrder>[] {
   return [
     // {
     //   id: 'select',
@@ -164,15 +155,6 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TPreOrd
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem
-                onClick={() => setRowAction({ row, type: 'view' })}
-                className='bg-blue-200 text-blue-500'
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <Eye size={16} strokeWidth={3} />
-                  <span className='font-semibold'>View</span>
-                </span>
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleNavigate} className='text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
                   <FilePenLine size={16} strokeWidth={3} />
