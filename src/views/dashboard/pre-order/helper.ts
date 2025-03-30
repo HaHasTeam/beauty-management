@@ -8,9 +8,9 @@ import { ProductClassificationTypeEnum } from '@/types/product'
 export const formSchema = z
   .object({
     id: z.string().optional(),
-    product: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-    startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-    endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    product: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+    startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+    endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
     productClassifications: z
       .array(
         z.object({
@@ -20,15 +20,15 @@ export const formSchema = z
                 id: z.string().optional(),
                 title: z
                   .string({
-                    message: defaultRequiredRegex.message
+                    message: defaultRequiredRegex.message()
                   })
                   .optional(),
                 price: z.coerce
                   .number({
-                    message: defaultRequiredRegex.message
+                    message: defaultRequiredRegex.message()
                   })
-                  .positive({ message: defaultRequiredRegex.message }),
-                quantity: z.coerce.number().int().positive({ message: defaultRequiredRegex.message }),
+                  .positive({ message: defaultRequiredRegex.message() }),
+                quantity: z.coerce.number().int().positive({ message: defaultRequiredRegex.message() }),
                 sku: z.string(),
                 images: z.array(
                   z.object({
@@ -42,7 +42,7 @@ export const formSchema = z
                 other: z.string().optional()
               },
               {
-                message: defaultRequiredRegex.message
+                message: defaultRequiredRegex.message()
               }
             )
             .partial()
@@ -54,10 +54,10 @@ export const formSchema = z
               other: z.string().optional(),
               quantity: z.coerce
                 .number({
-                  message: defaultRequiredRegex.message
+                  message: defaultRequiredRegex.message()
                 })
-                .positive({ message: defaultRequiredRegex.message }),
-              sku: z.string({ message: defaultRequiredRegex.message }),
+                .positive({ message: defaultRequiredRegex.message() }),
+              sku: z.string({ message: defaultRequiredRegex.message() }),
               type: z.nativeEnum(ProductClassificationTypeEnum),
               images: z.array(
                 z.object({
@@ -69,9 +69,9 @@ export const formSchema = z
               title: z.string().optional(),
               price: z.coerce
                 .number({
-                  message: defaultRequiredRegex.message
+                  message: defaultRequiredRegex.message()
                 })
-                .positive({ message: defaultRequiredRegex.message })
+                .positive({ message: defaultRequiredRegex.message() })
             })
             .superRefine((data, ctx) => {
               if (!data.color && !data.size && !data.other) {
@@ -85,7 +85,7 @@ export const formSchema = z
         })
       )
       .nonempty({
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       })
   })
   .superRefine((data, ctx) => {

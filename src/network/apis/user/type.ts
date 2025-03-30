@@ -44,7 +44,7 @@ export type TUpdateUsersListStatusRequestParams = {
 }
 export type TGetAccountFilterRequestParams = BaseParams<TUser> & {
   brand?: string
-  roles?: string
+  role?: string
   statuses?: string
   search?: string
 }

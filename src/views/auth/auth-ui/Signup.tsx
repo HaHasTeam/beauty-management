@@ -19,6 +19,7 @@ import { Routes, routesConfig } from '@/configs/routes'
 import { defaultRequiredRegex, emailRegex, phoneRegex } from '@/constants/regex'
 import { useAppProvider } from '@/contexts/AppProvider'
 import useHandleServerError from '@/hooks/useHandleServerError'
+// import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { createUserApi, signInWithPasswordApi } from '@/network/apis/user'
 import { useStore } from '@/stores/store'
@@ -102,28 +103,30 @@ export default function SignUp() {
         isAuthenticated: true,
         authData: data
       })
-    } catch (error) {
-      handleServerError({
-        error
-      })
+    } catch {
+      // handleServerError({
+      //   error
+      // })
     }
   }
 
   const handleServerError = useHandleServerError()
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const role = prefillData ? prefillData.role : rolesData[UserRoleEnum.MANAGER].id
       await createUserFn({
         email: values.email,
         password: values.password,
         username: values.username,
         phone: '0' + values?.phone?.slice(3),
-        role: prefillData ? prefillData.role : rolesData[UserRoleEnum.MANAGER].id,
+        role,
         brands: prefillData?.brand ? [prefillData.brand] : undefined,
         isEmailVerify: prefillData ? true : false,
         status: UserStatusEnum.PENDING
       })
-      await handleLogin(values.email, values.password)
-      const isManager = prefillData?.role === rolesData[UserRoleEnum.MANAGER].id
+      await handleLogin(values.email, values.password).catch(() => {})
+      const isManager = role === rolesData[UserRoleEnum.MANAGER].id
+
       if (isManager) {
         navigate(routesConfig[Routes.AUTH_EMAIL_VERIFICATION].getPath({ email: values.email }))
       } else {
@@ -252,16 +255,16 @@ export default function SignUp() {
               >
                 Sign up
               </Button>
-              <OauthSignIn />
             </div>
           </form>
         </Form>
+        <OauthSignIn />
       </div>
 
       <div className='px-8 py-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600'>
         <p className='text-center text-gray-600 dark:text-gray-300'>
           Already have an account?{' '}
-          <Link to='/sign-in' className='text-[#FFA07A] hover:underline font-medium'>
+          <Link to='/auth/signin/password-signin' className='text-[#FFA07A] hover:underline font-medium'>
             Sign in
           </Link>
         </p>

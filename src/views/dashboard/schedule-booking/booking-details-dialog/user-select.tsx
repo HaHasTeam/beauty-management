@@ -28,7 +28,7 @@ export function UserSelect({ onSelect, disabled = false }: UserSelectProps) {
       getAccountFilterApi.queryKey,
       {
         search: searchTerm,
-        roles: RoleEnum.OPERATOR,
+        role: RoleEnum.OPERATOR,
         statuses: StatusEnum.ACTIVE
       }
     ],

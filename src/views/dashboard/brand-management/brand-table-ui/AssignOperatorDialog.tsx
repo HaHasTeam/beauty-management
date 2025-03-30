@@ -17,7 +17,7 @@ import { RoleEnum } from '@/types/enum'
 import { UserSelect } from '../../schedule-booking/booking-details-dialog/user-select'
 
 const formSchema = z.object({
-  operatorId: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+  operatorId: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
 })
 
 interface AssignOperatorDialogProps {

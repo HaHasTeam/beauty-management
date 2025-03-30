@@ -17,8 +17,8 @@ type ForgotPasswordProps = {
 const formSchema = z.object({
   email: z
     .string()
-    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
-    .regex(emailRegex.pattern, emailRegex.message)
+    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+    .regex(emailRegex.pattern, emailRegex.message())
 })
 
 export default function ForgotPassword({ allowEmail }: ForgotPasswordProps) {

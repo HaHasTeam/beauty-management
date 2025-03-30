@@ -165,14 +165,16 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
               <DropdownMenuItem
-                onClick={() => {
-                  setRowAction({ row: row, type: 'view' })
-                }}
+              // onClick={() => {
+              //   setRowAction({ row: row, type: 'view' })
+              // }}
               >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <EyeIcon />
-                  View Details
-                </span>
+                <Link to={`/dashboard/voucher/${row.original.id}`}>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <EyeIcon />
+                    View Details
+                  </span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link to={routesConfig[Routes.UPDATE_VOUCHER].getPath(row.original.id)}>

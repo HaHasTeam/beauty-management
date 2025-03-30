@@ -54,7 +54,6 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
   const handleChangeTitle = (index: number, title: string) => {
     form.setValue(`productClassifications.${index}.append.title`, title)
   }
-  console.log(form.formState.errors, 'DSAFSA')
 
   return (
     <Card>

@@ -1,7 +1,7 @@
 'use client'
 
 import type { Table } from '@tanstack/react-table'
-import {  X } from 'lucide-react'
+import { X } from 'lucide-react'
 import * as React from 'react'
 
 import { DataTableFacetedFilter } from '@/components/ui/data-table/data-table-faceted-filter'
@@ -113,7 +113,10 @@ export function DataTableToolbar<TData>({
                   key={String(column.id)}
                   field={{
                     value: table.getColumn(String(column.id))?.getFilterValue() as string,
-                    onChange: (value) => table.getColumn(String(column.id))?.setFilterValue(new Date(value as unknown as string).toLocaleString())
+                    onChange: (value) =>
+                      table
+                        .getColumn(String(column.id))
+                        ?.setFilterValue(new Date(value as unknown as string).toLocaleString())
                   }}
                   label={column.label}
                 />

@@ -17,7 +17,7 @@ import { getUserProfileApi, updateProfileApi } from '@/network/apis/user'
 import { convertFormIntoProfile } from './helper'
 
 const formSchema = z.object({
-  avatar: z.string().regex(requiredRegex().pattern, requiredRegex().message)
+  avatar: z.string().regex(requiredRegex().pattern, requiredRegex().message())
 })
 
 const ProfileHeader = () => {
