@@ -126,11 +126,12 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
               user?.role === RoleEnum.STAFF) && (
               <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
                 <div>
-                  <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8)}
+                  <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8).toUpperCase()}
                 </div>
                 {orderDetailId && (
                   <div>
-                    <span className='font-medium'> {t('feedback.order')}:</span> {orderDetailId.substring(0, 8)}
+                    <span className='font-medium'> {t('feedback.order')}:</span>{' '}
+                    {orderDetailId.substring(0, 8).toUpperCase()}
                   </div>
                 )}
               </div>

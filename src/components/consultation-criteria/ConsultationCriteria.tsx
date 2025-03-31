@@ -130,7 +130,7 @@ const ConsultationCriteria = ({ consultationCriteria, mode = 'create', form }: C
           {/* Footer */}
           <div className='px-4 pb-3'>
             <div className='text-xs text-gray-500'>
-              {t('systemService.ID')}: {consultationCriteria.id.substring(0, 8)}
+              {t('systemService.ID')}: {consultationCriteria.id.substring(0, 8).toUpperCase()}
             </div>
           </div>
         </>

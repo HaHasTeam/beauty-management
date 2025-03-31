@@ -1,3 +1,6 @@
+import 'react-quill-new/dist/quill.snow.css'
+import '../product/index.css'
+
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactQuill from 'react-quill-new'

@@ -27,22 +27,22 @@ export default function OrderSummary({
             <span className='font-medium'>{t('productCard.price', { price: totalProductCost })}</span>
           </div>
 
-          {totalBrandDiscount && totalBrandDiscount > 0 ? (
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>{t('cart.discountBrand')}</span>
-              <span className='text-green-700 font-medium'>
-                -{t('productCard.price', { price: totalBrandDiscount })}
-              </span>
-            </div>
-          ) : null}
-          {totalPlatformDiscount && totalPlatformDiscount > 0 ? (
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>{t('cart.discountPlatform')}</span>
-              <span className='text-green-700 font-medium'>
-                -{t('productCard.price', { price: totalPlatformDiscount })}
-              </span>
-            </div>
-          ) : null}
+          <div className='flex justify-between items-center'>
+            <span className='text-sm text-muted-foreground'>{t('cart.discountBrand')}</span>
+            <span className='text-green-700 font-medium'>
+              {totalBrandDiscount > 0 ? '-' : ''}
+              {t('productCard.price', { price: totalBrandDiscount })}
+            </span>
+          </div>
+
+          <div className='flex justify-between items-center'>
+            <span className='text-sm text-muted-foreground'>{t('cart.discountPlatform')}</span>
+            <span className='text-green-700 font-medium'>
+              {totalPlatformDiscount > 0 ? '-' : ''}
+              {t('productCard.price', { price: totalPlatformDiscount })}
+            </span>
+          </div>
+
           <div className='flex flex-col'>
             <div className='flex justify-between items-center pt-3 border-t'>
               <span className='text-sm sm:text-base'>{t('cart.totalPayment')}</span>

@@ -106,7 +106,8 @@ const BrandAnswer = ({
                           user?.role === RoleEnum.STAFF) && (
                           <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
                             <div>
-                              <span className='font-medium'>{t('feedback.ID')}:</span> {reply.id.substring(0, 8)}
+                              <span className='font-medium'>{t('feedback.ID')}:</span>{' '}
+                              {reply.id.substring(0, 8).toUpperCase()}
                             </div>
                           </div>
                         )}

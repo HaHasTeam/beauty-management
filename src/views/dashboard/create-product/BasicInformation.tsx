@@ -1,4 +1,5 @@
 import 'react-quill-new/dist/quill.snow.css'
+import './index.css'
 
 import { BadgeInfo, ImagePlus, Upload } from 'lucide-react'
 import { useEffect, useRef } from 'react'
@@ -299,8 +300,8 @@ const BasicInformation = ({
                             }}
                             renderInputUI={(_isDragActive, files, maxFiles) => {
                               return (
-                                <div className='w-full h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
-                                  <Upload className='w-12 h-12 text-primary' />
+                                <div className='w-full h-16 hover:bg-primary/15 p-2 rounded-lg border flex flex-col gap-1 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                  <Upload className='w-6 h-6 text-primary' />
 
                                   <p className='text-sm text-primary'>
                                     {t('createProduct.inputImage')} ({files?.length ?? 0}/{maxFiles})

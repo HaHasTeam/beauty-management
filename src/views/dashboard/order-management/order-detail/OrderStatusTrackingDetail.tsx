@@ -9,6 +9,14 @@ import { RequestStatusEnum, ShippingStatusEnum } from '@/types/enum'
 import { UserRoleEnum } from '@/types/role'
 import { IStatusTracking } from '@/types/status-tracking'
 
+interface IStep {
+  status: string
+  createdAt: Date | string
+  text: string
+  icon: JSX.Element
+  reason: string | null
+  updatedBy: string
+}
 interface OrderStatusTrackingDetailProps {
   statusTrackingData: IStatusTracking[]
 }
@@ -43,13 +51,24 @@ const OrderStatusTrackingDetail = ({ statusTrackingData }: OrderStatusTrackingDe
   const timeline = [...defaultTimeline, ...databaseTimeline]
   const currentStatus = statusTrackingData[statusTrackingData.length - 1]?.status
   const currentIndex = timeline.findIndex((step) => step.status === currentStatus)
+
+  const isComplete = (step: IStep, index: number) => {
+    const status = step.status
+    return (
+      (status === ShippingStatusEnum.COMPLETED && index === timeline.length - 1) ||
+      status === ShippingStatusEnum.CANCELLED ||
+      step.status === RequestStatusEnum.APPROVED ||
+      status === ShippingStatusEnum.REFUNDED ||
+      status === ShippingStatusEnum.RETURNED_FAIL
+    )
+  }
   return (
     <div className='mx-auto'>
       <div className=''>
         {timeline.map((step, index) => (
           <div key={index} className='flex items-start gap-4'>
             <div className='flex flex-col items-center justify-center'>
-              {step.status === ShippingStatusEnum.COMPLETED ? (
+              {isComplete(step, index) ? (
                 <div className={`w-4 h-4 flex items-center justify-center bg-emerald-500 rounded-full`}>
                   <Check className='w-3 h-3 text-white' />
                 </div>
