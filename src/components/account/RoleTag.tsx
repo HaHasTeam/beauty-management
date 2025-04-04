@@ -14,17 +14,31 @@ const sizeClasses = {
   large: 'text-base px-4 py-2'
 }
 
-export function RoleTag({ role, size = 'medium' }: RoleTagProps) {
+const RoleTag = ({ role, size = 'medium' }: RoleTagProps) => {
   const { t } = useTranslation()
   const roleData = getRoleIcon(role)
+  if (!roleData || !roleData.icon) {
+    // Fallback rendering when icon is missing
+    return (
+      <span
+        className={`flex items-center gap-1 rounded-full font-medium bg-gray-100 text-gray-800 ${sizeClasses[size]}`}
+      >
+        {t(`role.${role}`)}
+      </span>
+    )
+  }
+
+  // Normal rendering when icon is available
+  const IconComponent = roleData.icon
 
   return (
     <span
       className={`flex items-center gap-1 rounded-full font-medium ${roleData.bgColor} ${roleData.textColor} ${sizeClasses[size]}`}
     >
-      <roleData.icon className={roleData.iconColor} size={16} />
-
+      <IconComponent className={roleData.iconColor} size={16} />
       {t(`role.${role}`)}
     </span>
   )
 }
+
+export default RoleTag

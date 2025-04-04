@@ -339,7 +339,10 @@ const OrderDetails = () => {
                     icon={<History />}
                     content={
                       !isFetchingStatusTracking && useStatusTrackingData && useStatusTrackingData?.data ? (
-                        <OrderStatusTrackingDetail statusTrackingData={useStatusTrackingData?.data} />
+                        <OrderStatusTrackingDetail
+                          statusTrackingData={useStatusTrackingData?.data}
+                          cancelAndReturnRequest={cancelAndReturnRequestData?.data}
+                        />
                       ) : (
                         <p></p>
                       )
@@ -468,16 +471,21 @@ const OrderDetails = () => {
             onOpenChange={setOpenTrackReturn}
             onConfirm={() => {}}
             item={'returnTrackView'}
+            rejectBy={cancelAndReturnRequestData?.data?.refundRequest?.updatedBy?.username}
+            rejectByRole={cancelAndReturnRequestData?.data?.refundRequest?.updatedBy?.role?.role}
+            rejectTime={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.createdAt}
+            reviewTime={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.updatedAt}
             rejectReason={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.reason}
             rejectMediaFiles={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.mediaFiles}
             reason={cancelAndReturnRequestData?.data?.refundRequest?.reason}
             mediaFiles={cancelAndReturnRequestData?.data?.refundRequest?.mediaFiles}
+            returnTime={cancelAndReturnRequestData?.data?.refundRequest?.createdAt}
             returnRequest={cancelAndReturnRequestData?.data?.refundRequest}
             isRejectRequest={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest !== null}
             isShowAction={false}
             status={cancelAndReturnRequestData?.data?.refundRequest?.status}
             rejectStatus={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.status}
-            reasonRejected={cancelAndReturnRequestData?.data?.refundRequest?.reasonRejected}
+            reasonRejected={cancelAndReturnRequestData?.data?.refundRequest?.rejectedRefundRequest?.reasonRejected}
           />
         )}
         {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.complaintRequest && (
@@ -498,6 +506,10 @@ const OrderDetails = () => {
             rejectStatus={cancelAndReturnRequestData?.data?.complaintRequest?.status}
             status={cancelAndReturnRequestData?.data?.complaintRequest?.status}
             reasonRejected={cancelAndReturnRequestData?.data?.complaintRequest?.reasonRejected}
+            rejectReview={cancelAndReturnRequestData?.data?.complaintRequest?.updatedBy?.username}
+            rejectReviewRole={cancelAndReturnRequestData?.data?.complaintRequest?.updatedBy?.role?.role}
+            reviewTime={cancelAndReturnRequestData?.data?.complaintRequest?.updatedAt}
+            returnTime={cancelAndReturnRequestData?.data?.complaintRequest.createdAt}
           />
         )}
         {/* {!isFetching && useOrderData?.data && cancelAndReturnRequestData?.data?.refundRequest && (

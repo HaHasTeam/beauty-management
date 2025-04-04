@@ -8,7 +8,7 @@ import { RoleEnum } from '@/types/enum'
 import { IReplyFeedback, IResponseFeedback } from '@/types/feedback'
 import { UserRoleEnum } from '@/types/role'
 
-import { RoleTag } from '../account/RoleTag'
+import RoleTag from '../account/RoleTag'
 import Button from '../button'
 import { ReplyFeedbackForm } from '../feedback/ReplyFeedbackForm'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'

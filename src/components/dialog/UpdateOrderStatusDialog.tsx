@@ -143,9 +143,7 @@ export default function UpdateOrderStatus({
       const deliveredDate = new Date(deliveredStatusTrack.createdAt)
       const currentDate = new Date()
       const allowedTimeInMs =
-        masterConfig && masterConfig[0].autoUpdateOrderToRefundedStatusTime
-          ? parseInt(masterConfig[0].autoUpdateOrderToRefundedStatusTime)
-          : null
+        masterConfig && masterConfig[0].complaintTimeExpired ? masterConfig[0].complaintTimeExpired : null
       return allowedTimeInMs ? currentDate.getTime() - deliveredDate.getTime() <= allowedTimeInMs : true
     }
     return isOrderDeliveredRecently()

@@ -705,7 +705,7 @@
       "delivered": "Đơn hàng đã được giao thành công đến tay khách hàng.",
       "completed": "Khách hàng đã xác nhận nhận hàng, giao dịch hoàn tất.",
       "cancelled": "Đơn hàng đã bị hủy và sẽ không được xử lý hoặc giao hàng.",
-      "returning": "Khách hàng đã yêu cầu trả hàng, và đơn hàng hiện đang được gửi trả lại cho thương hiệu. Thương hiệu cần thực hiện hành động trong vòng {{count}} ngày; nếu không, hệ thống sẽ tự động cập nhật trạng thái thành \"Đã nhận\". Nếu thương hiệu nhấp vào nút \"Chưa nhận được\", thời gian sẽ được gia hạn. Nếu có vấn đề, thương hiệu có thể gửi khiếu nại.",
+      "returning": "Khách hàng đã yêu cầu trả hàng, và đơn hàng đang chờ được lấy. Thương hiệu cần cử shipper đến lấy đơn hàng từ khách và thực hiện cập nhật trạng thái trong vòng {{count}} ngày; nếu không, hệ thống sẽ tự động cập nhật trạng thái thành \"Đã nhận\". Nếu thương hiệu nhấp vào nút \"Chưa nhận được\", thời gian sẽ được gia hạn. Nếu có vấn đề, thương hiệu có thể gửi khiếu nại.",
       "refunded": "Khoản tiền hoàn trả đã được xử lý và gửi lại cho khách hàng.",
       "brandReceived": "Đơn hàng trả lại đã được thương hiệu nhận thành công và đang chờ xem xét thêm. Nếu thương hiệu gửi khiếu nại, đội ngũ hỗ trợ sẽ xem xét và giải quyết vấn đề. Nếu thương hiệu không gửi khiếu nại, xu sẽ được hoàn vào ví của khách hàng trong vòng {{count}} ngày kể từ ngày nhận hàng trả. Sau thời gian này, thương hiệu sẽ không thể khiếu nại nữa.",
       "returnFailed": "Quá trình trả hàng không thành công do các vấn đề như gửi sai kiện hàng, sản phẩm bị hư hỏng khi trả lại hoặc không đáp ứng điều kiện hoàn trả."
@@ -750,7 +750,9 @@
       "SUSPICIOUS_ACTIVITY": "Yêu cầu hủy đơn hàng có dấu hiệu gian lận hoặc đáng ngờ.",
       "OTHER": "Khác"
     },
-    "processSuccess": "Yêu cầu hủy đơn đã được xử lý thành công!"
+    "processSuccess": "Yêu cầu hủy đơn đã được xử lý thành công!",
+    "time": "Lúc",
+    "by": "Bởi"
   },
   "toast": {
     "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
@@ -802,6 +804,8 @@
     "phone": "Điện thoại",
     "notes": "Ghi chú",
     "no": "Không",
+    "updatedBy": "Cập nhật bởi",
+    "approvedBy": "Chấp thuận bởi",
     "message": "Tin nhắn",
     "timeline": "Tiến trình",
     "subTotal": "Thành Tiền",
@@ -1317,7 +1321,7 @@
     "complaintRequestApprovedTitleCustomer": "Khiếu Nại Được Phê Duyệt",
     "complaintRequestApprovedMessageCustomer": "Khiếu nại của thương hiệu đã được quản trị viên chấp thuận. Bạn sẽ không được hoàn xu cho đơn hàng này. Bạn có thể xem lại chi tiết khiếu nại và liên hệ đội ngũ hỗ trợ nếu cần.",
     "returnRequestApprovedTitleBrand": "Yêu Cầu Trả Hàng Được Phê Duyệt",
-    "returnRequestApprovedMessageBrand": "Yêu cầu trả hàng đã được chấp thuận. Khách hàng sẽ gửi trả đơn hàng trong vòng {{count}} ngày."
+    "returnRequestApprovedMessageBrand": "Yêu cầu trả hàng đã được chấp thuận. Khách hàng sẽ gửi trả đơn hàng trong vòng {{count}} ngày. Sau khi khách hàng cập nhật trạng thái \"Đang trả hàng\", vui lòng sắp xếp shipper đến lấy đơn từ khách hàng."
   },
   "booking": {
     "waitConfirm": "Đang chờ xác nhận",

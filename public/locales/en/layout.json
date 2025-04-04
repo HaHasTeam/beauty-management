@@ -705,7 +705,7 @@
       "delivered": "The order has been successfully delivered to the customer’s address.",
       "completed": "The customer has confirmed receipt of the order, and the transaction is finalized.",
       "cancelled": "The refund has been processed and issued to the customer.",
-      "returning": "The customer has requested a return, and the order is currently being returned to the brand. The brand needs to take action within {{count}} day(s); otherwise, the system will automatically update the status to \"Received\". If the brand clicks the \"Haven't Received\" button, the time will be extended. If there is an issue, the brand can submit a complaint.",
+      "returning": "The customer has requested a return, and the order is awaiting pickup. The brand must arrange for a shipper to collect the order from the customer and update the status within {{count}} day(s); otherwise, the system will automatically update the status to \"Received\". If the brand clicks the \"Haven't Received\" button, the time will be extended. If there is an issue, the brand can submit a complaint.",
       "refunded": "The order has been canceled and will not be processed or shipped.",
       "brandReceived": "The returned order has been successfully received by the brand and is awaiting further review. If a complaint is filed, the support team will review and resolve the issue. If the brand does not file a complaint, the coins will be refunded to the customer's wallet within {{count}} days from the date the return was received. After this period, the brand will no longer be able to file a complaint.",
       "returnFailed": "The return process was unsuccessful due to issues such as incorrect return shipment, damaged item upon return, or failure to meet return conditions. Further action may be required."
@@ -750,7 +750,9 @@
       "SUSPICIOUS_ACTIVITY": "This cancellation request appears to be fraudulent or suspicious.",
       "OTHER": "Other"
     },
-    "processSuccess": "Cancellation request processed successfully!"
+    "processSuccess": "Cancellation request processed successfully!",
+    "time": "Time",
+    "by": "By"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -803,6 +805,8 @@
     "notes": "Notes",
     "no": "No",
     "message": "Message",
+    "updatedBy": "Updated by",
+    "approvedBy": "Approved by",
     "timeline": "Timeline",
     "subTotal": "Sub Total",
     "quantity": "Quantity",
@@ -1317,7 +1321,7 @@
     "complaintRequestApprovedTitleCustomer": "Complaint Approved",
     "complaintRequestApprovedMessageCustomer": "The brand's complaint has been approved by the admin. You will not receive a coin refund for this order. You can review the complaint details and contact the support team if needed.",
     "returnRequestApprovedTitleBrand": "Return Request Approved",
-    "returnRequestApprovedMessageBrand": "The customer's return request has been approved. The customer will return the order within {{count}} day(s)."
+    "returnRequestApprovedMessageBrand": "The customer's return request has been approved. The customer will return the order within {{count}} day(s). After the customer updates the status to \"Returning\", please arrange for a shipper to pick up the order from the customer"
   },
   "booking": {
     "waitConfirm": "Waiting for Confirmation",
