@@ -119,6 +119,7 @@ const MakeDecisionOnComplaint = ({
           isShowAction
           rejectReason={''}
           rejectMediaFiles={[]}
+          returnTime={complaintRequest.createdAt}
           reason={complaintRequest.reason}
           mediaFiles={complaintRequest.mediaFiles}
           returnRequest={complaintRequest}

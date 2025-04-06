@@ -7,7 +7,6 @@ import { ViewFeedbackDialog } from '@/components/feedback/ViewFeedbackDialog'
 import ImageWithFallback from '@/components/image/ImageWithFallback'
 import ProductTag from '@/components/product-tag'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import { Routes, routesConfig } from '@/configs/routes'
 import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
@@ -89,14 +88,12 @@ const ProductOrderDetailLandscape = ({
               )}
             </div>
           </div>
-          <div className='order-3 sm:order-2 xl:w-[30%] lg:w-[30%] md:w-[30%] w-full'>
+          <div className='order-3 sm:order-2 xl:w-[30%] lg:w-[30%] md:w-[30%] w-full flex items-center'>
             {productClassification?.type === ClassificationTypeEnum?.CUSTOM && (
               <div className='w-full flex items-center gap-2'>
-                <Label>
-                  <span className='text-muted-foreground lg:text-sm text-xs overflow-ellipsis'>
-                    {t('productDetail.classification')}:
-                  </span>
-                </Label>
+                <span className='text-xs font-medium text-muted-foreground lg:text-sm overflow-ellipsis'>
+                  {t('productDetail.classification')}:
+                </span>
                 <span className='line-clamp-2 lg:text-sm md:text-sm sm:text-xs text-xs text-primary font-medium'>
                   {[
                     productClassification?.color && `${productClassification.color}`,
@@ -110,7 +107,7 @@ const ProductOrderDetailLandscape = ({
             )}
           </div>
           {unitPriceBeforeDiscount - unitPriceAfterDiscount > 0 ? (
-            <div className='order-2 sm:order-3 w-full md:w-[25%] lg:w-[25%] xl:w-[20%] flex gap-1 items-center justify-start sm:justify-center'>
+            <div className='order-2 sm:order-3 w-full md:w-[25%] lg:w-[25%] xl:w-[20%] flex gap-1 items-center justify-start sm:justify-end'>
               <span className='text-gray-400 xl:text-base lg:text-sm text-xs line-through'>
                 {t('productCard.price', { price: unitPriceBeforeDiscount })}
               </span>
@@ -119,7 +116,7 @@ const ProductOrderDetailLandscape = ({
               </span>
             </div>
           ) : (
-            <div className='order-2 sm:order-3 w-full md:w-[25%] lg:w-[25%] xl:w-[20%] flex gap-1 items-center justify-start sm:justify-center'>
+            <div className='order-2 sm:order-3 w-full md:w-[25%] lg:w-[25%] xl:w-[20%] flex gap-1 items-center justify-start sm:justify-end'>
               <span className='xl:text-base lg:text-sm md:text-sm sm:text-xs text-xs'>
                 {t('productCard.price', { price: unitPriceBeforeDiscount })}
               </span>
