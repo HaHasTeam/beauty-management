@@ -80,9 +80,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
                 <FormControl>
                   <Input
                     // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                    placeholder='
-                please enter your brand name
-                    '
+                    placeholder='please enter your brand name'
                     {...field}
                   />
                 </FormControl>
@@ -99,9 +97,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
                 <FormControl>
                   <Input
                     // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
-                    placeholder='
-                     e.g. allure@gmail.com
-                    '
+                    placeholder='e.g. allure@gmail.com'
                     {...field}
                   />
                 </FormControl>

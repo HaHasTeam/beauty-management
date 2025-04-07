@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { jwtDecode } from 'jwt-decode'
 import { useId, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
@@ -16,7 +17,7 @@ import { PhoneInputWithCountries } from '@/components/phone-input'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Routes, routesConfig } from '@/configs/routes'
-import { defaultRequiredRegex, emailRegex, phoneRegex } from '@/constants/regex'
+import { defaultRequiredRegex, emailRegex, phoneRegex, usernameRegex } from '@/constants/regex'
 import { useAppProvider } from '@/contexts/AppProvider'
 import useHandleServerError from '@/hooks/useHandleServerError'
 // import useHandleServerError from '@/hooks/useHandleServerError'
@@ -38,11 +39,14 @@ const formSchema = z
   .object({
     email: z
       .string()
-      .regex(defaultRequiredRegex.pattern, 'Please fill out this field')
-      .regex(emailRegex.pattern, 'Please enter a valid email address'),
-    password: z.string().regex(defaultRequiredRegex.pattern, 'Please fill out this field'),
-    username: z.string().regex(defaultRequiredRegex.pattern, 'Please fill out this field'),
-    phone: z.string().refine(phoneRegex.pattern, 'Please fill in a valid phone number').optional(),
+      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+      .regex(emailRegex.pattern, emailRegex.message()),
+    password: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+    username: z
+      .string()
+      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+      .regex(usernameRegex.pattern, usernameRegex.message()),
+    phone: z.string().refine(phoneRegex.pattern, phoneRegex.message()).optional(),
     passwordConfirm: z.string().min(8).max(20)
     // acceptTerms: z.boolean()
   })
@@ -51,6 +55,7 @@ const formSchema = z
     path: ['passwordConfirm']
   })
 export default function SignUp() {
+  const { t } = useTranslation()
   const { rolesData } = useAppProvider()
   const navigate = useNavigate()
   const { successToast } = useToast()
@@ -175,7 +180,7 @@ export default function SignUp() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required className='text-gray-700 dark:text-gray-300'>
-                      Full Name
+                      Username
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -184,6 +189,9 @@ export default function SignUp() {
                         {...field}
                       />
                     </FormControl>
+                    <FormDescription className='text-xs text-gray-500 dark:text-gray-400'>
+                      {t('validation.usernameHelper')}
+                    </FormDescription>
                     <FormMessage className='text-red-500' />
                   </FormItem>
                 )}
