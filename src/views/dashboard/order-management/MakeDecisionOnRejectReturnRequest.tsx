@@ -119,10 +119,12 @@ const MakeDecisionOnReturnRejectRequest = ({
           onConfirm={() => handleMakeDecisionOnReturnRejectRequest(RequestStatusEnum.APPROVED)}
           item={'decisionRejectReturn'}
           isShowAction
+          rejectTime={rejectReturnRequest.createdAt}
           rejectReason={rejectReturnRequest.reason}
           rejectMediaFiles={rejectReturnRequest.mediaFiles}
           reason={refundRequest.reason}
           mediaFiles={refundRequest.mediaFiles}
+          returnTime={refundRequest.createdAt}
           returnRequest={refundRequest}
           isRejectRequest
           status={refundRequest?.status}

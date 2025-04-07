@@ -92,7 +92,7 @@ export default function BrandDashboard() {
           <div>
             <h1 className='text-3xl font-bold'>{brand.name}</h1>
             <p className='text-muted-foreground'>{brand.description || 'No description available'}</p>
-            <p className='text-xs text-muted-foreground mt-1'>ID: {brand.id?.substring(0, 8) || 'N/A'}</p>
+            <p className='text-xs text-muted-foreground mt-1'>ID: {brand.id?.substring(0, 8).toUpperCase() || 'N/A'}</p>
           </div>
         </div>
         <div className='flex flex-col items-end gap-2'>
