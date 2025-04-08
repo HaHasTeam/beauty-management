@@ -91,7 +91,7 @@
     --chart-foreground: 345 24% 98%;
     --chart-muted: 345 24% 91%;   
     --chart-yellow: 50 100% 50%;
-    --chart-gray: #262626
+    --chart-gray: #262626,
     /* mới thêm vào biến mới nè  */
 
     --warning: 48 96% 89%;

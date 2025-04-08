@@ -148,8 +148,9 @@ export function DataTableToolbar<TData>({
                   options={column.options ?? []}
                   isSingleChoice={column.isSingleChoice}
                 />
-              )
-          )}
+              
+          ))
+            }
         {dateColumns.length > 0 &&
           dateColumns.map(
             (column) =>
