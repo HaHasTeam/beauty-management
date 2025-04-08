@@ -5,6 +5,10 @@ export const emailRegex = {
   pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
   message: () => i18next.t('validation.emailValid')
 }
+export const usernameRegex = {
+  pattern: /^[a-zA-Z][a-zA-Z0-9_]{2,19}$/,
+  message: () => i18next.t('validation.usernameValid')
+}
 
 export const requiredRegex = (min?: number, max?: number) => {
   return {
