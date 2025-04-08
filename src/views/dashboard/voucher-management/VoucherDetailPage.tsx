@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, Calendar, CheckCircle, Clock, DollarSign, Eye, Percent, Store, Tag, XCircle } from 'lucide-react'
+import { Calendar, CheckCircle, Clock, DollarSign, Eye, Percent, Store, Tag, XCircle } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Badge } from '@/components/ui/badge'
@@ -50,12 +50,6 @@ function VoucherDetailSkeleton() {
     <div className='container mx-auto py-8 px-4 max-w-6xl'>
       <div className='flex items-center justify-between mb-6'>
         <div className='flex items-center'>
-          <Button variant='ghost' size='sm' asChild className='mr-2'>
-            <a href='/vouchers'>
-              <ArrowLeft className='h-4 w-4 mr-2' />
-              Back
-            </a>
-          </Button>
           <Skeleton className='h-8 w-48' />
         </div>
         <div className='flex space-x-2'>
@@ -159,12 +153,6 @@ export default function VoucherDetailPage() {
     return (
       <div className='container mx-auto py-8 px-4 max-w-6xl'>
         <div className='flex items-center mb-6'>
-          <Button variant='ghost' size='sm' asChild className='mr-2'>
-            <a href='/vouchers'>
-              <ArrowLeft className='h-4 w-4 mr-2' />
-              Back
-            </a>
-          </Button>
           <h1 className='text-2xl font-bold'>Voucher Details</h1>
         </div>
         <Card className='bg-destructive/10'>
@@ -211,12 +199,6 @@ export default function VoucherDetailPage() {
     <div className='container mx-auto py-8 px-4 max-w-6xl'>
       <div className='flex items-center justify-between mb-6'>
         <div className='flex items-center'>
-          <Button variant='ghost' size='sm' asChild className='mr-2'>
-            <a href='/vouchers'>
-              <ArrowLeft className='h-4 w-4 mr-2' />
-              Back
-            </a>
-          </Button>
           <h1 className='text-2xl font-bold'>Voucher Details</h1>
         </div>
         <div className='flex space-x-2'>
