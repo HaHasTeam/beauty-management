@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { addDays, format } from 'date-fns'
 import {
-  Briefcase,
   Building,
   CalendarIcon,
   CalendarPlus2Icon as CalendarIcon2,
@@ -171,25 +170,35 @@ function ScheduleMeeting() {
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         {/* Left sidebar with participant information */}
         <div className='lg:col-span-1 space-y-6'>
-          {/* System Operator Information */}
+          {/* Reviewer Information */}
           <Card className='border shadow-sm'>
             <CardHeader className='bg-muted/30 pb-3'>
               <CardTitle className='text-lg font-semibold flex items-center'>
                 <ShieldCheck className='h-5 w-5 mr-2 text-primary' />
-                System Operator
+                Reviewer Information
               </CardTitle>
             </CardHeader>
             <CardContent className='pt-4'>
               <div className='flex flex-col space-y-4'>
                 <div className='flex items-center space-x-3'>
                   <Avatar className='h-16 w-16 border'>
-                    <AvatarImage src={undefined} alt='Operator' />
-                    <AvatarFallback className='text-lg bg-primary/10 text-primary'>OP</AvatarFallback>
+                    <AvatarImage src={reviewer && 'avatar' in reviewer ? reviewer.avatar : undefined} alt='Reviewer' />
+                    <AvatarFallback className='text-lg bg-primary/10 text-primary'>
+                      {reviewer && typeof reviewer === 'object' && 'email' in reviewer
+                        ? `${reviewer.email?.charAt(0) || ''}`
+                        : typeof reviewer === 'string' && reviewer.length > 0
+                          ? reviewer.charAt(0).toUpperCase()
+                          : 'RV'}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className='font-semibold text-lg'>System Operator</h3>
+                    <h3 className='font-semibold text-lg'>
+                      {reviewer && 'firstName' in reviewer
+                        ? `${reviewer.firstName || ''} ${reviewer.lastName || ''}`
+                        : 'Reviewer'}
+                    </h3>
                     <Badge variant='outline' className='mt-1'>
-                      Platform Representative
+                      {reviewer && 'role' in reviewer ? reviewer.role : 'Platform Representative'}
                     </Badge>
                   </div>
                 </div>
@@ -199,12 +208,21 @@ function ScheduleMeeting() {
                 <div className='space-y-2'>
                   <div className='flex items-start'>
                     <Mail className='h-4 w-4 mr-2 mt-0.5 text-muted-foreground' />
-                    <span className='text-sm'>operator@platform.com</span>
+                    <span className='text-sm'>{reviewer && 'email' in reviewer ? reviewer.email : 'reviewer'}</span>
                   </div>
-                  <div className='flex items-start'>
-                    <Briefcase className='h-4 w-4 mr-2 mt-0.5 text-muted-foreground' />
-                    <span className='text-sm'>Account Verification Specialist</span>
-                  </div>
+                  {reviewer && 'phone' in reviewer && reviewer.phone && (
+                    <div className='flex items-start'>
+                      <Phone className='h-4 w-4 mr-2 mt-0.5 text-muted-foreground' />
+                      <span className='text-sm'>{reviewer.phone}</span>
+                    </div>
+                  )}
+
+                  {reviewer && 'username' in reviewer && (
+                    <div className='flex items-start'>
+                      <User className='h-4 w-4 mr-2 mt-0.5 text-muted-foreground' />
+                      <span className='text-sm'>{reviewer.username}</span>
+                    </div>
+                  )}
                 </div>
 
                 <Separator />
@@ -212,7 +230,7 @@ function ScheduleMeeting() {
                 <div>
                   <h4 className='text-sm font-medium mb-1'>About</h4>
                   <p className='text-sm text-muted-foreground'>
-                    The system operator will verify your brand information, explain the platform features, and help you
+                    The reviewer will verify your brand information, explain the platform features, and help you
                     complete the registration process.
                   </p>
                 </div>
@@ -377,7 +395,10 @@ function ScheduleMeeting() {
                                         const response = await getAvailableSlotMutate({
                                           startDate: startDate,
                                           endDate: endDate,
-                                          id: reviewer && 'id' in reviewer ? reviewer.id : undefined
+                                          id:
+                                            reviewer && typeof reviewer === 'object' && 'id' in reviewer
+                                              ? reviewer.id
+                                              : undefined
                                         })
 
                                         if (response.data) {

@@ -174,6 +174,11 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         brandId={rowAction?.row.original.id}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
+        onUpdateStatusChange={(type) => {
+          if (rowAction?.row) {
+            setRowAction({ row: rowAction.row, type: type })
+          }
+        }}
       />
       <AssignOperatorDialog
         open={rowAction?.type === 'assign-operator'}
@@ -182,6 +187,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
             setRowAction(null)
           }
         }}
+        row={rowAction?.row}
         brandId={rowAction?.row.original.id || ''}
         onAssign={handleAssignOperator}
       />

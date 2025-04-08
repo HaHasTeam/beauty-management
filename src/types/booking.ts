@@ -19,6 +19,7 @@ export type TBooking = TMetaData & {
   brand?: IBranch2
   account?: TUser
   slot: TSlot
+  resultNote: string
 }
 
 export type CalendarEvent = {

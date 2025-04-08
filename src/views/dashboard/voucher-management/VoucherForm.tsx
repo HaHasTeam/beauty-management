@@ -32,7 +32,6 @@ import {
   DiscountTypeEnum,
   discountTypeEnumArray,
   StatusEnum,
-  VoucherApplyTypeEnum,
   voucherEnumArray,
   VoucherVisibilityEnum
 } from '@/types/enum'
@@ -105,20 +104,19 @@ function VoucherForm({
         amount: values.amount,
         startTime: values.startTime,
         endTime: values.endTime,
-        brandId: userData?.brands?.length ? userData.brands[0].id : ''
+        brandId: userData?.brands?.length ? userData.brands[0].id : '',
+        applyProductIds: values.selectedProducts,
+        applyType: values.applyType,
+        visibility: values.visibility ? VoucherVisibilityEnum.PUBLIC : VoucherVisibilityEnum.WALLET
       }
       if (voucherData) {
         await updateVoucherMutation({
           id: voucherData.id,
-          ...formatData,
-          applyType: VoucherApplyTypeEnum.ALL,
-          visibility: VoucherVisibilityEnum.PUBLIC
+          ...formatData
         })
       } else {
         await createVoucherMutation({
-          ...formatData,
-          applyType: VoucherApplyTypeEnum.ALL,
-          visibility: VoucherVisibilityEnum.PUBLIC
+          ...formatData
         })
       }
     } catch (error) {

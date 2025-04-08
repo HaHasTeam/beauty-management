@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { Row } from '@tanstack/react-table'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
@@ -12,6 +13,7 @@ import { defaultRequiredRegex } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { useStore } from '@/stores/store'
+import { TBrand } from '@/types/brand'
 import { RoleEnum } from '@/types/enum'
 
 import { UserSelect } from '../../schedule-booking/booking-details-dialog/user-select'
@@ -23,21 +25,35 @@ const formSchema = z.object({
 interface AssignOperatorDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  row?: Row<TBrand>
   brandId: string
   onAssign: (operatorId: string, brandId: string) => Promise<void>
 }
 
-export function AssignOperatorDialog({ open, onOpenChange, brandId, onAssign }: AssignOperatorDialogProps) {
+export function AssignOperatorDialog({ open, onOpenChange, row, brandId, onAssign }: AssignOperatorDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { successToast } = useToast()
   const handleServerErrors = useHandleServerError()
 
+  // Get the reviewer data from the row if it exists
+  const reviewerData = row?.original?.reviewer
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      operatorId: ''
+      operatorId: reviewerData?.id || ''
     }
   })
+
+  // Reset form when dialog opens/closes or reviewer changes
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        operatorId: reviewerData?.id || ''
+      })
+    }
+  }, [reviewerData, form, open])
+
   const { user } = useStore(
     useShallow((state) => {
       return {
@@ -46,6 +62,7 @@ export function AssignOperatorDialog({ open, onOpenChange, brandId, onAssign }: 
     })
   )
   const isAdmin = user?.role === RoleEnum.ADMIN
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true)
@@ -63,15 +80,21 @@ export function AssignOperatorDialog({ open, onOpenChange, brandId, onAssign }: 
       setIsLoading(false)
     }
   }
+
   if (!isAdmin) {
     return null
   }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>Assign Operator</DialogTitle>
-          <DialogDescription>Select an operator to assign to this brand.</DialogDescription>
+          <DialogDescription>
+            {reviewerData
+              ? `Current operator: ${reviewerData.username} (${reviewerData.email})`
+              : 'Select an operator to assign to this brand.'}
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
@@ -82,7 +105,18 @@ export function AssignOperatorDialog({ open, onOpenChange, brandId, onAssign }: 
                 <FormItem>
                   <FormLabel required>Operator</FormLabel>
                   <FormControl>
-                    <UserSelect onSelect={(userId) => field.onChange(userId)} disabled={isLoading} />
+                    <UserSelect
+                      onSelect={(userId) => field.onChange(userId)}
+                      disabled={isLoading}
+                      defaultValue={
+                        reviewerData
+                          ? {
+                              id: reviewerData.id,
+                              label: `${reviewerData.username} (${reviewerData.email})`
+                            }
+                          : undefined
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +127,7 @@ export function AssignOperatorDialog({ open, onOpenChange, brandId, onAssign }: 
                 Cancel
               </Button>
               <Button type='submit' loading={isLoading}>
-                Assign Operator
+                {reviewerData ? 'Update Operator' : 'Assign Operator'}
               </Button>
             </div>
           </form>
