@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
-
 import { Shell } from '@/components/ui/shell'
 import { DataTableQueryState } from '@/types/table'
 import { OrderStatic, TGetDailyOrderStatisticsParams } from '@/network/apis/transaction/type'
@@ -41,20 +40,20 @@ export default function IndexPage() {
     <div className='flex flex-col gap-4'>
       <h1 className='text-2xl font-bold'>Order Statistics</h1>
       <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
-      <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
-        <div className='w-full flex items-center gap-4'>
-          <Shell className='gap-2'>
-            {isUserListLoading ? (
-              <div className='w-full'>
-                <Skeleton className='w-full h-[300px] rounded-lg' />
-              </div>
-            ) : (
-              <OrderStaticCard data={userListData?.data as OrderStatic} queryStates={queryStates} />
-            )}
-          </Shell>
+        <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
+          <div className='w-full flex items-center gap-4'>
+            <Shell className='gap-2'>
+              {isUserListLoading ? (
+                <div className='w-full'>
+                  <Skeleton className='w-full h-[300px] rounded-lg' />
+                </div>
+              ) : (
+                <OrderStaticCard data={userListData?.data as OrderStatic} queryStates={queryStates} />
+              )}
+            </Shell>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
     </div>
   )
 }

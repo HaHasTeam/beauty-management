@@ -26,7 +26,6 @@ interface OrderStaticCardProps {
 export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
   // Get currently selected date range
 
-
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -171,8 +170,8 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data}  />}>
-          <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
+      <CardWithFacetFilters mainContent={<Static data={data} />}>
+        <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
           <div className='flex items-center justify-end px-4 py-2'>
             <Select onValueChange={handleTimeRangeChange}>
               <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
@@ -194,7 +193,7 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
               </SelectContent>
             </Select>
           </div>
-          </DataTableToolbar>
+        </DataTableToolbar>
       </CardWithFacetFilters>
     </div>
   )

@@ -69,7 +69,6 @@ export function DataTableFilterList<TData>({
 
     if (!filterField) return
 
-
     void setFilters([
       // @ts-ignore
       ...filters,

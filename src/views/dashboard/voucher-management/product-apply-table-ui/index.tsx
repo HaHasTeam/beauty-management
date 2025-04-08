@@ -11,13 +11,30 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
 import { useDataTable } from '@/hooks/useDataTable'
-import { voucherCreateSchema } from '@/schemas'
+import type { voucherCreateSchema } from '@/schemas'
 // Update the type imports to match your actual types
 import type { IProductTable, IResponseProduct } from '@/types/product'
-import { DataTableQueryState } from '@/types/table'
+import type { DataTableQueryState } from '@/types/table'
 import { convertToProductTable2 } from '@/utils'
 
 import { getColumns } from './ProductsTableColumns'
+
+// Helper function to safely extract the array of product IDs
+function getProductIdsArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+  }
+
+  if (value && typeof value === 'object' && value !== null) {
+    // Check if it has a selectedProducts property that is an array
+    const objValue = value as Record<string, unknown>
+    if ('selectedProducts' in objValue && Array.isArray(objValue.selectedProducts)) {
+      return objValue.selectedProducts
+    }
+  }
+
+  return []
+}
 
 export default function IndexPage({
   isLoading,
@@ -34,7 +51,10 @@ export default function IndexPage({
 }) {
   const columns = useMemo(() => {
     const deleteProduct = (productId: string) => {
-      const currentSelected: Set<string> = new Set(form.getValues('selectedProducts') || [])
+      const rawValue = form.getValues('selectedProducts')
+      const currentProductIds = getProductIdsArray(rawValue)
+      const currentSelected = new Set(currentProductIds)
+
       if (currentSelected.has(productId)) {
         currentSelected.delete(productId)
       }
@@ -45,7 +65,9 @@ export default function IndexPage({
       onDelete: deleteProduct,
       handleProductSelect: (productId: string) => {
         // Get current selected products
-        const currentSelected: Set<string> = new Set(form.getValues('selectedProducts') || [])
+        const rawValue = form.getValues('selectedProducts')
+        const currentProductIds = getProductIdsArray(rawValue)
+        const currentSelected = new Set(currentProductIds)
 
         // Toggle selection
         if (currentSelected.has(productId)) {
@@ -88,8 +110,10 @@ export default function IndexPage({
 
   // Set row selection based on form values
   useEffect(() => {
-    const selectedProducts = form.getValues('selectedProducts') || []
-    if (table) {
+    const rawValue = form.getValues('selectedProducts')
+    const selectedProducts = getProductIdsArray(rawValue)
+
+    if (table && selectedProducts.length > 0) {
       table.getRowModel().rows.forEach((row) => {
         const isSelected = selectedProducts.includes(row.original.id || '')
         row.toggleSelected(isSelected)

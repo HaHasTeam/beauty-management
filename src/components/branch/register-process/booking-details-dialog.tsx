@@ -71,22 +71,22 @@ export const BookingDetailsDialog = ({
           <div className='space-y-3'>
             <h3 className='text-lg font-medium'>Thông tin thời gian</h3>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <div className='flex items-center gap-2'>
-                <Calendar className='h-5 w-5 text-primary' />
-                <div>
-                  <div className='text-sm text-muted-foreground'>Thời gian bắt đầu</div>
-                  <div className='font-medium'>
-                    {bookingDetails.startTime ? format(new Date(bookingDetails.startTime), 'dd/MM/yyyy HH:mm') : 'N/A'}
-                  </div>
+              <div>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground mb-1'>
+                  <Calendar className='h-5 w-5 text-primary flex-shrink-0' />
+                  <span>Thời gian bắt đầu</span>
+                </div>
+                <div className='font-medium ml-7'>
+                  {bookingDetails.startTime ? format(new Date(bookingDetails.startTime), 'dd/MM/yyyy HH:mm') : 'N/A'}
                 </div>
               </div>
-              <div className='flex items-center gap-2'>
-                <Clock className='h-5 w-5 text-primary' />
-                <div>
-                  <div className='text-sm text-muted-foreground'>Thời gian kết thúc</div>
-                  <div className='font-medium'>
-                    {bookingDetails.endTime ? format(new Date(bookingDetails.endTime), 'dd/MM/yyyy HH:mm') : 'N/A'}
-                  </div>
+              <div>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground mb-1'>
+                  <Clock className='h-5 w-5 text-primary flex-shrink-0' />
+                  <span>Thời gian kết thúc</span>
+                </div>
+                <div className='font-medium ml-7'>
+                  {bookingDetails.endTime ? format(new Date(bookingDetails.endTime), 'dd/MM/yyyy HH:mm') : 'N/A'}
                 </div>
               </div>
             </div>
@@ -96,20 +96,22 @@ export const BookingDetailsDialog = ({
           <div className='space-y-3'>
             <h3 className='text-lg font-medium'>Thông tin bổ sung</h3>
             {bookingDetails.notes && (
-              <div className='flex items-start gap-2'>
-                <MessageSquare className='h-5 w-5 text-primary mt-0.5' />
-                <div>
-                  <div className='text-sm text-muted-foreground'>Ghi chú</div>
-                  <div className='font-medium'>{bookingDetails.notes}</div>
+              <div>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground mb-1'>
+                  <MessageSquare className='h-5 w-5 text-primary flex-shrink-0' />
+                  <span>Ghi chú</span>
                 </div>
+                <div className='font-medium ml-7'>{bookingDetails.notes}</div>
               </div>
             )}
 
             {bookingDetails.meetUrl && (
-              <div className='flex items-start gap-2'>
-                <Link className='h-5 w-5 text-primary mt-0.5' />
-                <div>
-                  <div className='text-sm text-muted-foreground'>Link phỏng vấn</div>
+              <div>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground mb-1'>
+                  <Link className='h-5 w-5 text-primary flex-shrink-0' />
+                  <span>Link phỏng vấn</span>
+                </div>
+                <div className='ml-7'>
                   <a
                     href={bookingDetails.meetUrl}
                     target='_blank'
