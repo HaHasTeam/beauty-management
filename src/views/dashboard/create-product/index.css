@@ -1,8 +1,7 @@
-/* when dialog is open, overflow: visible ??*/ 
+/* when dialog is open, overflow: visible ??*/
 /* [data-state='open'] {
   overflow: visible !important;
 } */
-
 
 .ql-toolbar.ql-snow {
   border-color: #f8c0ce !important;
