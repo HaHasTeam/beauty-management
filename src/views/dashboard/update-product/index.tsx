@@ -487,7 +487,7 @@ const UpdateProduct = () => {
                   />
                   <div className='w-full flex flex-row-reverse justify-start gap-3'>
                     <Button type='submit' onClick={() => form.setValue('status', ProductEnum.OFFICIAL)}>
-                      {t('button.submit')}
+                      {t('button.submitAndShow')}
                     </Button>
                     <Button
                       variant='outline'

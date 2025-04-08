@@ -159,9 +159,9 @@ export default function DetailInformation({
                               <div className='flex items-center gap-1 '>
                                 {formField?.required && <span className='text-destructive'>*</span>}
                                 <div className='flex gap-1 justify-between items-center'>
-                                  <label className='text-sm'>{formField.label}</label>
+                                  <label className='text-sm m-0 p-0'>{formField.label}</label>
                                   {formField.type === 'multipleChoice' && (
-                                    <span className='text-xs text-muted-foreground text-right'>
+                                    <span className='text-sm text-muted-foreground text-right flex items-center'>
                                       {Array.isArray(field?.value) ? field?.value?.length : 0}/{MAX_MULTI_SELECT_ITEMS}
                                     </span>
                                   )}
