@@ -79,53 +79,53 @@ export function DataTableToolbar<TData>({
 
   // Helper function to check if a column exists or should be treated as a custom filter
   const shouldRenderFilter = (columnId: string) => {
-    const column = table.getColumn(columnId);
-    const field = filterFields.find(f => f.id === columnId);
-    return column || (field && field.isCustomFilter);
+    const column = table.getColumn(columnId)
+    const field = filterFields.find((f) => f.id === columnId)
+    return column || (field && field.isCustomFilter)
   }
 
   // Helper function to get column or handle custom filter
   const getColumnOrCustom = (columnId: string): ColumnOrCustom<TData, unknown> => {
-    const column = table.getColumn(columnId);
+    const column = table.getColumn(columnId)
     // If it's a regular column, return it
-    if (column) return column;
-    
+    if (column) return column
+
     // For custom filters, we'll create a proxy object with the necessary methods
     // This allows custom filters to work with the same UI components
     return {
       getFilterValue: () => {
         // Look up the filter value in columnFilters state
-        const filterValue = table.getState().columnFilters.find(f => f.id === columnId)?.value;
-        return filterValue;
+        const filterValue = table.getState().columnFilters.find((f) => f.id === columnId)?.value
+        return filterValue
       },
       setFilterValue: (value: unknown) => {
         // Update columnFilters state for this custom filter
-        const currentFilters = table.getState().columnFilters;
-        
+        const currentFilters = table.getState().columnFilters
+
         if (value === undefined || (Array.isArray(value) && value.length === 0)) {
           // Remove filter if value is empty
-          table.setColumnFilters(currentFilters.filter(f => f.id !== columnId));
+          table.setColumnFilters(currentFilters.filter((f) => f.id !== columnId))
         } else {
           // Update or add filter
-          const filterIndex = currentFilters.findIndex(f => f.id === columnId);
+          const filterIndex = currentFilters.findIndex((f) => f.id === columnId)
           if (filterIndex >= 0) {
-            const newFilters = [...currentFilters];
-            newFilters[filterIndex] = { id: columnId, value };
-            table.setColumnFilters(newFilters);
+            const newFilters = [...currentFilters]
+            newFilters[filterIndex] = { id: columnId, value }
+            table.setColumnFilters(newFilters)
           } else {
-            table.setColumnFilters([...currentFilters, { id: columnId, value }]);
+            table.setColumnFilters([...currentFilters, { id: columnId, value }])
           }
         }
       }
-    };
-  };
+    }
+  }
 
   return (
     <div className={cn('flex w-full items-center justify-between gap-2 overflow-auto p-1', className)} {...props}>
       <div className='flex flex-1 items-center gap-2'>
         {searchableColumns.length > 0 &&
           searchableColumns.map(
-            (column) => 
+            (column) =>
               shouldRenderFilter(String(column.id)) && (
                 <Input
                   key={String(column.id)}
@@ -158,7 +158,10 @@ export function DataTableToolbar<TData>({
                   key={String(column.id)}
                   field={{
                     value: getColumnOrCustom(String(column.id)).getFilterValue() as string,
-                    onChange: (value) => getColumnOrCustom(String(column.id)).setFilterValue(new Date(value as unknown as string).toLocaleString())
+                    onChange: (value) =>
+                      getColumnOrCustom(String(column.id)).setFilterValue(
+                        new Date(value as unknown as string).toLocaleString()
+                      )
                   }}
                   label={column.label}
                 />
@@ -177,9 +180,7 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className='flex items-center gap-2'>
-        <div className='flex items-center gap-2'>
-          {children}
-        </div>
+        <div className='flex items-center gap-2'>{children}</div>
         {isTable && <DataTableViewOptions table={table} />}
       </div>
     </div>
