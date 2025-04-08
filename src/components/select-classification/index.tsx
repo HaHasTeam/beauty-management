@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Image } from 'lucide-react'
-import { ChangeEvent, forwardRef, HTMLAttributes, useEffect, useMemo } from 'react'
+import { forwardRef, HTMLAttributes, useCallback, useEffect, useMemo } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getProductApi } from '@/network/apis/product'
@@ -36,7 +36,7 @@ type Props = Omit<HTMLAttributes<HTMLSelectElement>, 'value'> &
   }
 
 const getItemDisplay = (classification: TClassificationItem) => {
-  const imgUrl = classification.images[0]?.fileUrl
+  const imgUrl = classification?.images?.[0]?.fileUrl
   return (
     <div className='flex items-center gap-1'>
       <Avatar className='bg-transparent size-5'>
@@ -45,32 +45,33 @@ const getItemDisplay = (classification: TClassificationItem) => {
           <Image className='size-4' />
         </AvatarFallback>
       </Avatar>
-      <span>{classification.title}</span>
+      <span>{classification?.title || 'Classification'}</span>
     </div>
   )
 }
 
 const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
   const {
-    placeholder = props.multiple ? 'Select classifications' : 'Select a classification',
+    placeholder = 'Select a classification',
     className,
     onChange,
     value,
-    multiple = false,
     productId,
     initialClassification
   } = props
 
+  // Fetch product data including its classifications
   const { data: product, isFetching: isGettingProduct } = useQuery({
     queryKey: [getProductApi.queryKey, productId],
     queryFn: getProductApi.fn,
     enabled: !!productId
   })
 
-  const classificationList = product?.data.productClassifications
+  // Extract classifications from product data
+  const classificationList = useMemo(() => product?.data?.productClassifications || [], [product])
 
+  // Transform to options for select dropdown
   const classificationOptions = useMemo(() => {
-    if (!classificationList) return []
     return classificationList.map((classification) => ({
       value: classification.id,
       label: classification.title,
@@ -78,64 +79,88 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
     }))
   }, [classificationList])
 
+  // Find the currently selected option
   const selectedOptions = useMemo(() => {
-    if (!value) return undefined
+    // If no value or incomplete value, return undefined
+    if (!value || !value.title) return undefined
 
-    if (!multiple) {
-      const option = value as TClassificationItem
-      if (!(option.id && option.originalClassification && option.title)) return undefined
-
-      const selectedClassification = classificationList?.find((item) => {
-        if (option.title) {
-          return item.title === option.title
-        }
-        return item.id === (option.originalClassification || option.id)
-      }) as TClassificationItem
-
-      return classificationOptions.find((o) => o.value === selectedClassification?.id)
-    }
-    return []
-  }, [value, multiple, classificationOptions, classificationList])
-
-  const currentClassification = useMemo(() => {
-    const option = value as TClassificationItem
-
-    const selectedClassification = classificationList?.find((item) => {
-      if (option?.title) {
-        return item.title === option?.title
+    // Find the matching classification
+    const selectedClassification = classificationList.find((item) => {
+      // Match by title or id/originalClassification
+      if (value.title) {
+        return item.title === value.title
       }
-      return item.id === (option?.originalClassification || option?.id)
-    }) as TClassificationItem
-    return selectedClassification
-  }, [classificationList, value])
+      // Fallback to id matching
+      return item.id === (value.originalClassification || value.id)
+    })
 
+    // If we found a match, return the option
+    if (selectedClassification?.id) {
+      return classificationOptions.find((opt) => opt.value === selectedClassification.id)
+    }
+
+    return undefined
+  }, [value, classificationList, classificationOptions])
+
+  // Calculate maximum quantity based on initialClassification
   const maxQuantity = useMemo(() => {
-    if (initialClassification?.id && currentClassification) {
-      if (initialClassification.title === currentClassification.title) {
-        return currentClassification.quantity + (initialClassification?.quantity ?? 0)
+    // Find current classification
+    const currentClassification = classificationList.find((item) => {
+      if (value?.title) {
+        return item.title === value.title
       }
-      return currentClassification.quantity
-    }
-    return currentClassification?.quantity ?? 0
-  }, [initialClassification, currentClassification])
+      return item.id === (value?.originalClassification || value?.id)
+    })
 
+    // Handle quantity limit calculation
+    if (initialClassification?.id && currentClassification) {
+      // If this is the same classification that was initially selected
+      if (initialClassification.title === currentClassification.title) {
+        // Return the maximum available quantity
+        return currentClassification.quantity ?? 0
+      }
+      // Otherwise just return the available quantity
+      return currentClassification.quantity ?? 0
+    }
+
+    // Default to current classification quantity
+    return currentClassification?.quantity ?? 0
+  }, [initialClassification, value, classificationList])
+
+  // Update quantity when maxQuantity changes
   useEffect(() => {
-    if (currentClassification && onChange) {
+    if (onChange && value && (maxQuantity ?? 0) > 0) {
       onChange({
         ...value,
-
-        quantity: maxQuantity
-      } as unknown as ChangeEvent<HTMLInputElement>)
+        quantity: maxQuantity ?? 0
+      })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxQuantity])
+  }, [maxQuantity, onChange, value])
 
-  // if type is default auto selected
+  // Helper function to check if a classification matches the initial one
+  const isInitialClassification = (classification: TClassificationItem) => {
+    if (!initialClassification?.id) return false
+    return classification.id === initialClassification.id
+  }
+
+  // Helper function to generate a shorter SKU
+  const generateShortSku = (originalSku: string | undefined) => {
+    if (!originalSku) return ''
+
+    // Extract first 3-5 characters from the original SKU
+    const prefix = originalSku.substring(0, Math.min(5, originalSku.length))
+    // Get last 4 digits of timestamp
+    const timestamp = new Date().getTime().toString().slice(-4)
+
+    return `${prefix}-${timestamp}`
+  }
+
+  // Auto-select the only classification if there's just one
   useEffect(() => {
-    if (!value?.id && classificationList?.length === 1) {
+    if (classificationList.length === 1 && !value?.id && onChange) {
       const classification = classificationList[0] as TClassificationItem
       const formValue: TClassificationItem = {
-        ...(value as TClassificationItem),
+        ...(value || {}),
         title: classification.title,
         price: classification.price,
         type: classification.type,
@@ -144,53 +169,108 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
           name: image.name ?? image.fileUrl,
           fileUrl: image.fileUrl
         })),
-        quantity: maxQuantity,
-        sku: value?.sku ?? (classification.sku ?? '') + +new Date().getTime(),
-        originalClassification: classification.id as string,
+        quantity: maxQuantity ?? 0,
+        sku: generateShortSku(value?.sku || classification.sku),
+        originalClassification: classification.id,
         color: classification.color,
         size: classification.size,
         other: classification.other
       }
-      if (onChange) {
-        onChange(formValue as unknown as ChangeEvent<HTMLInputElement>)
-      }
+      onChange(formValue)
     }
-  }, [classificationList, value, onChange, maxQuantity])
+  }, [classificationList.length, value, onChange, maxQuantity, classificationList])
+
+  // Filter options based on search input
+  const loadOptions = useCallback(
+    async (inputValue: string) => {
+      // If no product ID, return empty array
+      if (!productId) {
+        return Promise.resolve([])
+      }
+
+      // If no input, return all options
+      if (!inputValue) {
+        return Promise.resolve(classificationOptions)
+      }
+
+      // Filter options based on input
+      const filteredOptions = classificationOptions.filter((option) =>
+        option.label?.toLowerCase().includes(inputValue.toLowerCase())
+      )
+
+      return Promise.resolve(filteredOptions)
+    },
+    [productId, classificationOptions]
+  )
 
   return (
     <AsyncSelect
+      key={productId} // Key based solely on productId to force re-render when product changes
+      cacheOptions={false} // Disable caching to ensure fresh options on each render
       defaultOptions={classificationOptions}
-      isMulti={multiple}
+      loadOptions={loadOptions}
+      value={selectedOptions}
+      isMulti={false}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingProduct}
       isClearable
-      value={selectedOptions}
+      isSearchable
       onChange={(options) => {
-        const optionValues = options as TOption
-        if (onChange) {
-          const classification = classificationList?.find(
-            (item) => item.id === optionValues?.value
-          ) as TClassificationItem
-          const formValue: TClassificationItem = {
-            ...(value as TClassificationItem),
-            title: classification.title,
-            price: classification.price,
-            type: classification.type,
-            images: classification.images.map((image) => ({
-              ...image,
-              name: image.name ?? image.fileUrl,
-              fileUrl: image.fileUrl
-            })),
-            quantity: maxQuantity,
-            sku: value?.sku ?? (classification.sku ?? '') + +new Date().getTime(),
-            originalClassification: classification.id as string,
-            color: classification.color,
-            size: classification.size,
-            other: classification.other
+        if (!options) {
+          // Handle clearing selection
+          if (onChange) {
+            // Create an empty classification item
+            const emptyValue: TClassificationItem = {
+              title: '',
+              price: 0,
+              quantity: 0,
+              type: ProductClassificationTypeEnum.DEFAULT,
+              images: [],
+              originalClassification: ''
+            }
+            onChange(emptyValue)
           }
+          return
+        }
 
-          onChange(formValue as unknown as ChangeEvent<HTMLInputElement>)
+        // Get the selected option value
+        const optionValue = (options as TOption).value
+
+        // Find the matching classification
+        const classification = classificationList.find((item) => item.id === optionValue) as TClassificationItem
+
+        // If no matching classification, do nothing
+        if (!classification) return
+
+        // Check if this is the initial classification
+        const isInitial = isInitialClassification(classification)
+
+        // Create form value from the selected classification
+        const formValue: TClassificationItem = {
+          ...(value || {}), // Preserve existing values
+          id: classification.id,
+          title: classification.title,
+          price: isInitial ? (initialClassification?.price ?? classification.price) : classification.price,
+          type: classification.type,
+          images: classification.images.map((image) => ({
+            ...image,
+            name: image.name ?? image.fileUrl,
+            fileUrl: image.fileUrl
+          })),
+          quantity: maxQuantity ?? 0, // Always use maxQuantity for the quantity field
+          sku: isInitial
+            ? (initialClassification?.sku ?? generateShortSku(classification.sku))
+            : generateShortSku(classification.sku),
+          originalClassification: classification.id,
+          color: classification.color,
+          size: classification.size,
+          other: classification.other
+        }
+
+        // Call onChange with the new value
+        if (onChange) {
+          onChange(formValue)
         }
       }}
     />

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Image } from 'lucide-react'
-import { ChangeEvent, forwardRef, HTMLAttributes, useMemo, useState } from 'react'
+import { ChangeEvent, forwardRef, HTMLAttributes, useCallback, useMemo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -46,7 +46,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       userData: state.user
     }))
   )
-  const [searchKey, setSearchKey] = useState('')
+
   const brandId = useMemo(() => (userData?.brands?.length ? userData.brands[0].id : ''), [userData])
 
   const { data: productList, isFetching: isGettingProductList } = useQuery({
@@ -67,8 +67,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       label: product.name,
       display: getProductItemDisplay(product)
     }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productList, searchKey])
+  }, [productList])
 
   const selectedOptions = useMemo(() => {
     if (multiple) {
@@ -86,6 +85,7 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       if (!value) return null
       const product = productList?.data.find((product) => product.id === value)
       return {
+        id: product?.id,
         value: product?.id,
         label: product?.name,
         display: getProductItemDisplay(product as TProduct)
@@ -93,32 +93,54 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
     }
   }, [value, productList?.data, multiple])
 
+  const promiseOptions = useCallback(
+    (inputValue: string) => {
+      if (!inputValue) {
+        return Promise.resolve(productOptions)
+      }
+      const filteredOptions = productOptions.filter((option) =>
+        option.label.toLowerCase().includes(inputValue.toLowerCase())
+      )
+      return Promise.resolve(filteredOptions)
+    },
+    [productOptions]
+  )
+
   return (
     <AsyncSelect
+      cacheOptions
       defaultOptions={productOptions}
+      loadOptions={promiseOptions}
+      value={selectedOptions}
       isMulti={multiple}
-      inputValue={searchKey}
-      onInputChange={(inputValue) => setSearchKey(inputValue)}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingProductList}
       isClearable={!readOnly}
       isDisabled={readOnly}
       isSearchable
-      value={selectedOptions}
       onChange={(options) => {
         if (multiple) {
           const optionValues = options as TOption[]
           if (onChange) onChange(optionValues.map((option) => option.value) as unknown as ChangeEvent<HTMLInputElement>)
         } else {
           const optionValues = options as TOption
-          if (onChange) onChange(optionValues?.value as unknown as ChangeEvent<HTMLInputElement>)
+
+          // If selection is changed, pass the new value
+          if (onChange) {
+            // Handle case when nothing is selected (clearing)
+            if (!optionValues) {
+              onChange('' as unknown as ChangeEvent<HTMLInputElement>)
+              return
+            }
+
+            onChange(optionValues.value as unknown as ChangeEvent<HTMLInputElement>)
+          }
         }
       }}
     />
   )
 })
-
 SelectProduct.displayName = 'SelectProduct'
 
 export default SelectProduct

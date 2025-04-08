@@ -1,5 +1,6 @@
 // Auth Imports
 import {
+  Banknote,
   BookA,
   Boxes,
   Brush,
@@ -31,6 +32,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.MY_BRAND_DASHBOARD].name,
     path: routesConfig[Routes.MY_BRAND_DASHBOARD].path,
     icon: <BookA className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.TRANSACTION_MANAGEMENT].name,
+    path: routesConfig[Routes.TRANSACTION_MANAGEMENT].path,
+    icon: <Banknote className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {
