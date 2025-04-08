@@ -2,6 +2,7 @@ import { Component, Info } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import RoleTag from '@/components/account/RoleTag'
 import LoadingIcon from '@/components/loading-icon'
 import ViewMediaSection from '@/components/media/ViewMediaSection'
 import SectionCollapsable from '@/components/section-collapsable'
@@ -11,6 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { RequestStatusEnum } from '@/types/enum'
 import { TServerFile } from '@/types/file'
 import { IReturnRequestOrder } from '@/types/order'
+import { UserRoleEnum } from '@/types/role'
 
 import RejectRejectReturn from './RejectRejectReturnDialog'
 import { RejectReturnOrderDialog } from './RejectReturnOrderDialog'
@@ -35,6 +37,13 @@ interface ConfirmDecisionDialogProps {
   rejectStatus?: RequestStatusEnum
   reasonRejected?: string | null
   rejectRequestId?: string
+  rejectTime?: string
+  returnTime?: string
+  rejectReview?: string
+  rejectBy?: string
+  rejectByRole?: string
+  rejectReviewRole?: string
+  reviewTime?: string
 }
 
 export default function ConfirmDecisionDialog({
@@ -56,7 +65,14 @@ export default function ConfirmDecisionDialog({
   rejectStatus,
   status,
   reasonRejected,
-  rejectRequestId
+  rejectRequestId,
+  rejectTime,
+  returnTime,
+  rejectBy,
+  rejectByRole,
+  rejectReview,
+  rejectReviewRole,
+  reviewTime
 }: ConfirmDecisionDialogProps) {
   const { t } = useTranslation()
   const [openRejectDialog, setOpenRejectDialog] = useState<boolean>(false)
@@ -85,6 +101,12 @@ export default function ConfirmDecisionDialog({
                   }
                   content={
                     <div className='space-y-2'>
+                      {returnTime && (
+                        <div className='flex gap-2 items-center'>
+                          <h3 className='font-medium text-primary'>{t('order.time')}:</h3>
+                          <span>{t('date.toLocaleDateTimeString', { val: new Date(returnTime) })}</span>
+                        </div>
+                      )}
                       {reason && (
                         <div className='flex gap-2 items-center'>
                           <h3 className='font-medium text-primary'>{t('order.cancelOrderReason.reason')}:</h3>
@@ -119,6 +141,23 @@ export default function ConfirmDecisionDialog({
                                 ? t('requestStatus.approved')
                                 : t('requestStatus.rejected')}
                             </span>
+                          </div>
+                        )}
+                        {rejectTime && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('order.time')}:</h3>
+                            <span>{t('date.toLocaleDateTimeString', { val: new Date(rejectTime) })}</span>
+                          </div>
+                        )}
+                        {rejectBy && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('order.by')}:</h3>
+                            <div className='flex gap-1 items-center'>
+                              <span>{rejectBy}</span>
+                              <div>
+                                <RoleTag role={rejectByRole as UserRoleEnum} size='small' />
+                              </div>
+                            </div>
                           </div>
                         )}
                         {rejectReason && (
@@ -156,6 +195,23 @@ export default function ConfirmDecisionDialog({
                                 ? t('requestStatus.approved')
                                 : t('requestStatus.rejected')}
                             </span>
+                          </div>
+                        )}
+                        {reviewTime && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('order.time')}:</h3>
+                            <span>{t('date.toLocaleDateTimeString', { val: new Date(reviewTime) })}</span>
+                          </div>
+                        )}
+                        {rejectReview && (
+                          <div className='flex gap-2 items-center'>
+                            <h3 className='font-medium text-primary'>{t('order.by')}:</h3>
+                            <div className='flex gap-1 items-center'>
+                              <span>{rejectReview}</span>
+                              <div>
+                                <RoleTag role={rejectReviewRole as UserRoleEnum} size='small' />
+                              </div>
+                            </div>
                           </div>
                         )}
                         {reasonRejected && (

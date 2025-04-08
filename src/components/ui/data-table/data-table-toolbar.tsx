@@ -1,7 +1,7 @@
 'use client'
 
 import type { Table } from '@tanstack/react-table'
-import {  X } from 'lucide-react'
+import { X } from 'lucide-react'
 import * as React from 'react'
 
 import { DataTableFacetedFilter, type ColumnOrCustom } from '@/components/ui/data-table/data-table-faceted-filter'

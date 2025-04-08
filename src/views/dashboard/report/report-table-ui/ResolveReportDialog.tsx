@@ -48,10 +48,10 @@ interface ResolveReportDialogProps extends React.ComponentPropsWithoutRef<typeof
 
 const formSchema = z.object({
   status: z.string({
-    message: defaultRequiredRegex.message
+    message: defaultRequiredRegex.message()
   }),
   resultNote: z.string({
-    message: defaultRequiredRegex.message
+    message: defaultRequiredRegex.message()
   })
 })
 

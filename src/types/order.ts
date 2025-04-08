@@ -5,7 +5,7 @@ import { IResponseFeedback } from './feedback'
 import { TServerFile } from './file'
 import { PaymentMethodEnum } from './payment'
 import { BaseParams } from './request'
-import { TUser } from './user'
+import { TUser, TUserUpdateStatusTracking } from './user'
 import { TVoucher } from './voucher'
 
 // Order detail interface
@@ -121,10 +121,12 @@ export interface ICancelRequestOrder {
   reason: string
   status: RequestStatusEnum
   order: IOrder
+  updatedBy: TUserUpdateStatusTracking
 }
 
 export interface IRejectReturnRequestOrder extends ICancelRequestOrder {
   mediaFiles: TServerFile[]
+  reasonRejected: string | null
 }
 export interface IReturnRequestOrder extends ICancelRequestOrder {
   mediaFiles: TServerFile[]

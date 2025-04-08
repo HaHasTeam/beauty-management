@@ -10,20 +10,20 @@ export const formSchema = z.object({
   description: z.string().optional(),
   name: z
     .string({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     })
-    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   productIds: z
     .array(
       z.string({
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       }),
       {
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       }
     )
     .nonempty({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
   maxAmountOption: z
     .object({
@@ -31,7 +31,7 @@ export const formSchema = z.object({
         .number()
         .int()
         .positive({
-          message: numberRequiredRegex.message
+          message: numberRequiredRegex.message()
         })
         .optional(),
       hasMaxBuyAmount: z.boolean().default(false)
@@ -40,7 +40,7 @@ export const formSchema = z.object({
       if (maxAmountOption.hasMaxBuyAmount && !maxAmountOption.maxBuyAmountEachPerson) {
         ctx.addIssue({
           code: 'custom',
-          message: defaultRequiredRegex.message,
+          message: defaultRequiredRegex.message(),
           path: ['maxBuyAmountEachPerson']
         })
       }
@@ -54,7 +54,7 @@ export const formSchema = z.object({
       if (startTimeOption.hasStartTime && !startTimeOption.startTime) {
         ctx.addIssue({
           code: 'custom',
-          message: defaultRequiredRegex.message,
+          message: defaultRequiredRegex.message(),
           path: ['startTime']
         })
       }
@@ -68,7 +68,7 @@ export const formSchema = z.object({
       if (endTimeOption.hasEndTime && !endTimeOption.endTime) {
         ctx.addIssue({
           code: 'custom',
-          message: defaultRequiredRegex.message,
+          message: defaultRequiredRegex.message(),
           path: ['endTime']
         })
       }
@@ -79,32 +79,32 @@ export const formSchema = z.object({
         id: z.string().optional(),
         threshold: z.coerce
           .number({
-            message: numberRequiredRegex.message
+            message: numberRequiredRegex.message()
           })
           .int()
           .positive({
-            message: numberRequiredRegex.message
+            message: numberRequiredRegex.message()
           }),
         voucher: z.object({
           id: z.string().optional(),
-          name: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+          name: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
           applyType: z.nativeEnum(VoucherApplyTypeEnum).default(VoucherApplyTypeEnum.ALL),
           discountValue: z.coerce
             .number({
-              message: numberRequiredRegex.message
+              message: numberRequiredRegex.message()
             })
             .positive({
-              message: numberRequiredRegex.message
+              message: numberRequiredRegex.message()
             }),
           description: z.string().optional(),
           discountType: z.nativeEnum(DiscountTypeEnum),
           visibility: z.nativeEnum(VoucherVisibilityEnum).default(VoucherVisibilityEnum.GROUP),
-          code: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+          code: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
         })
       })
     )
     .nonempty({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     })
     .superRefine((criterias, ctx) => {
       const isIncreasing = criterias.every((criteria, index) => {

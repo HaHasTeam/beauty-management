@@ -19,7 +19,7 @@ import { useStore } from '@/stores/store'
 import { UserRoleEnum } from '@/types/role'
 import { IRoute } from '@/types/types'
 
-import { RoleTag } from '../account/RoleTag'
+import RoleTag from '../account/RoleTag'
 import ImageWithFallback from '../image/ImageWithFallback'
 import { Button } from '../ui/button'
 

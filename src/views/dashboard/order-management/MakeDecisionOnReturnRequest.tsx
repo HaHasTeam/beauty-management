@@ -127,6 +127,7 @@ const MakeDecisionOnReturnRequest = ({
           mediaFiles={returnRequest.mediaFiles}
           returnRequest={returnRequest}
           status={returnRequest.status}
+          returnTime={returnRequest.createdAt}
         />
       </div>
     )

@@ -1,147 +1,120 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Search } from 'lucide-react'
-import { useId } from 'react'
-import { useForm, UseFormReturn } from 'react-hook-form'
-import { z } from 'zod'
+'use client'
+
+import { useEffect, useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import type { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { voucherCreateSchema } from '@/schemas'
-import { IProductTable } from '@/types/product'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
+import type { voucherCreateSchema } from '@/schemas'
+import type { IResponseProduct } from '@/types/product'
 import ProductAppliesTable from '@/views/dashboard/voucher-management/product-apply-table-ui'
-
-import { Form } from '../ui/form'
-
-const FormSchema = z.object({
-  selectedProducts: z.array(z.string()),
-  searchQuery: z.string().optional()
-})
-
-type FormValues = z.infer<typeof FormSchema>
-
-interface ProductListDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onDone: (selectedProducts: string[]) => void
-  products: IProductTable[]
-  form: UseFormReturn<z.infer<typeof voucherCreateSchema>>
-  isLoading: boolean
-  // isDialog: boolean
-}
 
 export default function ProductListDialog({
   open,
   onOpenChange,
   onDone,
   products,
-  isLoading,
-  form: parentForm
-}: ProductListDialogProps) {
-  const formId = useId()
+  form,
+  isLoading
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onDone: (selectedProducts: string[]) => void
+  products: IResponseProduct[]
+  form: UseFormReturn<z.infer<typeof voucherCreateSchema>>
+  isLoading: boolean
+}) {
+  // Local state to track selected products in the dialog
+  // This is separate from the form state until user confirms
+  const [localSelectedProducts, setLocalSelectedProducts] = useState<string[]>([])
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      selectedProducts: []
+  // Initialize local selection when dialog opens
+  useEffect(() => {
+    if (open) {
+      setLocalSelectedProducts(form.getValues('selectedProducts') || [])
     }
-  })
+  }, [form, open])
+
+  const handleProductSelect = (productId: string) => {
+    setLocalSelectedProducts((prev) => {
+      if (prev.includes(productId)) {
+        return prev.filter((id) => id !== productId)
+      } else {
+        return [...prev, productId]
+      }
+    })
+  }
+
+  // Only apply selection when user clicks Done/Confirm
   const handleDone = () => {
-    onDone(form.getValues('selectedProducts'))
+    onDone(localSelectedProducts)
     onOpenChange(false)
   }
 
-  const handleProductSelect = (productId: string) => {
-    const currentSelected = form.getValues('selectedProducts')
-    const newSelected = currentSelected.includes(productId)
-      ? currentSelected.filter((id) => id !== productId)
-      : [...currentSelected, productId]
-    form.setValue('selectedProducts', newSelected)
+  // Cancel without applying changes
+  const handleCancel = () => {
+    setLocalSelectedProducts(form.getValues('selectedProducts') || [])
+    onOpenChange(false)
   }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal>
-      <DialogContent
-        className='sm:max-w-[1200px]'
-        onInteractOutside={(e) => {
-          e.preventDefault()
-        }}
-      >
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          // If dialog is closing without confirmation, reset local selection
+          handleCancel()
+        }
+        onOpenChange(isOpen)
+      }}
+    >
+      <DialogContent className='sm:max-w-[800px] max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle>Apply Products</DialogTitle>
+          <DialogTitle>Chọn sản phẩm</DialogTitle>
+          <DialogDescription>
+            Chọn các sản phẩm mà voucher này có thể áp dụng. Bạn có thể chọn nhiều sản phẩm.
+          </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form className='space-y-4' id={formId}>
-            <div className='relative'>
-              <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
-              <Input
-                placeholder='Search products'
-                className='pl-9'
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className=''>
-              <ProductAppliesTable
-                list={products}
-                isLoading={isLoading}
-                form={parentForm}
-                isDialog={true}
-                handleProductSelect={handleProductSelect}
-              />
-            </div>
-            {/* <div className='border rounded-lg'>
-              <div className='grid grid-cols-[auto,1fr,auto,auto] gap-4 p-3 border-b bg-muted/50'>
-                <div className='w-6' />
-                <div>Products</div>
-                <div className='text-right'>Total available</div>
-                <div className='text-right'>Price</div>
-              </div>
 
-              <div className='max-h-[300px] overflow-y-auto'>
-                {products?.map((product) => (
-                  <div className='' key={product.id}>
-                    {product.productClassifications.map((item, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className='grid grid-cols-[auto,1fr,auto,auto] gap-4 p-3 items-center hover:bg-muted/50 cursor-pointer'
-                        >
-                          <Checkbox
-                            checked={form.watch('selectedProducts').includes(product.id)}
-                            onCheckedChange={() => handleProductSelect(product.id)}
-                          />
-                          <div className='flex items-center gap-2'>
-                            <div className='w-8 h-8 rounded bg-muted flex items-center justify-center'>
-                              <Image className='w-4 h-4 text-muted-foreground' />
-                            </div>
-                            <span>{product.name}</span>
-                          </div>
-                          <div className='text-right'>{item.quantity}</div>
-                          <div className='text-right'>{item.price}</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div> */}
+        <div className='py-4'>
+          <ProductAppliesTable
+            isLoading={isLoading}
+            list={products}
+            form={
+              {
+                ...form,
+                getValues: () => ({ selectedProducts: localSelectedProducts }),
+                setValue: (name, value) => {
+                  if (name === 'selectedProducts') {
+                    setLocalSelectedProducts(value as string[])
+                  }
+                }
+              } as UseFormReturn<z.infer<typeof voucherCreateSchema>>
+            }
+            isDialog={true}
+            handleProductSelect={handleProductSelect}
+          />
+        </div>
 
-            <DialogFooter className='flex items-center justify-between sm:justify-between'>
-              <div className='text-sm text-muted-foreground'>
-                {form.watch('selectedProducts')?.length} product
-                {form.watch('selectedProducts')?.length !== 1 ? 's' : ''} selected
-              </div>
-              <div className='flex gap-2'>
-                <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
-                  Cancel
-                </Button>
-                <Button type='button' onClick={handleDone}>
-                  Done
-                </Button>
-              </div>
-            </DialogFooter>
-          </form>
-        </Form>
+        <DialogFooter>
+          <div className='flex items-center justify-between w-full'>
+            <div className='text-sm text-muted-foreground'>Đã chọn {localSelectedProducts.length} sản phẩm</div>
+            <div className='flex gap-2'>
+              <Button variant='outline' onClick={handleCancel}>
+                Hủy
+              </Button>
+              <Button onClick={handleDone}>Xác nhận</Button>
+            </div>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

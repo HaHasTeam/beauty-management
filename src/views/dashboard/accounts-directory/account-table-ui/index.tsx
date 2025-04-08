@@ -21,7 +21,7 @@ export default function IndexPage() {
         limit: queryStates[0].perPage,
         sortBy: queryStates[0].sort?.[0]?.id,
         order: queryStates[0].sort?.[0].desc && queryStates[0].sort?.[0].desc ? 'DESC' : 'ASC',
-        roles: (queryStates[0].fieldFilters?.role as string[])?.join(','),
+        role: (queryStates[0].fieldFilters?.role as string[])?.join(','),
         statuses: (queryStates[0].fieldFilters?.status as string[])?.join(','),
         username: queryStates[0].fieldFilters?.username as string,
         email: queryStates[0].fieldFilters?.email as string

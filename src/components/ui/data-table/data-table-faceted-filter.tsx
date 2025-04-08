@@ -48,13 +48,9 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const unknownValue = column?.getFilterValue()
   const selectedValues = new Set(
-    Array.isArray(unknownValue) 
-      ? unknownValue 
-      : unknownValue !== undefined 
-        ? [unknownValue] 
-        : []
+    Array.isArray(unknownValue) ? unknownValue : unknownValue !== undefined ? [unknownValue] : []
   )
-  
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -126,7 +122,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Check className='size-4' aria-hidden='true' />
                     </div>
                     {option.icon && <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />}
-                    <span className="flex-1 truncate">{option.label}</span>
+                    <span className='flex-1 truncate'>{option.label}</span>
                     {option.count && (
                       <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>
                         {option.count}

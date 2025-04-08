@@ -7,9 +7,9 @@ import { ProductClassificationTypeEnum } from '@/types/product'
 
 export const formSchema = z.object({
   id: z.string().optional(),
-  product: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-  endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  product: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+  startTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+  endTime: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   // images: z
   //   .array(
   //     z.object({
@@ -22,10 +22,10 @@ export const formSchema = z.object({
   //   }),
   discount: z.coerce
     .number({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     })
     .positive({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
   productClassifications: z
     .array(
@@ -33,9 +33,9 @@ export const formSchema = z.object({
         rawClassification: z.object(
           {
             id: z.string().optional(),
-            title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
-            price: z.coerce.number().positive({ message: defaultRequiredRegex.message }),
-            quantity: z.coerce.number().int().nonnegative({ message: defaultRequiredRegex.message }),
+            title: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+            price: z.coerce.number().positive({ message: defaultRequiredRegex.message() }),
+            quantity: z.coerce.number().int().nonnegative({ message: defaultRequiredRegex.message() }),
             sku: z.string().optional(),
             images: z.array(
               z.object({
@@ -44,21 +44,21 @@ export const formSchema = z.object({
               })
             ),
             type: z.nativeEnum(ProductClassificationTypeEnum),
-            originalClassification: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+            originalClassification: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
             color: z.string().optional().nullable(),
             size: z.string().optional().nullable(),
             other: z.string().optional().nullable()
           },
           {
-            message: defaultRequiredRegex.message
+            message: defaultRequiredRegex.message()
           }
         ),
         append: z.object({
           quantity: z.coerce
             .number({
-              message: defaultRequiredRegex.message
+              message: defaultRequiredRegex.message()
             })
-            .positive({ message: defaultRequiredRegex.message })
+            .positive({ message: defaultRequiredRegex.message() })
         }),
         initialClassification: z
           .object({
@@ -78,7 +78,7 @@ export const formSchema = z.object({
             type: z.nativeEnum(ProductClassificationTypeEnum).optional(),
             originalClassification: z
               .string()
-              .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message)
+              .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
               .optional(),
             color: z.string().optional().nullable(),
             size: z.string().optional().nullable(),
@@ -88,7 +88,7 @@ export const formSchema = z.object({
       })
     )
     .nonempty({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     })
     .superRefine((value, ctx) => {
       const rawClassification = value ?? []

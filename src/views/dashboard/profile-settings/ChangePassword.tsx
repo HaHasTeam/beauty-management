@@ -13,9 +13,9 @@ import { requiredRegex } from '@/constants/regex'
 
 const formSchema = z
   .object({
-    password: z.string().regex(requiredRegex().pattern, requiredRegex().message),
-    newPassword: z.string().regex(requiredRegex().pattern, requiredRegex().message),
-    confirmPassword: z.string().regex(requiredRegex().pattern, requiredRegex().message)
+    password: z.string().regex(requiredRegex().pattern, requiredRegex().message()),
+    newPassword: z.string().regex(requiredRegex().pattern, requiredRegex().message()),
+    confirmPassword: z.string().regex(requiredRegex().pattern, requiredRegex().message())
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Please make sure your new password and confirm password match',

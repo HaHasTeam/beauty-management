@@ -705,7 +705,7 @@
       "delivered": "The order has been successfully delivered to the customer's address.",
       "completed": "The customer has confirmed receipt of the order, and the transaction is finalized.",
       "cancelled": "The refund has been processed and issued to the customer.",
-      "returning": "The customer has requested a return, and the order is currently being returned to the brand. The brand needs to take action within {{count}} day(s); otherwise, the system will automatically update the status to \"Received\". If the brand clicks the \"Haven't Received\" button, the time will be extended. If there is an issue, the brand can submit a complaint.",
+      "returning": "The customer has requested a return, and the order is awaiting pickup. The brand must arrange for a shipper to collect the order from the customer and update the status within {{count}} day(s); otherwise, the system will automatically update the status to \"Received\". If the brand clicks the \"Haven't Received\" button, the time will be extended. If there is an issue, the brand can submit a complaint.",
       "refunded": "The order has been canceled and will not be processed or shipped.",
       "brandReceived": "The returned order has been successfully received by the brand and is awaiting further review. If a complaint is filed, the support team will review and resolve the issue. If the brand does not file a complaint, the coins will be refunded to the customer's wallet within {{count}} days from the date the return was received. After this period, the brand will no longer be able to file a complaint.",
       "returnFailed": "The return process was unsuccessful due to issues such as incorrect return shipment, damaged item upon return, or failure to meet return conditions. Further action may be required."
@@ -750,7 +750,9 @@
       "SUSPICIOUS_ACTIVITY": "This cancellation request appears to be fraudulent or suspicious.",
       "OTHER": "Other"
     },
-    "processSuccess": "Cancellation request processed successfully!"
+    "processSuccess": "Cancellation request processed successfully!",
+    "time": "Time",
+    "by": "By"
   },
   "toast": {
     "success": "Your request has been successfully processed, continue with your work.",
@@ -803,11 +805,15 @@
     "notes": "Notes",
     "no": "No",
     "message": "Message",
+    "updatedBy": "Updated by",
+    "approvedBy": "Approved by",
     "timeline": "Timeline",
     "subTotal": "Sub Total",
     "quantity": "Quantity",
     "products": "Products",
     "status": "Status",
+    "classification": "Classification",
+    "price": "Price",
     "cancelBy": "Canceled by",
     "cancelByDate": "Canceled at",
     "cancelReason": "Cancellation reason",
@@ -816,7 +822,6 @@
     "brand": "Brand"
   },
   "validation": {
-    "required": "{{field}} is required",
     "requiredText": "This field is required",
     "onlyInteger": "Please enter a valid integer",
     "email": "Please enter a valid email address",
@@ -846,7 +851,37 @@
     "onlyNumber": "Please enter only numbers",
     "noSpecialChar": "Special characters are not allowed",
     "onlySomeSpecialChar": "Only {{chars}} special characters are allowed",
-    "confirmPassword": "Passwords do not match"
+    "confirmPassword": "Passwords do not match",
+    "emailValid": "Please enter a valid email address",
+    "usernameValid": "Please enter a valid username",
+    "usernameHelper": "Username must start with a letter, be 3–20 characters, and use only letters, numbers, or underscores",
+    "required": "Please fill out this field",
+    "paymentRequired": "Please choose a payment method",
+    "reasonRequired": "Please choose a reason",
+    "statusRequired": "Please select a status",
+    "passwordValid": "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number and one special character",
+    "phoneValid": "Please fill in a valid phone number",
+    "arrayRequired": "Field value must be an array",
+    "stringOrArrayRequired": "Field value must be a string or an array",
+    "sizeFileValid": "Each file must be under {{size}}MB.",
+    "fileFormat": "Accepted file formats are",
+    "fileCountValid": "You can upload up to {{count}} files",
+    "tooLong": "Message too long.",
+    "ratingFeedback": "The rating must be between 1 and 5",
+    "contentFeedback": "The feedback content must be at least {{minLength}} characters long but no more than {{maxLength}} characters",
+    "maxImagesExceeded": "You can upload a maximum of {{count}} images.",
+    "maxVideosExceeded": "You can upload a maximum of {{count}} videos.",
+    "inputMedia": "Please upload at least one image or video.",
+    "imageCount": "You have selected {{count}} images.",
+    "videoCount": "You have selected {{count}} videos.",
+    "files": "Files must be in a supported format and within the allowed size limit.",
+    "videoBrowser": "Your browser does not support the video tag.",
+    "fileTypeLimits": "You can upload up to {{imageCount}} images and {{videoCount}} videos.",
+    "maxImages": "You can only upload up to {{count}} images.",
+    "maxVideos": "You can only upload up to {{count}} videos.",
+    "contentReplyFeedback": "The feedback reply must be at least {{minLength}} characters long but no more than {{maxLength}} characters",
+    "videosRequired": "Please upload at least one video.",
+    "imagesRequired": "Please upload at least one image."
   },
   "role": {
     "ADMIN": "Admin",
@@ -1318,7 +1353,7 @@
     "complaintRequestApprovedTitleCustomer": "Complaint Approved",
     "complaintRequestApprovedMessageCustomer": "The brand's complaint has been approved by the admin. You will not receive a coin refund for this order. You can review the complaint details and contact the support team if needed.",
     "returnRequestApprovedTitleBrand": "Return Request Approved",
-    "returnRequestApprovedMessageBrand": "The customer's return request has been approved. The customer will return the order within {{count}} day(s)."
+    "returnRequestApprovedMessageBrand": "The customer's return request has been approved. The customer will return the order within {{count}} day(s). After the customer updates the status to \"Returning\", please arrange for a shipper to pick up the order from the customer"
   },
   "booking": {
     "waitConfirm": "Waiting for Confirmation",

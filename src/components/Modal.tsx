@@ -23,10 +23,10 @@ import { ReportTypeEnum } from '@/types/report'
 const formSchema = z
   .object({
     type: z.string({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
     reason: z.string({
-      message: defaultRequiredRegex.message
+      message: defaultRequiredRegex.message()
     }),
     files: z
       .array(
@@ -38,7 +38,7 @@ const formSchema = z
         })
       )
       .min(1, {
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       }),
     orderId: z.string().optional(),
     bookingId: z.string().optional()
@@ -48,14 +48,14 @@ const formSchema = z
       return ctx.addIssue({
         code: 'custom',
         path: ['orderId'],
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       })
     }
     if (data.type === ReportTypeEnum.BOOKING && !data.bookingId) {
       return ctx.addIssue({
         code: 'custom',
         path: ['bookingId'],
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       })
     }
   })

@@ -30,16 +30,16 @@ import Button from '../../../components/button'
 const formSchema = z.object({
   emails: z
     .array(z.string())
-    .nonempty(defaultRequiredRegex.message)
+    .nonempty(defaultRequiredRegex.message())
     .refine(
       (emails) => {
         return emails.every((email) => emailRegex.pattern.test(email))
       },
       {
-        message: emailRegex.message
+        message: emailRegex.message()
       }
     ),
-  role: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  role: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   brand: z.string().optional()
 })
 const InviteCoWorker = () => {

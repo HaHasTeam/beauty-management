@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     checker({
       typescript: {
-        buildMode: true,
+        buildMode: true
       }
     })
   ],

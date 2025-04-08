@@ -9,14 +9,14 @@ const optionSchema = z.object({
 })
 export const categoryTypeSchema = z
   .object({
-    label: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+    label: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
     required: z.boolean(),
     type: z.nativeEnum(CategoryTypeEnum),
     inputType: z.nativeEnum(InputTypeEnum).optional(),
     options: z
       .array(optionSchema)
       .nonempty({
-        message: defaultRequiredRegex.message
+        message: defaultRequiredRegex.message()
       })
       .optional(),
     onlyFutureDates: z.boolean().optional(),
@@ -29,7 +29,7 @@ export const categoryTypeSchema = z
       if (!data.inputType) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: defaultRequiredRegex.message,
+          message: defaultRequiredRegex.message(),
           path: ['inputType']
         })
       }
@@ -38,7 +38,7 @@ export const categoryTypeSchema = z
       if (!data.options?.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: defaultRequiredRegex.message,
+          message: defaultRequiredRegex.message(),
           path: ['options']
         })
       }
@@ -47,7 +47,7 @@ export const categoryTypeSchema = z
 
 export type CategoryType = z.infer<typeof categoryTypeSchema>
 export const formSchema = z.object({
-  name: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message),
+  name: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   detail: z.record(categoryTypeSchema).optional(),
   parentCategory: z.string().optional(),
   subCategories: z.any().optional(),

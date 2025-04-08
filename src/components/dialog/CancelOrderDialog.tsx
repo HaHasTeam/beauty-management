@@ -10,7 +10,12 @@ import Label from '@/components/form-label'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { cancelOrderApi, getOrderByIdApi, getStatusTrackingByIdApi } from '@/network/apis/order'
+import {
+  brandCancelOrderApi,
+  getCancelAndReturnRequestApi,
+  getOrderByIdApi,
+  getStatusTrackingByIdApi
+} from '@/network/apis/order'
 import { CancelOrderSchema } from '@/schemas/order.schema'
 
 import AlertMessage from '../alert/AlertMessage'
@@ -65,8 +70,8 @@ export default function CancelOrderDialog({ orderId, open, setOpen, onOpenChange
     defaultValues: defaultOrderValues
   })
   const { mutateAsync: cancelOrderFn } = useMutation({
-    mutationKey: [cancelOrderApi.mutationKey],
-    mutationFn: cancelOrderApi.fn,
+    mutationKey: [brandCancelOrderApi.mutationKey],
+    mutationFn: brandCancelOrderApi.fn,
     onSuccess: async () => {
       successToast({
         message: t('order.cancelSuccess')
@@ -74,7 +79,8 @@ export default function CancelOrderDialog({ orderId, open, setOpen, onOpenChange
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: [getOrderByIdApi.queryKey] }),
-        queryClient.invalidateQueries({ queryKey: [getStatusTrackingByIdApi.queryKey] })
+        queryClient.invalidateQueries({ queryKey: [getStatusTrackingByIdApi.queryKey] }),
+        queryClient.invalidateQueries({ queryKey: [getCancelAndReturnRequestApi.queryKey] })
       ])
       handleReset()
     }
