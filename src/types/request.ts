@@ -14,6 +14,12 @@ export type TServerResponseWithPaging<TItems = undefined> = {
   data: (TItems extends undefined ? object : { items: TItems }) & Paging
 }
 
+export type TPaginationResponse<T> = {
+  total: number
+  totalPages: number
+  items: T[]
+}
+
 export type TMetaData = {
   id: string
   createdAt: string

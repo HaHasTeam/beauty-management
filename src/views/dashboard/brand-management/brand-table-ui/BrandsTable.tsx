@@ -62,6 +62,11 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
    */
   const filterFields: DataTableFilterField<TBrand>[] = [
     {
+      id: 'name',
+      placeholder: 'Search by name...',
+      label: 'Name'
+    },
+    {
       id: 'status',
       label: 'Status',
       options: Object.keys(BrandStatusEnum).map((status) => {

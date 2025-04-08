@@ -6,7 +6,7 @@ export enum FileStatusEnum {
   INACTIVE = 'INACTIVE'
 }
 export type TFile = {
-  name: string
+  name?: string | null
   fileUrl: string
   id?: string
   status?: FileStatusEnum
@@ -21,7 +21,7 @@ export type CustomFile = File & {
 export type TServerFile = TMetaData & {
   id: string
   fileUrl: string
-  name: null
+  name?: string | null
   status: StatusEnum
   type: FileEnum
 }

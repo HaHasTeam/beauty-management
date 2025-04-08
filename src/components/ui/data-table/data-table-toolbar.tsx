@@ -4,7 +4,7 @@ import type { Table } from '@tanstack/react-table'
 import {  X } from 'lucide-react'
 import * as React from 'react'
 
-import { DataTableFacetedFilter } from '@/components/ui/data-table/data-table-faceted-filter'
+import { DataTableFacetedFilter, type ColumnOrCustom } from '@/components/ui/data-table/data-table-faceted-filter'
 import { DataTableViewOptions } from '@/components/ui/data-table/data-table-view-options'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -55,12 +55,14 @@ interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivEleme
    * ]
    */
   filterFields?: DataTableFilterField<TData>[]
+  isTable?: boolean
 }
 
 export function DataTableToolbar<TData>({
   table,
   filterFields = [],
   children,
+  isTable = true,
   className,
   ...props
 }: DataTableToolbarProps<TData>) {
@@ -75,18 +77,61 @@ export function DataTableToolbar<TData>({
     }
   }, [filterFields])
 
+  // Helper function to check if a column exists or should be treated as a custom filter
+  const shouldRenderFilter = (columnId: string) => {
+    const column = table.getColumn(columnId);
+    const field = filterFields.find(f => f.id === columnId);
+    return column || (field && field.isCustomFilter);
+  }
+
+  // Helper function to get column or handle custom filter
+  const getColumnOrCustom = (columnId: string): ColumnOrCustom<TData, unknown> => {
+    const column = table.getColumn(columnId);
+    // If it's a regular column, return it
+    if (column) return column;
+    
+    // For custom filters, we'll create a proxy object with the necessary methods
+    // This allows custom filters to work with the same UI components
+    return {
+      getFilterValue: () => {
+        // Look up the filter value in columnFilters state
+        const filterValue = table.getState().columnFilters.find(f => f.id === columnId)?.value;
+        return filterValue;
+      },
+      setFilterValue: (value: unknown) => {
+        // Update columnFilters state for this custom filter
+        const currentFilters = table.getState().columnFilters;
+        
+        if (value === undefined || (Array.isArray(value) && value.length === 0)) {
+          // Remove filter if value is empty
+          table.setColumnFilters(currentFilters.filter(f => f.id !== columnId));
+        } else {
+          // Update or add filter
+          const filterIndex = currentFilters.findIndex(f => f.id === columnId);
+          if (filterIndex >= 0) {
+            const newFilters = [...currentFilters];
+            newFilters[filterIndex] = { id: columnId, value };
+            table.setColumnFilters(newFilters);
+          } else {
+            table.setColumnFilters([...currentFilters, { id: columnId, value }]);
+          }
+        }
+      }
+    };
+  };
+
   return (
     <div className={cn('flex w-full items-center justify-between gap-2 overflow-auto p-1', className)} {...props}>
       <div className='flex flex-1 items-center gap-2'>
         {searchableColumns.length > 0 &&
           searchableColumns.map(
-            (column) =>
-              table.getColumn(column.id ? String(column.id) : '') && (
+            (column) => 
+              shouldRenderFilter(String(column.id)) && (
                 <Input
                   key={String(column.id)}
                   placeholder={column.placeholder}
-                  value={(table.getColumn(String(column.id))?.getFilterValue() as string) ?? ''}
-                  onChange={(event) => table.getColumn(String(column.id))?.setFilterValue(event.target.value)}
+                  value={(getColumnOrCustom(String(column.id)).getFilterValue() as string) ?? ''}
+                  onChange={(event) => getColumnOrCustom(String(column.id)).setFilterValue(event.target.value)}
                   className='h-8 w-40 lg:w-64'
                 />
               )
@@ -94,10 +139,10 @@ export function DataTableToolbar<TData>({
         {filterableColumns.length > 0 &&
           filterableColumns.map(
             (column) =>
-              table.getColumn(column.id ? String(column.id) : '') && (
+              shouldRenderFilter(String(column.id)) && (
                 <DataTableFacetedFilter
                   key={String(column.id)}
-                  column={table.getColumn(column.id ? String(column.id) : '')}
+                  column={getColumnOrCustom(String(column.id))}
                   title={column.label}
                   placeholder={column.placeholder}
                   options={column.options ?? []}
@@ -108,12 +153,12 @@ export function DataTableToolbar<TData>({
         {dateColumns.length > 0 &&
           dateColumns.map(
             (column) =>
-              table.getColumn(column.id ? String(column.id) : '') && (
+              shouldRenderFilter(String(column.id)) && (
                 <FlexDatePicker
                   key={String(column.id)}
                   field={{
-                    value: table.getColumn(String(column.id))?.getFilterValue() as string,
-                    onChange: (value) => table.getColumn(String(column.id))?.setFilterValue(new Date(value as unknown as string).toLocaleString())
+                    value: getColumnOrCustom(String(column.id)).getFilterValue() as string,
+                    onChange: (value) => getColumnOrCustom(String(column.id)).setFilterValue(new Date(value as unknown as string).toLocaleString())
                   }}
                   label={column.label}
                 />
@@ -132,8 +177,10 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className='flex items-center gap-2'>
-        {children}
-        <DataTableViewOptions table={table} />
+        <div className='flex items-center gap-2'>
+          {children}
+        </div>
+        {isTable && <DataTableViewOptions table={table} />}
       </div>
     </div>
   )

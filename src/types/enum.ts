@@ -86,7 +86,7 @@ export const discountTypeEnumArray = enumToArray(DiscountTypeEnum)
 
 export enum PaymentMethod {
   CASH = 'CASH',
-  CARD = 'CARD',
+  // CARD = 'CARD',
   WALLET = 'WALLET',
   BANK_TRANSFER = 'BANK_TRANSFER'
 }

@@ -753,10 +753,67 @@
     "processSuccess": "Yêu cầu hủy đơn đã được xử lý thành công!"
   },
   "toast": {
-    "success": "Yêu cầu của bạn đã được xử lý thành công, tiếp tục công việc của bạn.",
-    "error": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn, vui lòng thử lại sau. Nếu vấn đề vẫn tiếp diễn, vui lòng liên hệ với đội ngũ hỗ trợ.",
-    "info": "Đây là một thông báo để cung cấp thêm thông tin quan trọng liên quan đến công việc của bạn.",
-    "warning": "Bạn sắp thực hiện một hành động không an toàn, vui lòng cẩn thận. Nếu bạn không chắc chắn, hãy liên hệ với đội hỗ trợ."
+    "error": "Đã xảy ra lỗi.",
+    "success": "Thành công!",
+    "save": "Đã lưu",
+    "delete": "Đã xóa",
+    "send": "Đã gửi"
+  },
+  "transaction": {
+    "management": "Quản lý Giao dịch",
+    "list": "Danh sách Giao dịch",
+    "date": "Ngày",
+    "amount": "Số tiền",
+    "paymentMethod": "Phương thức thanh toán",
+    "filter": {
+      "type": "Loại",
+      "status": "Trạng thái"
+    },
+    "tabs": {
+      "all": "Tất cả Giao dịch"
+    },
+    "types": {
+      "deposit": "Nạp tiền",
+      "withdraw": "Rút tiền",
+      "order_purchase": "Mua hàng",
+      "booking_purchase": "Đặt lịch",
+      "refund": "Hoàn tiền",
+      "commission": "Hoa hồng",
+      "transfer": "Chuyển khoản"
+    },
+    "statuses": {
+      "pending": "Đang chờ",
+      "processing": "Đang xử lý",
+      "completed": "Hoàn thành",
+      "failed": "Thất bại",
+      "refunded": "Đã hoàn tiền"
+    },
+    "viewOrder": "Xem đơn hàng"
+  },
+  "walletTerm": {
+    "balance": "Số dư & Giao dịch",
+    "withdrawalRequests": {
+      "title": "Danh sách Yêu cầu Rút tiền",
+      "status": {
+        "pending": "Đang chờ",
+        "approved": "Đã duyệt",
+        "rejected": "Từ chối",
+        "processing": "Đang xử lý",
+        "completed": "Hoàn thành",
+        "cancelled": "Đã hủy"
+      },
+      "statusUpdateSuccess": "Cập nhật trạng thái yêu cầu rút tiền thành công",
+      "processedBy": "Xử lý bởi"
+    },
+    "withdraw": {
+      "amount": "Số tiền",
+      "bankAccounts": {
+        "title": "Tài khoản Ngân hàng",
+        "bankName": "Tên Ngân hàng",
+        "accountNumber": "Số tài khoản",
+        "accountName": "Tên chủ tài khoản"
+      }
+    }
   },
   "delete": {
     "productCart": {
@@ -936,7 +993,7 @@
     "classification": "Phân Loại",
     "addOption": "Thêm tùy chọn",
     "option": "Tùy chọn",
-    "classificationTitleInformation": "Thuộc Tính Phân Loại",
+    "classificationTitleInformation": "Thuô̙c Tính Phân Loại",
     "classificationEg": "Ví dụ: Đỏ, v.v.",
     "inputPriceAndQuantity": "Chi Tiết Phân Loại Sản Phẩm",
     "price": "Giá",

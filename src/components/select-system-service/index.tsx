@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Image } from 'lucide-react'
-import { ChangeEvent, forwardRef, HTMLAttributes, useMemo } from 'react'
+import { ChangeEvent, forwardRef, HTMLAttributes, useCallback, useMemo } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getAllSystemServiceApi } from '@/network/apis/system-service'
@@ -67,15 +67,31 @@ const SelectSystemService = forwardRef<HTMLSelectElement, Props>((props) => {
     }
   }, [value, systemServiceList?.data, multiple])
 
+  const promiseOptions = useCallback(
+    (inputValue: string) => {
+      if (!inputValue) {
+        return Promise.resolve(serviceOptions)
+      }
+      const filteredOptions = serviceOptions.filter((option) =>
+        option.label?.toLowerCase().includes(inputValue.toLowerCase())
+      )
+      return Promise.resolve(filteredOptions)
+    },
+    [serviceOptions]
+  )
+
   return (
     <AsyncSelect
+      cacheOptions
       defaultOptions={serviceOptions}
+      loadOptions={promiseOptions}
+      value={selectedOptions}
       isMulti={multiple}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingSystemServiceList}
       isClearable
-      value={selectedOptions}
+      isSearchable
       onChange={(options) => {
         if (multiple) {
           const optionValues = options as TOption[]

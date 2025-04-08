@@ -86,10 +86,10 @@ export default function ProductTag({ tag, text, size = 'medium' }: ProductTagPro
       tagText = t('productTag.soldOut')
       break
     // for payment methods
-    case PaymentMethod.CARD:
-      tagColorClass = 'bg-white text-yellow-500 border border-yellow-500'
-      tagText = t('paymentMethod.tag.cash')
-      break
+    // case PaymentMethod.CARD:
+    //   tagColorClass = 'bg-white text-yellow-500 border border-yellow-500'
+    //   tagText = t('paymentMethod.tag.cash')
+    //   break
     case PaymentMethod.CASH:
       tagColorClass = 'bg-white text-orange-500 border border-orange-500'
       tagText = t('paymentMethod.tag.card')

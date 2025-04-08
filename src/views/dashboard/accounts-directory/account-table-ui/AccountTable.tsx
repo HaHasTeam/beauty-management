@@ -16,7 +16,6 @@ import { AccountTableToolbarActions } from './AccountsTableToolbarActions'
 import { BanAccountsDialog } from './BanAccountsDialog'
 import { getRoleIcon, getStatusIcon } from './helper'
 import { UpdateStatusAccountDialog } from './UpdateStatusAccountDialog'
-import { ViewDetailsAccountSheet } from './ViewDetailsAccountSheet'
 
 interface AccountTableProps {
   data: TUser[]
@@ -109,7 +108,7 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
   })
 
   return (
-    <>
+    <div className='space-y-4'>
       <DataTable table={table} floatingBar={<AccountsTableFloatingBar table={table} />}>
         <DataTableToolbar table={table} filterFields={filterFields}>
           <AccountTableToolbarActions table={table} />
@@ -130,11 +129,6 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
         showTrigger={false}
         onSuccess={() => rowAction?.row.toggleSelected(false)}
       />
-      <ViewDetailsAccountSheet
-        account={rowAction?.row.original}
-        open={rowAction?.type === 'view'}
-        onOpenChange={() => setRowAction(null)}
-      />
-    </>
+    </div>
   )
 }
