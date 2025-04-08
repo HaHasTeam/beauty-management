@@ -56,7 +56,24 @@ export const getGroupProductFilterApi = toQueryFetcher<
   GetGroupProductFilterRequestParams,
   TServerResponseWithPaging<TGroupProduct[]>
 >('getGroupProductFilterApi', async (params) => {
+  const { page, limit, sortBy, order, ...bodyParams } = params || {}
+  const body: GetGroupProductFilterRequestParams = {}
+  if (bodyParams.productIds?.length) {
+    body.productIds = bodyParams.productIds
+  }
+  if (bodyParams.name) {
+    body.name = bodyParams.name
+  }
+  if (bodyParams.statuses?.length) {
+    body.statuses = bodyParams.statuses
+  }
+  if (bodyParams.brandId) {
+    body.brandId = bodyParams.brandId
+  }
+
   return privateRequest('/group-products/filter', {
-    params
+    method: 'POST',
+    data: body,
+    params: { page, limit, sortBy, order }
   })
 })

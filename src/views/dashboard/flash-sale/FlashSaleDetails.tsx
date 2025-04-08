@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { SaveIcon, Siren, Zap } from 'lucide-react'
-import { useEffect, useId } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as z from 'zod'
@@ -29,6 +29,7 @@ import { convertFlashSaleToForm, convertFormToFlashSale, formSchema } from './he
 const FlashSaleDetails = () => {
   const id = useId()
   const params = useParams()
+  const prevProductRef = useRef<string>('')
 
   const queryClient = useQueryClient()
   const itemId = params.id !== 'add' ? params.id : undefined
@@ -47,10 +48,31 @@ const FlashSaleDetails = () => {
       product: '',
       startTime: '',
       endTime: '',
-      // images: [],
+      discount: undefined,
       productClassifications: [{}]
     }
   })
+
+  // Listen for product changes to reset classifications
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      // Check if product has changed
+      const currentProduct = values.product
+
+      if (currentProduct && currentProduct !== prevProductRef.current) {
+        // Product changed, store the new value
+        prevProductRef.current = currentProduct
+
+        // Reset classifications
+        if (prevProductRef.current) {
+          // Remove existing classifications to start fresh
+          form.unregister('productClassifications')
+        }
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [form])
 
   const { mutateAsync: addFlashSaleFn } = useMutation({
     mutationKey: [addFlashSaleApi.mutationKey],
@@ -75,6 +97,7 @@ const FlashSaleDetails = () => {
 
   const handleServerError = useHandleServerError()
 
+  // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (itemId) {
@@ -107,6 +130,8 @@ const FlashSaleDetails = () => {
   useEffect(() => {
     if (flashSale?.data) {
       form.reset(convertFlashSaleToForm(flashSale.data))
+      // Update the prevProductRef with the loaded product ID
+      prevProductRef.current = flashSale.data.product.id
     }
   }, [flashSale?.data, form])
 
@@ -185,7 +210,7 @@ const FlashSaleDetails = () => {
               loading={isUpdatingFlashSale}
               variant={'success'}
             >
-              {'Close flash sale'}
+              {'Open flash sale'}
             </AlertAction>
           </Alert>
         )

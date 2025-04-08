@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ChangeEvent, forwardRef, HTMLAttributes, useMemo } from 'react'
+import { ChangeEvent, forwardRef, HTMLAttributes, useCallback, useMemo } from 'react'
 
 import { getAllBookingsApi } from '@/network/apis/booking'
 import { TBooking } from '@/types/booking'
@@ -61,15 +61,31 @@ const SelectBooking = forwardRef<HTMLSelectElement, Props>((props) => {
     }
   }, [value, myBookingList?.data, multiple])
 
+  const promiseOptions = useCallback(
+    (inputValue: string) => {
+      if (!inputValue) {
+        return Promise.resolve(bookingOptions)
+      }
+      const filteredOptions = bookingOptions.filter((option) =>
+        option.label?.toLowerCase().includes(inputValue.toLowerCase())
+      )
+      return Promise.resolve(filteredOptions)
+    },
+    [bookingOptions]
+  )
+
   return (
     <AsyncSelect
+      cacheOptions
       defaultOptions={bookingOptions}
+      loadOptions={promiseOptions}
+      value={selectedOptions}
       isMulti={multiple}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingMyBookingList}
       isClearable
-      value={selectedOptions}
+      isSearchable
       onChange={(options) => {
         if (multiple) {
           const optionValues = options as TOption[]

@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
-import { cn, formatDate } from '@/lib/utils'
-import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
+import { formatDate } from '@/lib/utils'
+import { TPreOrder } from '@/types/pre-order'
 
-import { getStatusIcon } from './helper'
+import { PreOrderClassificationsCell } from './PreOrderClassificationsCell'
+import { PreOrderStatusCell } from './PreOrderStatusCell'
 
 export function getColumns(): ColumnDef<TPreOrder>[] {
   return [
@@ -61,49 +62,17 @@ export function getColumns(): ColumnDef<TPreOrder>[] {
       accessorKey: 'productClassifications',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Classification | Quantity' />,
       cell: ({ row }) => {
-        const classificationList = row.original.productClassifications
-        return (
-          <div className='flex items-center gap-1 flex-wrap capitalize font-normal'>
-            {classificationList
-              .map((classification) => `${classification.title} | ${classification.quantity}`)
-              .join(', ')}
-          </div>
-        )
+        return <PreOrderClassificationsCell preOrder={row.original} />
       },
       enableSorting: false,
       enableHiding: false,
-      size: 300
+      size: 350
     },
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
       cell: ({ row }) => {
-        const statusKey = Object.keys(PreOrderStatusEnum).find((status) => {
-          const value = PreOrderStatusEnum[status as keyof typeof PreOrderStatusEnum]
-          return value === row.original.status
-        })
-
-        if (!statusKey) return null
-
-        const statusValue = PreOrderStatusEnum[statusKey as keyof typeof PreOrderStatusEnum]
-
-        const Icon = getStatusIcon(statusValue)
-
-        return (
-          <div
-            className={cn(
-              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
-              Icon.textColor,
-              Icon.bgColor
-            )}
-          >
-            <Icon.icon
-              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
-              aria-hidden='true'
-            />
-            <span className='capitalize'>{statusValue.toLowerCase()}</span>
-          </div>
-        )
+        return <PreOrderStatusCell preOrder={row.original} />
       },
       size: 100,
       filterFn: (row, id, value) => {

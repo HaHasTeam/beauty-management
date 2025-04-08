@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
@@ -51,7 +52,7 @@ interface GetColumnsProps {
 export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDef<TBrand>[] {
   return [
     {
-      id: 'brand',
+      id: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Brand Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name ?? 'brand'
@@ -109,19 +110,13 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
         const Icon = statusInfo.icon
 
         return (
-          <div
-            className={cn(
-              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl w',
-              statusInfo.textColor,
-              statusInfo.bgColor
-            )}
+          <Badge
+            variant='outline'
+            className={cn('flex items-center gap-2 whitespace-nowrap w-fit', statusInfo.bgColor, statusInfo.textColor)}
           >
-            <Icon
-              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', statusInfo.iconColor)}
-              aria-hidden='true'
-            />
+            <Icon className={cn('size-4', statusInfo.iconColor)} aria-hidden='true' />
             <span>{statusInfo.label}</span>
-          </div>
+          </Badge>
         )
       },
       size: 50,

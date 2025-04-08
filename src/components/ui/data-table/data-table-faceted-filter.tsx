@@ -17,8 +17,17 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { Option } from '@/types/table'
 
+// Define a custom filter column interface that mimics the necessary Column methods
+export interface CustomFilterColumn {
+  getFilterValue: () => unknown
+  setFilterValue: (value: unknown) => void
+}
+
+// Extend the Column type to include our custom filter column
+export type ColumnOrCustom<TData, TValue> = Column<TData, TValue> | CustomFilterColumn
+
 interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>
+  column?: ColumnOrCustom<TData, TValue>
   title?: string
   options: Option[]
   /**

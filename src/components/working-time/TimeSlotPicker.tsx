@@ -21,6 +21,8 @@ interface TimeSlotPickerProps {
   maxHeight?: number
   /** Optional callback when multiple slots are selected/deselected at once */
   onBulkSlotChange?: (slots: Array<{ date: Date; slotIndex: number }>, isSelected: boolean) => void
+  /** Set to true to make the component read-only (disables all interactions) */
+  readOnly?: boolean
 }
 
 // Using theme colors
@@ -73,7 +75,8 @@ export function TimeSlotPicker({
   slotDuration = 60, // 1 hour default
   disabledSlots = [],
   maxHeight = 600, // Default max height in pixels
-  onBulkSlotChange
+  onBulkSlotChange,
+  readOnly = false
 }: TimeSlotPickerProps) {
   // Validate time range
   const validStartTime = Math.max(0, Math.min(23, startTime))
@@ -155,10 +158,12 @@ export function TimeSlotPicker({
   }
 
   const handleSelectSlot = (date: Date, slotIndex: number) => {
+    if (readOnly) return
     onSelectSlot(date, slotIndex)
   }
 
   const handleDayHeaderClick = (day: Date) => {
+    if (readOnly) return
     const dayOfWeek = format(day, 'EEEE')
     const daySlots = selectedSlots.filter((slot) => format(slot.date, 'EEEE') === dayOfWeek)
 
@@ -205,12 +210,14 @@ export function TimeSlotPicker({
   }
 
   const handleClearAll = () => {
+    if (readOnly) return
     if (onBulkSlotChange && selectedSlots.length > 0) {
       onBulkSlotChange([...selectedSlots], false)
     }
   }
 
   const handleSelectAll = () => {
+    if (readOnly) return
     const allPossibleSlots: Array<{ date: Date; slotIndex: number }> = []
 
     weekDays.forEach((day: Date) => {
@@ -254,53 +261,69 @@ export function TimeSlotPicker({
 
   return (
     <div className='space-y-4'>
-      {/* Action buttons */}
-      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2'>
-        <div className='text-sm font-medium'>
-          {selectedSlots.length > 0 ? (
-            <span className='text-primary'>
-              You've selected {selectedSlots.length} time slots across{' '}
-              {
-                // Count unique days that have selections
-                new Set(selectedSlots.map((slot) => format(slot.date, 'EEEE'))).size
-              }{' '}
-              days
-            </span>
-          ) : (
-            <span className='text-muted-foreground'>No time slots selected</span>
-          )}
-        </div>
-        <div className='flex space-x-2'>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={(e) => {
-              e.preventDefault()
-              handleSelectAll()
-            }}
-            type='button'
-            className='text-xs'
-          >
-            <CheckSquare className='mr-1 h-3.5 w-3.5' />
-            Select All
-          </Button>
+      {/* Action buttons - hide in readOnly mode */}
+      {!readOnly && (
+        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2'>
+          <div className='text-sm font-medium'>
+            {selectedSlots.length > 0 ? (
+              <span className='text-primary'>
+                You've selected {selectedSlots.length} time slots across{' '}
+                {
+                  // Count unique days that have selections
+                  new Set(selectedSlots.map((slot) => format(slot.date, 'EEEE'))).size
+                }{' '}
+                days
+              </span>
+            ) : (
+              <span className='text-muted-foreground'>No time slots selected</span>
+            )}
+          </div>
+          <div className='flex space-x-2'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={(e) => {
+                e.preventDefault()
+                handleSelectAll()
+              }}
+              type='button'
+              className='text-xs'
+            >
+              <CheckSquare className='mr-1 h-3.5 w-3.5' />
+              Select All
+            </Button>
 
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={(e) => {
-              e.preventDefault()
-              handleClearAll()
-            }}
-            type='button'
-            className='text-xs'
-            disabled={selectedSlots.length === 0}
-          >
-            <XSquare className='mr-1 h-3.5 w-3.5' />
-            Clear All
-          </Button>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={(e) => {
+                e.preventDefault()
+                handleClearAll()
+              }}
+              type='button'
+              className='text-xs'
+              disabled={selectedSlots.length === 0}
+            >
+              <XSquare className='mr-1 h-3.5 w-3.5' />
+              Clear All
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* If in readOnly mode, display a summary of selected slots */}
+      {readOnly && selectedSlots.length > 0 && (
+        <div className='text-sm font-medium mb-2'>
+          <span className='text-primary'>
+            This consultant has {selectedSlots.length} time slots scheduled across{' '}
+            {
+              // Count unique days that have selections
+              new Set(selectedSlots.map((slot) => format(slot.date, 'EEEE'))).size
+            }{' '}
+            days
+          </span>
+        </div>
+      )}
 
       <div className='overflow-x-auto pb-4'>
         <div className='flex flex-col space-y-2'>
@@ -320,9 +343,11 @@ export function TimeSlotPicker({
                   handleDayHeaderClick(day)
                 }}
                 type='button'
+                disabled={readOnly}
                 className={cn(
-                  'py-2 rounded-lg border shadow-sm flex flex-col items-center justify-center cursor-pointer hover:bg-accent/50 transition-colors w-full min-w-[70px] flex-shrink-0',
-                  weekDayColors[dayNames[index] as keyof typeof weekDayColors]
+                  'py-2 rounded-lg border shadow-sm flex flex-col items-center justify-center transition-colors w-full min-w-[70px] flex-shrink-0',
+                  weekDayColors[dayNames[index] as keyof typeof weekDayColors],
+                  readOnly ? 'cursor-default' : 'cursor-pointer hover:bg-accent/50'
                 )}
               >
                 <span className='text-sm font-bold text-primary'>{format(day, 'EEE')}</span>
@@ -361,7 +386,7 @@ export function TimeSlotPicker({
 
                   {weekDays.map((day, dayIndex) => {
                     const selected = isSlotSelected(day, originalSlotIndex)
-                    const disabled = isSlotDisabled(day, originalSlotIndex)
+                    const disabled = isSlotDisabled(day, originalSlotIndex) || readOnly
 
                     // Apply special styling for active and inactive slots
                     return (
@@ -371,12 +396,16 @@ export function TimeSlotPicker({
                             'w-full rounded-md transition-all duration-200 text-sm font-medium aspect-square sm:aspect-auto relative',
                             selected
                               ? timeSlotColors.selected[period as keyof typeof timeSlotColors.selected]
-                              : disabled
+                              : disabled && !readOnly
                                 ? timeSlotColors.inactive[period as keyof typeof timeSlotColors.inactive]
                                 : timeSlotColors.unselected[period as keyof typeof timeSlotColors.unselected],
-                            disabled
+                            disabled && !readOnly
                               ? 'opacity-40 cursor-not-allowed'
-                              : 'hover:shadow-lg transform hover:-translate-y-0.5 hover:scale-105 active:translate-y-0 active:scale-100'
+                              : readOnly
+                                ? selected
+                                  ? 'cursor-default'
+                                  : 'opacity-40 cursor-default'
+                                : 'hover:shadow-lg transform hover:-translate-y-0.5 hover:scale-105 active:translate-y-0 active:scale-100'
                           )}
                           disabled={disabled}
                           onClick={(e) => {
@@ -390,14 +419,14 @@ export function TimeSlotPicker({
                             <span className='bg-primary text-primary-foreground rounded-full min-w-6 min-h-6 w-7 h-7 flex items-center justify-center text-xs shadow-sm font-bold'>
                               ✓
                             </span>
-                          ) : disabled ? (
+                          ) : disabled && !readOnly ? (
                             <span className='w-6 h-6 flex items-center justify-center text-muted'>✕</span>
                           ) : (
                             <span className='w-6 h-6 flex items-center justify-center'>—</span>
                           )}
 
-                          {/* Status indicator for active vs inactive slots */}
-                          {!disabled && !selected && (
+                          {/* Status indicator for active vs inactive slots - hide in readOnly mode if not selected */}
+                          {!disabled && !selected && !readOnly && (
                             <span className='absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse'></span>
                           )}
                         </button>
@@ -411,34 +440,50 @@ export function TimeSlotPicker({
         </div>
       </div>
 
-      {/* Legend for slot status */}
+      {/* Legend for slot status - simplify in readOnly mode */}
       <div className='flex flex-wrap gap-4 mt-3 text-xs'>
         <div className='flex items-center'>
           <div className='w-3.5 h-3.5 mr-1.5 border-2 border-primary bg-primary/30 rounded'></div>
           <span>Selected slots</span>
         </div>
-        <div className='flex items-center'>
-          <div className='w-3.5 h-3.5 mr-1.5 border border-border bg-transparent rounded relative'>
-            <span className='absolute -top-1 -right-1 w-1.5 h-1.5 bg-green-500 rounded-full'></span>
-          </div>
-          <span>Available slots</span>
-        </div>
-        <div className='flex items-center'>
-          <div className='w-3.5 h-3.5 mr-1.5 border border-muted/50 bg-muted/20 rounded opacity-40'></div>
-          <span>Inactive slots</span>
-        </div>
+        {!readOnly && (
+          <>
+            <div className='flex items-center'>
+              <div className='w-3.5 h-3.5 mr-1.5 border border-border bg-transparent rounded relative'>
+                <span className='absolute -top-1 -right-1 w-1.5 h-1.5 bg-green-500 rounded-full'></span>
+              </div>
+              <span>Available slots</span>
+            </div>
+            <div className='flex items-center'>
+              <div className='w-3.5 h-3.5 mr-1.5 border border-muted/50 bg-muted/20 rounded opacity-40'></div>
+              <span>Inactive slots</span>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Help text for better understanding */}
-      <div className='mt-2 p-2.5 bg-muted/20 rounded-md text-xs text-muted-foreground'>
-        <p className='flex items-center'>
-          <span className='mr-2'>💡</span>
-          <span>
-            <strong>Only time slots with at least one active day</strong> are shown. Hidden time slots are completely
-            inactive.
-          </span>
-        </p>
-      </div>
+      {/* Help text - change for readOnly mode */}
+      {readOnly ? (
+        <div className='mt-2 p-2.5 bg-muted/20 rounded-md text-xs text-muted-foreground'>
+          <p className='flex items-center'>
+            <span className='mr-2'>💡</span>
+            <span>
+              <strong>This is a read-only view</strong> of the consultant's working hours. The highlighted slots
+              indicate when the consultant is available.
+            </span>
+          </p>
+        </div>
+      ) : (
+        <div className='mt-2 p-2.5 bg-muted/20 rounded-md text-xs text-muted-foreground'>
+          <p className='flex items-center'>
+            <span className='mr-2'>💡</span>
+            <span>
+              <strong>Only time slots with at least one active day</strong> are shown. Hidden time slots are completely
+              inactive.
+            </span>
+          </p>
+        </div>
+      )}
     </div>
   )
 }

@@ -34,16 +34,20 @@ export type FilterOperator = DataTableConfig['globalOperators'][number]
 export type JoinOperator = DataTableConfig['joinOperators'][number]['value']
 
 export interface DataTableFilterField<TData> {
-  id: StringKeyOf<TData>
+  id: StringKeyOf<TData> | string
   label: string
   placeholder?: string
   options?: Option[]
   isDate?: boolean
   isSingleChoice?: boolean
+  /** If true, this is a custom filter not directly mapped to a data property */
+  isCustomFilter?: boolean
 }
 
-export interface DataTableAdvancedFilterField<TData> extends DataTableFilterField<TData> {
+export interface DataTableAdvancedFilterField<TData> extends Omit<DataTableFilterField<TData>, 'id'> {
+  id: StringKeyOf<TData> | string
   type: ColumnType
+  isCustomFilter?: boolean
 }
 
 export type Filter<TData> = Prettify<
@@ -57,10 +61,10 @@ export interface DataTableRowAction<TData> {
   type: 'update' | 'delete'
 }
 
-export interface DataTableQueryState<TData> {
+export interface DataTableQueryState<TData, TExtendedFilter extends Record<string, unknown> = Record<string, unknown>> {
   fieldFilters: {
     [key in keyof TData]: string | string[]
-  }
+  } & TExtendedFilter
   page: number
   perPage: number
   sort: ExtendedSortingState<TData>

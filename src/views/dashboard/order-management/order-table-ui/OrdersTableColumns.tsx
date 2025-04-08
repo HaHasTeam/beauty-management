@@ -1,25 +1,75 @@
 import type { ColumnDef, Row } from '@tanstack/react-table'
-import i18next from 'i18next'
 import { Ellipsis, EyeIcon, SettingsIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
-import { cn, formatDate } from '@/lib/utils'
-import { ShippingStatusEnum } from '@/types/enum'
+import { formatDate } from '@/lib/utils'
 import { type IOrder } from '@/types/order'
+import { formatCurrency } from '@/utils/number'
 import { getDisplayString } from '@/utils/string'
 
-import { getStatusIcon } from './helper'
+import { OrderItemsCell } from './OrderItemsCell'
+import { OrderResultCell } from './OrderResultCell'
+import { OrderStatusCell } from './OrderStatusCell'
+import { OrderTypeCell } from './OrderTypeCell'
+
+// Custom filter functions for use with table
+export const customFilterFunctions = {
+  // This function will filter orders based on product search text
+  // It searches across product names, SKUs, and categories
+  productSearch: (row: IOrder, value: unknown) => {
+    // If no search value, return all rows
+    if (!value || typeof value !== 'string') return true
+
+    const searchLower = value.toLowerCase()
+    const orderDetails = row.orderDetails || []
+
+    // Search across all products in the order
+    return orderDetails.some((item) => {
+      if (!item) return false
+
+      // Check if search term appears in product name
+      if (item.productName && item.productName.toLowerCase().includes(searchLower)) {
+        return true
+      }
+
+      // Check if classification name contains the search term
+      if (item.classificationName && item.classificationName.toLowerCase().includes(searchLower)) {
+        return true
+      }
+
+      // Check if product classification data contains the search term
+      const classification = item.productClassification
+      if (classification) {
+        // Search in classification properties if they exist
+        if (classification.title && classification.title.toLowerCase().includes(searchLower)) {
+          return true
+        }
+
+        // Check the SKU
+        if (classification.sku && classification.sku.toLowerCase().includes(searchLower)) {
+          return true
+        }
+
+        // Check product name
+        if (
+          classification.product &&
+          classification.product.name &&
+          classification.product.name.toLowerCase().includes(searchLower)
+        ) {
+          return true
+        }
+      }
+
+      return false
+    })
+  }
+}
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
@@ -33,114 +83,125 @@ interface GetColumnsProps {
 export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>[] {
   return [
     {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 1
-    },
-    {
-      id: 'index',
-      accessorKey: 'STT',
-      cell: ({ row }) => {
-        return <span className='text-center'>{row.index + 1}</span>
-      },
-      size: 1
-    },
-    {
       accessorKey: 'recipientName',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Recipient' />,
-      cell: ({ row }) => <div>{row.original.recipientName}</div>,
-      enableSorting: true
+      cell: ({ row }) => {
+        const name = row.original.recipientName || 'Unknown Recipient'
+        // Use account avatar if available, or first letter as fallback
+        const user = row.original.account
+        const avatarUrl = user?.avatar || ''
+
+        return (
+          <div className='flex gap-1 items-center'>
+            <Avatar className='rounded-full'>
+              <AvatarImage src={avatarUrl} className='size-5' />
+              <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <span className='max-w-[31.25rem] truncate'>{name}</span>
+          </div>
+        )
+      },
+      enableSorting: true,
+      size: 200
     },
     {
-      accessorKey: 'totalPrice',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Total' />,
-      cell: ({ row }) => <div>{i18next.t('order.totalPrice', { price: row.original.totalPrice })}</div>,
-      enableSorting: true
+      accessorKey: 'paymentMethod',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Total / Method' />,
+      cell: ({ row }) => {
+        return (
+          <div className='flex items-end gap-2 flex-col'>
+            <div className='text-right font-bold'>{formatCurrency(row.original.totalPrice)}</div>
+            <div className='text-xs text-muted-foreground'>
+              by <span className='capitalize'>{getDisplayString(row.original.paymentMethod.toLowerCase())}</span>
+            </div>
+          </div>
+        )
+      },
+      enableSorting: true,
+      size: 100
+    },
+    {
+      accessorKey: 'type',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Type' />,
+      cell: ({ row }) => (
+        <div className='text-nowrap'>
+          <OrderTypeCell order={row.original} />
+        </div>
+      ),
+      filterFn: (row, id, value) => {
+        return Array.isArray(value) && value.includes(row.getValue(id))
+      },
+      size: 340
     },
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
-      cell: ({ row }) => {
-        const statusValue = row.original.status
-        const Icon = getStatusIcon(statusValue)
-
-        return (
-          <div className={cn('flex items-center font-medium px-2 py-1 rounded-3xl', Icon.textColor, Icon.bgColor)}>
-            <Icon.icon className={cn('mr-2 size-4', Icon.iconColor)} aria-hidden='true' />
-            <span className='capitalize'>{getDisplayString(statusValue)}</span>
-          </div>
-        )
-      },
+      cell: ({ row }) => <OrderStatusCell order={row.original} />,
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id))
-      }
+      },
+      size: 150
+    },
+    {
+      id: 'Shipping',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Shipping & Note' />,
+      cell: ({ row }) => <OrderResultCell order={row.original} />,
+      size: 200
+    },
+    {
+      id: 'orderDetails',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Order Items' />,
+      cell: ({ row }) => <OrderItemsCell order={row.original} />,
+      enableSorting: false,
+      enableHiding: false,
+      size: 450
     },
     {
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Order Date' />,
-      cell: ({ cell }) =>
-        formatDate(cell.getValue() as Date, {
-          hour: 'numeric',
-          minute: 'numeric'
-        })
+      cell: ({ row }) => {
+        return (
+          <div className='text-sm text-muted-foreground'>
+            {formatDate(new Date(row.original.createdAt), { hour: 'numeric', minute: 'numeric' })}
+          </div>
+        )
+      },
+      size: 180
     },
     {
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
-      cell: ({ row }) => (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='size-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <Ellipsis className='size-4' aria-hidden='true' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <Link
-              to={routesConfig[Routes.ORDER_DETAILS].getPath({
-                id: row.original.id
-              })}
-            >
-              <DropdownMenuItem>
-                <EyeIcon className='mr-2 size-4' />
-                View details
-              </DropdownMenuItem>
-            </Link>
-            {/* <DropdownMenuItem asChild>
-              <Link to={routesConfig[Routes.ORDER_INVOICE].getPath(row.original.id)}>
-                <FileText className='mr-2 size-4' />
-                View invoice
-              </Link>
-            </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => setRowAction({ row, type: 'update-status' })}>
-              Update status
-            </DropdownMenuItem>
-            {row.original.status === ShippingStatusEnum.WAIT_FOR_CONFIRMATION && (
-              <DropdownMenuItem onSelect={() => setRowAction({ row, type: 'cancel' })} className='text-red-600'>
-                Cancel order
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-      size: 40,
+      cell: ({ row }) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const navigate = useNavigate()
+        const handleNavigate = () => {
+          //do nothing
+          setRowAction({ row, type: 'view' })
+          navigate(routesConfig[Routes.ORDER_DETAILS].getPath({ id: row.original.id }))
+        }
+
+        return (
+          <div className='flex justify-end'>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='h-8 w-8 p-0'>
+                  <span className='sr-only'>Open menu</span>
+                  <Ellipsis className='h-4 w-4' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuItem onClick={handleNavigate} className='text-blue-500'>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <EyeIcon size={16} strokeWidth={3} />
+                    <span className='font-semibold'>View & Edit</span>
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
+      },
+      size: 10,
       enableSorting: false,
       enableHiding: false
     }

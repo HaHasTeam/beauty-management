@@ -1,9 +1,7 @@
 import { AddressEnum } from './enum'
+import { TMetaData } from './request'
 
-export interface IAddress {
-  id?: string
-  createdAt?: string
-  updatedAt?: string
+export interface IAddress extends TMetaData {
   fullName: string
   phone: string
   detailAddress: string

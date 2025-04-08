@@ -1,4 +1,4 @@
-import { CalendarCheck, CheckCircle2, Circle, CircleDashed, CircleX, FileText, WifiOff, X } from 'lucide-react'
+import { CalendarCheck, CheckCircle2, Circle, CircleDashed, CircleMinus, CircleX, FileText, X } from 'lucide-react'
 
 import { BrandStatusEnum } from '@/types/brand'
 
@@ -39,7 +39,7 @@ export function getStatusInfo(status: BrandStatusEnum): StatusInfo {
       bgColor: 'bg-yellow-100'
     },
     [BrandStatusEnum.INACTIVE]: {
-      icon: WifiOff,
+      icon: CircleMinus,
       label: 'Inactive',
       iconColor: 'text-gray-500',
       textColor: 'text-gray-500',

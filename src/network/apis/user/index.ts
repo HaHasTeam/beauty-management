@@ -147,3 +147,15 @@ export const getUserStatsApi = toQueryFetcher<void, TServerResponse<TUserRespons
   // We'll process this data in the component to create chart data
   return response
 })
+
+// Get account details by ID
+export const getAccountDetailsByIdApi = toQueryFetcher<string, TServerResponse<TUserResponse>>(
+  'getAccountDetailsByIdApi',
+  async (id) => {
+    const res = (await privateRequest(`/accounts/get/id/${id}`)) as TServerResponse<TUserResponse[]>
+    return {
+      message: res.message,
+      data: res.data[0]
+    }
+  }
+)

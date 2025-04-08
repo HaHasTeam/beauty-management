@@ -1,4 +1,5 @@
 import { Shapes, Tag, Trash2 } from 'lucide-react'
+import { useEffect } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 
 import Button from '@/components/button'
@@ -20,24 +21,43 @@ type Props = {
 }
 
 const ClassificationConfig = ({ form, productId }: Props) => {
+  // Setup field array for managing multiple classifications
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'productClassifications'
   })
-  const classificationList = form.watch('productClassifications')
 
-  const isRemoveDisabled = fields.length === 1
+  // Get current classifications from form
+  const classificationList = form.watch('productClassifications') || []
+  const discount = Number(form.watch('discount') ?? 0) * 100
 
+  // Initialize empty classification when product changes and no classifications exist
+  useEffect(() => {
+    // If we have a product ID but no classifications, add an empty one to start
+    if (productId && fields.length === 0) {
+      // Using 'any' is necessary here due to complex nested type requirements
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      append({} as any)
+    }
+  }, [productId, fields.length, append])
+
+  // Handle adding a new classification
   const handleAddMore = async () => {
-    const res = await form.trigger('productClassifications')
-    if (res) {
-      append({} as SchemaType['productClassifications'][0])
+    const isValid = await form.trigger('productClassifications')
+    if (isValid) {
+      // Using 'any' is necessary here due to complex nested type requirements
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      append({} as any)
     }
   }
 
+  // Handle removing a classification
   const handleRemove = (index: number) => () => {
     remove(index)
   }
+
+  // Prevent removing the last classification
+  const isRemoveDisabled = fields.length === 1
 
   return (
     <Card>
@@ -51,20 +71,56 @@ const ClassificationConfig = ({ form, productId }: Props) => {
         <div className='gap-4 grid grid-flow-row grid-cols-1'>
           <Accordion type='multiple' className='w-full space-y-4' value={fields.map((_, index) => String(index))}>
             {fields.map((_, index) => {
-              const price = classificationList[index].rawClassification?.price ?? 0
-              const discount = Number(form.watch('discount') ?? 0) * 100
-              const discountPrice = Number(price) * (100 - discount)
+              // Handle potential undefined classifications during loading
+              if (!classificationList[index] || !classificationList[index]?.rawClassification) {
+                return (
+                  <Card key={`classification-placeholder-${index}`}>
+                    <CardContent>
+                      <AccordionItem value={String(index)} className='border-none'>
+                        <AccordionTrigger className='hover:no-underline'>
+                          <div className='flex items-center gap-2 w-full'>
+                            <span className='bg-gray-300 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
+                              <Tag strokeWidth={3} size={16} />
+                              Select a classification...
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                            <FormField
+                              control={form.control}
+                              name={`productClassifications.${index}.rawClassification`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel required>Classification Of Product</FormLabel>
+                                  <SelectClassification {...field} productId={productId} value={field.value} />
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </CardContent>
+                  </Card>
+                )
+              }
+
+              // Extract values for display with proper null checking
+              const price = classificationList[index]?.rawClassification?.price ?? 0
+              const discountPrice = (Number(price) * (100 - discount)) / 100
               const quantity = classificationList[index]?.append?.quantity ?? 0
+              const title = classificationList[index]?.rawClassification?.title || 'Classification'
 
               return (
-                <Card>
+                <Card key={`classification-${index}`}>
                   <CardContent>
                     <AccordionItem value={String(index)} className='border-none'>
                       <AccordionTrigger className='hover:no-underline'>
                         <div className='flex items-center gap-2 w-full'>
                           <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
                             <Tag strokeWidth={3} size={16} />
-                            {classificationList[index].rawClassification?.title}{' '}
+                            {title}{' '}
                             <span className='text-xs text-red-600 px-1 bg-red-100 rounded-3xl'>
                               -{formatNumber(discount, '%')}
                             </span>
@@ -82,6 +138,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                             className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
                             onClick={handleRemove(index)}
                             disabled={isRemoveDisabled}
+                            type='button'
                           >
                             <Trash2 color='red' strokeWidth={3} size={20} />
                           </button>
@@ -94,7 +151,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                             name={`productClassifications.${index}.rawClassification`}
                             render={({ field }) => {
                               const isDefault =
-                                classificationList[index].rawClassification?.type ===
+                                classificationList[index]?.rawClassification?.type ===
                                 ProductClassificationTypeEnum.DEFAULT
                               return (
                                 <FormItem className={cn(isDefault && 'hidden')}>
@@ -103,7 +160,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                                     {...field}
                                     productId={productId}
                                     value={field.value}
-                                    initialClassification={classificationList[index].initialClassification}
+                                    initialClassification={classificationList[index]?.initialClassification}
                                   />
                                   <FormMessage />
                                 </FormItem>
@@ -122,7 +179,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                                     placeholder='e.g. 100'
                                     {...field}
                                     symbol={'Items'}
-                                    maxVal={classificationList[index].rawClassification?.quantity ?? 0}
+                                    maxVal={classificationList[index]?.rawClassification?.quantity ?? 0}
                                   />
                                 </FormControl>
                                 <FormDescription>

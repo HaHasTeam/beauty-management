@@ -227,7 +227,7 @@
     },
     "address": {
       "title": "No Address Found",
-      "description": "It looks like you haven’t added any addresses yet. Add one now to make your shopping experience seamless!",
+      "description": "It looks like you haven't added any addresses yet. Add one now to make your shopping experience seamless!",
       "button": "Add Address"
     },
     "favorite": {
@@ -282,7 +282,7 @@
     },
     "productBanned": {
       "title": "Product Banned",
-      "description": "The product you’re looking for has been banned and is no longer available.",
+      "description": "The product you're looking for has been banned and is no longer available.",
       "button": "Browse Other Products"
     },
     "systemServiceDetail": {
@@ -702,7 +702,7 @@
       "shipping": "The order is packed and ready for shipment. Awaiting carrier pickup.",
       "preparingOrder": "The order has been confirmed, and the warehouse is currently processing and packing the items.",
       "delivering": "The order has been shipped and is in transit to the customer.",
-      "delivered": "The order has been successfully delivered to the customer’s address.",
+      "delivered": "The order has been successfully delivered to the customer's address.",
       "completed": "The customer has confirmed receipt of the order, and the transaction is finalized.",
       "cancelled": "The refund has been processed and issued to the customer.",
       "returning": "The customer has requested a return, and the order is awaiting pickup. The brand must arrange for a shipper to collect the order from the customer and update the status within {{count}} day(s); otherwise, the system will automatically update the status to \"Received\". If the brand clicks the \"Haven't Received\" button, the time will be extended. If there is an issue, the brand can submit a complaint.",
@@ -822,6 +822,36 @@
     "brand": "Brand"
   },
   "validation": {
+    "requiredText": "This field is required",
+    "onlyInteger": "Please enter a valid integer",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number",
+    "password": {
+      "minLength": "Password must be at least {{minLength}} characters long",
+      "uppercase": "Password must contain at least one uppercase letter",
+      "lowercase": "Password must contain at least one lowercase letter",
+      "number": "Password must contain at least one number",
+      "special": "Password must contain at least one special character",
+      "mismatch": "Passwords do not match"
+    },
+    "url": "Please enter a valid URL",
+    "date": "Please enter a valid date",
+    "time": "Please enter a valid time",
+    "positiveNumber": "Please enter a positive number",
+    "maxLength": "Max {{maxLength}} characters allowed",
+    "minMaxLength": "Must be between {{minLength}} and {{maxLength}} characters",
+    "min": "Please enter a value greater than or equal to {{min}}",
+    "max": "Please enter a value less than or equal to {{max}}",
+    "minMax": "Please enter a value between {{min}} and {{max}}",
+    "requiredOne": "Please select at least one option",
+    "inlineImage": "Inline images are not allowed",
+    "fileSize": "File size must be less than {{size}}MB",
+    "fileType": "File type must be {{types}}",
+    "onlyLetter": "Please enter only letters",
+    "onlyNumber": "Please enter only numbers",
+    "noSpecialChar": "Special characters are not allowed",
+    "onlySomeSpecialChar": "Only {{chars}} special characters are allowed",
+    "confirmPassword": "Passwords do not match",
     "emailValid": "Please enter a valid email address",
     "usernameValid": "Please enter a valid username",
     "usernameHelper": "Username must start with a letter, be 3–20 characters, and use only letters, numbers, or underscores",
@@ -1127,7 +1157,7 @@
       "REFUNDED": "Upload proof of return completion and refund."
     },
     "videosHint": {
-      "TO_SHIP": "A 360° view of the package to confirm it’s properly sealed.",
+      "TO_SHIP": "A 360° view of the package to confirm it's properly sealed.",
       "SHIPPING": "Record handover moment or a short clip of the sealed package before shipping.",
       "DELIVERED": "Unboxing video to capture package condition & item accuracy.",
       "RETURNING": "Record defect/missing parts/issues clearly for verification.",
@@ -1158,7 +1188,7 @@
       "TO_SHIP": "Please upload images and videos of the packaged order before shipping. This helps ensure accurate order fulfillment and reduce disputes.",
       "SHIPPING": "Upload images and videos of the package as it is handed over to the shipping carrier. This helps track the shipment condition and prevent delivery issues.",
       "DELIVERED": "Please upload images and videos of the received package if necessary. This helps confirm the product condition and support dispute resolution if needed.",
-      "RETURNING": "Upload images and videos showing the returned product’s condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
+      "RETURNING": "Upload images and videos showing the returned product's condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
       "REFUNDED": "Please upload images and videos confirming the successful return and refund process. This ensures proper documentation and avoids misunderstandings.",
       "COMPLAINT": "Please upload images and videos as evidence to support your complaint regarding the returned order. This helps verify the issue and assist in resolving disputes effectively."
     },
@@ -1360,5 +1390,61 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "pending": "Pending"
+  },
+  "transaction": {
+    "management": "Transaction Management",
+    "list": "Transaction List",
+    "date": "Date",
+    "amount": "Amount",
+    "paymentMethod": "Payment Method",
+    "filter": {
+      "type": "Type",
+      "status": "Status"
+    },
+    "tabs": {
+      "all": "All Transactions"
+    },
+    "types": {
+      "deposit": "Deposit",
+      "withdraw": "Withdraw",
+      "order_purchase": "Order Purchase",
+      "booking_purchase": "Booking Purchase",
+      "refund": "Refund",
+      "commission": "Commission",
+      "transfer": "Transfer"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    },
+    "viewOrder": "View Order"
+  },
+  "walletTerm": {
+    "balance": "Balance & Transactions",
+    "withdrawalRequests": {
+      "title": "Withdrawal Requests List",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "statusUpdateSuccess": "Withdrawal request status updated successfully",
+      "processedBy": "Processed by"
+    },
+    "withdraw": {
+      "amount": "Amount",
+      "bankAccounts": {
+        "title": "Bank Accounts",
+        "bankName": "Bank Name",
+        "accountNumber": "Account Number",
+        "accountName": "Account Name"
+      }
+    }
   }
 }

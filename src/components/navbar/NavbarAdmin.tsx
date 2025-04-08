@@ -36,11 +36,11 @@ export default function AdminNavbar(props: { brandText: string }) {
         <p className='text-md shrink capitalize text-zinc-950 dark:text-white md:text-3xl'>
           <NavLink to='#' className='font-bold capitalize hover:text-zinc-950 dark:hover:text-white'>
             {isAddPath ? (
-              `Add ${brandText}`
+              `${brandText}`
             ) : isEditPath ? (
               <span>
-                {`Edit ${brandText}`}{' '}
-                <span className='text-primary max-lg:text-sm truncate w-[100px]'>#{minifyString(params?.id)}</span>
+                {`${brandText}`}{' '}
+                <span className='text-primary max-lg:text-sm truncate w-[100px]'>{minifyString(params?.id)}</span>
               </span>
             ) : (
               brandText
