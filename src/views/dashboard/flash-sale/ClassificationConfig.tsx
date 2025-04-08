@@ -1,4 +1,4 @@
-import { Shapes, Tag, Trash2 } from 'lucide-react'
+import { CheckCircle2, CircleDashed, PackageOpen, Shapes, Trash2 } from 'lucide-react'
 import { useEffect } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 
@@ -6,6 +6,7 @@ import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
 import SelectClassification from '@/components/select-classification'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -77,12 +78,12 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                   <Card key={`classification-placeholder-${index}`}>
                     <CardContent>
                       <AccordionItem value={String(index)} className='border-none'>
-                        <AccordionTrigger className='hover:no-underline'>
+                        <AccordionTrigger className='hover:no-underline px-2 py-1 rounded-md hover:bg-gray-50/50 transition-colors'>
                           <div className='flex items-center gap-2 w-full'>
-                            <span className='bg-gray-300 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
-                              <Tag strokeWidth={3} size={16} />
-                              Select a classification...
-                            </span>
+                            <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
+                              <CircleDashed className='h-3.5 w-3.5' />
+                              <span className='whitespace-nowrap'>Select a classification...</span>
+                            </Badge>
                           </div>
                         </AccordionTrigger>
                         <AccordionContent>
@@ -116,36 +117,48 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                 <Card key={`classification-${index}`}>
                   <CardContent>
                     <AccordionItem value={String(index)} className='border-none'>
-                      <AccordionTrigger className='hover:no-underline'>
-                        <div className='flex items-center gap-2 w-full'>
-                          <span className='bg-green-600 px-4 py-1 text-white rounded-3xl items-center flex gap-1 uppercase text-xs font-extrabold'>
-                            <Tag strokeWidth={3} size={16} />
-                            {title}{' '}
-                            <span className='text-xs text-red-600 px-1 bg-red-100 rounded-3xl'>
-                              -{formatNumber(discount, '%')}
-                            </span>
-                          </span>
+                      <AccordionTrigger className='hover:no-underline px-2 py-2 rounded-md hover:bg-green-50/50 transition-colors'>
+                        <div className='flex items-center gap-3 w-full'>
+                          <Badge variant='default' className='bg-green-500 hover:bg-green-600 text-white gap-1.5'>
+                            <CheckCircle2 className='h-3.5 w-3.5' />
+                            <span className='whitespace-nowrap font-medium'>{title}</span>
+                          </Badge>
 
-                          <div className='flex items-center gap-1'>
-                            <span className='font-light line-through'>{formatCurrency(price)}</span>
-                            <span className='text-green-500'>{formatCurrency(discountPrice)}</span>
-                            <span className='text-xs text-blue-600 px-1 bg-blue-100 rounded-3xl'>
-                              Only <b>{formatNumber(quantity, ' items available')}</b>
-                            </span>
+                          <div className='flex items-center gap-1.5 flex-grow'>
+                            <Badge
+                              variant='outline'
+                              className='border-red-200 bg-red-50 text-red-700 gap-1 whitespace-nowrap'
+                            >
+                              -{formatNumber(discount, '%')}
+                            </Badge>
+
+                            <div className='flex items-center gap-1 px-2 py-0.5 bg-gray-50 rounded'>
+                              <span className='font-light line-through text-xs text-gray-500'>
+                                {formatCurrency(price)}
+                              </span>
+                              <span className='text-green-600 font-medium text-sm'>
+                                {formatCurrency(discountPrice)}
+                              </span>
+                            </div>
+
+                            <Badge variant='outline' className='border-blue-200 bg-blue-50 text-blue-700 gap-1 ml-auto'>
+                              <PackageOpen className='h-3.5 w-3.5' />
+                              <span className='whitespace-nowrap'>{formatNumber(quantity, ' items')}</span>
+                            </Badge>
                           </div>
 
                           <button
-                            className='ml-auto mr-2 disabled:opacity-20 cursor-pointer'
+                            className='flex-shrink-0 p-1.5 rounded-full hover:bg-red-50 disabled:opacity-20 cursor-pointer transition-colors'
                             onClick={handleRemove(index)}
                             disabled={isRemoveDisabled}
                             type='button'
                           >
-                            <Trash2 color='red' strokeWidth={3} size={20} />
+                            <Trash2 color='red' strokeWidth={2.5} size={16} />
                           </button>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-1'>
                           <FormField
                             control={form.control}
                             name={`productClassifications.${index}.rawClassification`}

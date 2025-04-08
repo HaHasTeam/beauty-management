@@ -25,6 +25,10 @@ export type TGetDailyOrderStatisticsParams = {
   endDate?: string
   orderType?: OrderEnum
   productIds?: string[]
+  eventIds?: string[]
+  groupProductIds?: string[]
+  preOrderProductIds?: string[]
+  flashSaleIds?: string[]
 }
 
 export type OrderStatic = {

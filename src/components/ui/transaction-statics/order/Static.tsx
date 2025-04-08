@@ -4,7 +4,7 @@ import { InteractiveAreaChart } from "@/components/ui/chart/InteractiveAreaChart
 import { Skeleton } from "@/components/ui/skeleton"
 import { OrderStatic } from '@/network/apis/transaction/type'
 import { formatCurrency } from "@/utils/number"
-import { Banknote, CreditCard, InfoIcon, Tag } from "lucide-react"
+import { Banknote, CreditCard, InfoIcon, Tag, ShoppingCart } from "lucide-react"
 
 type StaticProps = {
   data: OrderStatic | undefined
@@ -49,7 +49,17 @@ const Static = ({ data }: StaticProps) => {
 
   // Create a React node for the description with cards and icons
   const descriptionNode = (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+    <div className="w-full grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
+      <div className="w-full flex items-start space-x-4 rounded-lg border border-blue-500/20 p-3 bg-blue-500/5 hover:bg-blue-500/10 transition-colors">
+        <div className="rounded-full bg-blue-500/20 p-2 shrink-0">
+          <ShoppingCart className="h-4 w-4 text-blue-500" />
+        </div>
+        <div className="min-w-0 flex-1 overflow-hidden">
+          <p className="text-sm font-medium text-muted-foreground truncate">Total Orders</p>
+          <p className="text-lg md:text-xl font-bold truncate text-blue-500">{data.total.totalQuantity}</p>
+        </div>
+      </div>
+
       <div className="w-full flex items-start space-x-4 rounded-lg border border-primary/20 p-3 bg-primary/5 hover:bg-primary/10 transition-colors">
         <div className="rounded-full bg-primary/20 p-2 shrink-0">
           <Banknote className="h-4 w-4 text-primary" />
@@ -93,7 +103,6 @@ const Static = ({ data }: StaticProps) => {
       </div>
       <div className="space-y-2">
         <p>This chart displays daily revenue and discount trends over the selected time period. Values are shown in Vietnamese Dong (VND).</p>
-      
       </div>
     </div>
   );

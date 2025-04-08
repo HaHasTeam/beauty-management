@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Row } from '@tanstack/react-table'
 import * as React from 'react'
 
@@ -6,14 +6,16 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllBrandsApi } from '@/network/apis/brand'
+import { getAllProductApi } from '@/network/apis/product'
 import { getAllVouchersApi, updateStatusVoucherByIdApi } from '@/network/apis/voucher'
+import { useStore } from '@/stores/store'
 import { BrandStatusEnum } from '@/types/brand'
-import { StatusEnum } from '@/types/enum'
+import { RoleEnum, StatusEnum, VoucherApplyTypeEnum, VoucherStatusEnum, VoucherVisibilityEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 import { TVoucher } from '@/types/voucher'
 
 import { BanVouchersDialog } from './BanVouchersDialog'
-import { getStatusIcon } from './helper'
 import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
 import { ViewDetailsVouchersSheet } from './ViewDetailsVouchersSheet'
 import { DataTableRowAction, getColumns } from './VouchersTableColumns'
@@ -37,7 +39,20 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
       }),
     []
   )
+  const { data: productData } = useQuery({
+    queryKey: [getAllProductApi.queryKey],
+    queryFn: getAllProductApi.fn
+  })
 
+  const { data: brandData } = useQuery({
+    queryKey: [getAllBrandsApi.queryKey],
+    queryFn: getAllBrandsApi.fn
+  })
+
+  const { user } = useStore()
+  const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
+  const brands = brandData?.data ?? []
+  const products = productData?.data ?? []
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -53,14 +68,79 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
     {
       id: 'status',
       label: 'Status',
-      options: Object.keys(StatusEnum).map((status) => {
-        const value = StatusEnum[status as keyof typeof StatusEnum]
+      options: Object.keys(VoucherStatusEnum).map((status) => {
+        const value = VoucherStatusEnum[status as keyof typeof VoucherStatusEnum]
         return {
           label: toSentenceCase(value),
-          value: value,
-          icon: getStatusIcon(value).icon
+          value: value
         }
       })
+    },
+    ...(isAdmin
+      ? [
+          {
+            id: 'brandId',
+            label: 'Brand',
+            options: brands
+              .filter((brand) => brand.status === BrandStatusEnum.ACTIVE)
+              .map((brand) => ({
+                label: brand.name,
+                value: brand.id
+              })),
+            isCustomFilter: true,
+            isSingleChoice: true
+          }
+        ]
+      : []),
+    {
+      id: 'applyType',
+      label: 'Apply Type',
+      options: Object.keys(VoucherApplyTypeEnum).map((applyType) => {
+        const value = VoucherApplyTypeEnum[applyType as keyof typeof VoucherApplyTypeEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value
+        }
+      }),
+      isCustomFilter: true,
+      isSingleChoice: true
+    },
+    {
+      id: 'visibility',
+      label: 'Visibility',
+      options: Object.keys(VoucherVisibilityEnum).map((visibility) => {
+        const value = VoucherVisibilityEnum[visibility as keyof typeof VoucherVisibilityEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value
+        }
+      }),
+      isCustomFilter: true,
+      isSingleChoice: true
+    },
+    {
+      id: 'startTime',
+      label: 'Start Date',
+      isDate: true,
+      isCustomFilter: true
+    },
+    {
+      id: 'endTime',
+      label: 'End Date',
+      isDate: true,
+      isCustomFilter: true
+    },
+    {
+      id: 'applyProductIds',
+      label: 'Products',
+      options: products
+        .filter((product) => product.status === StatusEnum.ACTIVE)
+        .map((product) => ({
+          label: product.name,
+          value: product.id
+        })),
+      isCustomFilter: true,
+      isSingleChoice: false
     }
   ]
 

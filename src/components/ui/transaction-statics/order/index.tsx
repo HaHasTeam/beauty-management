@@ -30,7 +30,9 @@ export default function IndexPage() {
         startDate: queryStates[0].fieldFilters?.startDate as string,
         endDate: queryStates[0].fieldFilters?.endDate as string,
         orderType: queryStates[0].fieldFilters?.orderType as OrderEnum,
-        productIds: queryStates[0].fieldFilters?.productIds as string[]
+        productIds: queryStates[0].fieldFilters?.productIds as string[],
+        eventIds: [...(queryStates[0].fieldFilters?.groupProductIds||[]), ...(queryStates[0].fieldFilters?.flashSaleIds||[])],
+        groupProductIds: queryStates[0].fieldFilters?.groupProductIds as string[],
       }
     ],
     queryFn: getDailyOrderStatistics.fn,
