@@ -1,5 +1,4 @@
-/* eslint-disable */
-
+/* eslint-disable import/no-named-as-default */
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
 import { defineConfig } from 'vite'
