@@ -18,6 +18,7 @@ export interface Option {
   label: string
   value: string
   icon?: React.ComponentType<{ className?: string }> | React.ReactNode
+  iconClass?: string
   count?: number
   withCount?: boolean
 }
