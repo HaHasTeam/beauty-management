@@ -213,3 +213,8 @@ export enum ModeEnum {
   VIEW = 'VIEW',
   EDIT = 'EDIT'
 }
+export enum BlogEnum {
+  UN_PUBLISHED = 'UN_PUBLISHED',
+  PUBLISHED = 'PUBLISHED',
+  INACTIVE = 'INACTIVE'
+}

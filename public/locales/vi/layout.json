@@ -120,6 +120,10 @@
     "downloadSample": "Tải mẫu",
     "import": "Tải lên",
     "view": "Xem",
+    "add": "Thêm",
+    "export": "Xuất",
+    "update": "Cập nhật",
+    "viewDetails": "Xem chi tiết",
     "upload": "Tải lên"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
@@ -164,6 +168,11 @@
     "highToLow": "Từ cao đến thấp"
   },
   "empty": {
+    "blog": {
+      "title": "Không tìm thấy blog",
+      "description": "Blog bạn đang tìm kiếm không tồn tại, đã bị xóa hoặc hiện không khả dụng.",
+      "button": "Xem các blog khác"
+    },
     "search": {
       "title": "Không tìm thấy kết quả",
       "description": "Hãy thử điều chỉnh tìm kiếm của bạn để tìm những gì bạn đang tìm.",
@@ -711,7 +720,7 @@
       "returnFailed": "Quá trình trả hàng không thành công do các vấn đề như gửi sai kiện hàng, sản phẩm bị hư hỏng khi trả lại hoặc không đáp ứng điều kiện hoàn trả."
     },
     "cancelRequestPendingBrandTitle": "Yêu Cầu Hủy Đơn Hàng",
-    "CancelOrderRequestBrandMessage": "Khách hàng đã yêu cầu hủy đơn hàng. Vui lòng xem xét và phản hồi trong vòng {{count}} ngày. Bạn có thể chấp nhận hủy đơn hoặc từ chối để tiếp tục xử lý đơn hàng. Nếu không có hành động nào trong {{count}} ngày, đơn hàng sẽ tự động bị hủy.",
+    "CancelOrderRequestBrandMessage": "Khách hàng đã yêu cầu hủy đơn hàng. Vui lòng xem xét và phản hồi. Bạn có thể chấp nhận hủy đơn hoặc từ chối để tiếp tục xử lý đơn hàng.",
     "updateOrderStatusSuccess": "Thay đổi trạng thái đơn hàng thành công!",
     "orderCancellationUpdate": "Cập nhật hủy đơn hàng thành công!",
     "approvedCancelRequest": "Yêu cầu hủy được chấp nhận. Đơn hàng đã bị hủy.",
@@ -1049,6 +1058,7 @@
     "PUBLIC": "Công khai",
     "DENIED": "Từ chối",
     "UN_PUBLISHED": "Đang ẩn",
+    "PUBLISHED": "Đang hoạt động",
     "BAN": "Bị cấm",
     "BANNED": "Bị cấm",
     "PENDING": "Đang chờ duyệt",
@@ -1417,5 +1427,47 @@
     "approved": "Phê duyệt",
     "rejected": "Từ chối",
     "pending": "Chờ xét duyệt"
+  },
+  "createBlog": {
+    "title": "Tiêu đề",
+    "titlePlaceholder": "Nhập tiêu đề",
+    "content": "Nội dung",
+    "contentPlaceholder": "Nhập nội dung",
+    "status": "Trạng thái",
+    "statusPlaceholder": "Chọn trạng thái",
+    "published": "Đã xuất bản",
+    "unPublished": "Chưa xuất bản",
+    "inactive": "Không hoạt động",
+    "successPublished": "Xuất bản bài viết thành công",
+    "successPublishedDescription": "Bài viết đã được xuất bản và hiển thị công khai",
+    "successInactive": "Lưu bài viết thành công",
+    "successInactiveDescription": "Bài viết đã được lưu ở trạng thái không hoạt động và sẽ không được hiển thị",
+    "reset": "Đặt lại",
+    "submit": "Gửi",
+    "submitting": "Đang gửi..."
+  },
+  "updateBlog": {
+    "title": "Tiêu đề",
+    "titlePlaceholder": "Nhập tiêu đề",
+    "content": "Nội dung",
+    "contentPlaceholder": "Nhập nội dung",
+    "status": "Trạng thái",
+    "statusPlaceholder": "Chọn trạng thái",
+    "published": "Đã xuất bản",
+    "unPublished": "Chưa xuất bản",
+    "inactive": "Không hoạt động",
+    "successPublished": "Cập nhật và xuất bản bài viết thành công",
+    "successPublishedDescription": "Bài viết đã được xuất bản và hiển thị công khai",
+    "successInactive": "Cập nhật bài viết thành công",
+    "successInactiveDescription": "Bài viết đã được lưu nhưng sẽ không được hiển thị"
+  },
+  "blogDetails": {
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Ngày cập nhật",
+    "status": {
+      "published": "Đã xuất bản",
+      "un_published": "Chưa xuất bản",
+      "inactive": "Không hoạt động"
+    }
   }
 }

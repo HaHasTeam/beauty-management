@@ -66,9 +66,9 @@ const OrderDetails = () => {
     enabled: !!id
   })
 
-  const pendingRequestCancelTime = useMemo(() => {
-    return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].autoApprovedRequestCancelTime ?? ''))
-  }, [masterConfig?.data])
+  // const pendingRequestCancelTime = useMemo(() => {
+  //   return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].autoApprovedRequestCancelTime ?? ''))
+  // }, [masterConfig?.data])
 
   const autoApproveRefundRequestTime = useMemo(() => {
     return millisecondsToRoundedDays(parseInt(masterConfig?.data[0].autoApproveRefundRequestTime ?? ''))
@@ -295,7 +295,7 @@ const OrderDetails = () => {
                 cancelAndReturnRequestData?.data?.cancelRequest?.status === RequestStatusEnum.PENDING && (
                   <MakeDecisionOnCancelRequest
                     cancelOrderRequest={cancelAndReturnRequestData?.data?.cancelRequest}
-                    pendingRequestCancelTime={pendingRequestCancelTime}
+                    // pendingRequestCancelTime={pendingRequestCancelTime}
                   />
                 )}
 

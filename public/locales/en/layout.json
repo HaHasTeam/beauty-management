@@ -120,6 +120,10 @@
     "downloadSample": "Download sample",
     "import": "Import",
     "view": "View",
+    "add": "Add",
+    "export": "Export",
+    "update": "Update",
+    "viewDetails": "View details",
     "upload": "Upload"
   },
   "noData": "No matching data found",
@@ -164,6 +168,11 @@
     "highToLow": "High to Low"
   },
   "empty": {
+    "blog": {
+      "title": "No Blog Found",
+      "description": "The blog you're looking for either does not exist, has been removed, or is currently unavailable.",
+      "button": "Browse Other Blog"
+    },
     "search": {
       "title": "No results found",
       "description": "Try adjusting your search to find what you are looking for",
@@ -788,7 +797,7 @@
       "returnFailed": "The return process was unsuccessful due to issues such as incorrect return shipment, damaged item upon return, or failure to meet return conditions. Further action may be required."
     },
     "cancelRequestPendingBrandTitle": "Order Cancellation Request",
-    "CancelOrderRequestBrandMessage": "The customer has requested to cancel the order. Please review and respond within {{count}} day(s). You can either approve the cancellation or reject it to proceed with the order. If no action is taken within {{count}} days, the order will be automatically canceled.",
+    "CancelOrderRequestBrandMessage": "The customer has requested to cancel the order. Please review and respond. You can either approve the cancellation or reject it to proceed with the order.",
     "updateOrderStatusSuccess": "Update order status successfully!",
     "orderCancellationUpdate": "Order cancellation updated successfully!",
     "approvedCancelRequest": "Cancellation approved. Order is now canceled.",
@@ -1098,6 +1107,7 @@
     "DRAFT": "Draft",
     "PUBLIC": "Public",
     "UN_PUBLISHED": "Unavailable",
+    "PUBLISHED": "Published",
     "DENIED": "Denied",
     "BAN": "Banned",
     "BANNED": "Banned",
@@ -1503,5 +1513,47 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "close": "Close"
+  },
+  "createBlog": {
+    "title": "Title",
+    "titlePlaceholder": "Enter title",
+    "content": "Content",
+    "contentPlaceholder": "Enter content",
+    "status": "Status",
+    "statusPlaceholder": "Choose status",
+    "published": "Published",
+    "unPublished": "Unpublished",
+    "inactive": "Inactive",
+    "successPublished": "Blog published successfully",
+    "successPublishedDescription": "Blog is now live and visible to everyone",
+    "successInactive": "Blog saved successfully",
+    "successInactiveDescription": "Blog has been saved as inactive and won't be visible",
+    "reset": "Reset",
+    "submit": "Submit",
+    "submitting": "Submitting..."
+  },
+  "updateBlog": {
+    "title": "Title",
+    "titlePlaceholder": "Enter title",
+    "content": "Content",
+    "contentPlaceholder": "Enter content",
+    "status": "Status",
+    "statusPlaceholder": "Choose status",
+    "published": "Published",
+    "unPublished": "Unpublished",
+    "inactive": "Inactive",
+    "successPublished": "Blog updated and published successfully",
+    "successPublishedDescription": "Blog changes are now live and visible to everyone",
+    "successInactive": "Blog updated successfully",
+    "successInactiveDescription": "Blog changes have been saved but won't be visible"
+  },
+  "blogDetails": {
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "status": {
+      "published": "Published",
+      "un_published": "Unpublished",
+      "inactive": "Inactive"
+    }
   }
 }

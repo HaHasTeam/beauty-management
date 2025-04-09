@@ -5,6 +5,10 @@ import { Routes, routesConfig } from '@/configs/routes'
 import DashboardHome from '@/views/dashboard'
 import AccountsDirectory from '@/views/dashboard/accounts-directory'
 import AccountDetails from '@/views/dashboard/accounts-directory/account-details'
+import BlogManagement from '@/views/dashboard/blog-management'
+import BlogDetails from '@/views/dashboard/blog-management/BlogDetails'
+import CreateBlog from '@/views/dashboard/blog-management/CreateBlog'
+import UpdateBlog from '@/views/dashboard/blog-management/UpdateBlog'
 import Brands from '@/views/dashboard/brand-management'
 import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
 import Category from '@/views/dashboard/category'
@@ -149,6 +153,24 @@ export const privateRoutes: RouteObject[] = [
           {
             path: ':id',
             element: <CategoryDetailById />
+          }
+        ]
+      },
+      {
+        path: routesConfig[Routes.BLOG].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <BlogManagement />
+          },
+          { path: 'add', element: <CreateBlog /> },
+          {
+            path: ':id',
+            element: <BlogDetails />
+          },
+          {
+            path: 'update/:id',
+            element: <UpdateBlog />
           }
         ]
       },
