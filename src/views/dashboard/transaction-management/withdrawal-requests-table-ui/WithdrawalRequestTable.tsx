@@ -6,6 +6,8 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { useStore } from '@/stores/store'
+import { RoleEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 import { TWithdrawalRequest, WithdrawalStatusEnum } from '@/types/withdrawal-request'
 
@@ -25,7 +27,20 @@ interface WithdrawalRequestTableProps {
 
 export function WithdrawalRequestTable({ data, pageCount, queryStates }: WithdrawalRequestTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TWithdrawalRequest> | null>(null)
-  const columns = React.useMemo(() => getColumns(), [])
+  const { user } = useStore()
+  const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
+
+  // Only show actions column for admin users
+  const columns = React.useMemo(() => {
+    const allColumns = getColumns()
+
+    // If not admin, filter out the actions column
+    if (!isAdmin) {
+      return allColumns.filter((column) => column.id !== 'actions')
+    }
+
+    return allColumns
+  }, [isAdmin])
 
   const filterFields: DataTableFilterField<TWithdrawalRequest>[] = [
     {
@@ -62,12 +77,23 @@ export function WithdrawalRequestTable({ data, pageCount, queryStates }: Withdra
     filterFields,
     initialState: {
       sorting: [{ id: 'createdAt', desc: true }],
-      columnPinning: { right: ['actions'] }
+      columnPinning: { right: isAdmin ? ['actions'] : [] }
     },
     getRowId: (originalRow, index) => `${originalRow.id}-${index}`,
     shallow: false,
     clearOnDefault: true
   })
+
+  // Don't render any actions if not admin
+  if (!isAdmin) {
+    return (
+      <DataTable table={table}>
+        <DataTableToolbar table={table} filterFields={filterFields}>
+          <WithdrawalRequestTableToolbarActions table={table} />
+        </DataTableToolbar>
+      </DataTable>
+    )
+  }
 
   return (
     <>

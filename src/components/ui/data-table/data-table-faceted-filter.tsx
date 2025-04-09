@@ -121,11 +121,21 @@ export function DataTableFacetedFilter<TData, TValue>({
                     >
                       <Check className='size-4' aria-hidden='true' />
                     </div>
-                    {option.icon && typeof option.icon === 'function' ? (
-                      <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />
-                    ) : option.icon ? (
-                      <span className='mr-2 size-4 text-muted-foreground'>{option.icon}</span>
-                    ) : null}
+
+                    {/* Render icon or status color dot */}
+                    {option.iconClass ? (
+                      <div className='mr-2 size-4 flex items-center justify-center'>
+                        <div className={`w-3 h-3 rounded-full ${option.iconClass} shadow-sm`}></div>
+                      </div>
+                    ) : (
+                      <div className='mr-2 size-4 text-muted-foreground flex items-center justify-center'>
+                        {/* Render a generic icon if available */}
+                        <span className='size-4 flex items-center justify-center'>
+                          {typeof option.icon === 'string' ? option.icon : '•'}
+                        </span>
+                      </div>
+                    )}
+
                     <span className='flex-1 truncate'>{option.label}</span>
                     {option.count && (
                       <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>
