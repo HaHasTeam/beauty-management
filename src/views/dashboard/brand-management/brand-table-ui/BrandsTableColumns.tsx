@@ -71,7 +71,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
           </div>
         )
       },
-      size: 300
+      size: 100
     },
     {
       accessorKey: 'email',
@@ -95,7 +95,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
       cell: ({ cell }) => <div>{cell.row.original.address}</div>,
       enableSorting: false,
       enableHiding: false,
-      size: 250
+      size: 450
     },
     {
       accessorKey: 'status',

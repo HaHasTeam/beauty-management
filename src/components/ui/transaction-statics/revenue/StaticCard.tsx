@@ -76,7 +76,8 @@ export function StaticCard({ queryStates, data }: StaticCardProps) {
           label: brand.name,
           value: brand.id
         })),
-        isCustomFilter: true
+        isCustomFilter: true,
+        isSingleChoice: true
       })
       
   

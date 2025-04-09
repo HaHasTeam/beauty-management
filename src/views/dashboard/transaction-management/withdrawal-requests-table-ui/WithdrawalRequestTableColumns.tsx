@@ -7,6 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { useStore } from '@/stores/store'
+import { RoleEnum } from '@/types/enum'
 import { TWithdrawalRequest, WithdrawalStatusEnum } from '@/types/withdrawal-request'
 import { formatCurrency } from '@/utils/number'
 
@@ -32,6 +34,12 @@ function WithdrawalActionCell({
   const [approveDialogOpen, setApproveDialogOpen] = useState(false)
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false)
   const [completeDialogOpen, setCompleteDialogOpen] = useState(false)
+
+  const { user } = useStore()
+  const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
+
+  // If not admin, don't render any actions
+  if (!isAdmin) return null
 
   const status = withdrawalRequest.status
 

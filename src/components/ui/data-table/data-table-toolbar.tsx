@@ -158,19 +158,24 @@ export function DataTableToolbar<TData>({
           )}
         {filterableColumns.length > 0 &&
           filterableColumns.map(
-            (column) =>
-              shouldRenderFilter(String(column.id)) && (
-                <DataTableFacetedFilter
-                  key={String(column.id)}
-                  column={getColumnOrCustom(String(column.id))}
-                  title={column.label}
-                  placeholder={column.placeholder}
-                  options={column.options ?? []}
-                  isSingleChoice={column.isSingleChoice}
-                />
-              
-          ))
+            (column) => {
+              try {
+                return shouldRenderFilter(String(column.id)) && (
+                  <DataTableFacetedFilter
+                    key={String(column.id)}
+                    column={getColumnOrCustom(String(column.id))}
+                    title={column.label}
+                    placeholder={column.placeholder}
+                    options={column.options ?? []}
+                    isSingleChoice={column.isSingleChoice}
+                  />
+                )
+              } catch (error) {
+                console.error(`Error rendering filter for column ${String(column.id)}:`, error)
+                return null
+              }
             }
+          )}
         {dateColumns.length > 0 &&
           dateColumns.map(
             (column) =>

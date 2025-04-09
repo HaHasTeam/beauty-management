@@ -15,7 +15,6 @@ import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { BanProductsDialog } from './BanProductsDialog'
-import { getStatusIcon } from './helper'
 import { DataTableRowAction, getColumns } from './ProductsTableColumns'
 import { ProductsTableFloatingBar } from './ProductsTableFloatingBar'
 import { ProductTableToolbarActions } from './ProductsTableToolbarActions'
@@ -77,7 +76,7 @@ export function ProductTable({ data, pageCount, queryStates }: ProductTableProps
         return {
           label: t(`status.${value}`),
           value: value as string,
-          icon: getStatusIcon(value).icon
+          icon: '●'
         }
       })
     },

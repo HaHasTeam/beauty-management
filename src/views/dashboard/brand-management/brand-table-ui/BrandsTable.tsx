@@ -17,7 +17,6 @@ import { AssignOperatorDialog } from './AssignOperatorDialog'
 import { DataTableRowAction, getColumns } from './BrandsTableColumns'
 import { BrandsTableFloatingBar } from './BrandsTableFloatingBar'
 import { BrandsTableToolbarActions } from './BrandsTableToolbarActions'
-import { getStatusInfo } from './helper'
 import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
 import { ViewDetailsBrandsSheet } from './ViewDetailsBrandsSheet'
 
@@ -74,7 +73,8 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         return {
           label: toSentenceCase(value),
           value: value,
-          icon: getStatusInfo(value).icon
+          // Just use a string for the icon
+          icon: '●'
         }
       })
     }
