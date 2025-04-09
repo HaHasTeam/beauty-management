@@ -4,7 +4,7 @@ import * as React from 'react'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
-import {  TGetBrandRevenueStatisticsParams, TGetBrandRevenueStatisticsResponse } from '@/network/apis/transaction/type'
+import { TGetBrandRevenueStatisticsParams, TGetBrandRevenueStatisticsResponse } from '@/network/apis/transaction/type'
 import { useQuery } from '@tanstack/react-query'
 import { CardWithFacetFilters } from '../../CardWithFacetFilters'
 import Static from './Static'
@@ -45,10 +45,9 @@ export function StaticCard({ queryStates, data }: StaticCardProps) {
     queryKey: [getAllBrandsApi.queryKey],
     queryFn: getAllBrandsApi.fn
   })
-  
+
   const brands = brandData?.data ?? []
 
-  
   const filterFields: DataTableFilterField<TGetBrandRevenueStatisticsParams>[] = React.useMemo(() => {
     const fields: DataTableFilterField<TGetBrandRevenueStatisticsParams>[] = [
       // {
@@ -78,11 +77,9 @@ export function StaticCard({ queryStates, data }: StaticCardProps) {
         })),
         isCustomFilter: true
       })
-      
-  
     }
-    
-    return fields;
+
+    return fields
   }, [isAdmin, isBrand, brands, queryStates])
 
   /**
@@ -137,15 +134,9 @@ export function StaticCard({ queryStates, data }: StaticCardProps) {
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={
-        <Static 
-          data={data} 
-        />
-      }>
-          <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
-          </DataTableToolbar>
+      <CardWithFacetFilters mainContent={<Static data={data} />}>
+        <DataTableToolbar table={table} filterFields={filterFields} isTable={false}></DataTableToolbar>
       </CardWithFacetFilters>
     </div>
   )
 }
-
