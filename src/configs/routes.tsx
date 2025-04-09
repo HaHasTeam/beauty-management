@@ -48,7 +48,11 @@ export enum Routes {
   CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
   WORKING_TIME = 'working-time',
   REPORTS = 'reports',
-  MY_BRAND_DASHBOARD = 'my-brand'
+  MY_BRAND_DASHBOARD = 'my-brand',
+  BLOG = 'blogs',
+  CREATE_BLOG = 'add-blog',
+  UPDATE_BLOG = 'update-blog',
+  BLOG_DETAILS = 'blog-details'
 }
 
 export const routesConfig: TRoutes = {
@@ -277,6 +281,34 @@ export const routesConfig: TRoutes = {
     description: 'Beauty product',
     path: '/dashboard/products/:id',
     getPath: (params) => `/dashboard/products/${params.id}`
+  },
+  [Routes.BLOG]: {
+    name: 'Blog Management',
+    title: 'Blog Management',
+    description: 'Manage your website blog',
+    path: '/dashboard/blogs',
+    getPath: () => '/dashboard/blogs'
+  },
+  [Routes.CREATE_BLOG]: {
+    name: 'Create Blog',
+    title: 'Create Blog',
+    description: 'Create a new blog',
+    path: '/dashboard/blogs/add',
+    getPath: () => '/dashboard/blogs/add'
+  },
+  [Routes.UPDATE_BLOG]: {
+    name: 'Update Blog',
+    title: 'Update Blog',
+    description: 'Update blog',
+    path: '/dashboard/blogs/update/:id',
+    getPath: (params) => `/dashboard/blogs/update/${params.id}`
+  },
+  [Routes.BLOG_DETAILS]: {
+    name: 'Blog Details',
+    title: 'Blog Details',
+    description: 'Blog',
+    path: '/dashboard/blogs/:id',
+    getPath: (params) => `/dashboard/blogs/${params.id}`
   },
   [Routes.GROUP_PRODUCT]: {
     name: 'Group Product',

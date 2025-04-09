@@ -19,11 +19,11 @@ import { ICancelRequestOrder } from '@/types/order'
 import ReasonDialog from './ReasonDialog'
 
 const MakeDecisionOnCancelRequest = ({
-  cancelOrderRequest,
-  pendingRequestCancelTime
+  cancelOrderRequest
+  // pendingRequestCancelTime
 }: {
   cancelOrderRequest: ICancelRequestOrder | null
-  pendingRequestCancelTime: number
+  // pendingRequestCancelTime: number
 }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -127,9 +127,7 @@ const MakeDecisionOnCancelRequest = ({
                     {t('order.cancelRequestPendingBrandTitle')}
                   </h3>
                 </div>
-                <AlertDescription>
-                  {t('order.CancelOrderRequestBrandMessage', { count: pendingRequestCancelTime })}
-                </AlertDescription>
+                <AlertDescription>{t('order.CancelOrderRequestBrandMessage')}</AlertDescription>
               </div>
             </div>
             <div className='flex gap-2 items-center'>
