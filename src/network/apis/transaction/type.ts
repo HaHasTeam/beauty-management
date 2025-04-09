@@ -25,6 +25,10 @@ export type TGetDailyOrderStatisticsParams = {
   endDate?: string
   orderType?: OrderEnum
   productIds?: string[]
+  eventIds?: string[]
+  groupProductIds?: string[]
+  preOrderProductIds?: string[]
+  flashSaleIds?: string[]
 }
 
 export type OrderStatic = {
@@ -41,4 +45,37 @@ export type OrderStatic = {
     totalPlatformVoucherDiscount: number
     totalShopVoucherDiscount: number
   }[]
+}
+export enum StatisticsTimeEnum {
+  ALL_TIME = 'ALL_TIME',
+  SPECIFIC_TIME = 'SPECIFIC_TIME'
+}
+
+export type TGetBrandRevenueStatisticsParams = {
+  brandId?: string
+  startDate?: string
+  endDate?: string
+}
+
+export type TGetBrandRevenueStatisticsResponse = {
+  cancelledOrders: {
+    count: number
+    sumTotalPrice: number
+  }
+  refundedOrders: {
+    count: number
+    sumTotalPrice: number
+  }
+  inProgressReturnedOrders: {
+    count: number
+    sumTotalPrice: number
+  }
+  completedOrders: {
+    count: number
+    sumTotalPrice: number
+  }
+  unpaidForBrandOrders: {
+    count: number
+    sumTotalPrice: number
+  }
 }

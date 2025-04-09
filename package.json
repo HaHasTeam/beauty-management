@@ -111,6 +111,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.1",
+    "vite": "^6.2.5",
     "zego-express-engine-webrtc": "^3.7.4",
     "zustand": "^5.0.1"
   },
@@ -147,7 +148,6 @@
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.1",
-    "vite": "^5.4.8",
     "vite-plugin-checker": "^0.8.0",
     "zod": "^3.24.1"
   }

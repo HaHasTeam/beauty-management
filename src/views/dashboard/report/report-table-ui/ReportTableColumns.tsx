@@ -1,6 +1,6 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
 import { format } from 'date-fns'
-import { ActivitySquareIcon, Ellipsis, SpeechIcon, View } from 'lucide-react'
+import { ActivitySquareIcon, Ellipsis, SettingsIcon, SpeechIcon, View } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -86,7 +86,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IReport
     },
     {
       id: 'actions',
-      header: () => <div className='text-right'>Actions</div>,
+      header: () => <SettingsIcon className='h-4 w-4' />,
       cell: function Cell({ row }) {
         const isAssigned = !!row.original.assignee?.id
         const isResolved = !!row.original.resultNote

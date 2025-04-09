@@ -102,7 +102,7 @@ export type IServerCreateProduct = {
   sku?: string
   certificates?: IImage[]
 }
-export type IResponseProduct = {
+export type IResponseProduct = TMetaData & {
   id: string
   name: string
   brand?: IBrand

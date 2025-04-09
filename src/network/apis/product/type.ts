@@ -1,14 +1,14 @@
+import { BaseParams } from '@/types/request'
+
 export type TGetProductByBrandIdRequestParams = {
   brandId: string
 }
 
-export type TGetProductFilterRequestParams = {
+export type TGetProductFilterRequestParams = BaseParams<{
   search?: string
   brandId?: string
   categoryId?: string
-  status?: string
-  sortBy?: string
-  order?: string
-  page?: string
-  limit?: string
-}
+  maxPrice?: string
+  minPrice?: string
+  statuses?: string
+}>

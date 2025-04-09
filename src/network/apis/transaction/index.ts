@@ -5,7 +5,13 @@ import { ITransaction, TTransaction } from '@/types/transaction'
 import { toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-import { OrderStatic, TFilterTransactionsParams, TGetDailyOrderStatisticsParams } from './type'
+import {
+  OrderStatic,
+  TFilterTransactionsParams,
+  TGetBrandRevenueStatisticsParams,
+  TGetBrandRevenueStatisticsResponse,
+  TGetDailyOrderStatisticsParams
+} from './type'
 
 /**
  * Get a transaction by ID
@@ -97,5 +103,26 @@ export const getFinancialSummary = toQueryFetcher<
 >('getFinancialSummary', async () => {
   return privateRequest('/transactions/get-financial-summary', {
     method: 'GET'
+  })
+})
+
+export const getBrandRevenueStatistics = toQueryFetcher<
+  TGetBrandRevenueStatisticsParams,
+  TServerResponse<TGetBrandRevenueStatisticsResponse>
+>('getBrandRevenueStatistics', async (params) => {
+  if (!params) throw new Error('Params is required')
+  const { ...rest } = params
+  // Remove falsy values and empty arrays
+  const cleanedData = _.omitBy(rest, (value) => {
+    if (value === undefined || value === null) return true
+    if (typeof value === 'string' && value === '') return true
+    if (typeof value === 'boolean' && value === false) return true
+    if (Array.isArray(value) && value.length === 0) return true
+    return false
+  })
+
+  return privateRequest(`/transactions/order-statistics`, {
+    method: 'POST',
+    data: cleanedData
   })
 })

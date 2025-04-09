@@ -1,5 +1,7 @@
+import _ from 'lodash'
+
 import { IReport } from '@/types/report'
-import { TServerResponse } from '@/types/request'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
@@ -62,6 +64,30 @@ export const updateReportNote = toMutationFetcher<TUpdateReportNoteRequestParams
       method: 'POST',
       data: {
         resultNote: params.resultNote
+      }
+    })
+  }
+)
+
+export const filterReports = toQueryFetcher<TGetFilteredReportRequestParams, TServerResponseWithPaging<IReport[]>>(
+  'filterReports',
+  async (params) => {
+    const { page, limit, order, sortBy, ...rest } = params ?? {}
+    const cleanedData = _.omitBy(rest, (value) => {
+      if (value === undefined || value === null) return true
+      if (typeof value === 'string' && value === '') return true
+      if (typeof value === 'boolean' && value === false) return true
+      if (Array.isArray(value) && value.length === 0) return true
+      return false
+    })
+    return privateRequest('/reports/filter', {
+      method: 'POST',
+      data: cleanedData,
+      params: {
+        page,
+        limit,
+        order,
+        sortBy
       }
     })
   }

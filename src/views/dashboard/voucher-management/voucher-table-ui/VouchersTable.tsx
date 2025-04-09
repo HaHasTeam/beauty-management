@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Row } from '@tanstack/react-table'
 import * as React from 'react'
 
@@ -6,15 +6,16 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllBrandsApi } from '@/network/apis/brand'
+import { getAllProductApi } from '@/network/apis/product'
 import { getAllVouchersApi, updateStatusVoucherByIdApi } from '@/network/apis/voucher'
+import { useStore } from '@/stores/store'
 import { BrandStatusEnum } from '@/types/brand'
-import { StatusEnum } from '@/types/enum'
+import { RoleEnum, StatusEnum, VoucherApplyTypeEnum, VoucherStatusEnum, VoucherVisibilityEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 import { TVoucher } from '@/types/voucher'
 
-import { BanVouchersDialog } from './BanVouchersDialog'
-import { getStatusIcon } from './helper'
-import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
+import { UpdateStatusVoucherDialog } from './UpdateStatusVoucherDialog'
 import { ViewDetailsVouchersSheet } from './ViewDetailsVouchersSheet'
 import { DataTableRowAction, getColumns } from './VouchersTableColumns'
 import { VouchersTableFloatingBar } from './VouchersTableFloatingBar'
@@ -37,7 +38,20 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
       }),
     []
   )
+  const { data: productData } = useQuery({
+    queryKey: [getAllProductApi.queryKey],
+    queryFn: getAllProductApi.fn
+  })
 
+  const { data: brandData } = useQuery({
+    queryKey: [getAllBrandsApi.queryKey],
+    queryFn: getAllBrandsApi.fn
+  })
+
+  const { user } = useStore()
+  const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
+  const brands = brandData?.data ?? []
+  const products = productData?.data ?? []
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -53,14 +67,79 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
     {
       id: 'status',
       label: 'Status',
-      options: Object.keys(StatusEnum).map((status) => {
-        const value = StatusEnum[status as keyof typeof StatusEnum]
+      options: Object.keys(VoucherStatusEnum).map((status) => {
+        const value = VoucherStatusEnum[status as keyof typeof VoucherStatusEnum]
         return {
           label: toSentenceCase(value),
-          value: value,
-          icon: getStatusIcon(value).icon
+          value: value
         }
       })
+    },
+    ...(isAdmin
+      ? [
+          {
+            id: 'brandId',
+            label: 'Brand',
+            options: brands
+              .filter((brand) => brand.status === BrandStatusEnum.ACTIVE)
+              .map((brand) => ({
+                label: brand.name,
+                value: brand.id
+              })),
+            isCustomFilter: true,
+            isSingleChoice: true
+          }
+        ]
+      : []),
+    {
+      id: 'applyType',
+      label: 'Apply Type',
+      options: Object.keys(VoucherApplyTypeEnum).map((applyType) => {
+        const value = VoucherApplyTypeEnum[applyType as keyof typeof VoucherApplyTypeEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value
+        }
+      }),
+      isCustomFilter: true,
+      isSingleChoice: true
+    },
+    {
+      id: 'visibility',
+      label: 'Visibility',
+      options: Object.keys(VoucherVisibilityEnum).map((visibility) => {
+        const value = VoucherVisibilityEnum[visibility as keyof typeof VoucherVisibilityEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value
+        }
+      }),
+      isCustomFilter: true,
+      isSingleChoice: true
+    },
+    {
+      id: 'startTime',
+      label: 'Start Date',
+      isDate: true,
+      isCustomFilter: true
+    },
+    {
+      id: 'endTime',
+      label: 'End Date',
+      isDate: true,
+      isCustomFilter: true
+    },
+    {
+      id: 'applyProductIds',
+      label: 'Products',
+      options: products
+        .filter((product) => product.status === StatusEnum.ACTIVE)
+        .map((product) => ({
+          label: product.name,
+          value: product.id
+        })),
+      isCustomFilter: true,
+      isSingleChoice: false
     }
   ]
 
@@ -90,26 +169,24 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
     clearOnDefault: true
   })
   const { mutateAsync: updateStatusVoucherMutation } = useMutation({
-    // mutationKey: [updateStatusBrandByIdApi.mutationKey],
     mutationFn: updateStatusVoucherByIdApi.fn
   })
-  const deleteBrand = async (brand: Row<TVoucher>['original'][]) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) =>
-      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.BANNED })
+
+  const activateVoucher = async (vouchers: Row<TVoucher>['original'][]) => {
+    // Map over the vouchers array and call the mutation for each voucher
+    const updatePromises = vouchers.map((item) =>
+      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.ACTIVE })
     )
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    await queryClient.invalidateQueries({
-      queryKey: [getAllVouchersApi.queryKey],
-      exact: true
-    })
+    await queryClient.invalidateQueries({ queryKey: [getAllVouchersApi.queryKey] })
   }
-  const updateStatusBrand = async (brand: Row<TVoucher>['original'][]) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) =>
-      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.ACTIVE })
+
+  const deactivateVoucher = async (vouchers: Row<TVoucher>['original'][]) => {
+    // Map over the vouchers array and call the mutation for each voucher
+    const updatePromises = vouchers.map((item) =>
+      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.INACTIVE })
     )
 
     // Wait for all updates to complete
@@ -124,24 +201,25 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
           <VouchersTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-      <BanVouchersDialog
-        open={rowAction?.type === 'ban'}
+      <UpdateStatusVoucherDialog
+        status={StatusEnum.ACTIVE}
+        open={rowAction?.type === 'activate'}
         onOpenChange={() => setRowAction(null)}
         Vouchers={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={(voucher) => {
-          deleteBrand(voucher)
+          activateVoucher(voucher)
           rowAction?.row.toggleSelected(false)
         }}
       />
-      <UpdateStatusBrandDialog
-        status={BrandStatusEnum.ACTIVE}
-        open={rowAction?.type === 'update-status'}
+      <UpdateStatusVoucherDialog
+        status={StatusEnum.INACTIVE}
+        open={rowAction?.type === 'deactivate'}
         onOpenChange={() => setRowAction(null)}
         Vouchers={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={(voucher) => {
-          updateStatusBrand(voucher)
+          deactivateVoucher(voucher)
           rowAction?.row.toggleSelected(false)
         }}
       />

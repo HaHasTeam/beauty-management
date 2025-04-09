@@ -1,14 +1,14 @@
 import { type Table } from '@tanstack/react-table'
-import { Download } from 'lucide-react'
-import { IoIosAddCircleOutline } from 'react-icons/io'
+import { Download, ListPlusIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
+import { StatusEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
 
-import { BanVouchersDialog } from './BanVouchersDialog'
+import { UpdateStatusVoucherDialog } from './UpdateStatusVoucherDialog'
 
 interface VouchersTableToolbarActionsProps {
   table: Table<TVoucher>
@@ -20,17 +20,28 @@ export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActio
     navigate(routesConfig[Routes.ADD_VOUCHER].getPath())
   }
 
+  const selectedRows = table.getFilteredSelectedRowModel().rows
+  const hasSelectedRows = selectedRows.length > 0
+
   return (
     <div className='flex items-center gap-2'>
-      {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-        <BanVouchersDialog
-          Vouchers={table.getFilteredSelectedRowModel().rows.map((row) => row.original)}
-          onSuccess={() => table.toggleAllRowsSelected(false)}
-        />
+      {hasSelectedRows ? (
+        <>
+          <UpdateStatusVoucherDialog
+            status={StatusEnum.ACTIVE}
+            Vouchers={selectedRows.map((row) => row.original)}
+            onSuccess={() => table.toggleAllRowsSelected(false)}
+          />
+          <UpdateStatusVoucherDialog
+            status={StatusEnum.INACTIVE}
+            Vouchers={selectedRows.map((row) => row.original)}
+            onSuccess={() => table.toggleAllRowsSelected(false)}
+          />
+        </>
       ) : null}
-      <Button size={'sm'} onClick={handleAddVoucher}>
-        <IoIosAddCircleOutline />
-        Add Vouchers
+      <Button size={'sm'} onClick={handleAddVoucher} className='gap-2'>
+        <ListPlusIcon className='size-4' />
+        Add Voucher
       </Button>
       <Button
         variant='outline'
