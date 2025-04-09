@@ -13,7 +13,7 @@ import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker
 import FormLabel from '@/components/form-label'
 import { buttonVariants } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { InputNormal } from '@/components/ui/input'
+import { Input, InputNormal } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -371,7 +371,7 @@ function VoucherForm({
                         className='text-sm text-primary'
                         onClick={() => {
                           if (form.watch('discountType') === DiscountTypeEnum.PERCENTAGE) {
-                            form.setValue('discountValue', 10)
+                            form.setValue('discountValue', 0.1)
                           } else {
                             form.setValue('discountValue', 10000)
                           }
@@ -383,37 +383,15 @@ function VoucherForm({
                     </FormDescription>
                     <FormControl>
                       <div className='relative'>
-                        <InputNormal
-                          type='number'
+                        <Input
+                          type={form.watch('discountType') === DiscountTypeEnum.PERCENTAGE ? 'percentage' : 'number'}
                           {...field}
-                          value={field.value || ''}
-                          onChange={(e) => {
-                            const value = e.target.valueAsNumber
-                            if (form.watch('discountType') === DiscountTypeEnum.PERCENTAGE) {
-                              // Validate percentage value (0-100)
-                              if (isNaN(value) || value < 0 || value > 100) {
-                                form.setError('discountValue', {
-                                  type: 'manual',
-                                  message: 'Giá trị phần trăm phải từ 0 đến 100'
-                                })
-                              } else {
-                                form.clearErrors('discountValue')
-                              }
-                            }
-                            field.onChange(isNaN(value) ? 0 : value)
-                          }}
                           placeholder={
                             form.watch('discountType') === DiscountTypeEnum.PERCENTAGE
                               ? 'Điền phần trăm (0-100)'
                               : 'Điền số tiền'
                           }
                         />
-                        {form.watch('discountType') === DiscountTypeEnum.PERCENTAGE && (
-                          <span className='absolute right-3 top-1/2 -translate-y-1/2'>%</span>
-                        )}
-                        {form.watch('discountType') === DiscountTypeEnum.AMOUNT && (
-                          <span className='absolute right-3 top-1/2 -translate-y-1/2'>đ</span>
-                        )}
                       </div>
                     </FormControl>
                     <FormMessage />

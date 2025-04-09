@@ -134,8 +134,8 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/select-interview'
   },
   [Routes.VOUCHER]: {
-    name: 'Voucher Management',
-    title: 'Voucher Management',
+    name: 'Vouchers',
+    title: 'Vouchers',
     description: 'Voucher Management',
     path: '/dashboard/voucher',
     getPath: () => '/dashboard/voucher'
@@ -267,8 +267,8 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/profile-settings'
   },
   [Routes.PRODUCT_LIST]: {
-    name: 'Product List',
-    title: 'Product List',
+    name: 'Products',
+    title: 'Products',
     description: 'Manage your beauty products',
     path: '/dashboard/products',
     getPath: () => '/dashboard/products'
@@ -330,8 +330,8 @@ export const routesConfig: TRoutes = {
     getPath: (params) => `/dashboard/orders/${params.id}`
   },
   [Routes.SYSTEM_SERVICE_LIST]: {
-    name: 'System Service List',
-    title: 'System Service List',
+    name: 'System Services',
+    title: 'System Services',
     description: 'System Service List',
     path: '/dashboard/system-services',
     getPath: () => '/dashboard/system-services'

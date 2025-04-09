@@ -15,8 +15,7 @@ import { RoleEnum, StatusEnum, VoucherApplyTypeEnum, VoucherStatusEnum, VoucherV
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 import { TVoucher } from '@/types/voucher'
 
-import { BanVouchersDialog } from './BanVouchersDialog'
-import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
+import { UpdateStatusVoucherDialog } from './UpdateStatusVoucherDialog'
 import { ViewDetailsVouchersSheet } from './ViewDetailsVouchersSheet'
 import { DataTableRowAction, getColumns } from './VouchersTableColumns'
 import { VouchersTableFloatingBar } from './VouchersTableFloatingBar'
@@ -170,26 +169,24 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
     clearOnDefault: true
   })
   const { mutateAsync: updateStatusVoucherMutation } = useMutation({
-    // mutationKey: [updateStatusBrandByIdApi.mutationKey],
     mutationFn: updateStatusVoucherByIdApi.fn
   })
-  const deleteBrand = async (brand: Row<TVoucher>['original'][]) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) =>
-      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.BANNED })
+
+  const activateVoucher = async (vouchers: Row<TVoucher>['original'][]) => {
+    // Map over the vouchers array and call the mutation for each voucher
+    const updatePromises = vouchers.map((item) =>
+      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.ACTIVE })
     )
 
     // Wait for all updates to complete
     await Promise.all(updatePromises)
-    await queryClient.invalidateQueries({
-      queryKey: [getAllVouchersApi.queryKey],
-      exact: true
-    })
+    await queryClient.invalidateQueries({ queryKey: [getAllVouchersApi.queryKey] })
   }
-  const updateStatusBrand = async (brand: Row<TVoucher>['original'][]) => {
-    // Map over the brand array and call the mutation for each brand
-    const updatePromises = brand.map((item) =>
-      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.ACTIVE })
+
+  const deactivateVoucher = async (vouchers: Row<TVoucher>['original'][]) => {
+    // Map over the vouchers array and call the mutation for each voucher
+    const updatePromises = vouchers.map((item) =>
+      updateStatusVoucherMutation({ voucherId: item.id, status: StatusEnum.INACTIVE })
     )
 
     // Wait for all updates to complete
@@ -204,24 +201,25 @@ export function VouchersTable({ data, pageCount, queryStates }: VoucherTableProp
           <VouchersTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-      <BanVouchersDialog
-        open={rowAction?.type === 'ban'}
+      <UpdateStatusVoucherDialog
+        status={StatusEnum.ACTIVE}
+        open={rowAction?.type === 'activate'}
         onOpenChange={() => setRowAction(null)}
         Vouchers={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={(voucher) => {
-          deleteBrand(voucher)
+          activateVoucher(voucher)
           rowAction?.row.toggleSelected(false)
         }}
       />
-      <UpdateStatusBrandDialog
-        status={BrandStatusEnum.ACTIVE}
-        open={rowAction?.type === 'update-status'}
+      <UpdateStatusVoucherDialog
+        status={StatusEnum.INACTIVE}
+        open={rowAction?.type === 'deactivate'}
         onOpenChange={() => setRowAction(null)}
         Vouchers={rowAction?.row.original ? [rowAction?.row.original] : []}
         showTrigger={false}
         onSuccess={(voucher) => {
-          updateStatusBrand(voucher)
+          deactivateVoucher(voucher)
           rowAction?.row.toggleSelected(false)
         }}
       />

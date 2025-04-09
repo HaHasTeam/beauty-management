@@ -78,7 +78,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                   <Card key={`classification-placeholder-${index}`}>
                     <CardContent>
                       <AccordionItem value={String(index)} className='border-none'>
-                        <AccordionTrigger className='hover:no-underline px-2 py-1 rounded-md hover:bg-gray-50/50 transition-colors'>
+                        <AccordionTrigger className='hover:no-underline px-2 rounded-md hover:bg-gray-50/50 transition-colors py-3'>
                           <div className='flex items-center gap-2 w-full'>
                             <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
                               <CircleDashed className='h-3.5 w-3.5' />
@@ -87,7 +87,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                           </div>
                         </AccordionTrigger>
                         <AccordionContent>
-                          <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2'>
+                          <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-2'>
                             <FormField
                               control={form.control}
                               name={`productClassifications.${index}.rawClassification`}
@@ -117,7 +117,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                 <Card key={`classification-${index}`}>
                   <CardContent>
                     <AccordionItem value={String(index)} className='border-none'>
-                      <AccordionTrigger className='hover:no-underline px-2 py-2 rounded-md hover:bg-green-50/50 transition-colors'>
+                      <AccordionTrigger className='hover:no-underline px-2 py-3 rounded-md hover:bg-green-50/50 transition-colors '>
                         <div className='flex items-center gap-3 w-full'>
                           <Badge variant='default' className='bg-green-500 hover:bg-green-600 text-white gap-1.5'>
                             <CheckCircle2 className='h-3.5 w-3.5' />
@@ -158,7 +158,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-1'>
+                        <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-2'>
                           <FormField
                             control={form.control}
                             name={`productClassifications.${index}.rawClassification`}

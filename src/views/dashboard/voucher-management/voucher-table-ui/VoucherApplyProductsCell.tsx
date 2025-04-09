@@ -1,7 +1,8 @@
-import { ChevronDown, ChevronUp, Image, Package } from 'lucide-react'
+import { ChevronDown, ChevronUp, Image, Package, Users } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { VoucherApplyTypeEnum, VoucherVisibilityEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
 
 interface VoucherApplyProductsCellProps {
@@ -10,7 +11,20 @@ interface VoucherApplyProductsCellProps {
 
 export function VoucherApplyProductsCell({ voucher }: VoucherApplyProductsCellProps) {
   const [expanded, setExpanded] = useState(false)
-  const { applyProducts } = voucher
+  const { applyProducts, visibility, applyType } = voucher
+
+  // Special case for GROUP vouchers with no specific products
+  if (
+    visibility === VoucherVisibilityEnum.GROUP &&
+    (!applyProducts?.length || applyType === VoucherApplyTypeEnum.ALL)
+  ) {
+    return (
+      <div className='flex items-center text-sm text-muted-foreground p-1.5'>
+        <Users className='h-4 w-4 mr-1.5 text-blue-500' />
+        <span className='italic'>Áp dụng cho toàn bộ sản phẩm trong group</span>
+      </div>
+    )
+  }
 
   // If no apply products, show a placeholder
   if (!applyProducts?.length) {

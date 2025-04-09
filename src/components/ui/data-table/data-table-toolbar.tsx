@@ -20,6 +20,7 @@ interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivEleme
    * - When options are provided, a faceted filter is rendered.
    * - When isDate is true, a date picker is rendered.
    * - When isSingleChoice is true with options, a single-choice faceted filter is rendered.
+   * - When isNumber is true, a number input is rendered.
    * - Otherwise, a search filter is rendered.
    *
    * @example
@@ -68,12 +69,13 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
-  // Memoize computation of searchableColumns, filterableColumns, and dateColumns
-  const { searchableColumns, filterableColumns, dateColumns } = React.useMemo(() => {
+  // Memoize computation of searchableColumns, filterableColumns, dateColumns, and numberColumns
+  const { searchableColumns, filterableColumns, dateColumns, numberColumns } = React.useMemo(() => {
     return {
-      searchableColumns: filterFields.filter((field) => !field.options && !field.isDate),
+      searchableColumns: filterFields.filter((field) => !field.options && !field.isDate && !field.isNumber),
       filterableColumns: filterFields.filter((field) => field.options),
-      dateColumns: filterFields.filter((field) => field.isDate)
+      dateColumns: filterFields.filter((field) => field.isDate),
+      numberColumns: filterFields.filter((field) => field.isNumber)
     }
   }, [filterFields])
 
@@ -120,6 +122,8 @@ export function DataTableToolbar<TData>({
     };
   };
 
+  const isHaveFilter=   searchableColumns.length > 0 || filterableColumns.length > 0 || dateColumns.length > 0 || numberColumns.length > 0
+  if (!isHaveFilter) return null  
   return (
     <div className={cn('flex w-full items-center justify-between gap-2 overflow-auto p-1', className)} {...props}>
       <div className='flex flex-1 items-center gap-2'>
@@ -133,6 +137,22 @@ export function DataTableToolbar<TData>({
                   value={(getColumnOrCustom(String(column.id)).getFilterValue() as string) ?? ''}
                   onChange={(event) => getColumnOrCustom(String(column.id)).setFilterValue(event.target.value)}
                   className='h-8 w-40 lg:w-64'
+                />
+              )
+          )}
+        {numberColumns.length > 0 &&
+          numberColumns.map(
+            (column) => 
+              shouldRenderFilter(String(column.id)) && (
+                <Input
+                  key={String(column.id)}
+                  type="number"
+                  placeholder={column.placeholder}
+                  value={(getColumnOrCustom(String(column.id)).getFilterValue() as string) ?? ''}
+                  onChange={(event) => {
+                    getColumnOrCustom(String(column.id)).setFilterValue(event);
+                  }}
+                  className='h-8 w-36'
                 />
               )
           )}

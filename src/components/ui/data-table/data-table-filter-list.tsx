@@ -205,7 +205,11 @@ export function DataTableFilterList<TData>({
                         }, 0)
                       }}
                     >
-                      {option.icon && <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />}
+                      {option.icon && typeof option.icon === 'function' ? (
+                        <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />
+                      ) : option.icon ? (
+                        <span className='mr-2 size-4 text-muted-foreground'>{option.icon}</span>
+                      ) : null}
                       <span>{option.label}</span>
                       {option.count && (
                         <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>
@@ -296,7 +300,11 @@ export function DataTableFilterList<TData>({
                         })
                       }}
                     >
-                      {option.icon && <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />}
+                      {option.icon && typeof option.icon === 'function' ? (
+                        <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />
+                      ) : option.icon ? (
+                        <span className='mr-2 size-4 text-muted-foreground'>{option.icon}</span>
+                      ) : null}
                       <span>{option.label}</span>
                       {option.count && (
                         <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>

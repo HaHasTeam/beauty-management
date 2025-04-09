@@ -569,11 +569,17 @@
   "input": {
     "message": "Message"
   },
+  "format": {
+    "currency": "{{value, currency}}",
+    "decimalNumber": "{{value, number(maximumFractionDigits: 2)}}",
+    "percentage": "{{value}}%"
+  },
   "wallet": {
     "title": "Wallet",
     "ATM": "Credit Card/Debit Card",
     "COD": "Cash on Delivery",
     "balance": "Balance",
+    "availableBalance": "Available Balance",
     "addPayment": "Add Payment Method",
     "paymentMethod": "Payment Method",
     "bankAccount": "Bank Account",
@@ -599,7 +605,78 @@
     "CARD": "Credit Card/Debit Card",
     "WALLET": "Wallet",
     "CASH": "Cash on Delivery",
-    "BANK_TRANSFER": "Credit Card/Debit Card"
+    "BANK_TRANSFER": "Credit Card/Debit Card",
+    "myBankAccount": "My Bank Account",
+    "balanceOverview": "Balance Overview",
+    "availableBalanceHint": "Available balance is the amount you can currently withdraw, excluding any pending transactions.",
+    "noWalletFound": "No Wallet Found!",
+    "noWalletDescription": "You haven't created any wallet yet. Start managing your finances by creating a new wallet.",
+    "bankAccounts": {
+      "setAsDefault": "Set as Default"
+    }
+  },
+  "walletTerm": {
+    "balance": "Balance & Transactions",
+    "createWallet": "Create Your Own Wallet",
+    "withdraw": "Withdraw",
+    "withdrawalRequests": {
+      "title": "Withdrawal Requests List",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "statusUpdateSuccess": "Withdrawal request status updated successfully",
+      "processedBy": "Processed by"
+    },
+    "withdraw": {
+      "amount": "Amount",
+      "availableBalance": "Available balance",
+      "noBankAccount": "No Bank Account Found",
+      "addBankAccountFirst": "Please add a bank account before making a withdrawal",
+      "selectBankAccount": "Select Bank Account",
+      "submitButton": "Submit Withdrawal Request",
+      "withdrawalNote": "Withdrawal requests are typically processed within 1-3 business days. The actual time when funds appear in your account may vary depending on your bank's processing schedule.",
+      "success": "Withdrawal Request Submitted",
+      "successMessage": "Your withdrawal request has been successfully submitted and will be processed shortly. You can track the status in your withdrawal history.",
+      "error": "Withdrawal Failed",
+      "errorMessage": "We couldn't process your withdrawal request at this time. Please check your information and try again later."
+    },
+    "bankAccounts": {
+      "title": "Bank Accounts",
+      "bankName": "Bank Name",
+      "enterBankName": "Select your bank",
+      "accountNumber": "Account Number",
+      "enterAccountNumber": "Enter your account number",
+      "accountName": "Account Name",
+      "enterAccountName": "Enter your account name",
+      "manage": "Manage Accounts",
+      "viewAccounts": "My Bank Accounts",
+      "addAccount": "Add New Account",
+      "addSuccess": "Bank account added successfully",
+      "addError": "Failed to add bank account",
+      "noDefaultAccount": "No default account set",
+      "default": "Default", 
+      "setAsDefault": "Set as Default",
+      "yourAccounts": "Your Bank Accounts",
+      "refresh": "Refresh",
+      "noAccounts": "No Bank Accounts",
+      "addYourFirst": "Add your first bank account to get started",
+      "deleteAccount": "Delete Account",
+      "deleteSuccess": "Bank account deleted successfully",
+      "deleteError": "Failed to delete bank account",
+      "deleteSuccessDescription": "Your bank account has been removed from your profile",
+      "deleteErrorDescription": "There was a problem deleting your bank account. Please try again.",
+      "defaultSuccess": "Default bank account updated",
+      "defaultError": "Failed to update default bank account",
+      "defaultSuccessDescription": "Your default bank account has been updated successfully",
+      "defaultErrorDescription": "There was a problem updating your default bank account. Please try again.",
+      "deleteConfirmTitle": "Confirm Delete Account",
+      "deleteConfirmDescription": "Are you sure you want to delete this bank account? This action cannot be undone."
+    }
   },
   "order": {
     "loading": "Loading order...",
@@ -1422,29 +1499,9 @@
     },
     "viewOrder": "View Order"
   },
-  "walletTerm": {
-    "balance": "Balance & Transactions",
-    "withdrawalRequests": {
-      "title": "Withdrawal Requests List",
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "processing": "Processing",
-        "completed": "Completed",
-        "cancelled": "Cancelled"
-      },
-      "statusUpdateSuccess": "Withdrawal request status updated successfully",
-      "processedBy": "Processed by"
-    },
-    "withdraw": {
-      "amount": "Amount",
-      "bankAccounts": {
-        "title": "Bank Accounts",
-        "bankName": "Bank Name",
-        "accountNumber": "Account Number",
-        "accountName": "Account Name"
-      }
-    }
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close"
   }
 }
