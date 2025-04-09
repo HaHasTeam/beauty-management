@@ -135,7 +135,8 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
           label: brand.name,
           value: brand.id
         })),
-        isCustomFilter: true
+        isCustomFilter: true,
+        isSingleChoice: true
       })
 
       const isSelectedBrand = queryStates?.[0]?.fieldFilters?.brandId
