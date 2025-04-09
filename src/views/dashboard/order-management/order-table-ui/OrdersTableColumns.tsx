@@ -1,6 +1,7 @@
 import type { ColumnDef, Row } from '@tanstack/react-table'
 import { Ellipsis, EyeIcon, SettingsIcon } from 'lucide-react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -9,6 +10,7 @@ import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-col
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
 import { formatDate } from '@/lib/utils'
+import { OrderEnum, ShippingStatusEnum } from '@/types/enum'
 import { type IOrder } from '@/types/order'
 import { formatCurrency } from '@/utils/number'
 import { getDisplayString } from '@/utils/string'
@@ -80,6 +82,30 @@ interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<IOrder> | null>>
 }
 
+const PaymentMethodCell = ({ row }: { row: { original: IOrder } }) => {
+  const { t } = useTranslation()
+  const isGroupBuying = row.original.type === OrderEnum.GROUP_BUYING
+  const isJoinGroupBuying = row.original.status === ShippingStatusEnum.JOIN_GROUP_BUYING
+
+  return (
+    <div className='flex items-end gap-2 flex-col'>
+      <div className='text-right font-bold'>{formatCurrency(row.original.totalPrice)}</div>
+      {isGroupBuying && isJoinGroupBuying && (
+        <div className='text-xs text-muted-foreground italic text-red-500'>
+          *
+          {t(
+            'order.estimatedPriceNote',
+            'This is the estimated price for the order. The final price will be determined after the order is confirmed.'
+          )}
+        </div>
+      )}
+      <div className='text-xs text-muted-foreground'>
+        by <span className='capitalize'>{getDisplayString(row.original.paymentMethod.toLowerCase())}</span>
+      </div>
+    </div>
+  )
+}
+
 export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>[] {
   return [
     {
@@ -107,16 +133,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>
     {
       accessorKey: 'paymentMethod',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Total / Method' />,
-      cell: ({ row }) => {
-        return (
-          <div className='flex items-end gap-2 flex-col'>
-            <div className='text-right font-bold'>{formatCurrency(row.original.totalPrice)}</div>
-            <div className='text-xs text-muted-foreground'>
-              by <span className='capitalize'>{getDisplayString(row.original.paymentMethod.toLowerCase())}</span>
-            </div>
-          </div>
-        )
-      },
+      cell: ({ row }) => <PaymentMethodCell row={row} />,
       enableSorting: true,
       size: 100
     },
