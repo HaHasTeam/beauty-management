@@ -121,7 +121,11 @@ export function DataTableFacetedFilter<TData, TValue>({
                     >
                       <Check className='size-4' aria-hidden='true' />
                     </div>
-                    {option.icon && <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />}
+                    {option.icon && typeof option.icon === 'function' ? (
+                      <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />
+                    ) : option.icon ? (
+                      <span className='mr-2 size-4 text-muted-foreground'>{option.icon}</span>
+                    ) : null}
                     <span className='flex-1 truncate'>{option.label}</span>
                     {option.count && (
                       <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>

@@ -27,7 +27,7 @@ export function ReportStatusCell({ report }: ReportStatusCellProps) {
         </Badge>
       )
 
-    case ReportStatusEnum.DONE:
+    case ReportStatusEnum.APPROVED:
       return (
         <Badge variant='outline' className='border-green-200 bg-green-50 text-green-700 gap-1'>
           <CheckIcon className='h-3.5 w-3.5' />

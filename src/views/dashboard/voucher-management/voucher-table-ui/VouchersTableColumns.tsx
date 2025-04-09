@@ -1,10 +1,19 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, EyeIcon, Pen, SettingsIcon, XIcon } from 'lucide-react'
-import { GrRevert } from 'react-icons/gr'
+import {
+  Calendar,
+  CheckCircle2,
+  Ellipsis,
+  EyeIcon,
+  FilePenLine,
+  Settings,
+  SettingsIcon,
+  Users,
+  XCircle
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
   DropdownMenu,
@@ -14,16 +23,17 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
-import { cn, formatDate } from '@/lib/utils'
-import { StatusEnum } from '@/types/enum'
+import { formatDate } from '@/lib/utils'
+import { DiscountTypeEnum, StatusEnum, VoucherVisibilityEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
-import { formatPriceVND } from '@/utils'
+import { formatCurrency, formatNumber } from '@/utils/number'
 
-import { getStatusIcon } from './helper'
+import { VoucherApplyProductsCell } from './VoucherApplyProductsCell'
+import { VoucherStatusCell } from './VoucherStatusCell'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
-  type: 'ban' | 'view' | 'unbanned' | 'update-status'
+  type: 'activate' | 'deactivate' | 'view'
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<TVoucher> | null>>
@@ -31,117 +41,154 @@ interface GetColumnsProps {
 export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVoucher>[] {
   return [
     {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 1
-    },
-    {
-      id: 'voucher',
+      accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Chương trình giảm giá' />,
       cell: ({ row }) => {
         const displayName = row.original.name
-        return (
-          <div className='flex space-x-2 items-center'>
-            <span className='max-w-[31.25rem] truncate'>{displayName}</span>
-          </div>
-        )
-      }
+        return <div className='font-medium'>{displayName}</div>
+      },
+      size: 250,
+      enableHiding: false
     },
     {
       accessorKey: 'code',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Mã giảm giá' />,
       cell: ({ cell }) => <div>{cell.row.original.code}</div>,
-      size: 100,
+      size: 120,
       enableSorting: false,
       enableHiding: false
     },
     {
       accessorKey: 'discountValue',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số tiền giảm' />,
-      cell: ({ cell }) => <div>{formatPriceVND(cell.row.original.discountValue)}</div>,
-      size: 10,
+      cell: ({ cell }) => {
+        const voucher = cell.row.original
+        const { discountValue, discountType } = voucher
+
+        if (discountType === DiscountTypeEnum.AMOUNT) {
+          return <div className='text-end font-bold'>{formatCurrency(discountValue, 'vi-VN')}</div>
+        } else if (discountType === DiscountTypeEnum.PERCENTAGE) {
+          // Multiply by 100 to get percentage and add % sign
+          return <div className='text-end font-bold'>{formatNumber(discountValue * 100, '%')}</div>
+        }
+
+        return <div className='text-end font-bold'>{formatNumber(discountValue)}</div>
+      },
+      size: 120,
       enableSorting: false,
       enableHiding: false
     },
     {
       accessorKey: 'amount',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng mã' />,
-      cell: ({ cell }) => <div>{cell.row.original.amount}</div>,
-      size: 10,
+      cell: ({ cell }) => {
+        const amount = cell.row.original.amount
+        if (!amount) {
+          return <div className='text-end text-blue-500 font-medium'>Không giới hạn</div>
+        }
+        return <div className='text-end font-bold'>{amount}</div>
+      },
+      size: 800,
       enableSorting: false,
       enableHiding: false
     },
-
     {
-      accessorKey: 'status',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+      accessorKey: 'visibility',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Phạm vi' />,
       cell: ({ row }) => {
-        const statusKey = Object.keys(StatusEnum).find((status) => {
-          const value = StatusEnum[status as keyof typeof StatusEnum]
-          return value === row.original.status
-        })
+        const { visibility } = row.original
 
-        if (!statusKey) return null
-
-        const statusValue = StatusEnum[statusKey as keyof typeof StatusEnum]
-
-        const Icon = getStatusIcon(statusValue)
-
-        return (
-          <div
-            className={cn(
-              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
-              Icon.textColor,
-              Icon.bgColor
-            )}
-          >
-            <Icon.icon
-              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
-              aria-hidden='true'
-            />
-            <span className='capitalize'>{statusValue.toLowerCase()}</span>
-          </div>
-        )
+        switch (visibility) {
+          case VoucherVisibilityEnum.PUBLIC:
+            return (
+              <Badge variant='outline' className='bg-green-50 text-green-700 border-green-200 gap-1'>
+                <Users className='h-3 w-3' />
+                <span>Public</span>
+              </Badge>
+            )
+          case VoucherVisibilityEnum.WALLET:
+            return (
+              <Badge variant='outline' className='bg-purple-50 text-purple-700 border-purple-200 gap-1'>
+                <Settings className='h-3 w-3' />
+                <span>Wallet</span>
+              </Badge>
+            )
+          case VoucherVisibilityEnum.GROUP:
+            return (
+              <Badge variant='outline' className='bg-indigo-50 text-indigo-700 border-indigo-200 gap-1'>
+                <Users className='h-3 w-3' />
+                <span>Group</span>
+              </Badge>
+            )
+          default:
+            return null
+        }
       },
-      size: 50,
+      size: 20,
+      enableSorting: false,
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id))
       }
     },
     {
+      accessorKey: 'applyProducts',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Áp dụng cho' />,
+      cell: ({ row }) => <VoucherApplyProductsCell voucher={row.original} />,
+      size: 220,
+      enableSorting: false,
+      enableHiding: false
+    },
+    {
       accessorKey: 'startTime',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thời gian bắt đầu' />,
-      cell: ({ cell }) =>
-        formatDate(cell.getValue() as Date, {
+      cell: ({ cell }) => {
+        const value = cell.getValue()
+        if (!value) {
+          return (
+            <div className='flex items-center text-muted-foreground'>
+              <Calendar className='h-4 w-4 mr-1' />
+              <span>N/A</span>
+            </div>
+          )
+        }
+        return formatDate(value as Date, {
           hour: 'numeric',
-          minute: 'numeric'
+          minute: 'numeric',
+          month: '2-digit'
         })
+      },
+      size: 150
     },
-
     {
       accessorKey: 'endTime',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thời gian kết thúc' />,
-      cell: ({ cell }) =>
-        formatDate(cell.getValue() as Date, {
+      cell: ({ cell }) => {
+        const value = cell.getValue()
+        if (!value) {
+          return (
+            <div className='flex items-center text-muted-foreground'>
+              <Calendar className='h-4 w-4 mr-1' />
+              <span>N/A</span>
+            </div>
+          )
+        }
+        return formatDate(value as Date, {
           hour: 'numeric',
-          minute: 'numeric'
+          minute: 'numeric',
+          month: '2-digit'
         })
+      },
+      size: 150
+    },
+    {
+      accessorKey: 'status',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+      cell: ({ row }) => <VoucherStatusCell voucher={row.original} />,
+      size: 120,
+      minSize: 100,
+      filterFn: (row, id, value) => {
+        return Array.isArray(value) && value.includes(row.getValue(id))
+      }
     },
     {
       accessorKey: 'createdAt',
@@ -149,80 +196,73 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
       cell: ({ cell }) =>
         formatDate(cell.getValue() as Date, {
           hour: 'numeric',
-          minute: 'numeric'
-        })
+          minute: 'numeric',
+          month: '2-digit'
+        }),
+      size: 150
     },
     {
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
+        const voucher = row.original
         return (
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger>
-              <Button aria-label='Open menu' variant='ghost' className='flex size-8 p-0 data-[state=open]:bg-muted'>
-                <Ellipsis className='size-4' aria-hidden='true' />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem
-              // onClick={() => {
-              //   setRowAction({ row: row, type: 'view' })
-              // }}
-              >
-                <Link to={`/dashboard/voucher/${row.original.id}`}>
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <EyeIcon />
-                    View Details
-                  </span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to={routesConfig[Routes.UPDATE_VOUCHER].getPath(row.original.id)}>
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <Pen />
-                    Update
-                  </span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {row.original.status !== StatusEnum.BANNED ? (
-                <DropdownMenuItem
-                  className='bg-red-500 text-white mb-1'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'ban' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <XIcon />
-                    ban
-                  </span>
+          <div className='flex justify-end'>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='h-8 w-8 p-0'>
+                  <span className='sr-only'>Open menu</span>
+                  <Ellipsis className='h-4 w-4' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuItem>
+                  <Link to={`/dashboard/voucher/${voucher.id}`} className='w-full'>
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <EyeIcon className='mr-2 h-4 w-4' aria-hidden='true' />
+                      <span>View Details</span>
+                    </span>
+                  </Link>
                 </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  className='bg-green-500 text-white'
-                  onClick={() => {
-                    setRowAction({ row: row, type: 'unbanned' })
-                  }}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <GrRevert />
-                    unBan
-                  </span>
+                <DropdownMenuItem>
+                  <Link to={routesConfig[Routes.UPDATE_VOUCHER].getPath(voucher.id)} className='w-full'>
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <FilePenLine className='mr-2 h-4 w-4' aria-hidden='true' />
+                      <span>Edit</span>
+                    </span>
+                  </Link>
                 </DropdownMenuItem>
-              )}
-              <DropdownMenuItem
-                className='bg-green-500 text-white'
-                onClick={() => {
-                  setRowAction({ row: row, type: 'update-status' })
-                }}
-              >
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <GrRevert />
-                  update status
-                </span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+                <DropdownMenuSeparator />
+
+                {voucher.status === StatusEnum.ACTIVE ? (
+                  <DropdownMenuItem
+                    className='text-amber-500'
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'deactivate' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <XCircle className='h-4 w-4' />
+                      <span className='font-semibold'>Deactivate Voucher</span>
+                    </span>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem
+                    className='text-green-500'
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'activate' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <CheckCircle2 className='h-4 w-4' />
+                      <span className='font-semibold'>Activate Voucher</span>
+                    </span>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )
       },
       size: 40,

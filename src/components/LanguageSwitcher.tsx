@@ -9,10 +9,10 @@ const LanguageSwitcher = () => {
   const supportedLngs = i18n.options.supportedLngs || []
   const [isOpenLanguage, setOpenLanguage] = useState(false)
 
-  // Ensure English is set as default language
+  // Ensure Vietnamese is set as default language
   useEffect(() => {
-    if (i18n.resolvedLanguage !== 'en') {
-      i18n.changeLanguage('en')
+    if (i18n.resolvedLanguage !== 'vi') {
+      i18n.changeLanguage('vi')
     }
   }, [i18n])
 

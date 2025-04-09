@@ -31,12 +31,10 @@ import { TUpdateGroupProductRequestParams } from '@/network/apis/group-product/t
 import { useStore } from '@/stores/store'
 import { DiscountTypeEnum, VoucherApplyTypeEnum } from '@/types/enum'
 import { GroupProductStatusEnum } from '@/types/group-product'
-import { generateCouponCode } from '@/utils'
+import { generateMeaningfulCode } from '@/utils'
 
 import { convertFormToGroupProduct, convertGroupProductToForm, formSchema } from './helper'
 import VoucherThresholds from './VoucherThresholds'
-
-const initialCode = generateCouponCode()
 
 const GroupProductDetails = () => {
   const id = useId()
@@ -56,7 +54,7 @@ const GroupProductDetails = () => {
     queryFn: getGroupProductByIdApi.fn,
     enabled: !!itemId
   })
-
+  const initialCode = generateMeaningfulCode('GROUP')
   const navigate = useNavigate()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,10 +73,10 @@ const GroupProductDetails = () => {
           threshold: undefined,
           voucher: {
             applyType: VoucherApplyTypeEnum.ALL,
-            name: "Group's Voucher " + initialCode,
             description: undefined,
             discountType: DiscountTypeEnum.PERCENTAGE,
-            code: 'group-voucher-' + initialCode
+            name: initialCode,
+            code: initialCode
           }
         }
       ]
@@ -276,8 +274,8 @@ const GroupProductDetails = () => {
                       render={({ field }) => {
                         return (
                           <FormItem>
-                            <FormLabel required>Maximum Buy Amount Each Person</FormLabel>
-                            <Input {...field} placeholder={`e.g. 10`} type='quantity' symbol='Items/ Product' />
+                            <FormLabel required>Maximum Items For Each Person</FormLabel>
+                            <Input {...field} placeholder={`e.g. 10`} type='quantity' symbol='Items' />
                             <FormMessage />
                           </FormItem>
                         )

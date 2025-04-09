@@ -14,6 +14,10 @@ import { getAllBrandsApi } from '@/network/apis/brand'
 import { RoleEnum, OrderEnum } from '@/types/enum'
 import { useStore } from '@/stores/store'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllPreOrderListApi } from '@/network/apis/pre-order'
+import { getAllFlashSaleApi } from '@/network/apis/flash-sale'
+import { formatDate } from 'date-fns'
+import { getAllGroupProductsListApi } from '@/network/apis/group-product'
 
 interface OrderStaticCardProps {
   data: OrderStatic
@@ -24,7 +28,8 @@ interface OrderStaticCardProps {
 }
 
 export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
-  // Get currently selected date range
+  // Get currently selected date range and order type
+  const [selectedOrderType, setSelectedOrderType] = React.useState<OrderEnum | null>(null);
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
@@ -42,6 +47,20 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
   const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
   const isBrand = [RoleEnum.MANAGER, RoleEnum.STAFF].includes(user?.role as RoleEnum)
 
+  // Monitor field filters changes to detect order type selection
+  React.useEffect(() => {
+    if (queryStates) {
+      const [queryState] = queryStates;
+      const orderTypeValue = queryState.fieldFilters?.orderType as OrderEnum | undefined;
+      
+      if (orderTypeValue) {
+        setSelectedOrderType(orderTypeValue);
+      } else {
+        setSelectedOrderType(null);
+      }
+    }
+  }, [queryStates]);
+
   const { data: productData } = useQuery({
     queryKey: [getAllProductApi.queryKey],
     queryFn: getAllProductApi.fn
@@ -51,8 +70,34 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
     queryKey: [getAllBrandsApi.queryKey],
     queryFn: getAllBrandsApi.fn
   })
+  
+  // Fetch pre-order products data
+  const { data: preOrderData } = useQuery({
+    queryKey: [getAllPreOrderListApi.queryKey],
+    queryFn: getAllPreOrderListApi.fn,
+    enabled: isAdmin || isBrand
+  })
+  
+  // Fetch flash sale products data
+  const { data: flashSaleData } = useQuery({
+    queryKey: [getAllFlashSaleApi.queryKey],
+    queryFn: getAllFlashSaleApi.fn,
+    enabled: isAdmin || isBrand
+  })
+  
+  // Fetch group buying products data
+  const { data: groupProductData } = useQuery({
+    queryKey: [getAllGroupProductsListApi.queryKey],
+    queryFn: getAllGroupProductsListApi.fn,
+    enabled: isAdmin || isBrand
+  })
+  
   const products = productData?.data ?? []
   const brands = brandData?.data ?? []
+  const preOrders = preOrderData?.data ?? []
+  const flashSales = flashSaleData?.data ?? []
+  const groupProducts = groupProductData?.data ?? []
+  
   const filterFields: DataTableFilterField<TGetDailyOrderStatisticsParams>[] = React.useMemo(() => {
     const fields: DataTableFilterField<TGetDailyOrderStatisticsParams>[] = [
       {
@@ -80,6 +125,8 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
         isSingleChoice: true
       }
     ]
+
+    // Add product filter first (for all order types)
     if (isAdmin) {
       fields.push({
         id: 'brandId',
@@ -90,6 +137,7 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
         })),
         isCustomFilter: true
       })
+      
       const isSelectedBrand = queryStates?.[0]?.fieldFilters?.brandId
       if (isSelectedBrand) {
         fields.push({
@@ -103,6 +151,7 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
         })
       }
     }
+    
     if (isBrand) {
       fields.push({
         id: 'productIds',
@@ -115,8 +164,45 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
       })
     }
 
-    return fields
-  }, [isAdmin, isBrand, products, brands])
+    // Conditionally add filters based on selected order type
+    if (selectedOrderType === OrderEnum.PRE_ORDER && preOrders.length > 0) {
+      fields.push({
+        id: 'preOrderProductIds',
+        label: 'Pre Order Events',
+        options: preOrders.map((preOrder) => ({
+          label: `${formatDate(preOrder.startTime, 'dd/MM/yy')} - ${formatDate(preOrder.endTime, 'dd/MM/yy')} - ${preOrder.product.name}`,
+          value: preOrder.id
+        })),
+        isCustomFilter: true
+      })
+    }
+    
+    if (selectedOrderType === OrderEnum.FLASH_SALE && flashSales.length > 0) {
+      fields.push({
+        id: 'flashSaleIds',
+        label: 'Flash Sale Events',
+        options: flashSales.map((flashSale) => ({
+          label: `${formatDate(flashSale.startTime, 'dd/MM/yy')} - ${formatDate(flashSale.endTime, 'dd/MM/yy')} ${flashSale.product.name}`,
+          value: flashSale.id
+        })),
+        isCustomFilter: true
+      })
+    }
+    
+    if (selectedOrderType === OrderEnum.GROUP_BUYING && groupProducts.length > 0) {
+      fields.push({
+        id: 'groupProductIds',
+        label: 'Group Buying Events',
+        options: groupProducts.map((groupProduct) => ({
+          label: `${groupProduct.name}`,
+          value: groupProduct.id
+        })),
+        isCustomFilter: true
+      })
+    }
+    
+    return fields;
+  }, [isAdmin, isBrand, products, brands, preOrders, flashSales, groupProducts, selectedOrderType, queryStates])
 
   /**
    * Advanced filter fields for the data table.
@@ -170,8 +256,12 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data} />}>
-        <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
+      <CardWithFacetFilters mainContent={
+        <Static 
+          data={data} 
+        />
+      }>
+          <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
           <div className='flex items-center justify-end px-4 py-2'>
             <Select onValueChange={handleTimeRangeChange}>
               <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
@@ -193,8 +283,9 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
               </SelectContent>
             </Select>
           </div>
-        </DataTableToolbar>
+          </DataTableToolbar>
       </CardWithFacetFilters>
     </div>
   )
 }
+

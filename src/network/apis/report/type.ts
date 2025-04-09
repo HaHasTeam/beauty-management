@@ -1,10 +1,12 @@
 import { IReport, ReportStatusEnum, ReportTypeEnum } from '@/types/report'
+import { BaseParams } from '@/types/request'
 
-export type TGetFilteredReportRequestParams = {
-  type?: ReportTypeEnum
-  status?: ReportTypeEnum
+export type TGetFilteredReportRequestParams = BaseParams<{
+  types?: ReportTypeEnum[]
+  statuses?: ReportStatusEnum[]
+  reason?: string
   assigneeId?: string
-}
+}>
 
 export type TCreateReportRequestParams = Pick<IReport, 'type' | 'reason'> & {
   orderId?: string

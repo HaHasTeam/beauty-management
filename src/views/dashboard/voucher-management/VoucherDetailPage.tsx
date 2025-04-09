@@ -251,7 +251,7 @@ export default function VoucherDetailPage() {
                     </TableCell>
                     <TableCell>
                       {voucher.discountType === 'PERCENTAGE'
-                        ? `${voucher.discountValue}%`
+                        ? `${(voucher.discountValue * 100).toFixed(0)}%`
                         : formatCurrency(voucher.discountValue)}
                     </TableCell>
                   </TableRow>
@@ -303,7 +303,7 @@ export default function VoucherDetailPage() {
                         <Clock className='h-4 w-4 mr-2 text-muted-foreground' />
                         Amount
                       </TableCell>
-                      <TableCell>{voucher.amount.toLocaleString()}</TableCell>
+                      <TableCell>{voucher.amount !== null ? voucher.amount.toLocaleString() : '0'}</TableCell>
                     </TableRow>
                   )}
                   <TableRow>

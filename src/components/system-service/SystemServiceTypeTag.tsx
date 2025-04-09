@@ -1,17 +1,51 @@
 import { Crown, Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { Badge } from '@/components/ui/badge'
 import { ServiceTypeEnum } from '@/types/enum'
 
 interface SystemServiceTypeTagProps {
   type: string
   text?: string
   size?: 'small' | 'medium' | 'large'
+  useBadgeStyle?: boolean
 }
 
-export default function SystemServiceTypeTag({ type, text, size = 'medium' }: SystemServiceTypeTagProps) {
+export default function SystemServiceTypeTag({
+  type,
+  text,
+  size = 'medium',
+  useBadgeStyle = false
+}: SystemServiceTypeTagProps) {
   const { t } = useTranslation()
 
+  // If using Badge style
+  if (useBadgeStyle) {
+    switch (type) {
+      case ServiceTypeEnum.PREMIUM:
+        return (
+          <Badge variant='outline' className='border-purple-200 bg-purple-50 text-purple-700 gap-1'>
+            <Crown className='h-3.5 w-3.5' />
+            <span className='whitespace-nowrap'>{text || t(`systemServiceType.${type}`)}</span>
+          </Badge>
+        )
+      case ServiceTypeEnum.STANDARD:
+        return (
+          <Badge variant='outline' className='border-yellow-200 bg-yellow-50 text-yellow-700 gap-1'>
+            <Star className='h-3.5 w-3.5' />
+            <span className='whitespace-nowrap'>{text || t(`systemServiceType.${type}`)}</span>
+          </Badge>
+        )
+      default:
+        return (
+          <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
+            <span className='whitespace-nowrap'>{text || t(`systemServiceType.${type}`) || 'Unknown'}</span>
+          </Badge>
+        )
+    }
+  }
+
+  // Original styling
   let tagColorClass = ''
   let icon
   const sizeClasses = {

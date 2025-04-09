@@ -158,7 +158,7 @@ export function ReportResultCell({ report }: ReportResultCellProps) {
         </div>
       )
 
-    case ReportStatusEnum.DONE:
+    case ReportStatusEnum.APPROVED:
       return (
         <div className='w-full'>
           <div className='flex items-start'>

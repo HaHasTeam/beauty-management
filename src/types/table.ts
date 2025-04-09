@@ -17,8 +17,9 @@ export interface SearchParams {
 export interface Option {
   label: string
   value: string
-  icon?: React.ComponentType<{ className?: string }>
+  icon?: React.ComponentType<{ className?: string }> | React.ReactNode
   count?: number
+  withCount?: boolean
 }
 
 export interface ExtendedColumnSort<TData> extends Omit<ColumnSort, 'id'> {
@@ -34,7 +35,7 @@ export type FilterOperator = DataTableConfig['globalOperators'][number]
 export type JoinOperator = DataTableConfig['joinOperators'][number]['value']
 
 export interface DataTableFilterField<TData> {
-  id: StringKeyOf<TData> | string
+  id: string | keyof TData
   label: string
   placeholder?: string
   options?: Option[]
@@ -42,6 +43,7 @@ export interface DataTableFilterField<TData> {
   isSingleChoice?: boolean
   /** If true, this is a custom filter not directly mapped to a data property */
   isCustomFilter?: boolean
+  isNumber?: boolean
 }
 
 export interface DataTableAdvancedFilterField<TData> extends Omit<DataTableFilterField<TData>, 'id'> {
