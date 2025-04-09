@@ -2,9 +2,11 @@ import { type Table } from '@tanstack/react-table'
 import { Download, Flag, ListPlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
 import { IBlogDetails } from '@/types/blog'
 
@@ -15,9 +17,14 @@ interface BlogTableToolbarActionsProps {
 }
 
 export function BlogTableToolbarActions({ table }: BlogTableToolbarActionsProps) {
-  const handleAddBlog = () => {}
+  // const handleAddBlog = () => {}
   const [isOpened, setIsOpened] = useState(false)
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const handleAddBlog = () => {
+    navigate(routesConfig[Routes.CREATE_BLOG].getPath())
+  }
   return (
     <div className='flex items-center gap-2'>
       {/* {table.getFilteredSelectedRowModel().rows.length > 0 ? (
