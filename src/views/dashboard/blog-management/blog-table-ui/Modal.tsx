@@ -134,7 +134,7 @@ export default function Modal({ setOpen, viewOnly = false, Report }: DialogProps
   const getHeader = () => {
     if (!report?.id) return null
     switch (report?.status) {
-      case ReportStatusEnum.DONE:
+      case ReportStatusEnum.APPROVED:
         return (
           <Alert variant={'success'}>
             <div className='flex items-center gap-2'>
