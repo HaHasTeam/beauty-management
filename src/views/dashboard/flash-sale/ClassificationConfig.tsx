@@ -75,35 +75,37 @@ const ClassificationConfig = ({ form, productId }: Props) => {
               // Handle potential undefined classifications during loading
               if (!classificationList[index] || !classificationList[index]?.rawClassification) {
                 return (
-                  <Card key={`classification-placeholder-${index}`}>
-                    <CardContent>
-                      <AccordionItem value={String(index)} className='border-none'>
-                        <AccordionTrigger className='hover:no-underline px-2 rounded-md hover:bg-gray-50/50 transition-colors py-3'>
-                          <div className='flex items-center gap-2 w-full'>
-                            <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
-                              <CircleDashed className='h-3.5 w-3.5' />
-                              <span className='whitespace-nowrap'>Select a classification...</span>
-                            </Badge>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-2'>
-                            <FormField
-                              control={form.control}
-                              name={`productClassifications.${index}.rawClassification`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel required>Classification Of Product</FormLabel>
-                                  <SelectClassification {...field} productId={productId} value={field.value} />
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </CardContent>
-                  </Card>
+                  <>
+                    <div className='flex items-center w-full'>
+                      <div className='flex items-center gap-2 w-full'>
+                        <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
+                          <CircleDashed className='h-3.5 w-3.5' />
+                          <span className='whitespace-nowrap'>Select a classification...</span>
+                        </Badge>
+                        <button
+                          className='flex-shrink-0 p-1.5 rounded-full hover:bg-red-50 disabled:opacity-20 cursor-pointer transition-colors'
+                          onClick={handleRemove(index)}
+                          disabled={isRemoveDisabled}
+                          type='button'
+                        >
+                          <Trash2 color='red' strokeWidth={2.5} size={16} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-2'>
+                      <FormField
+                        control={form.control}
+                        name={`productClassifications.${index}.rawClassification`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Classification Of Product</FormLabel>
+                            <SelectClassification {...field} productId={productId} value={field.value} />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </>
                 )
               }
 
@@ -187,13 +189,7 @@ const ClassificationConfig = ({ form, productId }: Props) => {
                               <FormItem>
                                 <FormLabel required>Quantity</FormLabel>
                                 <FormControl>
-                                  <Input
-                                    type='quantity'
-                                    placeholder='e.g. 100'
-                                    {...field}
-                                    symbol={'Items'}
-                                    maxVal={classificationList[index]?.rawClassification?.quantity ?? 0}
-                                  />
+                                  <Input type='quantity' placeholder='e.g. 100' {...field} symbol={'Items'} />
                                 </FormControl>
                                 <FormDescription>
                                   This is the quantity of the flash sale that take from initial quantity.
