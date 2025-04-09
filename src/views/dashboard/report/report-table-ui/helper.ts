@@ -4,7 +4,7 @@ import { ReportStatusEnum } from '@/types/report'
 
 export function getStatusIcon(status: ReportStatusEnum) {
   const statusIcons = {
-    [ReportStatusEnum.APPROVED]: {
+    [ReportStatusEnum.DONE]: {
       icon: CheckCircle2,
       iconColor: 'text-green-500',
       textColor: 'text-green-500',
@@ -18,21 +18,15 @@ export function getStatusIcon(status: ReportStatusEnum) {
     },
     [ReportStatusEnum.CANCELLED]: {
       icon: CircleX,
-      iconColor: 'text-gray-500',
-      textColor: 'text-gray-500',
-      bgColor: 'bg-gray-100'
+      iconColor: 'text-red-500',
+      textColor: 'text-red-500',
+      bgColor: 'bg-red-100'
     },
     [ReportStatusEnum.PENDING]: {
       icon: CircleDashed,
       iconColor: 'text-yellow-500',
       textColor: 'text-yellow-500',
       bgColor: 'bg-yellow-100'
-    },
-    [ReportStatusEnum.REJECTED]: {
-      icon: CircleX,
-      iconColor: 'text-red-500',
-      textColor: 'text-red-500',
-      bgColor: 'bg-red-100'
     }
   }
   return statusIcons[status] || CircleIcon

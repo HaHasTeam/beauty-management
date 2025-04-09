@@ -1,9 +1,6 @@
-import { IAddress } from './address'
-import { TBankAccount } from './bank-account'
 import { IBrand } from './brand'
-import { TCartItem } from './cart-item'
 import { TMetaData } from './request'
-import { TRoleResponse } from './role'
+import { TRoleResponse, UserRoleEnum } from './role'
 
 export enum UserGenderEnum {
   MALE = 'MALE',
@@ -12,17 +9,10 @@ export enum UserGenderEnum {
 }
 
 export enum UserStatusEnum {
+  PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
-  PENDING = 'PENDING',
   BANNED = 'BANNED'
-}
-
-export enum UserRoleEnum {
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  CONSULTANT = 'CONSULTANT',
-  CUSTOMER = 'CUSTOMER'
 }
 
 export type TUser = TMetaData & {
@@ -30,7 +20,7 @@ export type TUser = TMetaData & {
   lastName?: string
   username: string
   email: string
-  password?: string
+  password: string
   role: UserRoleEnum | string
   gender?: UserGenderEnum | string
   phone?: string
@@ -39,24 +29,7 @@ export type TUser = TMetaData & {
   status: UserStatusEnum | string
   isEmailVerify: boolean
   brands?: IBrand[]
-  description?: string
-  majorTitle?: string
-  introduceVideo?: string
-  yoe?: number
-  addresses?: IAddress[]
-  bankAccounts?: TBankAccount[]
-  cartItems?: TCartItem[]
 }
-
-export type TUserFull = Omit<TUser, 'role'> & {
-  role: TRoleResponse
-}
-
-export type TUserResponse = TUser & {
-  createdAt: string
-  updatedAt: string
-}
-
 export type TUserFeedback = TMetaData & {
   firstName?: string
   lastName?: string

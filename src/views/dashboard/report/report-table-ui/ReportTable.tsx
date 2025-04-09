@@ -1,22 +1,22 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { Flag } from 'lucide-react'
 import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { useDataTable } from '@/hooks/useDataTable'
-import { toSentenceCase } from '@/lib/utils'
-import { getAllUserApi } from '@/network/apis/user'
-import { IReport, ReportStatusEnum, ReportTypeEnum } from '@/types/report'
+import { IReport } from '@/types/report'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { AssignReportDialog } from './AssignReportDialog'
+import { BanReportDialog } from './BanReportDialog'
+import Modal from './Modal'
 import { DataTableRowAction, getColumns } from './ReportTableColumns'
 import { ReportTableFloatingBar } from './ReportTableFloatingBar'
 import { ReportTableToolbarActions } from './ReportTableToolbarActions'
 import { ResolveReportDialog } from './ResolveReportDialog'
-import { ViewReportModal } from './ViewReportModal'
 
 interface ReportTableProps {
   data: IReport[]
@@ -45,45 +45,7 @@ export function ReportTable({ data, pageCount, queryStates }: ReportTableProps) 
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const { data: userList } = useQuery({
-    queryKey: [getAllUserApi.queryKey],
-    queryFn: getAllUserApi.fn
-  })
-  const users = userList?.data ?? []
-  const filterFields: DataTableFilterField<IReport>[] = [
-    {
-      id: 'type',
-      label: 'Type',
-      options: Object.keys(ReportTypeEnum).map((type) => ({
-        label: toSentenceCase(type),
-        value: type
-      }))
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      options: Object.keys(ReportStatusEnum).map((status) => ({
-        label: toSentenceCase(status),
-        value: status
-      }))
-    },
-    {
-      id: 'assigneeId',
-      label: 'Assignee',
-      options: users.map((user) => ({
-        label: user.username ?? user.email ?? 'N/A',
-        value: user.id
-      })),
-      isCustomFilter: true,
-      isSingleChoice: true
-    },
-    {
-      id: 'reason',
-      label: 'Reason',
-      placeholder: 'Search by reason',
-      isCustomFilter: true
-    }
-  ]
+  const filterFields: DataTableFilterField<IReport>[] = []
 
   /**
    * Advanced filter fields for the data table.
@@ -118,7 +80,13 @@ export function ReportTable({ data, pageCount, queryStates }: ReportTableProps) 
           <ReportTableToolbarActions table={table} />
         </DataTableToolbar>
       </DataTable>
-
+      <BanReportDialog
+        open={rowAction?.type === 'ban'}
+        onOpenChange={() => setRowAction(null)}
+        Report={rowAction?.row.original ? [rowAction?.row.original] : []}
+        showTrigger={false}
+        onSuccess={() => rowAction?.row.toggleSelected(false)}
+      />
       <AssignReportDialog
         open={rowAction?.type === 'assign'}
         onOpenChange={() => setRowAction(null)}
@@ -126,7 +94,6 @@ export function ReportTable({ data, pageCount, queryStates }: ReportTableProps) 
         showTrigger={false}
         onSuccess={() => rowAction?.row.toggleSelected(false)}
       />
-
       <ResolveReportDialog
         open={rowAction?.type === 'resolve'}
         onOpenChange={() => setRowAction(null)}
@@ -134,12 +101,26 @@ export function ReportTable({ data, pageCount, queryStates }: ReportTableProps) 
         showTrigger={false}
         onSuccess={() => rowAction?.row.toggleSelected(false)}
       />
-
-      <ViewReportModal
-        open={rowAction?.type === 'view'}
-        onOpenChange={() => setRowAction(null)}
-        report={rowAction?.row.original}
-      />
+      <Dialog open={rowAction?.type === 'view'} onOpenChange={() => setRowAction(null)}>
+        <DialogContent className='max-w-2xl overflow-auto! max-h-[70%]'>
+          <DialogTitle className='flex items-center gap-2'>
+            <Flag className='h-5 w-5' />
+            View Report Details
+          </DialogTitle>
+          <DialogDescription>
+            <div className='text-gray-600 text-sm'>See the details of the report and take necessary actions.</div>
+          </DialogDescription>
+          <Modal
+            viewOnly
+            setOpen={() => setRowAction(null)}
+            open={rowAction?.type === 'resolve'}
+            onOpenChange={() => setRowAction(null)}
+            Report={rowAction?.row.original ? [rowAction?.row.original] : []}
+            showTrigger={false}
+            onSuccess={() => rowAction?.row.toggleSelected(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

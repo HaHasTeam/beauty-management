@@ -1,16 +1,19 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { CheckCircle2, CircleDashed, Ellipsis, EyeIcon, FilePenLine, Image, SettingsIcon } from 'lucide-react'
+import { Ellipsis, EyeIcon, FilePenLine, Image, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import SystemServiceTypeTag from '@/components/system-service/SystemServiceTypeTag'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import { ISystemService, SystemServiceStatusEnum } from '@/types/system-service'
+import { getDisplayString } from '@/utils/string'
+
+import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
@@ -21,6 +24,27 @@ export interface DataTableRowAction<TData> {
 // }
 export function getColumns(): ColumnDef<ISystemService>[] {
   return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          className='-translate-x-2'
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label='Select all'
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label='Select row'
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 40
+    },
     {
       id: 'title',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Service' />,
@@ -48,8 +72,8 @@ export function getColumns(): ColumnDef<ISystemService>[] {
       cell: ({ row }) => {
         const type = row.original.type
         return (
-          <div className='w-full flex justify-center'>
-            <SystemServiceTypeTag type={type} size='small' useBadgeStyle={true} />
+          <div className='w-full text-center'>
+            <SystemServiceTypeTag type={type} size='small' />
           </div>
         )
       }
@@ -67,31 +91,32 @@ export function getColumns(): ColumnDef<ISystemService>[] {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
       cell: ({ row }) => {
-        const statusValue = row.original.status
+        const statusKey = Object.keys(SystemServiceStatusEnum).find((status) => {
+          const value = SystemServiceStatusEnum[status as keyof typeof SystemServiceStatusEnum]
+          return value === row.original.status
+        })
 
-        // Map system service status to appropriate styling
-        switch (statusValue) {
-          case SystemServiceStatusEnum.ACTIVE:
-            return (
-              <Badge variant='outline' className='border-green-200 bg-green-50 text-green-700 gap-1'>
-                <CheckCircle2 className='h-3.5 w-3.5' />
-                <span className='whitespace-nowrap'>Active</span>
-              </Badge>
-            )
-          case SystemServiceStatusEnum.INACTIVE:
-            return (
-              <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
-                <CircleDashed className='h-3.5 w-3.5' />
-                <span className='whitespace-nowrap'>Inactive</span>
-              </Badge>
-            )
-          default:
-            return (
-              <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
-                <span className='whitespace-nowrap'>Unknown</span>
-              </Badge>
-            )
-        }
+        if (!statusKey) return null
+
+        const statusValue = SystemServiceStatusEnum[statusKey as keyof typeof SystemServiceStatusEnum]
+
+        const Icon = getStatusIcon(statusValue)
+
+        return (
+          <div
+            className={cn(
+              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
+              Icon.textColor,
+              Icon.bgColor
+            )}
+          >
+            <Icon.icon
+              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
+              aria-hidden='true'
+            />
+            <span className='capitalize text-nowrap'>{getDisplayString(statusValue)}</span>
+          </div>
+        )
       },
       size: 150,
       filterFn: (row, id, value) => {

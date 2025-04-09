@@ -24,15 +24,14 @@ import useStepper from '@/hooks/useStepper'
 import { useToast } from '@/hooks/useToast'
 import { requestCreateBrandApi } from '@/network/apis/brand'
 import { uploadFilesApi } from '@/network/apis/file'
-import { getCreateBrandSchema } from '@/schemas'
-// import { brandCreateSchema } from '@/schemas'
+import { brandCreateSchema } from '@/schemas'
 
 function RegisterBrand() {
   const { successToast } = useToast()
   const { t } = useTranslation()
   const navigate = useNavigate()
   // const accountId = accessToken ? jwtDecode<TEmailDecoded>(accessToken).accountId : undefined
-  const brandCreateSchema = getCreateBrandSchema()
+
   const form = useForm<z.infer<typeof brandCreateSchema>>({
     resolver: zodResolver(brandCreateSchema),
     defaultValues: {

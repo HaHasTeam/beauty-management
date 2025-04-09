@@ -5,8 +5,7 @@ import * as React from 'react'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
-import { toSentenceCase } from '@/lib/utils'
-import { ISystemService, SystemServiceStatusEnum } from '@/types/system-service'
+import { ISystemService } from '@/types/system-service'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { BanSystemServicesDialog } from './BanSystemServiceDialog'
@@ -39,21 +38,7 @@ export function SystemServiceTable({ data, pageCount, queryStates }: SystemServi
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<ISystemService>[] = [
-    {
-      id: 'name',
-      label: 'Name',
-      placeholder: 'Search by name...'
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      options: Object.values(SystemServiceStatusEnum).map((status) => ({
-        label: toSentenceCase(status),
-        value: status
-      }))
-    }
-  ]
+  const filterFields: DataTableFilterField<ISystemService>[] = []
 
   /**
    * Advanced filter fields for the data table.

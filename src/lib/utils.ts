@@ -19,11 +19,12 @@ export function formatDate(date: Date | string | number, opts: Intl.DateTimeForm
 export function toSentenceCase(str: string) {
   return str
     .replace(/_/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
     .toLowerCase()
+    .replace(/^\w/, (c) => c.toUpperCase())
+    .replace(/\s+/g, '')
     .trim()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+    .toUpperCase()
 }
 
 /**

@@ -20,14 +20,7 @@ export const getMyBookingsApi = toQueryFetcher<void, TServerResponse<TBooking[]>
     method: 'GET'
   })
 })
-export const getMyBookingByIdBrandApi = toQueryFetcher<string, TServerResponse<TBooking>>(
-  'getMyBookingByIdBrandApi',
-  async (params) => {
-    return privateRequest(`/bookings/get-booking-of-brand/${params}`, {
-      method: 'GET'
-    })
-  }
-)
+
 export const getStatusBookingsApi = toQueryFetcher<void, TServerResponse<void>>('getStatusBookingsApi', async () => {
   return privateRequest(`/bookings/get-status-booking-interview`, {
     method: 'GET'

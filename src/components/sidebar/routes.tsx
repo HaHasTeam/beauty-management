@@ -1,6 +1,5 @@
 // Auth Imports
 import {
-  Banknote,
   BookA,
   Boxes,
   Brush,
@@ -13,7 +12,7 @@ import {
   TicketPercent
 } from 'lucide-react'
 import { GrSchedule } from 'react-icons/gr'
-import { HiOutlineCog8Tooth, HiOutlineHome } from 'react-icons/hi2'
+import { HiOutlineCog8Tooth, HiOutlineHome, HiOutlineUsers } from 'react-icons/hi2'
 import { IoIosFlash } from 'react-icons/io'
 import { PiCompassToolBold } from 'react-icons/pi'
 import { TbBrandAmigo } from 'react-icons/tb'
@@ -32,12 +31,6 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.MY_BRAND_DASHBOARD].name,
     path: routesConfig[Routes.MY_BRAND_DASHBOARD].path,
     icon: <BookA className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
-    collapse: false
-  },
-  {
-    name: routesConfig[Routes.TRANSACTION_MANAGEMENT].name,
-    path: routesConfig[Routes.TRANSACTION_MANAGEMENT].path,
-    icon: <Banknote className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {
@@ -84,6 +77,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.ACCOUNTS_DIRECTORY].name,
     path: routesConfig[Routes.ACCOUNTS_DIRECTORY].path,
     icon: <PiCompassToolBold className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.MERCHANTS_DIRECTORY].name,
+    path: routesConfig[Routes.MERCHANTS_DIRECTORY].path,
+    icon: <HiOutlineUsers className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

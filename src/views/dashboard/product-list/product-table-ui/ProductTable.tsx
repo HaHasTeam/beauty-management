@@ -1,20 +1,16 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
-import { getAllBrandsApi } from '@/network/apis/brand'
-import { flattenCategoryApi } from '@/network/apis/category'
-import { useStore } from '@/stores/store'
-import { RoleEnum } from '@/types/enum'
 import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { BanProductsDialog } from './BanProductsDialog'
+import { getStatusIcon } from './helper'
 import { DataTableRowAction, getColumns } from './ProductsTableColumns'
 import { ProductsTableFloatingBar } from './ProductsTableFloatingBar'
 import { ProductTableToolbarActions } from './ProductsTableToolbarActions'
@@ -34,21 +30,6 @@ export function ProductTable({ data, pageCount, queryStates }: ProductTableProps
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<IResponseProduct> | null>(null)
   const columns = React.useMemo(() => getColumns({ setRowAction }), [])
 
-  const { user } = useStore()
-  const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
-
-  const { data: brandData } = useQuery({
-    queryKey: [getAllBrandsApi.queryKey],
-    queryFn: getAllBrandsApi.fn,
-    enabled: isAdmin // Only fetch brands for admin users
-  })
-  const { data: categoryData } = useQuery({
-    queryKey: [flattenCategoryApi.queryKey],
-    queryFn: flattenCategoryApi.fn,
-    enabled: isAdmin // Only fetch brands for admin users
-  })
-  const brands = brandData?.data ?? []
-  const categories = categoryData?.data ?? []
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -60,65 +41,25 @@ export function ProductTable({ data, pageCount, queryStates }: ProductTableProps
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-
   const filterFields: DataTableFilterField<IResponseProduct>[] = [
     {
-      id: 'search',
+      id: 'name',
       label: 'Name',
-      placeholder: 'Search product...',
-      isCustomFilter: true
+      placeholder: 'Search product by name'
     },
     {
-      id: 'statuses',
+      id: 'status',
       label: 'Status',
       options: Object.keys(ProductStatusEnum).map((status) => {
         const value = ProductStatusEnum[status as keyof typeof ProductStatusEnum]
         return {
           label: t(`status.${value}`),
-          value: value as string,
-          icon: '●'
+          value: value,
+          icon: getStatusIcon(value).icon
         }
       })
-    },
-    {
-      id: 'minPrice',
-      label: 'Min Price',
-      placeholder: 'Min price',
-      isCustomFilter: true,
-      isNumber: true
-    },
-    {
-      id: 'maxPrice',
-      label: 'Max Price',
-      placeholder: 'Max price',
-      isCustomFilter: true,
-      isNumber: true
-    },
-    {
-      id: 'categoryId',
-      label: 'Category',
-      placeholder: 'Select category',
-      options: categories?.map((category) => ({
-        label: category.name,
-        value: category.id
-      })),
-      isCustomFilter: true,
-      isSingleChoice: true
     }
   ]
-
-  // Add brand filter for admin users
-  if (isAdmin && brandData?.data) {
-    filterFields.push({
-      id: 'brandId',
-      label: 'Brand',
-      options: brands?.map((brand) => ({
-        label: brand.name,
-        value: brand.id
-      })),
-      isCustomFilter: true
-    })
-  }
 
   /**
    * Advanced filter fields for the data table.

@@ -1,7 +1,7 @@
 import { ICategory } from '@/types/category'
 import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
-import { privateRequest, publicRequest } from '@/utils/request'
+import { privateRequest } from '@/utils/request'
 
 import {
   AddCategoryRequestParams,
@@ -12,10 +12,6 @@ import {
 
 export const getAllCategoryApi = toQueryFetcher<void, TServerResponse<ICategory[]>>('getAllCategoryApi', async () => {
   return privateRequest('/category')
-})
-
-export const getCategoryAllApi = toQueryFetcher<void, TServerResponse<ICategory[]>>('getCategoryAllApi', async () => {
-  return publicRequest('/category')
 })
 
 export const addCategoryApi = toMutationFetcher<AddCategoryRequestParams, TServerResponse<ICategory>>(

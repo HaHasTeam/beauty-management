@@ -196,20 +196,19 @@ export function useDataTable<TData>({
   // Create parsers for each filter field
   const filterParsers = React.useMemo(() => {
     return filterFields.reduce<Record<string, Parser<string> | Parser<string[]>>>((acc, field) => {
-      const fieldId = String(field.id)
       if (field.options) {
         // Faceted filter - use array parser for multi-select, string parser for single-choice
         if (field.isSingleChoice) {
-          acc[fieldId] = parseAsString.withOptions(queryStateOptions)
+          acc[field.id] = parseAsString.withOptions(queryStateOptions)
         } else {
-          acc[fieldId] = parseAsArrayOf(parseAsString, ',').withOptions(queryStateOptions)
+          acc[field.id] = parseAsArrayOf(parseAsString, ',').withOptions(queryStateOptions)
         }
       } else if (field.isDate) {
         // Date filter
-        acc[fieldId] = parseAsString.withOptions(queryStateOptions)
+        acc[field.id] = parseAsString.withOptions(queryStateOptions)
       } else {
         // Default search filter
-        acc[fieldId] = parseAsString.withOptions(queryStateOptions)
+        acc[field.id] = parseAsString.withOptions(queryStateOptions)
       }
       return acc
     }, {})

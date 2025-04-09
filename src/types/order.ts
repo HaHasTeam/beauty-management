@@ -1,10 +1,7 @@
-import { TBrand } from './brand'
 import { IClassification } from './classification'
 import { OrderEnum, PaymentMethod, RequestStatusEnum, ShippingStatusEnum } from './enum'
 import { IResponseFeedback } from './feedback'
 import { TServerFile } from './file'
-import { PaymentMethodEnum } from './payment'
-import { BaseParams } from './request'
 import { TUser, TUserUpdateStatusTracking } from './user'
 import { TVoucher } from './voucher'
 
@@ -69,19 +66,14 @@ export interface IOrder {
   platformVoucherDiscount: number
   shopVoucherDiscount: number
   account: TUser
-  brand?: TBrand
   children?: IOrder[]
-  orderDetails?: IOrderDetail[]
 }
 
 // Other interfaces (kept as they were, assuming they're still needed)
-export type IOrderFilter = BaseParams<{
+export interface IOrderFilter {
   search?: string
-  statuses?: ShippingStatusEnum[]
-  types?: OrderEnum[]
-  paymentMethods?: PaymentMethodEnum[]
-  productIds?: string[]
-}>
+  status?: string
+}
 
 export interface IOrderCheckoutItem {
   productClassificationId: string

@@ -304,7 +304,7 @@ const ConsultantServiceDetails = () => {
   useEffect(() => {
     if (detailConsultantServiceById?.data) {
       const formData = convertConsultantServiceToForm(detailConsultantServiceById.data)
-      form.reset(formData as unknown as SchemaType)
+      form.reset(formData)
       replace(formData.serviceBookingFormData.questions as unknown as SchemaType['serviceBookingFormData']['questions'])
     }
   }, [detailConsultantServiceById?.data, form, replace])

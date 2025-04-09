@@ -1,21 +1,10 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
 import i18next from 'i18next'
-import {
-  CheckCircle2,
-  CircleDashed,
-  CircleMinus,
-  Crown,
-  Ellipsis,
-  EyeIcon,
-  FilePenLine,
-  Image,
-  SettingsIcon
-} from 'lucide-react'
+import { Ellipsis, EyeIcon, Image, Pen, SettingsIcon } from 'lucide-react'
 import { GrRevert } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -27,12 +16,11 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import { StatusEnum } from '@/types/enum'
 import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 
-import { ProductCategoryCell } from './ProductCategoryCell'
-import { ProductClassificationsCell } from './ProductClassificationsCell'
+import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
@@ -62,107 +50,77 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
       ),
       enableSorting: false,
       enableHiding: false,
-      size: 50
+      size: 100
     },
     {
-      id: 'product',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Product' />,
+      id: 'index',
+      accessorKey: 'STT',
       cell: ({ row }) => {
-        const productName = row.original.name
-        const image = row.original.images?.[0]?.fileUrl || ''
-
+        return <span className='text-center'>{row.index}</span>
+      },
+      size: 1
+    },
+    {
+      id: 'name',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
+      cell: ({ row }) => {
+        const displayName = row.original.name
+        const image =
+          row.original.images?.[0]?.fileUrl ||
+          'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg'
         return (
-          <div className='flex items-center gap-2'>
-            <div className='w-8 h-8 flex-shrink-0'>
-              <Avatar className='rounded-lg w-full h-full'>
-                <AvatarImage src={image} alt={productName} className='bg-transparent object-cover' />
-                <AvatarFallback className='bg-transparent'>
-                  <Image size={24} />
-                </AvatarFallback>
-              </Avatar>
-            </div>
-            <span className='max-w-[250px] truncate'>{productName}</span>
+          <div className='flex space-x-2 items-center'>
+            <Avatar className='rounded-lg'>
+              <AvatarImage src={image} className='bg-transparent size-5' />
+              <AvatarFallback className='bg-transparent'>
+                <Image size={24} />
+              </AvatarFallback>
+            </Avatar>
+            <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
         )
-      },
-      size: 220,
-      enableHiding: false
+      }
     },
     {
       accessorKey: 'sku',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='SKU' />,
-      cell: ({ cell }) => <div className='text-center'>{cell.row.original.sku}</div>,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Sku' />,
+      cell: ({ cell }) => <div>{cell.row.original.sku}</div>,
+      size: 10,
       enableSorting: false,
-      enableHiding: false,
-      size: 150
-    },
-    {
-      accessorKey: 'category',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Category' />,
-      cell: ({ row }) => {
-        return <ProductCategoryCell product={row.original} />
-      },
-      enableSorting: false,
-      enableHiding: false,
-      size: 220
-    },
-    {
-      accessorKey: 'productClassifications',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Classifications | Quantity' />,
-      cell: ({ row }) => {
-        return <ProductClassificationsCell product={row.original} />
-      },
-      enableSorting: false,
-      enableHiding: false,
-      size: 350
+      enableHiding: false
     },
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
       cell: ({ row }) => {
-        const status = row.original.status
+        const statusKey = Object.keys(ProductStatusEnum).find((status) => {
+          const value = ProductStatusEnum[status as keyof typeof ProductStatusEnum]
+          return value === row.original.status
+        })
 
-        switch (status) {
-          case ProductStatusEnum.OFFICIAL:
-            return (
-              <Badge variant='outline' className='border-green-200 bg-green-50 text-green-700 gap-1'>
-                <CheckCircle2 className='h-3.5 w-3.5' />
-                <span className='whitespace-nowrap'>{i18next.t(`status.${status}`)}</span>
-              </Badge>
-            )
-          case 'PRE_ORDER':
-          case 'FLASH_SALE':
-            return (
-              <Badge variant='outline' className='border-amber-200 bg-amber-50 text-amber-700 gap-1'>
-                <CircleDashed className='h-3.5 w-3.5' />
-                <span className='whitespace-nowrap'>{i18next.t(`status.${status}`)}</span>
-              </Badge>
-            )
-          case ProductStatusEnum.INACTIVE:
-          case ProductStatusEnum.UN_PUBLISHED:
-          case ProductStatusEnum.BANNED:
-            return (
-              <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
-                <CircleMinus className='h-3.5 w-3.5' />
-                <span className='whitespace-nowrap'>{i18next.t(`status.${status}`)}</span>
-              </Badge>
-            )
-          case ProductStatusEnum.OUT_OF_STOCK:
-            return (
-              <Badge variant='outline' className='border-purple-200 bg-purple-50 text-purple-700 gap-1'>
-                <Crown className='h-3.5 w-3.5' />
-                <span className='whitespace-nowrap'>{i18next.t(`status.${status}`)}</span>
-              </Badge>
-            )
-          default:
-            return (
-              <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>
-                <span className='whitespace-nowrap'>{i18next.t(`status.${status}`)}</span>
-              </Badge>
-            )
-        }
+        if (!statusKey) return null
+
+        const statusValue = ProductStatusEnum[statusKey as keyof typeof ProductStatusEnum]
+
+        const Icon = getStatusIcon(statusValue)
+
+        return (
+          <div
+            className={cn(
+              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
+              Icon.textColor,
+              Icon.bgColor
+            )}
+          >
+            <Icon.icon
+              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
+              aria-hidden='true'
+            />
+            <span className='capitalize'>{i18next.t(`status.${statusValue}`)}</span>
+          </div>
+        )
       },
-      size: 150,
+      size: 50,
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id))
       }
@@ -170,94 +128,75 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
     {
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Created At' />,
-      cell: ({ cell }) => (
-        <div>
-          {formatDate(cell.getValue() as Date, {
-            hour: 'numeric',
-            minute: 'numeric',
-            month: '2-digit'
-          })}
-        </div>
-      ),
-      size: 200
-    },
-    {
-      accessorKey: 'updatedAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Updated At' />,
-      cell: ({ cell }) => (
-        <div>
-          {formatDate(cell.getValue() as Date, {
-            hour: 'numeric',
-            minute: 'numeric',
-            month: '2-digit'
-          })}
-        </div>
-      ),
-      size: 200
+      cell: ({ cell }) => {
+        const time = cell.getValue() as Date
+
+        return <div>{time && formatDate(time, { hour: 'numeric', minute: 'numeric', month: '2-digit' })}</div>
+      }
     },
     {
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
         return (
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-label='Open menu' variant='ghost' className='flex size-8 p-0 data-[state=open]:bg-muted'>
                 <Ellipsis className='size-4' aria-hidden='true' />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem className='text-blue-500'>
+              <DropdownMenuItem>
                 <Link
                   to={routesConfig[Routes.PRODUCT_DETAILS].getPath({
                     id: row.original.id
                   })}
-                  className='w-full flex gap-2 items-center'
                 >
-                  <EyeIcon size={16} strokeWidth={3} />
-                  <span className='font-semibold'>View</span>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <EyeIcon />
+                    View Details
+                  </span>
                 </Link>
               </DropdownMenuItem>
-
-              <DropdownMenuItem className='text-blue-500'>
+              <DropdownMenuItem>
                 <Link
                   to={routesConfig[Routes.UPDATE_PRODUCT].getPath({
                     id: row.original.id
                   })}
-                  className='w-full flex gap-2 items-center'
                 >
-                  <FilePenLine size={16} strokeWidth={3} />
-                  <span className='font-semibold'>Edit</span>
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <Pen />
+                    Update
+                  </span>
                 </Link>
               </DropdownMenuItem>
-
               <DropdownMenuSeparator />
 
-              {(row.original.status === ProductStatusEnum.OFFICIAL ||
-                row.original.status === ProductStatusEnum.PENDING) && (
+              {(row.original.status == ProductStatusEnum.OFFICIAL ||
+                row.original.status == ProductStatusEnum.PENDING) && (
                 <DropdownMenuItem
-                  className='text-red-500'
+                  className='bg-red-500/30 text-white '
                   onClick={() => {
-                    setRowAction({ row, type: 'update-status-inactive' })
+                    setRowAction({ row: row, type: 'update-status-inactive' })
                   }}
                 >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <GrRevert size={16} />
-                    <span className='font-semibold'>Inactive</span>
+                    <GrRevert />
+                    Inactive
                   </span>
                 </DropdownMenuItem>
               )}
 
-              {row.original.status === StatusEnum.INACTIVE && (
+              {row.original.status == StatusEnum.INACTIVE && (
                 <DropdownMenuItem
-                  className='text-green-500'
+                  className='bg-green-500/10 text-white mb-2'
                   onClick={() => {
-                    setRowAction({ row, type: 'update-status-active' })
+                    setRowAction({ row: row, type: 'update-status-active' })
                   }}
                 >
                   <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <GrRevert size={16} />
-                    <span className='font-semibold'>Active</span>
+                    <GrRevert />
+                    Active
                   </span>
                 </DropdownMenuItem>
               )}

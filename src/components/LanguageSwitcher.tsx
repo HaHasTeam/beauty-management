@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from './ui/button'
@@ -8,14 +8,6 @@ const LanguageSwitcher = () => {
   const { i18n } = useTranslation()
   const supportedLngs = i18n.options.supportedLngs || []
   const [isOpenLanguage, setOpenLanguage] = useState(false)
-
-  // Ensure Vietnamese is set as default language
-  useEffect(() => {
-    if (i18n.resolvedLanguage !== 'vi') {
-      i18n.changeLanguage('vi')
-    }
-  }, [i18n])
-
   const toggleDropdown = () => setOpenLanguage(!isOpenLanguage)
   const handleChangeLanguage = (lng: string) => {
     i18n.changeLanguage(lng)

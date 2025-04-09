@@ -78,8 +78,7 @@ function ViewVoucherDetail() {
           startTime: voucherData.startTime,
           endTime: voucherData.endTime,
           brand: voucherData.brand,
-          applyType: voucherData.applyType,
-          applyProductIds: voucherData.applyProducts ?? []
+          applyType: voucherData.applyType
         }
         form.reset(formatData)
       }

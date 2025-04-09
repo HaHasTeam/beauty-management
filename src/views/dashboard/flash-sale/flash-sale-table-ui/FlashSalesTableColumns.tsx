@@ -4,15 +4,16 @@ import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
-import { formatDate } from '@/lib/utils'
-import { TFlashSale } from '@/types/flash-sale'
+import { cn, formatDate } from '@/lib/utils'
+import { FlashSaleStatusEnum, TFlashSale } from '@/types/flash-sale'
 import { formatNumber } from '@/utils/number'
+import { getDisplayString } from '@/utils/string'
 
-import { FlashSaleClassificationsCell } from './FlashSaleClassificationsCell'
-import { FlashSaleStatusCell } from './FlashSaleStatusCell'
+import { getStatusIcon } from './helper'
 
 export interface DataTableRowAction<TData> {
   row: Row<TData>
@@ -21,6 +22,27 @@ export interface DataTableRowAction<TData> {
 
 export function getColumns(): ColumnDef<TFlashSale>[] {
   return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          className='-translate-x-2'
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label='Select all'
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label='Select row'
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 36
+    },
     {
       id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Flash Sale Product' />,
@@ -54,17 +76,50 @@ export function getColumns(): ColumnDef<TFlashSale>[] {
       accessorKey: 'productClassifications',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Classifications | Quantity' />,
       cell: ({ row }) => {
-        return <FlashSaleClassificationsCell flashSale={row.original} />
+        const classificationList = row.original.productClassifications
+        return (
+          <div className='flex items-center gap-1 flex-wrap capitalize font-normal'>
+            {classificationList
+              .map((classification) => classification.title + ` | ${classification.quantity}`)
+              .join(',    ')}
+          </div>
+        )
       },
       enableSorting: false,
       enableHiding: false,
-      size: 350
+      size: 200
     },
+
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
       cell: ({ row }) => {
-        return <FlashSaleStatusCell flashSale={row.original} />
+        const statusKey = Object.keys(FlashSaleStatusEnum).find((status) => {
+          const value = FlashSaleStatusEnum[status as keyof typeof FlashSaleStatusEnum]
+          return value === row.original.status
+        })
+
+        if (!statusKey) return null
+
+        const statusValue = FlashSaleStatusEnum[statusKey as keyof typeof FlashSaleStatusEnum]
+
+        const Icon = getStatusIcon(statusValue)
+
+        return (
+          <div
+            className={cn(
+              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
+              Icon.textColor,
+              Icon.bgColor
+            )}
+          >
+            <Icon.icon
+              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
+              aria-hidden='true'
+            />
+            <span className='capitalize text-nowrap'>{getDisplayString(statusValue)}</span>
+          </div>
+        )
       },
       size: 50,
       filterFn: (row, id, value) => {
@@ -115,7 +170,7 @@ export function getColumns(): ColumnDef<TFlashSale>[] {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem onClick={handleNavigate} className='text-blue-500'>
+              <DropdownMenuItem onClick={handleNavigate} className='bg-blue-200 text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
                   <FilePenLine size={16} strokeWidth={3} />
                   <span className='font-semibold'>Edit</span>

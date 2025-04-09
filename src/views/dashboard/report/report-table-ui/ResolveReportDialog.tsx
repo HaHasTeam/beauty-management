@@ -145,7 +145,7 @@ export function ResolveReportDialog({ Report, showTrigger = true, onSuccess, ...
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {[ReportStatusEnum.CANCELLED, ReportStatusEnum.APPROVED].map((status) => (
+                          {[ReportStatusEnum.CANCELLED, ReportStatusEnum.DONE].map((status) => (
                             <SelectItem key={status} value={ReportStatusEnum[status as keyof typeof ReportStatusEnum]}>
                               {status.replace(/_/g, ' ')}
                             </SelectItem>

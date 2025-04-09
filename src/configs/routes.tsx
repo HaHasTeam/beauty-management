@@ -11,7 +11,6 @@ export enum Routes {
   SERVICES_CATALOG = 'services-catalog',
   PROFILE_SETTINGS = 'profile-settings',
   ACCOUNTS_DIRECTORY = 'accounts-directory',
-  ACCOUNT_DETAILS = 'account-details',
   AUTH_SIGN_UP = 'auth-sign-up',
   PRE_ORDER = 'pre-order',
   BRAND = 'brand',
@@ -49,8 +48,7 @@ export enum Routes {
   CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
   WORKING_TIME = 'working-time',
   REPORTS = 'reports',
-  MY_BRAND_DASHBOARD = 'my-brand',
-  TRANSACTION_MANAGEMENT = 'transaction-management'
+  MY_BRAND_DASHBOARD = 'my-brand'
 }
 
 export const routesConfig: TRoutes = {
@@ -98,13 +96,6 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/my-brand',
     getPath: () => '/dashboard/my-brand'
   },
-  [Routes.TRANSACTION_MANAGEMENT]: {
-    name: 'Transaction & Withdrawal',
-    title: 'Transaction & Withdrawal',
-    description: 'Manage transactions and withdrawal requests',
-    path: '/dashboard/transactions',
-    getPath: () => '/dashboard/transactions'
-  },
   [Routes.ADD_BRAND]: {
     name: 'Add Brand',
     title: 'Add Brand',
@@ -134,8 +125,8 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/select-interview'
   },
   [Routes.VOUCHER]: {
-    name: 'Vouchers',
-    title: 'Vouchers',
+    name: 'Voucher Management',
+    title: 'Voucher Management',
     description: 'Voucher Management',
     path: '/dashboard/voucher',
     getPath: () => '/dashboard/voucher'
@@ -245,13 +236,6 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/accounts',
     getPath: () => '/dashboard/accounts'
   },
-  [Routes.ACCOUNT_DETAILS]: {
-    name: 'Account Details',
-    title: 'Account Details',
-    description: 'View account details',
-    path: '/dashboard/accounts/[id]',
-    getPath: (params) => `/dashboard/accounts/${params.id}`
-  },
   [Routes.SERVICES_CATALOG]: {
     name: 'Services Catalog',
     title: 'Services Catalog',
@@ -267,8 +251,8 @@ export const routesConfig: TRoutes = {
     getPath: () => '/dashboard/profile-settings'
   },
   [Routes.PRODUCT_LIST]: {
-    name: 'Products',
-    title: 'Products',
+    name: 'Product List',
+    title: 'Product List',
     description: 'Manage your beauty products',
     path: '/dashboard/products',
     getPath: () => '/dashboard/products'
@@ -316,8 +300,8 @@ export const routesConfig: TRoutes = {
     getPath: (params) => `/dashboard/group-product/${params.id}`
   },
   [Routes.ORDER_LIST]: {
-    name: 'Orders & Requests',
-    title: 'Orders & Requests',
+    name: 'Order List',
+    title: 'Order List',
     description: 'Order List',
     path: '/dashboard/orders',
     getPath: () => '/dashboard/orders'
@@ -330,8 +314,8 @@ export const routesConfig: TRoutes = {
     getPath: (params) => `/dashboard/orders/${params.id}`
   },
   [Routes.SYSTEM_SERVICE_LIST]: {
-    name: 'System Services',
-    title: 'System Services',
+    name: 'System Service List',
+    title: 'System Service List',
     description: 'System Service List',
     path: '/dashboard/system-services',
     getPath: () => '/dashboard/system-services'

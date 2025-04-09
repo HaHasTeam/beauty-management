@@ -17,17 +17,8 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { Option } from '@/types/table'
 
-// Define a custom filter column interface that mimics the necessary Column methods
-export interface CustomFilterColumn {
-  getFilterValue: () => unknown
-  setFilterValue: (value: unknown) => void
-}
-
-// Extend the Column type to include our custom filter column
-export type ColumnOrCustom<TData, TValue> = Column<TData, TValue> | CustomFilterColumn
-
 interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: ColumnOrCustom<TData, TValue>
+  column?: Column<TData, TValue>
   title?: string
   options: Option[]
   /**
@@ -121,21 +112,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     >
                       <Check className='size-4' aria-hidden='true' />
                     </div>
-                    
-                    {/* Render icon or status color dot */}
-                    {option.iconClass ? (
-                      <div className="mr-2 size-4 flex items-center justify-center">
-                        <div className={`w-3 h-3 rounded-full ${option.iconClass} shadow-sm`}></div>
-                      </div>
-                    ) : (
-                      <div className='mr-2 size-4 text-muted-foreground flex items-center justify-center'>
-                        {/* Render a generic icon if available */}
-                        <span className="size-4 flex items-center justify-center">
-                          {typeof option.icon === 'string' ? option.icon : '•'}
-                        </span>
-                      </div>
-                    )}
-                    
+                    {option.icon && <option.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />}
                     <span className='flex-1 truncate'>{option.label}</span>
                     {option.count && (
                       <span className='ml-auto flex size-4 items-center justify-center font-mono text-xs'>

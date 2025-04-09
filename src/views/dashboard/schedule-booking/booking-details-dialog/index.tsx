@@ -1,5 +1,3 @@
-'use client'
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   AlertCircle,
@@ -27,7 +25,7 @@ import { useToast } from '@/hooks/useToast'
 import { getMyBookingsApi, saveInterviewNotesApi, updateBookingStatusApi } from '@/network/apis/booking/index'
 import { useStore } from '@/stores/store'
 import type { CalendarEvent } from '@/types/booking'
-import { BookingStatusEnum, BookingTypeEnum, RoleEnum } from '@/types/enum'
+import { BookingStatusEnum, BookingTypeEnum } from '@/types/enum'
 
 import { eventStyleGetter, getStatusBookingText, getStatusClass } from '../helper'
 
@@ -49,8 +47,8 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
   const [interviewNotes, setInterviewNotes] = useState(selectedEvent?.resource.notes || '')
 
   // Check user roles
-  const isAdmin = user?.role === RoleEnum.ADMIN
-  const isOperator = user?.role === RoleEnum.OPERATOR
+  const isAdmin = user?.role === 'admin'
+  const isOperator = user?.role === 'operator'
   const hasOperationalAccess = isAdmin || isOperator
 
   const { mutate: updateBookingStatus, isPending: isUpdating } = useMutation({
@@ -376,7 +374,8 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
                     <div className='flex items-center'>
                       <div className='w-1/3 text-xs font-medium text-gray-500'>{t('Name')}:</div>
                       <div className={`w-2/3 text-sm font-semibold ${isCancelled ? 'text-gray-600' : 'text-gray-800'}`}>
-                        {selectedEvent.resource.brand.reviewer.username}
+                        {selectedEvent.resource.brand.reviewer.firstName}{' '}
+                        {selectedEvent.resource.brand.reviewer.lastName}
                       </div>
                     </div>
 
@@ -441,7 +440,7 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
                   />
                 </div>
 
-                {/* Only show Save Notes button if user has operational access and booking is not cancelled */}
+                {/* Only show Save Notes button if user is admin or operator and booking is not cancelled */}
                 {hasOperationalAccess && !isCancelled && (
                   <div className='flex justify-center mt-4'>
                     <Button
@@ -483,8 +482,8 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
             </div>
           )}
 
-          {/* Only show action buttons if booking is not cancelled and user has operational access */}
-          {isWaitingForConfirmation && !isCancelled && hasOperationalAccess && (
+          {/* Only show action buttons if booking is not cancelled */}
+          {isWaitingForConfirmation && !isCancelled && (
             <>
               <Button
                 onClick={handleAcceptBooking}
@@ -524,7 +523,7 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
             </>
           )}
 
-          {/* Only show Mark as Completed button if user has operational access and booking is confirmed and not cancelled */}
+          {/* Only show Mark as Completed button if user is admin or operator and booking is confirmed and not cancelled */}
           {isConfirmed && hasOperationalAccess && !isCancelled && (
             <Button
               onClick={handleCompleteBooking}
@@ -545,8 +544,8 @@ export function BookingDetailsDialog({ selectedEvent, onOpenChange }: BookingDet
             </Button>
           )}
 
-          {/* Close button for cancelled bookings or users without operational access */}
-          {(isCancelled || !hasOperationalAccess) && (
+          {/* Close button for cancelled bookings */}
+          {isCancelled && (
             <Button
               onClick={() => onOpenChange(false)}
               className='w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white shadow-md transition-all duration-300 hover:shadow-lg rounded-lg'

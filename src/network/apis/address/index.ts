@@ -9,7 +9,7 @@ export const getAllAddressesApi = toQueryFetcher<void, TServerResponse<IAddress[
   })
 })
 
-export const createAddressApi = toMutationFetcher<Partial<IAddress>, TServerResponse<IAddress>>(
+export const createAddressApi = toMutationFetcher<IAddress, TServerResponse<IAddress>>(
   'createAddressApi',
   async (data) => {
     return privateRequest('/address', {
@@ -33,7 +33,7 @@ export const getAddressByIdApi = toQueryFetcher<IAddress, TServerResponse<IAddre
   }
 )
 
-export const updateAddressApi = toMutationFetcher<Partial<IAddress>, TServerResponse<IAddress>>(
+export const updateAddressApi = toMutationFetcher<IAddress, TServerResponse<IAddress>>(
   'updateAddressApi',
   async (data) => {
     return privateRequest(`/address/${data.id}`, {

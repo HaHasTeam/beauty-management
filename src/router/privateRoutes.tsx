@@ -4,7 +4,6 @@ import Layout from '@/components/layout'
 import { Routes, routesConfig } from '@/configs/routes'
 import DashboardHome from '@/views/dashboard'
 import AccountsDirectory from '@/views/dashboard/accounts-directory'
-import AccountDetails from '@/views/dashboard/accounts-directory/account-details'
 import Brands from '@/views/dashboard/brand-management'
 import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
 import Category from '@/views/dashboard/category'
@@ -20,6 +19,7 @@ import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
 import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
+import MerchantsDirectory from '@/views/dashboard/merchants-directory'
 import MyBrandDashBoard from '@/views/dashboard/my-brand-dashboard'
 import OrderList from '@/views/dashboard/order-management'
 import OrderDetails from '@/views/dashboard/order-management/OrderDetails'
@@ -39,7 +39,6 @@ import SystemService from '@/views/dashboard/system-service'
 import CreateSystemService from '@/views/dashboard/system-service/CreateSystemService'
 import SystemServiceDetail from '@/views/dashboard/system-service/SystemServiceDetail'
 import UpdateSystemService from '@/views/dashboard/system-service/UpdateSystemService'
-import TransactionManagement from '@/views/dashboard/transaction-management'
 import UpdateProduct from '@/views/dashboard/update-product'
 import Vouchers from '@/views/dashboard/voucher-management'
 import ViewVoucherDetail from '@/views/dashboard/voucher-management/ViewVoucherDetail'
@@ -167,25 +166,16 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
+        path: 'merchants-directory',
+        element: <MerchantsDirectory />
+      },
+      {
         path: routesConfig[Routes.MY_BRAND_DASHBOARD].path.replace('/dashboard/', ''),
         element: <MyBrandDashBoard />
       },
       {
-        path: routesConfig[Routes.TRANSACTION_MANAGEMENT].path.replace('/dashboard/', ''),
-        element: <TransactionManagement />
-      },
-      {
         path: routesConfig[Routes.ACCOUNTS_DIRECTORY].path.replace('/dashboard/', ''),
-        children: [
-          {
-            index: true,
-            element: <AccountsDirectory />
-          },
-          {
-            path: ':id',
-            element: <AccountDetails />
-          }
-        ]
+        element: <AccountsDirectory />
       },
       {
         path: routesConfig[Routes.SERVICES_CATALOG].path.replace('/dashboard/', ''),

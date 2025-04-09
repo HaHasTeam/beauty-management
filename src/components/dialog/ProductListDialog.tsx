@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { FieldPath, UseFormReturn } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form'
 import type { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -16,23 +16,6 @@ import {
 import type { voucherCreateSchema } from '@/schemas'
 import type { IResponseProduct } from '@/types/product'
 import ProductAppliesTable from '@/views/dashboard/voucher-management/product-apply-table-ui'
-
-// Helper function to safely extract the array of product IDs
-function getProductIdsArray(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value
-  }
-
-  if (value && typeof value === 'object' && value !== null) {
-    // Check if it has a selectedProducts property that is an array
-    const objValue = value as Record<string, unknown>
-    if ('selectedProducts' in objValue && Array.isArray(objValue.selectedProducts)) {
-      return objValue.selectedProducts
-    }
-  }
-
-  return []
-}
 
 export default function ProductListDialog({
   open,
@@ -56,27 +39,18 @@ export default function ProductListDialog({
   // Initialize local selection when dialog opens
   useEffect(() => {
     if (open) {
-      const rawValue = form.getValues('selectedProducts')
-      const selectedProducts = getProductIdsArray(rawValue)
-      setLocalSelectedProducts(selectedProducts)
+      setLocalSelectedProducts(form.getValues('selectedProducts') || [])
     }
   }, [form, open])
 
   const handleProductSelect = (productId: string) => {
-    // Check if the product is already in the array using strict equality
-    const productIndex = localSelectedProducts.findIndex((id) => id === productId)
-    const isAlreadySelected = productIndex !== -1
-
-    // Create a new array based on selection state
-    let newSelection: string[]
-    if (isAlreadySelected) {
-      newSelection = [...localSelectedProducts]
-      newSelection.splice(productIndex, 1)
-    } else {
-      newSelection = [...localSelectedProducts, productId]
-    }
-
-    setLocalSelectedProducts(newSelection)
+    setLocalSelectedProducts((prev) => {
+      if (prev.includes(productId)) {
+        return prev.filter((id) => id !== productId)
+      } else {
+        return [...prev, productId]
+      }
+    })
   }
 
   // Only apply selection when user clicks Done/Confirm
@@ -87,39 +61,8 @@ export default function ProductListDialog({
 
   // Cancel without applying changes
   const handleCancel = () => {
-    const rawValue = form.getValues('selectedProducts')
-    const selectedProducts = getProductIdsArray(rawValue)
-    setLocalSelectedProducts(selectedProducts)
+    setLocalSelectedProducts(form.getValues('selectedProducts') || [])
     onOpenChange(false)
-  }
-
-  // Type for our form values
-  type FormValues = z.infer<typeof voucherCreateSchema>
-
-  // Create a modified form object that works with our local state
-  const localForm: UseFormReturn<FormValues> = {
-    ...form,
-    getValues: ((name?: FieldPath<FormValues>) => {
-      if (name === 'selectedProducts') {
-        return localSelectedProducts as unknown as FormValues[keyof FormValues]
-      }
-      return form.getValues(name as FieldPath<FormValues>)
-    }) as UseFormReturn<FormValues>['getValues'],
-
-    setValue: ((name: FieldPath<FormValues>, value: unknown) => {
-      if (name === 'selectedProducts') {
-        setLocalSelectedProducts(value as string[])
-        return form
-      }
-      return form.setValue(name, value as string | number | boolean | undefined)
-    }) as UseFormReturn<FormValues>['setValue'],
-
-    watch: ((name?: FieldPath<FormValues>) => {
-      if (name === 'selectedProducts') {
-        return localSelectedProducts as unknown as FormValues[keyof FormValues]
-      }
-      return form.watch(name as FieldPath<FormValues>)
-    }) as UseFormReturn<FormValues>['watch']
   }
 
   return (
@@ -145,7 +88,17 @@ export default function ProductListDialog({
           <ProductAppliesTable
             isLoading={isLoading}
             list={products}
-            form={localForm}
+            form={
+              {
+                ...form,
+                getValues: () => ({ selectedProducts: localSelectedProducts }),
+                setValue: (name, value) => {
+                  if (name === 'selectedProducts') {
+                    setLocalSelectedProducts(value as string[])
+                  }
+                }
+              } as UseFormReturn<z.infer<typeof voucherCreateSchema>>
+            }
             isDialog={true}
             handleProductSelect={handleProductSelect}
           />

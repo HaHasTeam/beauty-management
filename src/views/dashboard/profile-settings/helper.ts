@@ -1,5 +1,6 @@
 import _ from 'lodash'
 
+import { UserRoleEnum } from '@/types/role'
 import { TUser } from '@/types/user'
 
 export const convertProfileIntoForm = (profile: TUser) => {
@@ -17,9 +18,9 @@ export const convertFormIntoProfile = (form: Partial<TUser>) => {
   let profile = _.cloneDeepWith(form)
   profile = _.omitBy(profile, _.isNil)
 
-  // if (!profile.role) {
-  //   profile.role = UserRoleEnum.CUSTOMER
-  // }
+  if (!profile.role) {
+    profile.role = UserRoleEnum.CUSTOMER
+  }
 
   return profile
 }

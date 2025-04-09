@@ -17,6 +17,7 @@ import { AssignOperatorDialog } from './AssignOperatorDialog'
 import { DataTableRowAction, getColumns } from './BrandsTableColumns'
 import { BrandsTableFloatingBar } from './BrandsTableFloatingBar'
 import { BrandsTableToolbarActions } from './BrandsTableToolbarActions'
+import { getStatusInfo } from './helper'
 import { UpdateStatusBrandDialog } from './UpdateStatusBrandDialog'
 import { ViewDetailsBrandsSheet } from './ViewDetailsBrandsSheet'
 
@@ -61,11 +62,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
    */
   const filterFields: DataTableFilterField<TBrand>[] = [
     {
-      id: 'name',
-      placeholder: 'Search by name...',
-      label: 'Name'
-    },
-    {
       id: 'status',
       label: 'Status',
       options: Object.keys(BrandStatusEnum).map((status) => {
@@ -73,8 +69,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         return {
           label: toSentenceCase(value),
           value: value,
-          // Just use a string for the icon
-          icon: '●'
+          icon: getStatusInfo(value).icon
         }
       })
     }
@@ -179,11 +174,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
         brandId={rowAction?.row.original.id}
         open={rowAction?.type === 'view'}
         onOpenChange={() => setRowAction(null)}
-        onUpdateStatusChange={(type) => {
-          if (rowAction?.row) {
-            setRowAction({ row: rowAction.row, type: type })
-          }
-        }}
       />
       <AssignOperatorDialog
         open={rowAction?.type === 'assign-operator'}
@@ -192,7 +182,6 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
             setRowAction(null)
           }
         }}
-        row={rowAction?.row}
         brandId={rowAction?.row.original.id || ''}
         onAssign={handleAssignOperator}
       />

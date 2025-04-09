@@ -10,7 +10,7 @@ import {
   IRejectReturnRequestOrder,
   IReturnRequestOrder
 } from '@/types/order'
-import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
+import { TServerResponse } from '@/types/request'
 import { IStatusTracking } from '@/types/status-tracking'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
@@ -217,38 +217,3 @@ export const getBrandReturnRequestApi = toMutationFetcher<
     data
   })
 })
-
-export const filterOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithPaging<IOrder[]>>(
-  'filterOrdersApi',
-  async (filterData) => {
-    const { page, limit, sortBy, order, ...rest } = filterData || {}
-
-    const body: IOrderFilter = {}
-    if (rest.search) {
-      body.search = rest.search
-    }
-    if (rest.statuses?.length) {
-      body.statuses = rest.statuses
-    }
-    if (rest.types?.length) {
-      body.types = rest.types
-    }
-    if (rest.paymentMethods?.length) {
-      body.paymentMethods = rest.paymentMethods
-    }
-    if (rest.productIds?.length) {
-      body.productIds = rest.productIds
-    }
-
-    return privateRequest('/orders/filter', {
-      method: 'POST',
-      data: body,
-      params: {
-        page,
-        limit,
-        sortBy,
-        order
-      }
-    })
-  }
-)

@@ -10,13 +10,11 @@ import {
   Power,
   PowerOff,
   SettingsIcon,
-  User,
   UserPlus
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
@@ -51,27 +49,26 @@ interface GetColumnsProps {
   isAdmin: boolean
 }
 export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDef<TBrand>[] {
-  // Define base columns that are always shown
-  const baseColumns: ColumnDef<TBrand>[] = [
+  return [
     {
-      id: 'name',
+      id: 'brand',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Brand Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name ?? 'brand'
         const image = row.original.logo
         return (
           <div className='flex gap-1 items-center'>
-            <Avatar className='rounded-lg mr-2'>
-              <AvatarImage src={image} className='bg-transparent  aspect-square' />
+            <Avatar className='rounded-lg'>
+              <AvatarImage src={image} className='bg-transparent size-5' />
               <AvatarFallback className='bg-transparent'>
                 <Image size={24} />
               </AvatarFallback>
             </Avatar>
-            <span className='max-w-[31.25rem]  truncate'>{displayName}</span>
+            <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
         )
       },
-      size: 100
+      size: 300
     },
     {
       accessorKey: 'email',
@@ -95,7 +92,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
       cell: ({ cell }) => <div>{cell.row.original.address}</div>,
       enableSorting: false,
       enableHiding: false,
-      size: 450
+      size: 250
     },
     {
       accessorKey: 'status',
@@ -112,13 +109,19 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
         const Icon = statusInfo.icon
 
         return (
-          <Badge
-            variant='outline'
-            className={cn('flex items-center gap-2 whitespace-nowrap w-fit', statusInfo.bgColor, statusInfo.textColor)}
+          <div
+            className={cn(
+              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl w',
+              statusInfo.textColor,
+              statusInfo.bgColor
+            )}
           >
-            <Icon className={cn('size-4', statusInfo.iconColor)} aria-hidden='true' />
+            <Icon
+              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', statusInfo.iconColor)}
+              aria-hidden='true'
+            />
             <span>{statusInfo.label}</span>
-          </Badge>
+          </div>
         )
       },
       size: 50,
@@ -138,6 +141,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
           })}
         </div>
       ),
+
       size: 30
     },
     {
@@ -157,7 +161,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
             label: 'Update',
             icon: Pen,
             link: routesConfig[Routes.UPDATE_BRAND].getPath(row.original.id),
-            showAlways: !isAdmin
+            showAlways: true
           },
           {
             label: 'Assign Operator',
@@ -259,41 +263,4 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
       enableHiding: false
     }
   ]
-
-  // Define the reviewer column
-  const reviewerColumn: ColumnDef<TBrand> = {
-    id: 'reviewer',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Operator' />,
-    cell: ({ row }) => {
-      const reviewer = row.original.reviewer
-
-      if (!reviewer) {
-        return <div className='text-muted-foreground'>--</div>
-      }
-
-      return (
-        <div className='flex items-center gap-2'>
-          <Avatar className='h-8 w-8'>
-            <AvatarFallback>
-              <User className='h-4 w-4' />
-            </AvatarFallback>
-          </Avatar>
-          <div className='flex flex-col'>
-            <span className='font-medium'>{reviewer.username}</span>
-            <span className='text-xs text-muted-foreground'>{reviewer.email}</span>
-          </div>
-        </div>
-      )
-    },
-    size: 200,
-    enableSorting: false,
-    enableHiding: false
-  }
-
-  // If user is admin, insert the reviewer column after the address column (index 3)
-  if (isAdmin) {
-    baseColumns.splice(4, 0, reviewerColumn)
-  }
-
-  return baseColumns
 }

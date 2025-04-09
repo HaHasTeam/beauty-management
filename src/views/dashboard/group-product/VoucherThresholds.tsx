@@ -1,4 +1,4 @@
-import { Percent, TicketCheckIcon } from 'lucide-react'
+import { DollarSign, Percent, TicketCheckIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
@@ -12,7 +12,7 @@ import type { StepItem } from '@/components/ui/stepper'
 import { Step, Stepper, useStepper } from '@/components/ui/stepper'
 import { Textarea } from '@/components/ui/textarea'
 import { DiscountTypeEnum, VoucherApplyTypeEnum } from '@/types/enum'
-import { generateMeaningfulCode } from '@/utils'
+import { generateCouponCode } from '@/utils'
 import { formatCurrency, formatNumber } from '@/utils/number'
 
 import { formSchema } from './helper'
@@ -95,28 +95,23 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
   })
 
   const steps = useMemo(() => {
-    return fields.map<StepItem>((_, index) => {
-      const type = form.watch(`criterias.${index}.voucher.discountType`)
-      const value = form.watch(`criterias.${index}.voucher.discountValue`)
-      const threshold = form.watch(`criterias.${index}.threshold`)
-
-      return {
-        label: `Stage ${index + 1}`,
-        icon: TicketCheckIcon,
-        description:
-          !!threshold && !!value
-            ? `Will discount ${type === DiscountTypeEnum.AMOUNT ? `${formatCurrency(value)}` : `${formatNumber(value * 100, '%')}`} if ${formatNumber(threshold, ' people')} buy this product together.`
-            : undefined
-      }
-    })
-  }, [fields, form])
+    return fields.map<StepItem>((_, index) => ({
+      label: `Stage ${index + 1}`,
+      icon: TicketCheckIcon,
+      description:
+        !!_.threshold && !!_.voucher.discountValue
+          ? `Will discount ${_.voucher.discountType === DiscountTypeEnum.AMOUNT ? `${formatCurrency(_.voucher.discountValue)}` : `${formatNumber(_.voucher.discountValue, '%')}`} if ${formatNumber(_.threshold, ' people')} buy this product together.`
+          : undefined
+    }))
+  }, [fields])
 
   const addThreshold = async () => {
-    const initialCode = generateMeaningfulCode('GROUP')
+    const code = generateCouponCode()
+
     append({
       voucher: {
-        name: initialCode,
-        code: initialCode,
+        name: 'Group voucher' + code,
+        code: 'group-voucher-' + code,
         discountType: DiscountTypeEnum.PERCENTAGE,
         applyType: VoucherApplyTypeEnum.ALL
       }
@@ -139,7 +134,7 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
           return (
             <Step key={stepProps.label} {...stepProps}>
               <div className='flex flex-col gap-4'>
-                <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 backdrop-blur-md p-1'>
+                <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 backdrop-blur-md'>
                   <FormField
                     control={form.control}
                     name={`criterias.${index}.threshold`}
@@ -183,6 +178,11 @@ const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
                                               width: `var(--radix-dropdown-menu-trigger-width)`
                                             }}
                                           >
+                                            <SelectItem value={DiscountTypeEnum.AMOUNT}>
+                                              <div className='flex items-center gap-1'>
+                                                <DollarSign />
+                                              </div>
+                                            </SelectItem>
                                             <SelectItem
                                               value={DiscountTypeEnum.PERCENTAGE}
                                               className='flex items-center gap-1'

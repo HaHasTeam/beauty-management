@@ -19,8 +19,8 @@ i18n
     },
     ns: ['layout'],
     defaultNS: 'layout',
-    fallbackLng: ['en'],
-    lng: 'en',
+    fallbackLng: ['vi'],
+    lng: 'vi',
     interpolation: {
       escapeValue: false,
       format: (value, format, lng) => {
@@ -30,18 +30,7 @@ i18n
 
         if (format === 'currency') {
           const currency = lng === 'vi' ? 'VND' : 'USD' // Change currency per language
-
-          if (currency === 'VND') {
-            // Vietnamese currency format: 10.000.000 đ (no decimals, dot as thousands separator, đ as suffix)
-            return new Intl.NumberFormat('vi-VN', {
-              style: 'currency',
-              currency: 'VND',
-              maximumFractionDigits: 0,
-              currencyDisplay: 'symbol'
-            }).format(value)
-          }
-
-          return new Intl.NumberFormat(lng, { style: 'currency', currency }).format(value)
+          return Intl.NumberFormat(lng, { style: 'currency', currency }).format(value)
         }
         return value
       }

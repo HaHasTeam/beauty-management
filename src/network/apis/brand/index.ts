@@ -1,12 +1,11 @@
 import { IBranch, IBranch2 } from '@/types/Branch'
 import { TBrand } from '@/types/brand'
-import { TPaginationResponse, TServerResponse } from '@/types/request'
+import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
 import {
   RequestAssignOperatorParams,
-  TFilterBrandRequestParams,
   TRequestCreateBrandParams,
   TUpdateBrandRequestParams,
   TUpdateStatusBrandRequestParams
@@ -67,26 +66,3 @@ export const getAllBrandsApi = toQueryFetcher<void, TServerResponse<TBrand[]>>('
     method: 'GET'
   })
 })
-
-export const filterBrandsApi = toQueryFetcher<TFilterBrandRequestParams, TServerResponse<TPaginationResponse<TBrand>>>(
-  'filterBrands',
-  async (params) => {
-    const { page, limit, sortBy, order, ...filterParams } = params || {}
-    const body: TFilterBrandRequestParams = {}
-    if (filterParams?.name) {
-      body.name = filterParams.name
-    }
-    if (filterParams?.reviewerId) {
-      body.reviewerId = filterParams.reviewerId
-    }
-    if (filterParams?.statuses?.length) {
-      body.statuses = filterParams.statuses
-    }
-
-    return privateRequest('/brands/filter', {
-      method: 'POST',
-      data: body,
-      params: { page, limit, sortBy, order }
-    })
-  }
-)

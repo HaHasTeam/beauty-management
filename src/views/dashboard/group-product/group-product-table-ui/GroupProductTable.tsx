@@ -31,7 +31,13 @@ interface GroupProductTableProps {
 
 export function GroupProductTable({ data, pageCount, queryStates }: GroupProductTableProps) {
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TGroupProduct> | null>(null)
-  const columns = React.useMemo(() => getColumns(), [])
+  const columns = React.useMemo(
+    () =>
+      getColumns({
+        setRowAction
+      }),
+    []
+  )
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.

@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
-import { CheckCircle, CheckCircle2, InfoIcon } from 'lucide-react'
+import { XIcon } from 'lucide-react'
 import * as React from 'react'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
+import { GrStatusGood } from 'react-icons/gr'
 import { z } from 'zod'
 
 import Button from '@/components/button'
@@ -22,8 +23,10 @@ import {
 } from '@/components/ui/dialog'
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger
@@ -32,7 +35,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Textarea } from '@/components/ui/textarea'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { useToast } from '@/hooks/useToast'
 import { activateAccountMutateApi } from '@/network/apis/auth'
 import { getAllUserApi } from '@/network/apis/user'
 import { reasonSchema } from '@/schemas'
@@ -51,7 +53,7 @@ export function UpdateStatusAccountDialog({
   ...props
 }: UpdateStatusAccountDialogProps) {
   const queryClient = useQueryClient()
-  const { successToast, errorToast } = useToast()
+
   const handleServerError = useHandleServerError()
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const form = useForm<z.infer<typeof reasonSchema>>({
@@ -61,32 +63,28 @@ export function UpdateStatusAccountDialog({
     }
   })
   const id = useId()
-  const { mutateAsync: updateStatusAccountMutation, isPending } = useMutation({
+  const { mutateAsync: updateStatusAccountMutation } = useMutation({
     mutationKey: [activateAccountMutateApi.mutationKey],
-    mutationFn: activateAccountMutateApi.fn,
-    onSuccess: () => {
-      successToast({
-        message: 'Account(s) activated successfully',
-        description: `Successfully activated ${accounts.length} account(s).`
-      })
-    },
-    onError: () => {
-      errorToast({
-        message: 'Error',
-        description: 'Failed to activate the account(s). Please try again.'
-      })
-    }
+    mutationFn: activateAccountMutateApi.fn
   })
+  const updateStatusAccount = async ({ accounts }: { status: string; accounts: TUser[] }) => {
+    const updatePromises = accounts.map((item) => updateStatusAccountMutation(item.id))
 
-  const updateStatusAccount = async () => {
+    // Wait for all updates to complete
+    await Promise.all(updatePromises)
+    await queryClient.invalidateQueries({ queryKey: [getAllUserApi.queryKey] })
+    form.reset()
+    // await queryClient.invalidateQueries({ queryKey: ['getAllBrands', 'updateStatusBrandById'] })
+    props.onOpenChange?.(false)
+  }
+  async function onSubmit() {
     try {
-      // Process all accounts
-      const updatePromises = accounts.map((item) => updateStatusAccountMutation(item.id))
-      // Wait for all updates to complete
-      await Promise.all(updatePromises)
-      await queryClient.invalidateQueries({ queryKey: [getAllUserApi.queryKey] })
-      form.reset()
-      props.onOpenChange?.(false)
+      const formatData = {
+        status: status,
+        accounts: accounts
+      }
+
+      await updateStatusAccount(formatData)
     } catch (error) {
       handleServerError({
         error,
@@ -94,117 +92,74 @@ export function UpdateStatusAccountDialog({
       })
     }
   }
-
-  // Get display name for each account
-  const getDisplayName = (account: TUser) => {
-    if (account.firstName || account.lastName) {
-      return `${account.firstName || ''} ${account.lastName || ''}`.trim()
-    }
-    return account.username || account.email || 'Unknown User'
-  }
-
-  // Create content to use in both desktop and mobile views
-  const content = (
-    <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(updateStatusAccount)} id={`form-${id}`}>
-        <DialogHeader>
-          <DialogTitle className='flex items-center gap-2'>
-            <CheckCircle2 className='size-5 text-green-500' aria-hidden='true' />
-            Activate User{accounts.length > 1 ? 's' : ''}
-          </DialogTitle>
-          <DialogDescription>
-            {accounts.length === 1
-              ? 'Are you sure you want to activate this user account? This will enable full platform access.'
-              : `Are you sure you want to activate these ${accounts.length} user accounts? This will enable full platform access.`}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className='py-4'>
-          <div className='flex flex-wrap gap-1 mb-4'>
-            {accounts.map((account) => (
-              <Badge key={account.id} variant='outline' className='bg-slate-100'>
-                {getDisplayName(account)}
-              </Badge>
-            ))}
-          </div>
-
-          <div className='rounded-md bg-green-50 p-4 mb-4'>
-            <div className='flex'>
-              <div className='flex-shrink-0'>
-                <InfoIcon className='h-5 w-5 text-green-400' aria-hidden='true' />
-              </div>
-              <div className='ml-3'>
-                <h3 className='text-sm font-medium text-green-800'>What happens next?</h3>
-                <div className='mt-2 text-sm text-green-700'>
-                  <p>Activating a user account means:</p>
-                  <ul className='list-disc pl-5 space-y-1 mt-2'>
-                    <li>The user will gain full access to the platform</li>
-                    <li>They will be able to log in immediately</li>
-                    <li>They will be notified via email about their account activation</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {status === UserStatusEnum.BANNED && (
-            <FormField
-              control={form.control}
-              name='reason'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Reason for activation</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      rows={3}
-                      placeholder='Please provide a reason for activating this account...'
-                      className='resize-none'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-        </div>
-
-        <DialogFooter className='gap-2 sm:space-x-0'>
-          <DialogClose asChild>
-            <Button variant='outline' disabled={isPending}>
-              Cancel
-            </Button>
-          </DialogClose>
-          <Button
-            type='submit'
-            variant='default'
-            className='bg-green-600 hover:bg-green-700 text-white'
-            disabled={isPending}
-            loading={isPending}
-          >
-            {isPending ? 'Activating...' : 'Activate User' + (accounts.length > 1 ? 's' : '')}
-          </Button>
-        </DialogFooter>
-      </form>
-    </Form>
-  )
-
   if (isDesktop) {
     return (
       <Dialog {...props}>
         {showTrigger ? (
           <DialogTrigger asChild>
-            <Button
-              variant='outline'
-              size='sm'
-              className='gap-1 border-green-200 bg-green-50 text-green-700 hover:bg-green-100'
-            >
-              <CheckCircle className='h-3.5 w-3.5' />
-              <span>Activate {accounts.length > 1 ? `${accounts.length} Users` : 'User'}</span>
+            <Button variant='destructive' size='sm' className='text-white'>
+              <XIcon className='size-4' aria-hidden='true' />
+              Update status {accounts.length} Selected {accounts.length > 1 ? 'Accounts' : 'Account'}
             </Button>
           </DialogTrigger>
         ) : null}
-        <DialogContent className='sm:max-w-md'>{content}</DialogContent>
+        <DialogContent className='sm:max-w-2xl'>
+          <Form {...form}>
+            <form
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              // className='w-full flex-col gap-8 flex'
+              id={`form-${id}`}
+            >
+              <DialogHeader className='my-2'>
+                <DialogTitle className='flex items-center gap-2'>
+                  <GrStatusGood className='size-6' aria-hidden='true' />
+                  Are you sure to update status to {status} {accounts.length >= 2 ? 'these accounts' : 'this accounts'}?
+                </DialogTitle>
+                <DialogDescription>
+                  You are about to <b className='uppercase'>Update</b>{' '}
+                  {accounts.map((Account, index) => (
+                    <div className='' key={index}>
+                      <Badge className='mr-1'>{Account.email}</Badge>
+                    </div>
+                  ))}
+                  . After update , the Account will be active on platform. Please check the Account information before
+                  update.
+                </DialogDescription>
+                {status === UserStatusEnum.BANNED && (
+                  <FormField
+                    control={form.control}
+                    name='reason'
+                    render={({ field }) => (
+                      <FormItem className='my-2'>
+                        <FormLabel required>Reason</FormLabel>
+                        <FormControl>
+                          <Textarea rows={3} placeholder='reason' className='resize-none' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </DialogHeader>
+              <DialogFooter className='gap-2 sm:space-x-0 my-2 '>
+                <DialogClose asChild>
+                  <Button
+                    variant='outline'
+                    onClick={() => {
+                      form.reset()
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type='submit' aria-label='Update Selected rows' variant='default' className='text-white'>
+                  Update To {status}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
       </Dialog>
     )
   }
@@ -213,30 +168,59 @@ export function UpdateStatusAccountDialog({
     <Drawer {...props}>
       {showTrigger ? (
         <DrawerTrigger asChild>
-          <Button
-            variant='outline'
-            size='sm'
-            className='gap-1 border-green-200 bg-green-50 text-green-700 hover:bg-green-100'
-          >
-            <CheckCircle className='h-3.5 w-3.5' />
-            <span>Activate {accounts.length > 1 ? `${accounts.length} Users` : 'User'}</span>
+          <Button variant='default' size='sm' className='text-white'>
+            <XIcon className='size-4' aria-hidden='true' />
+            Update {accounts.length} Selected {accounts.length > 1 ? 'accounts' : 'account'}
           </Button>
         </DrawerTrigger>
       ) : null}
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle className='flex items-center gap-2'>
-            <CheckCircle2 className='size-5 text-green-500' aria-hidden='true' />
-            Activate User{accounts.length > 1 ? 's' : ''}
-          </DrawerTitle>
-          <DrawerDescription>
-            {accounts.length === 1
-              ? 'Are you sure you want to activate this user account? This will enable full platform access.'
-              : `Are you sure you want to activate these ${accounts.length} user accounts? This will enable full platform access.`}
-          </DrawerDescription>
-        </DrawerHeader>
+        <Form {...form}>
+          <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            // className='w-full flex-col gap-8 flex'
+            id={`form-${id}`}
+          >
+            <DrawerHeader className='my-2'>
+              <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+              <DrawerDescription>
+                You are about to <b className='uppercase'>update</b>{' '}
+                {accounts.map((account, index) => (
+                  <Badge className='mr-1' key={index}>
+                    {account.username}
+                  </Badge>
+                ))}
+                . After update , the account will be active on platform. Please check the account information before
+                update.
+              </DrawerDescription>
+              {/* {status === AccountStatus.DENIED && (
+                <FormField
+                  control={form.control}
+                  name='reason'
+                  render={({ field }) => (
+                    <FormItem className='my-2'>
+                      <FormLabel required>Reason</FormLabel>
+                      <FormControl>
+                        <Textarea rows={3} placeholder='reason' className='resize-none' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )} */}
+            </DrawerHeader>
 
-        <div className='px-4'>{content}</div>
+            <DrawerFooter className='gap-2 sm:space-x-0'>
+              <DrawerClose asChild>
+                <Button variant='outline'>Cancel</Button>
+              </DrawerClose>
+              <Button aria-label='Update Selected rows' className='text-white' variant='default' type='submit'>
+                Update Account{accounts.length > 1 ? 's' : ''}
+              </Button>
+            </DrawerFooter>
+          </form>
+        </Form>
       </DrawerContent>
     </Drawer>
   )

@@ -20,7 +20,7 @@ export default function IndexPage() {
         limit: queryStates[0].perPage,
         sortBy: queryStates[0].sort?.[0]?.id,
         order: queryStates[0].sort?.[0]?.desc ? 'DESC' : 'ASC',
-        statuses: (queryStates[0].fieldFilters?.status ?? []) as string[],
+        statuses: ((queryStates[0].fieldFilters?.status ?? []) as string[]).join(','),
         startTime: queryStates[0].fieldFilters?.startTime as string,
         endTime: queryStates[0].fieldFilters?.endTime as string,
         productIds: (queryStates[0].fieldFilters?.products ?? []) as string[],

@@ -1,12 +1,6 @@
 import { z } from 'zod'
 
-import {
-  defaultRequiredRegex,
-  emailRegex,
-  mediumRequiredRegex,
-  numberRequiredRegex,
-  phoneRegex
-} from '@/constants/regex'
+import { defaultRequiredRegex, numberRequiredRegex, phoneRegex } from '@/constants/regex'
 import { DiscountTypeEnum, StatusEnum, VoucherApplyTypeEnum, VoucherEnum } from '@/types/enum'
 
 // const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
@@ -18,44 +12,19 @@ export const reasonSchemaRequire = z.object({
 })
 // Now add this object into an array
 const fileArray = z.array(z.instanceof(File))
-export const getCreateBrandSchema = () => {
-  return z.object({
-    name: z.string().regex(mediumRequiredRegex.pattern, mediumRequiredRegex.message()),
-    logo: fileArray.optional(),
-    document: fileArray.min(1, 'You must upload at least 1 document for your license details'),
-    description: z.string().optional(),
-    email: z
-      .string()
-      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
-      .regex(emailRegex.pattern, emailRegex.message()),
-    phone: z.string().refine(phoneRegex.pattern, phoneRegex.message()).optional(),
-
-    address: z.string().optional(),
-    province: z.string().max(255),
-    district: z.string().max(255),
-    ward: z.string().max(255),
-    businessTaxCode: z.string().max(100),
-    businessRegistrationCode: z.string().max(100),
-    establishmentDate: z.string().max(255).optional(),
-    businessRegistrationAddress: z.string().max(255).optional(),
-    status: z.nativeEnum(StatusEnum).optional().default(StatusEnum.PENDING)
-  })
-}
 export const brandCreateSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name cannot exceed 100 characters'),
   logo: fileArray.optional(),
   document: fileArray.min(1, 'You must upload at least 1 document for your license details'),
-  description: z.string().optional(),
-  email: z
-    .string()
-    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
-    .regex(emailRegex.pattern, emailRegex.message()),
-  phone: z.string().refine(phoneRegex.pattern, phoneRegex.message()).optional(),
+  description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().refine(phoneRegex.pattern, 'Phone is invalid').optional(),
 
-  address: z.string().optional(),
+  address: z.string().max(255, 'Address cannot exceed 255 characters').optional(),
   province: z.string().max(255),
   district: z.string().max(255),
   ward: z.string().max(255),
+
   businessTaxCode: z.string().max(100),
   businessRegistrationCode: z.string().max(100),
   establishmentDate: z.string().max(255).optional(),

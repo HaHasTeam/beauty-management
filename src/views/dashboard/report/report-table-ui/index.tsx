@@ -4,31 +4,19 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
-import { filterReports } from '@/network/apis/report'
-import { IReport, ReportStatusEnum, ReportTypeEnum } from '@/types/report'
+import { getFilteredReports } from '@/network/apis/report'
+import { IReport } from '@/types/report'
 import { DataTableQueryState } from '@/types/table'
 
 import { ReportTable } from './ReportTable'
 
 export default function IndexPage() {
-  const queryStates = useState<DataTableQueryState<IReport>>({} as DataTableQueryState<IReport>)
   const { data: reportList, isLoading: isReportListLoading } = useQuery({
-    queryKey: [
-      filterReports.queryKey,
-      {
-        page: queryStates[0].page,
-        limit: queryStates[0].perPage,
-        sortBy: 'CREATED_DESC',
-        order: queryStates[0].sort?.[0].desc && queryStates[0].sort?.[0].desc ? 'DESC' : 'ASC',
-        assigneeId: queryStates[0].fieldFilters?.assignee as string,
-        statuses: (queryStates[0].fieldFilters?.status ?? []) as ReportStatusEnum[],
-        types: (queryStates[0].fieldFilters?.type ?? []) as ReportTypeEnum[],
-        reason: queryStates[0].fieldFilters?.reason as string
-      }
-    ],
-    queryFn: filterReports.fn
+    queryKey: [getFilteredReports.queryKey, {}],
+    queryFn: getFilteredReports.fn
   })
 
+  const queryStates = useState<DataTableQueryState<IReport>>({} as DataTableQueryState<IReport>)
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
       <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
@@ -43,11 +31,7 @@ export default function IndexPage() {
                 shrinkZero
               />
             ) : (
-              <ReportTable
-                data={reportList?.data?.items ?? []}
-                pageCount={Math.ceil((reportList?.data?.total ?? 0) / (queryStates[0].perPage ?? 10))}
-                queryStates={queryStates}
-              />
+              <ReportTable data={reportList?.data ?? []} pageCount={1} queryStates={queryStates} />
             )}
           </Shell>
         </div>

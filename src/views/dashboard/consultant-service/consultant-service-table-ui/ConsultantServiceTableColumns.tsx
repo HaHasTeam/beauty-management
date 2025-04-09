@@ -3,7 +3,6 @@ import { Ellipsis, FilePenLine, Image, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -118,19 +117,26 @@ export const getColumns = (): ColumnDef<IConsultantService>[] => {
         if (!statusKey) return null
 
         const statusValue = ConsultantServiceStatusEnum[statusKey as keyof typeof ConsultantServiceStatusEnum]
+
         const Icon = getStatusIcon(statusValue)
 
         return (
-          <Badge
-            variant='outline'
-            className={cn('flex items-center gap-2 whitespace-nowrap w-fit', Icon.bgColor, Icon.textColor)}
+          <div
+            className={cn(
+              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
+              Icon.textColor,
+              Icon.bgColor
+            )}
           >
-            <Icon.icon className={cn('size-4', Icon.iconColor)} aria-hidden='true' />
-            <span className='capitalize'>{getDisplayString(statusValue)}</span>
-          </Badge>
+            <Icon.icon
+              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
+              aria-hidden='true'
+            />
+            <span className='capitalize text-nowrap'>{getDisplayString(statusValue)}</span>
+          </div>
         )
       },
-      size: 50,
+      size: 150,
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id))
       }

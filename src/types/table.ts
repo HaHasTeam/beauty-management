@@ -17,10 +17,8 @@ export interface SearchParams {
 export interface Option {
   label: string
   value: string
-  icon?: React.ComponentType<{ className?: string }> | React.ReactNode
-  iconClass?: string
+  icon?: React.ComponentType<{ className?: string }>
   count?: number
-  withCount?: boolean
 }
 
 export interface ExtendedColumnSort<TData> extends Omit<ColumnSort, 'id'> {
@@ -36,21 +34,16 @@ export type FilterOperator = DataTableConfig['globalOperators'][number]
 export type JoinOperator = DataTableConfig['joinOperators'][number]['value']
 
 export interface DataTableFilterField<TData> {
-  id: string | keyof TData
+  id: StringKeyOf<TData>
   label: string
   placeholder?: string
   options?: Option[]
   isDate?: boolean
   isSingleChoice?: boolean
-  /** If true, this is a custom filter not directly mapped to a data property */
-  isCustomFilter?: boolean
-  isNumber?: boolean
 }
 
-export interface DataTableAdvancedFilterField<TData> extends Omit<DataTableFilterField<TData>, 'id'> {
-  id: StringKeyOf<TData> | string
+export interface DataTableAdvancedFilterField<TData> extends DataTableFilterField<TData> {
   type: ColumnType
-  isCustomFilter?: boolean
 }
 
 export type Filter<TData> = Prettify<
@@ -64,10 +57,10 @@ export interface DataTableRowAction<TData> {
   type: 'update' | 'delete'
 }
 
-export interface DataTableQueryState<TData, TExtendedFilter extends Record<string, unknown> = Record<string, unknown>> {
+export interface DataTableQueryState<TData> {
   fieldFilters: {
     [key in keyof TData]: string | string[]
-  } & TExtendedFilter
+  }
   page: number
   perPage: number
   sort: ExtendedSortingState<TData>

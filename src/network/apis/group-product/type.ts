@@ -32,10 +32,9 @@ export type GetGroupProductFilterRequestParams = {
   limit?: number
   sortBy?: string
   order?: 'ASC' | 'DESC'
-  statuses?: string[]
+  statuses?: string
   startTime?: string
   endTime?: string
   productIds?: string[]
   name?: string
-  brandId?: string
 }

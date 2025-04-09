@@ -1,6 +1,8 @@
+'use client'
+
 import { useQuery } from '@tanstack/react-query'
 import { Check, ChevronsUpDown, Loader2, Search, User } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -13,40 +15,13 @@ import { RoleEnum, StatusEnum } from '@/types/enum'
 interface UserSelectProps {
   onSelect: (userId: string) => void
   disabled?: boolean
-  defaultValue?: {
-    id: string
-    label: string
-  }
 }
 
-export function UserSelect({ onSelect, disabled = false, defaultValue }: UserSelectProps) {
+export function UserSelect({ onSelect, disabled = false }: UserSelectProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedUser, setSelectedUser] = useState<{ id: string; name: string; email: string } | null>(null)
-
-  // Initialize with defaultValue if provided
-  useEffect(() => {
-    if (defaultValue) {
-      // Extract name and email from the label if possible
-      const match = defaultValue.label.match(/(.+) $$(.+)$$/)
-      if (match) {
-        setSelectedUser({
-          id: defaultValue.id,
-          name: match[1],
-          email: match[2]
-        })
-      } else {
-        setSelectedUser({
-          id: defaultValue.id,
-          name: defaultValue.label,
-          email: ''
-        })
-      }
-      // Call onSelect to ensure the parent form is updated
-      onSelect(defaultValue.id)
-    }
-  }, [defaultValue, onSelect])
 
   const { data: users, isLoading } = useQuery({
     queryKey: [
@@ -89,12 +64,7 @@ export function UserSelect({ onSelect, disabled = false, defaultValue }: UserSel
           {selectedUser ? (
             <div className='flex items-center'>
               <User className='mr-2 h-4 w-4' />
-              <div className='flex flex-col items-start text-left truncate'>
-                <span className='truncate'>{selectedUser.name}</span>
-                {selectedUser.email && (
-                  <span className='text-xs text-muted-foreground truncate'>{selectedUser.email}</span>
-                )}
-              </div>
+              {selectedUser.name}
             </div>
           ) : (
             <span>{t('Select a user')}</span>

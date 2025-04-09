@@ -1,9 +1,8 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, SettingsIcon, ShieldCheck, ShieldX, User, UserCheck } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Ellipsis, EyeIcon, SettingsIcon, XIcon } from 'lucide-react'
+import { GrRevert } from 'react-icons/gr'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
@@ -13,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { UserRoleEnum } from '@/types/role'
 import { TUser, UserStatusEnum } from '@/types/user'
@@ -54,25 +52,13 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
       id: 'displayName',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Display Name' />,
       cell: ({ row }) => {
-        let displayName = 'Unknown User'
-
-        if (row.original) {
-          if (row.original.firstName || row.original.lastName) {
-            displayName = `${row.original.firstName || ''} ${row.original.lastName || ''}`.trim()
-          } else if (row.original.username) {
-            displayName = row.original.username
-          } else if (row.original.email) {
-            displayName = row.original.email
-          }
-        }
-
-        const initial = row.original.username ? row.original.username[0].toUpperCase() : '?'
-
+        const displayName =
+          row.original.firstName || row.original.lastName ? `${row.original.firstName} ${row.original.lastName}` : ''
         return (
           <div className='flex space-x-2 items-center'>
             <Avatar>
               <AvatarImage src={row.original.avatar} className='rounded-full border shadow-lg' />
-              <AvatarFallback>{initial}</AvatarFallback>
+              <AvatarFallback>{row.original.username[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{displayName}</span>
           </div>
@@ -133,18 +119,13 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
 
         const roleValue = UserRoleEnum[roleKey as keyof typeof UserRoleEnum]
         const Icon = getRoleIcon(roleValue)
-
         return (
-          <Badge
-            variant='outline'
-            className={cn('flex items-center w-fit gap-1 px-2 py-1 border', Icon.bgColor, Icon.textColor)}
-          >
-            <Icon.icon className={cn('size-3.5', Icon.iconColor)} aria-hidden='true' />
-            <span className='capitalize whitespace-nowrap'>{roleValue.toLowerCase()}</span>
-          </Badge>
+          <div className='flex items-center'>
+            <Icon.icon className='mr-2 size-4 text-muted-foreground' aria-hidden='true' />
+            <span className='capitalize'>{roleValue}</span>
+          </div>
         )
-      },
-      size: 100
+      }
     },
     {
       accessorKey: 'status',
@@ -158,19 +139,26 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
         if (!statusKey) return null
 
         const statusValue = UserStatusEnum[statusKey as keyof typeof UserStatusEnum]
+
         const Icon = getStatusIcon(statusValue)
 
         return (
-          <Badge
-            variant='outline'
-            className={cn('flex items-center w-fit gap-1 px-2 py-1 border', Icon.bgColor, Icon.textColor)}
+          <div
+            className={cn(
+              'flex items-center font-medium px-2 py-1 rounded-3xl shadow-xl',
+              Icon.textColor,
+              Icon.bgColor
+            )}
           >
-            <Icon.icon className={cn('size-3.5', Icon.iconColor)} aria-hidden='true' />
-            <span className='capitalize whitespace-nowrap'>{statusValue.toLowerCase()}</span>
-          </Badge>
+            <Icon.icon
+              className={cn('mr-2 size-7 p-0.5 rounded-full animate-pulse', Icon.iconColor)}
+              aria-hidden='true'
+            />
+            <span className='capitalize'>{statusValue.toLowerCase()}</span>
+          </div>
         )
       },
-      size: 100,
+      size: 50,
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id))
       }
@@ -189,75 +177,67 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
-        const user = row.original
-        const navigate = useNavigate()
-        const handleViewDetails = () => {
-          const path = routesConfig[Routes.ACCOUNT_DETAILS].getPath({ id: user.id })
-          navigate(path)
-        }
-
         return (
-          <div className='flex justify-end'>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button variant='ghost' className='h-8 w-8 p-0'>
-                  <span className='sr-only'>Open menu</span>
-                  <Ellipsis className='h-4 w-4' />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
-                <DropdownMenuItem onClick={handleViewDetails}>
-                  <User className='mr-2 h-4 w-4' aria-hidden='true' />
-                  Explore Account
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button aria-label='Open menu' variant='ghost' className='flex size-8 p-0 data-[state=open]:bg-muted'>
+                <Ellipsis className='size-4' aria-hidden='true' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end' className='w-40'>
+              <DropdownMenuItem
+                onClick={() => {
+                  setRowAction({ row: row, type: 'view' })
+                }}
+              >
+                <span className='w-full flex gap-2 items-center cursor-pointer'>
+                  <EyeIcon />
+                  View Details
+                </span>
+              </DropdownMenuItem>
+              {row.original.status == UserStatusEnum.INACTIVE ||
+                (row.original.status == UserStatusEnum.PENDING && (
+                  <DropdownMenuItem
+                    className='bg-green-500 text-white mb-2'
+                    onClick={() => {
+                      setRowAction({ row: row, type: 'update-status-active' })
+                    }}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <GrRevert />
+                      Active
+                    </span>
+                  </DropdownMenuItem>
+                ))}
+
+              <DropdownMenuSeparator />
+              {row.original.status !== UserStatusEnum.BANNED ? (
+                <DropdownMenuItem
+                  className='bg-red-500 text-white'
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'ban' })
+                  }}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <XIcon />
+                    Ban User
+                  </span>
                 </DropdownMenuItem>
-
-                {(user.status === UserStatusEnum.INACTIVE || user.status === UserStatusEnum.PENDING) && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className='text-green-500'
-                      onClick={() => {
-                        setRowAction({ row: row, type: 'update-status-active' })
-                      }}
-                    >
-                      <span className='w-full flex gap-2 items-center cursor-pointer'>
-                        <UserCheck className='h-4 w-4' />
-                        <span className='font-semibold'>Activate Account</span>
-                      </span>
-                    </DropdownMenuItem>
-                  </>
-                )}
-
-                <DropdownMenuSeparator />
-
-                {user.status !== UserStatusEnum.BANNED ? (
-                  <DropdownMenuItem
-                    className='text-red-500'
-                    onClick={() => {
-                      setRowAction({ row: row, type: 'ban' })
-                    }}
-                  >
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <ShieldX className='h-4 w-4' />
-                      <span className='font-semibold'>Ban Account</span>
-                    </span>
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem
-                    className='text-green-500'
-                    onClick={() => {
-                      setRowAction({ row: row, type: 'unbanned' })
-                    }}
-                  >
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <ShieldCheck className='h-4 w-4' />
-                      <span className='font-semibold'>Unban Account</span>
-                    </span>
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+              ) : (
+                <DropdownMenuItem
+                  className='bg-green-500 text-white'
+                  onClick={() => {
+                    setRowAction({ row: row, type: 'unbanned' })
+                  }}
+                >
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <GrRevert />
+                    Unbanned User
+                  </span>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )
       },
       size: 40,

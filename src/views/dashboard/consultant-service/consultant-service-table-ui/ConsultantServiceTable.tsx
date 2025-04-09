@@ -12,6 +12,7 @@ import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 import { BanConsultantServicesDialog } from './BanConsultantServiceDialog'
 import { DataTableRowAction, getColumns } from './ConsultantServiceTableColumns'
 import { ConsultantServiceTableToolbarActions } from './ConsultantServiceTableToolbarActions'
+import { getStatusIcon } from './helper'
 import { ViewDetailsConsultantServiceSheet } from './ViewConsultantServiceSheet'
 
 interface ConsultantServiceTableProps {
@@ -47,7 +48,7 @@ export function ConsultantServiceTable({ data, pageCount, queryStates }: Consult
         return {
           label: toSentenceCase(value),
           value: value,
-          icon: '●'
+          icon: getStatusIcon(value).icon
         }
       })
     }

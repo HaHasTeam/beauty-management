@@ -13,8 +13,8 @@ function CallVideo() {
 
   // Initialize ZegoUIKit and join room on component mount
   const myMeeting = (type: string) => {
-    const appID = 341001862
-    const serverSecret = 'cbfce508cdc4a7db90a1286ba5c5734e'
+    const appID = 420418570
+    const serverSecret = '61a4d19a3536130a3193a935b16c93a9'
     const roomValid = roomId || ''
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,

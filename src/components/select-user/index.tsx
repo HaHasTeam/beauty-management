@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Image } from 'lucide-react'
-import { ChangeEvent, forwardRef, HTMLAttributes, useCallback, useMemo } from 'react'
+import { ChangeEvent, forwardRef, HTMLAttributes, useMemo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -99,33 +99,17 @@ const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
         display: getItemDisplay(item as TUser)
       }
     }
-  }, [value, listUser, multiple, self])
-
-  const promiseOptions = useCallback(
-    (inputValue: string) => {
-      if (!inputValue) {
-        return Promise.resolve(userOptions)
-      }
-      const filteredOptions = userOptions.filter((option) =>
-        option.label?.toLowerCase().includes(inputValue.toLowerCase())
-      )
-      return Promise.resolve(filteredOptions)
-    },
-    [userOptions]
-  )
+  }, [value, multiple, listUser, self])
 
   return (
     <AsyncSelect
-      cacheOptions
       defaultOptions={userOptions}
-      loadOptions={promiseOptions}
-      value={selectedOptions}
       isMulti={multiple}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingFilteredAccounts}
       isClearable
-      isSearchable
+      value={selectedOptions}
       onChange={(options) => {
         if (multiple) {
           const optionValues = options as TOption[]

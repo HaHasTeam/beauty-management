@@ -17,7 +17,6 @@ export type TBrand = TMetaData & {
   district: string
   ward: string
   businessRegistrationAddress: string
-  reviewer?: TUser
   status: BrandStatusEnum
 }
 

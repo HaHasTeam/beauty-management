@@ -1,5 +1,3 @@
-'use client'
-
 import { useQuery } from '@tanstack/react-query'
 import { Calendar, FileCheck, ShieldCheck, Store, ThumbsUp, User } from 'lucide-react'
 import { cloneElement, useMemo } from 'react'
@@ -9,7 +7,7 @@ import { Card } from '@/components/ui/card'
 // Add these imports at the top
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn } from '@/lib/utils'
-import { getMyBookingByIdBrandApi, getStatusBookingsApi } from '@/network/apis/booking'
+import { getStatusBookingsApi } from '@/network/apis/booking'
 import { BrandStatusEnum } from '@/types/brand'
 import { BookingStatusEnum, RoleEnum } from '@/types/enum'
 import type { TUser } from '@/types/user'
@@ -115,11 +113,11 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
       BookingStatusEnum.COMPLETED
     ].includes(bookingData.data)
 
-  const { data: bookingDetailsData } = useQuery({
-    queryKey: [getMyBookingByIdBrandApi.queryKey, userProfileData?.brands?.[0]?.id as string],
-    queryFn: getMyBookingByIdBrandApi.fn,
-    enabled: isInterviewSlotSelected && !!userProfileData?.brands?.[0]?.id
-  })
+  // const { data: bookingDetailsData } = useQuery({
+  //   queryKey: [getBookingDetailsApi.queryKey],
+  //   queryFn: getBookingDetailsApi.fn,
+  //   enabled: isInterviewSlotSelected
+  // })
 
   const completionPercentage = useCompletionPercentage(
     isEmailVerify,
@@ -244,24 +242,22 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
           },
           isInterviewSlotSelected ? (
             <BookingDetailsDialog
-              bookingDetails={
-                bookingDetailsData?.data || {
-                  voucherDiscount: 0,
-                  id: 'a7b383cf-732c-41a1-80f4-aca94f48c98e',
-                  createdAt: '2025-03-08T03:47:39.809Z',
-                  updatedAt: '2025-03-08T03:48:49.529Z',
-                  totalPrice: 0,
-                  startTime: '2025-03-20T03:00:00.000Z',
-                  endTime: '2025-03-20T04:00:00.000Z',
-                  paymentMethod: 'BANK_TRANSFER',
-                  notes: 'hello',
-                  meetUrl: 'http://localhost:5173/room/8qtn3341741405659645?type=one-on-one',
-                  record: null,
-                  type: 'INTERVIEW',
-                  status: 'BOOKING_CONFIRMED',
-                  resultNote: null
-                }
-              }
+              bookingDetails={{
+                voucherDiscount: 0,
+                id: 'a7b383cf-732c-41a1-80f4-aca94f48c98e',
+                createdAt: '2025-03-08T03:47:39.809Z',
+                updatedAt: '2025-03-08T03:48:49.529Z',
+                totalPrice: 0,
+                startTime: '2025-03-20T03:00:00.000Z',
+                endTime: '2025-03-20T04:00:00.000Z',
+                paymentMethod: 'BANK_TRANSFER',
+                notes: 'hello',
+                meetUrl: 'http://localhost:5173/room/8qtn3341741405659645?type=one-on-one',
+                record: null,
+                type: 'INTERVIEW',
+                status: 'BOOKING_CONFIRMED',
+                resultNote: null
+              }}
             />
           ) : null
         )}

@@ -63,7 +63,7 @@ const UploadFilePreview = <T extends FieldValues>({
     accept: {
       'image/*': ['.jpg', '.jpeg', '.png'],
       'application/pdf': ['.pdf'],
-      'application/msword': ['.docx']
+      'application/msword': ['.doc', '.docx']
     },
     multiple: true,
     maxFiles: 10,

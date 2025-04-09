@@ -75,10 +75,8 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
                     className
                   )}
                 >
-                  <div className='w-full flex items-center justify-between gap-2'>
-                    <span className=''>{date ? `${format(date, 'PPP')} ` : <span>{label}</span>}</span>
-                    <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                  </div>
+                  <span className='flex-1'>{date ? `${format(date, 'PPP')} ` : <span>{label}</span>}</span>
+                  <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                 </Button>
               </FormControl>
             </PopoverTrigger>

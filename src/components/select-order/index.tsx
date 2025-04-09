@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ChangeEvent, forwardRef, HTMLAttributes, useCallback, useMemo } from 'react'
+import { ChangeEvent, forwardRef, HTMLAttributes, useMemo } from 'react'
 
 import { getAllOrderListApi } from '@/network/apis/order'
 import { IOrder } from '@/types/order'
@@ -61,31 +61,15 @@ const SelectOrder = forwardRef<HTMLSelectElement, Props>((props) => {
     }
   }, [value, orderList?.data, multiple])
 
-  const promiseOptions = useCallback(
-    (inputValue: string) => {
-      if (!inputValue) {
-        return Promise.resolve(orderOptions)
-      }
-      const filteredOptions = orderOptions.filter((option) =>
-        option.label?.toLowerCase().includes(inputValue.toLowerCase())
-      )
-      return Promise.resolve(filteredOptions)
-    },
-    [orderOptions]
-  )
-
   return (
     <AsyncSelect
-      cacheOptions
       defaultOptions={orderOptions}
-      loadOptions={promiseOptions}
-      value={selectedOptions}
       isMulti={multiple}
       placeholder={placeholder}
       className={className}
       isLoading={isGettingOrderList}
       isClearable
-      isSearchable
+      value={selectedOptions}
       onChange={(options) => {
         if (multiple) {
           const optionValues = options as TOption[]
