@@ -3,8 +3,7 @@ import { TServerResponse } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
-import { TGetFilteredReportRequestParams } from '../report/type'
-import { UpdateBlogParams } from './type'
+import { TGetFilteredBlogRequestParams, UpdateBlogParams } from './type'
 
 export const getAllBlogApi = toQueryFetcher<void, TServerResponse<IServerCreateBlog[]>>('getAllBlogApi', async () => {
   return privateRequest('/blogs')
@@ -22,12 +21,12 @@ export const createBlogApi = toMutationFetcher<IServerCreateBlog, TServerRespons
     })
   }
 )
-export const getFilteredBlogs = toQueryFetcher<TGetFilteredReportRequestParams, TServerResponse<IBlogDetails[]>>(
+export const getFilteredBlogs = toQueryFetcher<TGetFilteredBlogRequestParams, TServerResponse<IBlogDetails[]>>(
   'getFilteredBlogs',
   async (query) => {
     return privateRequest('/blogs/filter-blogs', {
-      method: 'POST',
-      data: query
+      method: 'GET',
+      params: query
     })
   }
 )
