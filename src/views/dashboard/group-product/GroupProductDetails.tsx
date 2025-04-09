@@ -104,6 +104,12 @@ const GroupProductDetails = () => {
       queryClient.invalidateQueries({
         queryKey: [getGroupProductByIdApi.queryKey, itemId as string]
       })
+    },
+    onError: (error) => {
+      handleServerError({
+        error,
+        form
+      })
     }
   })
 

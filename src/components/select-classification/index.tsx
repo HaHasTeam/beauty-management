@@ -102,56 +102,62 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
     return undefined
   }, [value, classificationList, classificationOptions])
 
+  // Helper function to check if a classification matches the initial one
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const isInitialClassification = useCallback(
+    (classification: TClassificationItem) => {
+      if (!initialClassification) return false
+
+      // If value has id, compare by title
+      if (value?.id) {
+        return classification.title === initialClassification.title
+      }
+
+      // If no id and both have originalClassification, compare them
+      if (value?.originalClassification && classification.id) {
+        return classification.id === value.originalClassification
+      }
+
+      return false
+    },
+    [initialClassification, value]
+  )
+
   // Calculate maximum quantity based on initialClassification
   const maxQuantity = useMemo(() => {
     // Find current classification
     const currentClassification = classificationList.find((item) => {
-      if (value?.title) {
+      // Ensure item has required properties
+      if (!item || !item.title) return false
+
+      if (value?.id) {
         return item.title === value.title
       }
-      return item.id === (value?.originalClassification || value?.id)
+      return item.id === value?.originalClassification
     })
 
-    // Handle quantity limit calculation
-    if (initialClassification?.id && currentClassification) {
-      // If this is the same classification that was initially selected
-      if (initialClassification.title === currentClassification.title) {
-        // Return the maximum available quantity
-        return currentClassification.quantity ?? 0
-      }
-      // Otherwise just return the available quantity
-      return currentClassification.quantity ?? 0
+    if (!currentClassification) return 0
+
+    // If this is a new selection (not initial classification)
+    if (!initialClassification) {
+      return currentClassification.quantity || 0
     }
 
-    // Default to current classification quantity
-    return currentClassification?.quantity ?? 0
-  }, [initialClassification, value, classificationList])
-
-  // Update quantity when maxQuantity changes
-  useEffect(() => {
-    if (onChange && value && (maxQuantity ?? 0) > 0) {
-      onChange({
-        ...value,
-        quantity: maxQuantity ?? 0
-      })
+    // If this is the same as initial classification
+    const isInitial = isInitialClassification(currentClassification as TClassificationItem)
+    if (isInitial) {
+      return initialClassification.quantity || currentClassification.quantity || 0
     }
-  }, [maxQuantity, onChange, value])
 
-  // Helper function to check if a classification matches the initial one
-  const isInitialClassification = (classification: TClassificationItem) => {
-    if (!initialClassification?.id) return false
-    return classification.id === initialClassification.id
-  }
+    // For different classification, use its full quantity
+    return currentClassification.quantity || 0
+  }, [initialClassification, value, classificationList, isInitialClassification])
 
   // Helper function to generate a shorter SKU
   const generateShortSku = (originalSku: string | undefined) => {
     if (!originalSku) return ''
-
-    // Extract first 3-5 characters from the original SKU
     const prefix = originalSku.substring(0, Math.min(5, originalSku.length))
-    // Get last 4 digits of timestamp
     const timestamp = new Date().getTime().toString().slice(-4)
-
     return `${prefix}-${timestamp}`
   }
 
@@ -169,7 +175,7 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
           name: image.name ?? image.fileUrl,
           fileUrl: image.fileUrl
         })),
-        quantity: maxQuantity ?? 0,
+        quantity: classification.quantity || 0, // Use direct classification quantity for default
         sku: generateShortSku(value?.sku || classification.sku),
         originalClassification: classification.id,
         color: classification.color,
@@ -178,7 +184,7 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
       }
       onChange(formValue)
     }
-  }, [classificationList.length, value, onChange, maxQuantity, classificationList])
+  }, [classificationList.length, value, onChange, classificationList])
 
   // Filter options based on search input
   const loadOptions = useCallback(
@@ -220,14 +226,12 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
         if (!options) {
           // Handle clearing selection
           if (onChange) {
-            // Create an empty classification item
             const emptyValue: TClassificationItem = {
               title: '',
               price: 0,
               quantity: 0,
               type: ProductClassificationTypeEnum.DEFAULT,
-              images: [],
-              originalClassification: ''
+              images: []
             }
             onChange(emptyValue)
           }
@@ -248,8 +252,6 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
 
         // Create form value from the selected classification
         const formValue: TClassificationItem = {
-          ...(value || {}), // Preserve existing values
-          id: classification.id,
           title: classification.title,
           price: isInitial ? (initialClassification?.price ?? classification.price) : classification.price,
           type: classification.type,
@@ -258,14 +260,22 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
             name: image.name ?? image.fileUrl,
             fileUrl: image.fileUrl
           })),
-          quantity: maxQuantity ?? 0, // Always use maxQuantity for the quantity field
+          quantity: maxQuantity,
           sku: isInitial
             ? (initialClassification?.sku ?? generateShortSku(classification.sku))
             : generateShortSku(classification.sku),
-          originalClassification: classification.id,
           color: classification.color,
           size: classification.size,
           other: classification.other
+        }
+
+        // Handle ID and originalClassification based on conditions
+        if (value?.id) {
+          // If value already has an ID, it's a cloned item
+          formValue.id = value.id
+        } else {
+          // If no ID, it's a new item, use originalClassification
+          formValue.originalClassification = classification.id
         }
 
         // Call onChange with the new value
