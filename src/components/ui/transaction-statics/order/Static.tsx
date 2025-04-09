@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { OrderStatic } from '@/network/apis/transaction/type'
 import { formatCurrency } from "@/utils/number"
 import { Banknote, CreditCard, InfoIcon, Tag, ShoppingCart } from "lucide-react"
+import { GrEmptyCircle } from 'react-icons/gr'
 
 type StaticProps = {
   data: OrderStatic | undefined
@@ -26,10 +27,10 @@ const Static = ({ data }: StaticProps) => {
     }
   }
 
-  if (!data?.items) {
+  if (!data?.items?.length) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-[250px] w-full" />
+      <div className="space-y-4 ">
+        <p className="text-sm text-muted-foreground w-full text-center p-8">No data</p>
       </div>
     )
   }
