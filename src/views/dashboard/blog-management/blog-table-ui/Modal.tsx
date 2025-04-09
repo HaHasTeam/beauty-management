@@ -124,7 +124,7 @@ export default function Modal({ setOpen, viewOnly = false, Report }: DialogProps
         bookingId: report.booking?.id,
         files: report.files.map((file) => ({
           id: file.id,
-          name: file.name,
+          name: file.name ?? '',
           fileUrl: file.fileUrl,
           status: file.status
         }))
