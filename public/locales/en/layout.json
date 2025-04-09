@@ -668,7 +668,7 @@
       "addSuccess": "Bank account added successfully",
       "addError": "Failed to add bank account",
       "noDefaultAccount": "No default account set",
-      "default": "Default", 
+      "default": "Default",
       "setAsDefault": "Set as Default",
       "yourAccounts": "Your Bank Accounts",
       "refresh": "Refresh",
