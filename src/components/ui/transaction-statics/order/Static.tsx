@@ -1,11 +1,9 @@
 "use client"
 
 import { InteractiveAreaChart } from "@/components/ui/chart/InteractiveAreaChart"
-import { Skeleton } from "@/components/ui/skeleton"
 import { OrderStatic } from '@/network/apis/transaction/type'
 import { formatCurrency } from "@/utils/number"
 import { Banknote, CreditCard, InfoIcon, Tag, ShoppingCart } from "lucide-react"
-import { GrEmptyCircle } from 'react-icons/gr'
 
 type StaticProps = {
   data: OrderStatic | undefined
