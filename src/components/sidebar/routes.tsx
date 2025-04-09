@@ -8,6 +8,7 @@ import {
   Clock,
   Flag,
   Layers2Icon,
+  Newspaper,
   Package,
   ReceiptText,
   TicketPercent
@@ -126,6 +127,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.REPORTS].name,
     path: routesConfig[Routes.REPORTS].path,
     icon: <Flag className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: true
+  },
+  {
+    name: routesConfig[Routes.BLOG].name,
+    path: routesConfig[Routes.BLOG].path,
+    icon: <Newspaper className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: true
   }
 ]
