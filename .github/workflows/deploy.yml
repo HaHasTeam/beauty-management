@@ -18,16 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install dependencies
         run: |
-          npm install -g yarn
-          cp .env.example .env
-          yarn
+          cp .env.production .env
+          npm install
 
       - name: Build application in production mode
-        run: yarn run build:production --mode production
+        run: npm run build:production -- --mode production
         env:
           NODE_ENV: production
 
