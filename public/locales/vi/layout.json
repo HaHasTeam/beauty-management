@@ -1444,7 +1444,8 @@
     "successInactiveDescription": "Bài viết đã được lưu ở trạng thái không hoạt động và sẽ không được hiển thị",
     "reset": "Đặt lại",
     "submit": "Gửi",
-    "submitting": "Đang gửi..."
+    "submitting": "Đang gửi...",
+    "author": "Author"
   },
   "updateBlog": {
     "title": "Tiêu đề",

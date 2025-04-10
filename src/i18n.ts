@@ -29,7 +29,7 @@ i18n
         }
 
         if (format === 'currency') {
-          const currency = lng === 'vi' ? 'VND' : 'USD' // Change currency per language
+          const currency = lng === 'vi' ? 'VND' : 'VND' // Change currency per language
 
           if (currency === 'VND') {
             // Vietnamese currency format: 10.000.000 đ (no decimals, dot as thousands separator, đ as suffix)

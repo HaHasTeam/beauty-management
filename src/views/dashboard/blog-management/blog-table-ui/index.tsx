@@ -8,21 +8,28 @@ import { getFilteredBlogs } from '@/network/apis/blog'
 import { IBlogDetails } from '@/types/blog'
 import { DataTableQueryState } from '@/types/table'
 
-import { BlogTable } from './ReportTable'
+import { BlogTable } from './BlogTable'
 
 export default function IndexPage() {
-  const { data: reportList, isLoading: isReportListLoading } = useQuery({
-    queryKey: [getFilteredBlogs.queryKey, {}],
+  const queryStates = useState<DataTableQueryState<IBlogDetails>>({} as DataTableQueryState<IBlogDetails>)
+  const { data: blogList, isLoading: isblogListLoading } = useQuery({
+    queryKey: [
+      getFilteredBlogs.queryKey,
+      {
+        page: queryStates[0].page,
+        limit: queryStates[0].perPage,
+        sortBy: queryStates[0].sort?.[0]?.id,
+        order: queryStates[0].sort?.[0]?.desc ? 'DESC' : 'ASC'
+      }
+    ],
     queryFn: getFilteredBlogs.fn
   })
-
-  const queryStates = useState<DataTableQueryState<IBlogDetails>>({} as DataTableQueryState<IBlogDetails>)
   return (
     <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
       <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
         <div className='w-full flex items-center gap-4'>
           <Shell className='gap-2'>
-            {isReportListLoading ? (
+            {isblogListLoading ? (
               <DataTableSkeleton
                 columnCount={1}
                 searchableColumnCount={1}
@@ -31,7 +38,11 @@ export default function IndexPage() {
                 shrinkZero
               />
             ) : (
-              <BlogTable data={reportList?.data ?? []} pageCount={1} queryStates={queryStates} />
+              <BlogTable
+                data={blogList?.data?.items ?? []}
+                pageCount={Math.ceil((blogList?.data?.total ?? 0) / (queryStates[0].perPage ?? 10))}
+                queryStates={queryStates}
+              />
             )}
           </Shell>
         </div>

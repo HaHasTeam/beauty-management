@@ -1,9 +1,8 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import i18next from 'i18next'
+import i18next, { t } from 'i18next'
 import { Ellipsis, EyeIcon, Pen, SettingsIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import BlogState from '@/components/blog-state'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -53,29 +52,30 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
     },
     {
       id: 'title',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Reporter' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={i18next.t('createBlog.title')} />,
       cell: ({ row }) => {
         const title = row.original.title ?? ''
         return <div>{title}</div>
       },
       size: 200
     },
+    {
+      id: 'author',
+      header: ({ column }) => <DataTableColumnHeader column={column} title={i18next.t('createBlog.author')} />,
+      cell: ({ row }) => {
+        const author = row.original.author.username ?? ''
+        return <div>{author}</div>
+      },
+      size: 200
+    },
 
     {
       accessorKey: 'status',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('createBlog.status')} />,
       cell: ({ row }) => {
-        const statusKey = Object.keys(BlogState).find((status) => {
-          const value = BlogState[status as keyof typeof BlogState]
-          return value === row.original.status
-        })
-
-        if (!statusKey) return null
-
-        const statusValue = BlogState[statusKey as keyof typeof BlogState]
+        const statusValue = row.original.status
 
         const Icon = getStatusIcon(statusValue)
-
         return (
           <div
             className={cn(
@@ -126,7 +126,7 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
             <DropdownMenuContent align='end' className='w-40'>
               <DropdownMenuItem>
                 <Link
-                  to={routesConfig[Routes.PRODUCT_DETAILS].getPath({
+                  to={routesConfig[Routes.BLOG_DETAILS].getPath({
                     id: row.original.id
                   })}
                 >
@@ -138,7 +138,7 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
-                  to={routesConfig[Routes.UPDATE_PRODUCT].getPath({
+                  to={routesConfig[Routes.UPDATE_BLOG].getPath({
                     id: row.original.id
                   })}
                 >
