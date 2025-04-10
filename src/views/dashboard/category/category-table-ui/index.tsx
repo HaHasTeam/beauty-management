@@ -1,26 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
 import { getCategoryFilterApi } from '@/network/apis/category'
-import { useStore } from '@/stores/store'
 import { ICategory } from '@/types/category'
 import { DataTableQueryState } from '@/types/table'
 
 import { CategoryTable } from './CategoryTable'
 
 export default function IndexPage() {
-  const { userData } = useStore(
-    useShallow((state) => {
-      return {
-        userData: state.user
-      }
-    })
-  )
-
   const queryStates = useState<DataTableQueryState<ICategory>>({} as DataTableQueryState<ICategory>)
 
   const { data: categoryListData, isLoading: isCategoryListLoading } = useQuery({
@@ -35,8 +25,7 @@ export default function IndexPage() {
         statuses: ((queryStates[0].fieldFilters?.status ?? []) as string[]).join(',')
       }
     ],
-    queryFn: getCategoryFilterApi.fn,
-    enabled: !!userData?.brands?.length
+    queryFn: getCategoryFilterApi.fn
   })
 
   return (
