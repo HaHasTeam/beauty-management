@@ -1,4 +1,5 @@
 import { BlogEnum } from './enum'
+import { TUser } from './user'
 
 export interface IServerCreateBlog {
   title: string
@@ -13,4 +14,5 @@ export interface IBlogDetails {
   title: string
   content: string
   status: BlogEnum
+  author: TUser
 }

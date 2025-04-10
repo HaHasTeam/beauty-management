@@ -1530,7 +1530,8 @@
     "successInactiveDescription": "Blog has been saved as inactive and won't be visible",
     "reset": "Reset",
     "submit": "Submit",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "author": "Author"
   },
   "updateBlog": {
     "title": "Title",
