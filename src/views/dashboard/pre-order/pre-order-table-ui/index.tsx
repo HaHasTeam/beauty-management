@@ -1,26 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
 import { getPreOrderFilterApi } from '@/network/apis/pre-order'
-import { useStore } from '@/stores/store'
 import { TPreOrder } from '@/types/pre-order'
 import { DataTableQueryState } from '@/types/table'
 
 import { PreOrderTable } from './PreOrderTable'
 
 export default function IndexPage() {
-  const { userData } = useStore(
-    useShallow((state) => {
-      return {
-        userData: state.user
-      }
-    })
-  )
-
   const queryStates = useState<DataTableQueryState<TPreOrder>>({} as DataTableQueryState<TPreOrder>)
   const customFilters = queryStates[0].fieldFilters as unknown as DataTableQueryState<TPreOrder>['fieldFilters']
 
@@ -38,8 +28,7 @@ export default function IndexPage() {
         endTime: customFilters?.endTime as string
       }
     ],
-    queryFn: getPreOrderFilterApi.fn,
-    enabled: !!userData?.brands?.length
+    queryFn: getPreOrderFilterApi.fn
   })
 
   return (
