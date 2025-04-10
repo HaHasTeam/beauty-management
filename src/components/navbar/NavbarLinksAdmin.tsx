@@ -19,6 +19,8 @@ import { useTheme } from '@/contexts/ThemeProvider'
 import { useToast } from '@/hooks/useToast'
 import { useStore } from '@/stores/store'
 
+import LanguageSwitcher from '../LanguageSwitcher'
+
 export default function HeaderLinks() {
   const { open, setOpen } = useContext(OpenContext)
   const { theme, setTheme } = useTheme()
@@ -78,6 +80,8 @@ export default function HeaderLinks() {
           <HiOutlineSun className='h-5 w-5 stroke-2' />
         )}
       </Button>
+
+      <LanguageSwitcher />
 
       {/* Dropdown Menu */}
       <DropdownMenu>

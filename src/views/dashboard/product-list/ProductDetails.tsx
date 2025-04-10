@@ -53,7 +53,9 @@ const ProductDetails = () => {
         <div className='container mx-auto p-6 space-y-4'>
           {/* Header Section */}
           <div className='flex justify-between items-center gap-2'>
-            <h3 className='md:text-xl sm:text-sm text-xs font-bold text-justify'>{productData.data.name}</h3>
+            <h3 className='md:text-xl sm:text-sm text-xs font-bold text-justify text-primary'>
+              {productData.data.name}
+            </h3>
             <div className='flex gap-2 items-center'>
               {productData.data.status !== ProductEnum.INACTIVE && productData.data.status !== ProductEnum.BANNED && (
                 <Link
