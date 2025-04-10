@@ -5,7 +5,9 @@ import * as React from 'react'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
+import { toSentenceCase } from '@/lib/utils'
 import { IBlogDetails } from '@/types/blog'
+import { BlogEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 
 import { getColumns } from './BlogTableColumns'
@@ -35,7 +37,26 @@ export function BlogTable({ data, pageCount, queryStates }: BlogTableProps) {
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<IBlogDetails>[] = []
+  const filterFields: DataTableFilterField<IBlogDetails>[] = [
+    {
+      id: 'author',
+      placeholder: 'Search by name...',
+      label: 'Name'
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      options: Object.keys(BlogEnum).map((status) => {
+        const value = BlogEnum[status as keyof typeof BlogEnum]
+        return {
+          label: toSentenceCase(value),
+          value: value,
+          // Just use a string for the icon
+          icon: '●'
+        }
+      })
+    }
+  ]
 
   /**
    * Advanced filter fields for the data table.
