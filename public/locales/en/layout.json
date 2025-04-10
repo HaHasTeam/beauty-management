@@ -1274,13 +1274,13 @@
     "description": {
       "TO_SHIP": "Please upload images and videos of the packaged order before shipping. This helps ensure accurate order fulfillment and reduce disputes.",
       "SHIPPING": "Upload images and videos of the package as it is handed over to the shipping carrier. This helps track the shipment condition and prevent delivery issues.",
-      "DELIVERED": "Please upload images and videos of the received package if necessary. This helps confirm the product condition and support dispute resolution if needed.",
+      "DELIVERED": "Please upload images and videos of the delivered package. This helps confirm the product condition and support dispute resolution if needed.",
       "RETURNING": "Upload images and videos showing the returned product's condition and packaging. This helps ensure a smooth return process and verify item eligibility for refund.",
       "REFUNDED": "Please upload images and videos confirming the successful return and refund process. This ensures proper documentation and avoids misunderstandings.",
       "COMPLAINT": "Please upload images and videos as evidence to support your complaint regarding the returned order. This helps verify the issue and assist in resolving disputes effectively."
     },
-    "TO_SHIP": "Upload Proof of Handover to Carrier",
-    "SHIPPING": "Upload Images & Videos for Order Preparation",
+    "TO_SHIP": "Upload Images & Videos for Order Preparation",
+    "SHIPPING": "Upload Proof of Handover to Carrier",
     "DELIVERED": "Upload Delivery Confirmation",
     "RETURNING": "Upload Return Request Evidence",
     "REFUNDED": "Upload Refund Completion Proof",
