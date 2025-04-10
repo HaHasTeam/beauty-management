@@ -80,7 +80,7 @@ export const formSchema = z.object({
               })
             ),
             type: z.nativeEnum(ProductClassificationTypeEnum),
-            originalClassification: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+            originalClassification: z.string().optional(),
             color: z.string().optional().nullable(),
             size: z.string().optional().nullable(),
             other: z.string().optional().nullable()
@@ -146,7 +146,10 @@ export const convertFormToFlashSale = (form: SchemaType) => {
     if (!initialItem.id) continue
 
     // Check if this item still exists in current classifications (by ID)
-    const existingItem = currentClassifications.find((current) => current.rawClassification?.id === initialItem.id)
+    const existingItem = currentClassifications.find(
+      (current) =>
+        current.rawClassification?.id === initialItem.id || current.rawClassification?.title === initialItem.title
+    )
 
     if (existingItem) {
       // Case 1: Item exists in both - it was modified
@@ -175,7 +178,9 @@ export const convertFormToFlashSale = (form: SchemaType) => {
     if (!rawClass || !rawClass.originalClassification) continue
 
     // Check if this item is new (doesn't exist in initial by ID)
-    const existsInInitial = initialClassifications.some((initial) => initial.id === rawClass.id)
+    const existsInInitial = initialClassifications.some(
+      (initial) => initial.id === rawClass.id || initial.title === rawClass.title
+    )
 
     if (!existsInInitial) {
       // Case 3: Item in current but not in initial - it's new
@@ -227,7 +232,6 @@ export const convertFlashSaleToForm = (flashSale: TFlashSale): SchemaType => {
         status: image.status
       })),
       type: item.type,
-      originalClassification: item.id,
       color: item.color,
       size: item.size,
       other: item.other,
@@ -248,7 +252,6 @@ export const convertFlashSaleToForm = (flashSale: TFlashSale): SchemaType => {
           status: image.status
         })),
         type: item.type,
-        originalClassification: item.id,
         color: item.color,
         size: item.size,
         other: item.other

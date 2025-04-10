@@ -49,30 +49,10 @@ const FlashSaleDetails = () => {
       startTime: '',
       endTime: '',
       discount: undefined,
+      initialClassifications: [],
       productClassifications: [{}]
     }
   })
-
-  // Listen for product changes to reset classifications
-  useEffect(() => {
-    const subscription = form.watch((values) => {
-      // Check if product has changed
-      const currentProduct = values.product
-
-      if (currentProduct && currentProduct !== prevProductRef.current) {
-        // Product changed, store the new value
-        prevProductRef.current = currentProduct
-
-        // Reset classifications
-        if (prevProductRef.current) {
-          // Remove existing classifications to start fresh
-          form.unregister('productClassifications')
-        }
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [form])
 
   const { mutateAsync: addFlashSaleFn } = useMutation({
     mutationKey: [addFlashSaleApi.mutationKey],
@@ -129,7 +109,16 @@ const FlashSaleDetails = () => {
 
   useEffect(() => {
     if (flashSale?.data) {
-      form.reset(convertFlashSaleToForm(flashSale.data))
+      const data = convertFlashSaleToForm(flashSale.data)
+
+      // Ensure productClassifications is never undefined or empty
+      const safeData = {
+        ...data,
+        productClassifications:
+          data.productClassifications && data.productClassifications.length > 0 ? data.productClassifications : [{}]
+      }
+
+      form.reset(safeData)
       // Update the prevProductRef with the loaded product ID
       prevProductRef.current = flashSale.data.product.id
     }

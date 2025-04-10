@@ -66,6 +66,39 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
   // Extract classifications from product data
   const classificationList = useMemo(() => product?.data?.productClassifications || [], [product])
 
+  // Effect to maintain quantity value when the same classification is selected
+  useEffect(() => {
+    // Skip if conditions not met
+    if (!onChange || !value || !value.title) {
+      return
+    }
+
+    // Skip if value doesn't have an ID (means it's not an existing classification)
+    if (!value.id) {
+      return
+    }
+
+    // Find the matching classification by title
+    const matchingClassification = classificationList.find((item) => item.title === value.title)
+
+    // Skip if matching classification not found
+    if (!matchingClassification) {
+      return
+    }
+
+    // If quantity has been changed from the original
+    if (value.quantity !== matchingClassification.quantity) {
+      // Create a new object with all properties from value, only updating quantity
+      const updatedValue: TClassificationItem = {
+        ...value,
+        quantity: matchingClassification.quantity || 0
+      }
+
+      // Update the form value
+      onChange(updatedValue)
+    }
+  }, [value?.title, value?.id, classificationList, onChange, value, isReadOnly])
+
   // Helper function to generate a shorter SKU
   const generateShortSku = useCallback((originalSku: string | undefined) => {
     if (!originalSku) return ''
@@ -174,9 +207,16 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
       placeholder={placeholder}
       className={className}
       isLoading={isGettingProduct}
-      isClearable={!isReadOnly}
+      isClearable={false}
       isSearchable={!isReadOnly}
       isDisabled={isReadOnly}
+      menuPortalTarget={document.body} // Render dropdown in body to avoid clipping
+      styles={{
+        menuPortal: (base) => ({
+          ...base,
+          zIndex: 9999 // Ensure high z-index
+        })
+      }}
       onChange={(options) => {
         // If readonly, don't allow changes
         if (isReadOnly) return
@@ -206,6 +246,12 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
         // If no matching classification, do nothing
         if (!classification) return
 
+        // Keep the existing quantity if the classification is the same
+        // This prevents resetting quantity when user has modified it
+        const isSameClassification = value?.title === classification.title
+        const shouldKeepQuantity =
+          isSameClassification && value?.quantity !== undefined && value.quantity !== classification.quantity
+
         // Create form value from the selected classification
         const formValue: TClassificationItem = {
           title: classification.title,
@@ -216,7 +262,8 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
             name: image.name ?? image.fileUrl,
             fileUrl: image.fileUrl
           })),
-          quantity: classification.quantity || 0, // Use classification's quantity directly
+          // Use existing quantity if different from original and is the same classification
+          quantity: shouldKeepQuantity ? value!.quantity : classification.quantity || 0,
           sku: generateShortSku(classification.sku),
           color: classification.color,
           size: classification.size,
