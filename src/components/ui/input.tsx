@@ -34,12 +34,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputType = isNumberInput ? 'text' : type
     const isFileInput = type === 'file'
 
-    const formatCurrency = (amount?: number): string =>
-      !!amount
-        ? `${new Intl.NumberFormat(locale, {
-            maximumSignificantDigits: MAX_DIGITS
-          }).format(amount)}`
-        : ''
+    const formatCurrency = (amount?: number): string => {
+      if (amount === 0) return '0'
+      if (amount === undefined || isNaN(amount)) return ''
+      
+      return new Intl.NumberFormat(locale, {
+        maximumSignificantDigits: MAX_DIGITS
+      }).format(amount)
+    }
 
     const [formattedValue, setFormattedValue] = React.useState(isNumberInput ? formatCurrency(Number(value)) : value)
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,9 +51,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         const hasDecimalPoint = inputString.includes('.')
         const [integerPart, decimal] = inputString.split('.').map((part) => part.replace(/\D/g, ''))
         const decimalPart = hasDecimalPoint ? `.${decimal}` : ''
-        const inputValue = integerPart ? Number(`${integerPart}${decimalPart}`) : undefined
-
-        const formattedInputValue = integerPart ? `${formatCurrency(Number(integerPart))}${decimalPart}` : ''
+        
+        const isEmpty = !integerPart && !decimal
+        const isZero = integerPart === '0' && !decimal
+        
+        const inputValue = isEmpty ? undefined : isZero ? 0 : Number(`${integerPart || '0'}${decimalPart}`)
+        
+        const formattedInputValue = isEmpty ? '' : isZero ? '0' : `${formatCurrency(Number(integerPart))}${decimalPart}`
 
         switch (type) {
           case 'percentage': {
@@ -82,6 +88,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               break
             }
 
+            if (inputValue === 0) {
+              setFormattedValue('0')
+              if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
+              break
+            }
+
             const integerPart = inputValue.toString().split('.')[0]
             const integerFormatted = formatCurrency(Number(integerPart))
 
@@ -97,6 +109,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             break
           }
           default: {
+            if (inputValue === 0) {
+              setFormattedValue('0')
+              if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
+              break
+            }
+            
             setFormattedValue(formattedInputValue)
             if (onChange) onChange(inputValue as unknown as React.ChangeEvent<HTMLInputElement>)
             break
