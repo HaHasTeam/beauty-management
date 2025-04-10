@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { z } from 'zod'
 
 import { defaultRequiredRegex } from '@/constants/regex'
@@ -100,26 +101,26 @@ export const formSchema = z
       })
     }
 
-    const isDupplicateSku = data.productClassifications.findIndex((item, index) => {
+    const isDuplicateSku = data.productClassifications.findIndex((item, index) => {
       return data.productClassifications.findIndex((i) => i.append.sku === item.append.sku) !== index
     })
-    if (isDupplicateSku !== -1) {
+    if (isDuplicateSku !== -1) {
       return ctx.addIssue({
         code: 'custom',
         message: 'SKU is duplicated',
-        path: ['productClassifications', isDupplicateSku, 'append', 'sku']
+        path: ['productClassifications', isDuplicateSku, 'append', 'sku']
       })
     }
   })
 
 export type SchemaType = z.infer<typeof formSchema>
 
-export const convertFormToPreProduct = (form: SchemaType) => {
+export const convertFormToPreProduct = (form: Partial<SchemaType>) => {
   const result: TAddPreOderRequestParams | TUpdatePreOrderRequestParams = {
     id: form.id ?? undefined,
     startTime: form.startTime,
     endTime: form.endTime,
-    productClassifications: form.productClassifications.map((item) => {
+    productClassifications: form.productClassifications?.map((item) => {
       return {
         ...item.rawClassification,
         ...item.append
@@ -127,7 +128,8 @@ export const convertFormToPreProduct = (form: SchemaType) => {
     }),
     product: form.product
   }
-  return result
+
+  return _.omitBy(result, (value) => Boolean(value) == false)
 }
 
 export const convertPreProductToForm = (preProduct: TPreOrder): SchemaType => {

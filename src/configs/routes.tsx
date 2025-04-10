@@ -127,8 +127,8 @@ export const routesConfig: TRoutes = {
     name: 'Schedule Booking',
     title: 'Schedule Booking',
     description: 'Schedule',
-    path: '/dashboard/Schedule',
-    getPath: () => `/dashboard/Schedule`
+    path: '/dashboard/schedule-booking',
+    getPath: () => `/dashboard/schedule-booking`
   },
   [Routes.SELECT_INTERVIEW_SLOT]: {
     name: 'Schedule Meeting',
