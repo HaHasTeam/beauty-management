@@ -86,7 +86,16 @@ const PreOrderDetails = () => {
       if (triggerFns) {
         await Promise.all(triggerFns.map((trigger) => trigger()))
       }
-      const values = form.getValues()
+      let values = { ...form.getValues() }
+      const isStartTimeDirty = form.formState.dirtyFields.startTime
+      const isEndTimeDirty = form.formState.dirtyFields.endTime
+      if (!isEndTimeDirty) {
+        values = { ...values, endTime: '' }
+      }
+      if (!isStartTimeDirty) {
+        values = { ...values, startTime: '' }
+      }
+
       if (itemId) {
         await updatePreProductFn(convertFormToPreProduct(values) as TUpdatePreOrderRequestParams)
         queryClient.invalidateQueries({
@@ -110,7 +119,9 @@ const PreOrderDetails = () => {
 
   useEffect(() => {
     if (preProduct?.data) {
-      form.reset(convertPreProductToForm(preProduct.data))
+      form.reset(convertPreProductToForm(preProduct.data), {
+        keepDirty: false
+      })
     }
   }, [preProduct?.data, form])
 
@@ -160,7 +171,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close pre-order product'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )
@@ -186,7 +197,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'success'}
             >
-              {'Close pre-order product'}
+              {'Open event'}
             </AlertAction>
           </Alert>
         )
@@ -215,7 +226,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close pre-order product'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )
@@ -244,7 +255,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close pre-order product'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )

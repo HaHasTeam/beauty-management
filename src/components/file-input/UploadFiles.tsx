@@ -169,7 +169,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
       const formData = new FormData()
 
       files.forEach((file) => {
-        if (!!file.fileUrl && file.fileUrl.includes('https://firebasestorage.googleapis.com/')) return
+        if (!!file.fileUrl && file.fileUrl.includes('http')) return
 
         formData.append('files', file)
       })
@@ -179,7 +179,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
 
         let fileIndex = 0
         const result = files.map((file) => {
-          if (file.fileUrl && file.fileUrl.includes('https://firebasestorage.googleapis.com/')) {
+          if (file.fileUrl && file.fileUrl.includes('http')) {
             return {
               id: file.id ?? undefined,
               name: file.name,
@@ -234,7 +234,7 @@ const UploadFiles = ({ dropZoneConfigOptions, field, triggerRef }: UploadFilesPr
         <FileInput disabled={isUploadingFiles} className='w-full h-full bg-background'>
           <div className='overflow-hidden h-full w-full flex flex-col items-center justify-center text-center p-2 hover:bg-primary/30 transition-all duration-500 border-2 border-dashed rounded-lg'>
             <div className='flex items-center flex-col gap-2'>
-              <ImagePlusIcon className='size-10 text-muted-foreground max-lg:size-6' />
+              <ImagePlusIcon className='size-4 text-muted-foreground max-lg:size-6' />
               <p className='text-foreground tracking-tight flex-1'>
                 Drag & drop or browse files{' '}
                 <b>{`(${files.filter((file) => file.status !== FileStatusEnum.INACTIVE).length}/${dropZoneConfig.maxFiles})`}</b>

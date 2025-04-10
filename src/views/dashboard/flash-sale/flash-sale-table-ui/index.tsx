@@ -1,27 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
 import { getFlashSaleFilterApi } from '@/network/apis/flash-sale'
 import { GetFlashSaleFilterRequestParams } from '@/network/apis/flash-sale/type'
-import { useStore } from '@/stores/store'
 import { TFlashSale } from '@/types/flash-sale'
 import { DataTableQueryState } from '@/types/table'
 
 import { FlashSaleTable } from './FlashSaleTable'
 
 export default function IndexPage() {
-  const { userData } = useStore(
-    useShallow((state) => {
-      return {
-        userData: state.user
-      }
-    })
-  )
-
   const queryStates = useState<DataTableQueryState<TFlashSale>>({} as DataTableQueryState<TFlashSale>)
 
   const { data: flashSaleListData, isLoading: isFlashSaleListLoading } = useQuery({
@@ -39,8 +29,7 @@ export default function IndexPage() {
         statuses: ((queryStates[0].fieldFilters?.status ?? []) as string[]).join(',')
       } as GetFlashSaleFilterRequestParams
     ],
-    queryFn: getFlashSaleFilterApi.fn,
-    enabled: !!userData?.brands?.length
+    queryFn: getFlashSaleFilterApi.fn
   })
 
   return (
