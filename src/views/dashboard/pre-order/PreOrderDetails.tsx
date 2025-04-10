@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Calendar, SaveIcon, Siren } from 'lucide-react'
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as z from 'zod'
@@ -32,8 +32,6 @@ const PreOrderDetails = () => {
   const triggerRef = useRef<TriggerUploadRef>(null)
   const queryClient = useQueryClient()
   const itemId = params.id !== 'add' ? params.id : undefined
-  const [currentProductId, setCurrentProductId] = useState<string>('')
-
   const { data: preProduct, isFetching: isGettingPreProduct } = useQuery({
     queryKey: [getPreOrderByIdApi.queryKey, itemId as string],
     queryFn: getPreOrderByIdApi.fn,
@@ -48,35 +46,16 @@ const PreOrderDetails = () => {
       product: '',
       startTime: '',
       endTime: '',
-      initialClassifications: [],
       productClassifications: [
         {
           append: {
             images: [],
-            type: ProductClassificationTypeEnum.CUSTOM,
-            color: '',
-            size: '',
-            other: '',
-            price: 0,
-            quantity: 0,
-            sku: '',
-            title: ''
-          },
-          rawClassification: {
-            images: []
+            type: ProductClassificationTypeEnum.CUSTOM
           }
         }
       ]
     }
   })
-
-  // Watch for product ID changes
-  const selectedProductId = form.watch('product')
-  useEffect(() => {
-    if (selectedProductId) {
-      setCurrentProductId(selectedProductId)
-    }
-  }, [selectedProductId])
 
   const { mutateAsync: addPreProductFn } = useMutation({
     mutationKey: [addPreOderApi.mutationKey],
@@ -132,8 +111,6 @@ const PreOrderDetails = () => {
   useEffect(() => {
     if (preProduct?.data) {
       form.reset(convertPreProductToForm(preProduct.data))
-      // Set the current product ID when loading existing data
-      setCurrentProductId(preProduct.data.product.id)
     }
   }, [preProduct?.data, form])
 
@@ -183,7 +160,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close event'}
+              {'Close pre-order product'}
             </AlertAction>
           </Alert>
         )
@@ -209,7 +186,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'success'}
             >
-              {'Open event'}
+              {'Close pre-order product'}
             </AlertAction>
           </Alert>
         )
@@ -238,7 +215,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close event'}
+              {'Close pre-order product'}
             </AlertAction>
           </Alert>
         )
@@ -267,7 +244,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Reopen event'}
+              {'Close pre-order product'}
             </AlertAction>
           </Alert>
         )
@@ -387,7 +364,7 @@ const PreOrderDetails = () => {
               </div>
             </CardContent>
           </Card>
-          {<ClassificationConfig form={form} productId={currentProductId} triggerImageUploadRef={triggerRef} />}
+          {<ClassificationConfig form={form} productId={form.watch('product')} triggerImageUploadRef={triggerRef} />}
         </form>
         {getFooter()}
       </Form>
