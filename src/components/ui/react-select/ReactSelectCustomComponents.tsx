@@ -38,10 +38,14 @@ export const MultiValueRemove = (props: MultiValueRemoveProps) => {
 export const Option = (props: OptionProps) => {
   const option = props.data as { label: string; display?: React.ReactNode }
   return (
-    <components.Option {...props}>
-      <div className='flex items-center justify-between'>
+    <components.Option {...props} className=''>
+      <div className='flex items-center justify-between w-full mr-2 truncate'>
         {/* TODO: Figure out the type */}
-        {option.display ?? <div>{(props.data as { label: string }).label}</div>}
+        {option.display ?? (
+          <div className='overflow-hidden text-ellipsis whitespace-nowrap max-w-[90%]'>
+            {(props.data as { label: string }).label}
+          </div>
+        )}
         {props.isSelected && <CheckIcon />}
       </div>
     </components.Option>

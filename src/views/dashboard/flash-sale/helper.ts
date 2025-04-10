@@ -41,7 +41,7 @@ export const formSchema = z.object({
         images: z
           .array(
             z.object({
-              name: z.string(),
+              name: z.string().optional(),
               fileUrl: z.string(),
               id: z.string().optional(),
               status: z.nativeEnum(FileStatusEnum).optional()
@@ -73,7 +73,7 @@ export const formSchema = z.object({
             sku: z.string().optional(),
             images: z.array(
               z.object({
-                name: z.string(),
+                name: z.string().optional(),
                 fileUrl: z.string(),
                 id: z.string().optional(),
                 status: z.nativeEnum(FileStatusEnum).optional()
@@ -184,9 +184,17 @@ export const convertFormToFlashSale = (form: SchemaType) => {
 
     if (!existsInInitial) {
       // Case 3: Item in current but not in initial - it's new
+      const removeImgId = rawClass.images?.map((image) => {
+        return {
+          name: image.name ?? image.fileUrl ?? '',
+          fileUrl: image.fileUrl ?? '',
+          status: image.status as FileStatusEnum
+        }
+      })
       processedClassifications.push({
         ...rawClass,
-        ...currentItem.append
+        ...currentItem.append,
+        images: removeImgId
       })
     }
   }
@@ -212,6 +220,7 @@ export const convertFlashSaleToForm = (flashSale: TFlashSale): SchemaType => {
     startTime: flashSale.startTime,
     endTime: flashSale.endTime,
     images: flashSale.images?.map((image) => ({
+      ...image,
       name: image.name || image.fileUrl || '',
       fileUrl: image.fileUrl,
       id: image.id,
@@ -226,6 +235,7 @@ export const convertFlashSaleToForm = (flashSale: TFlashSale): SchemaType => {
       quantity: item.quantity,
       sku: item.sku ?? '',
       images: item.images?.map((image) => ({
+        ...image,
         name: image.name ?? image.fileUrl,
         fileUrl: image.fileUrl,
         id: image.id,

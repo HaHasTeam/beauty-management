@@ -4,7 +4,7 @@ import { forwardRef, HTMLAttributes, useCallback, useEffect, useMemo } from 'rea
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getProductApi } from '@/network/apis/product'
-import { TFile } from '@/types/file'
+import { FileStatusEnum, TFile } from '@/types/file'
 import { ProductClassificationTypeEnum } from '@/types/product'
 
 import { InputProps } from '../ui/input'
@@ -35,8 +35,9 @@ type Props = Omit<HTMLAttributes<HTMLSelectElement>, 'value'> &
     onChange?: (value: TClassificationItem) => void
   }
 
-const getItemDisplay = (classification: TClassificationItem) => {
-  const imgUrl = classification?.images?.[0]?.fileUrl
+const getItemDisplay = (classification: TClassificationItem, fallbackUrl?: string, productName?: string) => {
+  const imgUrl = classification?.images?.[0]?.fileUrl || fallbackUrl
+  const name = classification.title !== 'Default' ? classification.title : productName
   return (
     <div className='flex items-center gap-1'>
       <Avatar className='bg-transparent size-5'>
@@ -45,7 +46,7 @@ const getItemDisplay = (classification: TClassificationItem) => {
           <Image className='size-4' />
         </AvatarFallback>
       </Avatar>
-      <span>{classification?.title || 'Classification'}</span>
+      <span>{name || 'Classification'}</span>
     </div>
   )
 }
@@ -130,7 +131,13 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
         price: typeof classification.price === 'number' ? classification.price : 0,
         type: ProductClassificationTypeEnum.CUSTOM,
         // Cast the images array to TFile[] - we know the API returns compatible data
-        images: (classification.images || []) as TFile[],
+        images: classification.images.map((image) => ({
+          ...image,
+          name: image.name ?? image.fileUrl ?? '',
+          fileUrl: image.fileUrl ?? '',
+          id: image.id ?? '',
+          status: image.status as FileStatusEnum
+        })),
         quantity: classification.quantity || 0,
         sku: generateShortSku(classification.sku),
         color: classification.color || null,
@@ -147,12 +154,19 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
 
   // Transform to options for select dropdown
   const classificationOptions = useMemo(() => {
-    return classificationList.map((classification) => ({
-      value: classification.id,
-      label: classification.title,
-      display: getItemDisplay(classification as TClassificationItem)
-    }))
-  }, [classificationList])
+    return classificationList.map((classification) => {
+      const title = classification.title !== 'Default' ? classification.title : product?.data?.name
+      return {
+        value: classification.id,
+        label: title,
+        display: getItemDisplay(
+          classification as TClassificationItem,
+          product?.data?.images?.[0]?.fileUrl,
+          product?.data?.name
+        )
+      }
+    })
+  }, [classificationList, product])
 
   // Find the currently selected option
   const selectedOptions = useMemo(() => {
@@ -259,8 +273,10 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
           type: ProductClassificationTypeEnum.CUSTOM,
           images: classification.images.map((image) => ({
             ...image,
-            name: image.name ?? image.fileUrl,
-            fileUrl: image.fileUrl
+            name: image.name ?? image.fileUrl ?? '',
+            fileUrl: image.fileUrl ?? '',
+            id: image.id ?? '',
+            status: image.status as FileStatusEnum
           })),
           // Use existing quantity if different from original and is the same classification
           quantity: shouldKeepQuantity ? value!.quantity : classification.quantity || 0,

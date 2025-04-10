@@ -134,6 +134,8 @@ const ClassificationConfig = ({ form, productId }: Props) => {
 
   // Prevent removing the last classification
   const isRemoveDisabled = fields.length === 1
+  // console.log(form.formState.errors, 'DSAf')
+  // console.log(form.getValues(), 'DSAf')
 
   return (
     <>
