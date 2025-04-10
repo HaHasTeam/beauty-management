@@ -56,14 +56,14 @@ const OrderStatusTrackingDetail = ({ statusTrackingData, cancelAndReturnRequest 
     //   `role.${tracking.updatedBy?.role?.role === UserRoleEnum.MANAGER || tracking.updatedBy?.role?.role === UserRoleEnum.STAFF ? 'BRAND' : tracking.updatedBy?.role.role}`
     // )
     updatedBy: t(`${tracking.updatedBy?.role?.role}`),
-    updatedPerson: tracking.updatedBy.username,
+    updatedPerson: tracking.updatedBy?.username,
     reviewRole:
       (tracking.status === ShippingStatusEnum.CANCELLED || tracking.status === RequestStatusEnum.APPROVED
-        ? cancelAndReturnRequest?.cancelRequest.updatedBy.role.role
+        ? cancelAndReturnRequest?.cancelRequest?.updatedBy?.role?.role
         : '') ?? '',
     reviewPerson:
       (tracking.status === ShippingStatusEnum.CANCELLED || tracking.status === RequestStatusEnum.APPROVED
-        ? cancelAndReturnRequest?.cancelRequest.updatedBy.username
+        ? cancelAndReturnRequest?.cancelRequest?.updatedBy?.username
         : '') ?? ''
   }))
 
