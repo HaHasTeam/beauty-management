@@ -184,7 +184,7 @@ const FlashSaleDetails = () => {
               loading={isUpdatingFlashSale}
               variant={'default'}
             >
-              {'Close flash sale'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )
@@ -210,7 +210,7 @@ const FlashSaleDetails = () => {
               loading={isUpdatingFlashSale}
               variant={'success'}
             >
-              {'Open flash sale'}
+              {'Open event'}
             </AlertAction>
           </Alert>
         )
@@ -239,7 +239,7 @@ const FlashSaleDetails = () => {
               loading={isUpdatingFlashSale}
               variant={'default'}
             >
-              {'Close flash sale'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )
@@ -268,7 +268,7 @@ const FlashSaleDetails = () => {
               loading={isUpdatingFlashSale}
               variant={'default'}
             >
-              {'Close flash sale'}
+              {'Reopen event'}
             </AlertAction>
           </Alert>
         )

@@ -160,7 +160,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close pre-order product'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )
@@ -186,7 +186,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'success'}
             >
-              {'Close pre-order product'}
+              {'Open event'}
             </AlertAction>
           </Alert>
         )
@@ -215,7 +215,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close pre-order product'}
+              {'Close event'}
             </AlertAction>
           </Alert>
         )
@@ -244,7 +244,7 @@ const PreOrderDetails = () => {
               loading={isUpdatingPreProduct}
               variant={'default'}
             >
-              {'Close pre-order product'}
+              {'Reopen event'}
             </AlertAction>
           </Alert>
         )

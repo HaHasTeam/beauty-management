@@ -17,6 +17,7 @@ export type TClassification = TMetaData & {
   color?: string | null
   size?: string | null
   other?: string | null
+  isAvailable?: boolean
 }
 
 export enum ClassificationStatusEnum {
