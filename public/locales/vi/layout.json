@@ -1224,13 +1224,13 @@
     "description": {
       "TO_SHIP": "Vui lòng tải lên hình ảnh và video của đơn hàng đã được đóng gói trước khi vận chuyển. Điều này giúp đảm bảo đơn hàng được xử lý chính xác và giảm tranh chấp.",
       "SHIPPING": "Tải lên hình ảnh và video về kiện hàng khi bàn giao cho đơn vị vận chuyển. Điều này giúp theo dõi tình trạng lô hàng và ngăn ngừa các vấn đề giao nhận.",
-      "DELIVERED": "Vui lòng tải lên hình ảnh và video của kiện hàng đã nhận nếu cần. Điều này giúp xác nhận tình trạng sản phẩm và hỗ trợ giải quyết tranh chấp nếu có.",
+      "DELIVERED": "Vui lòng tải lên hình ảnh và video của kiện hàng đã vận chuyển. Điều này giúp xác nhận tình trạng sản phẩm và hỗ trợ giải quyết tranh chấp nếu có.",
       "RETURNING": "Tải lên hình ảnh và video thể hiện tình trạng sản phẩm hoàn trả và cách đóng gói. Điều này giúp đảm bảo quy trình hoàn trả suôn sẻ và xác minh điều kiện hoàn tiền.",
       "REFUNDED": "Vui lòng tải lên hình ảnh và video xác nhận quá trình hoàn trả và hoàn tiền thành công. Điều này giúp đảm bảo tài liệu đầy đủ và tránh hiểu lầm.",
       "COMPLAINT": "Vui lòng tải lên hình ảnh và video làm bằng chứng để hỗ trợ khiếu nại về đơn hàng trả lại. Điều này giúp xác minh vấn đề và hỗ trợ giải quyết tranh chấp hiệu quả."
     },
-    "TO_SHIP": "Tải lên bằng chứng bàn giao cho đơn vị vận chuyển",
-    "SHIPPING": "Tải lên hình ảnh & video chuẩn bị đơn hàng",
+    "TO_SHIP": "Tải lên bằng chứng chuẩn bị đơn hàng",
+    "SHIPPING": "Tải lên bằng chứng bàn giao cho đơn vị vận chuyển",
     "DELIVERED": "Tải lên xác nhận giao hàng",
     "RETURNING": "Tải lên bằng chứng yêu cầu hoàn trả",
     "REFUNDED": "Tải lên bằng chứng hoàn tiền hoàn tất",
