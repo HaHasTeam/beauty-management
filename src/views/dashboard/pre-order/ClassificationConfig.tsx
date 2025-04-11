@@ -25,7 +25,6 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
     control: form.control,
     name: 'productClassifications'
   })
-
   const classificationList = fields
 
   const isRemoveDisabled = fields.length === 1
@@ -71,11 +70,11 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
             value={classificationList.map((_, index) => String(index))}
           >
             {fields.map((_, index) => {
-              const quantity = classificationList[index]?.append?.quantity ?? 0
               const color = form.watch(`productClassifications.${index}.append.color`)
               const size = form.watch(`productClassifications.${index}.append.size`)
               const other = form.watch(`productClassifications.${index}.append.other`)
-
+              const price = form.watch(`productClassifications.${index}.append.price`)
+              const quantity = form.watch(`productClassifications.${index}.append.quantity`)
               const cmpArray = [color, size, other]
               const autoTitle = cmpArray.filter((item) => item).join(' - ')
 
@@ -89,13 +88,10 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             <Tag strokeWidth={3} size={16} />
                             {autoTitle}
                           </span>
-
                           <div className='flex items-center gap-1'>
-                            <span className='font-light'>
-                              {formatCurrency(classificationList[index].append?.price ?? 0)}
-                            </span>
+                            <span className='font-light'>{formatCurrency(price ?? 0)}</span>
                             <span className='text-xs text-blue-600 px-1 bg-blue-100 rounded-3xl'>
-                              Only <b>{formatNumber(quantity, ' items available')}</b>
+                              Only <b>{formatNumber(quantity ?? 0, ' items available')}</b>
                             </span>
                           </div>
 

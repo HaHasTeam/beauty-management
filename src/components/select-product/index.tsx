@@ -98,9 +98,35 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
       if (!inputValue) {
         return Promise.resolve(productOptions)
       }
-      const filteredOptions = productOptions.filter((option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase())
-      )
+
+      // Improved search algorithm focusing on label
+      const searchTerm = inputValue.toLowerCase().trim()
+      const filteredOptions = productOptions.filter((option) => {
+        const label = option.label.toLowerCase()
+
+        // Exact match has highest priority
+        if (label === searchTerm) {
+          return true
+        }
+
+        // Starts with the search term
+        if (label.startsWith(searchTerm)) {
+          return true
+        }
+
+        // Contains the search term as a whole word
+        if (label.includes(` ${searchTerm}`) || label.includes(`${searchTerm} `)) {
+          return true
+        }
+
+        // Contains the search term anywhere
+        if (label.includes(searchTerm)) {
+          return true
+        }
+
+        return false
+      })
+
       return Promise.resolve(filteredOptions)
     },
     [productOptions]
