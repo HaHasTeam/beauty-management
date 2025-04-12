@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
 import { TServerError } from '@/types/request'
+import { translateError } from '@/utils/translate'
 
 import { useToast } from './useToast'
 
@@ -16,7 +17,7 @@ const useHandleServerError = () => {
   const handleServerError = useCallback(
     ({ error, form }: Props) => {
       errorToast({
-        message: (error as TServerError).message
+        message: translateError((error as TServerError).message)
       })
 
       const parsedTypeErrors = (error as TServerError<FieldValues>).errors

@@ -83,7 +83,8 @@
     "logoutError": "Logout unsuccessful",
     "noToken": "You are not logged in",
     "errorLoading": "An error occurred. Please try again later",
-    "errorSubmit": "Submission unsuccessful"
+    "errorSubmit": "Submission unsuccessful",
+    "invalidEmail": "Email is invalid"
   },
   "errorNotification": "Oops, there was a problem, please wait a moment!",
   "loginRcm": "Log in to update your skills!",
@@ -1556,5 +1557,8 @@
       "un_published": "Unpublished",
       "inactive": "Inactive"
     }
+  },
+  "backendError": {
+    "invalidEmail": "Email is invalid"
   }
 }

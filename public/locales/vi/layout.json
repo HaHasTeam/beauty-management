@@ -83,7 +83,8 @@
     "logoutError": "Đăng xuất không thành công",
     "noToken": "Bạn chưa đăng nhập",
     "errorLoading": "Đã xảy ra lỗi. Vui lòng thử lại sau",
-    "errorSubmit": "Gửi không thành công"
+    "errorSubmit": "Gửi không thành công",
+    "invalidEmail": "Email không hợp lệ"
   },
   "errorNotification": "Rất tiếc, có sự cố xảy ra, vui lòng chờ một chút!",
   "loginRcm": "Đăng nhập để cập nhật kỹ năng của bạn!",
@@ -1470,5 +1471,8 @@
       "un_published": "Chưa xuất bản",
       "inactive": "Không hoạt động"
     }
+  },
+  "backendError": {
+    "invalidEmail": "Email không hợp lệ"
   }
 }
