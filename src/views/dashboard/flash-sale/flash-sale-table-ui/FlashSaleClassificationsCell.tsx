@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { TFlashSale } from '@/types/flash-sale'
 import { formatCurrency, formatNumber } from '@/utils/number'
-import { minifyString } from '@/utils/string'
 
 interface FlashSaleClassificationsCellProps {
   flashSale: TFlashSale
@@ -66,13 +65,23 @@ export function FlashSaleClassificationsCell({ flashSale }: FlashSaleClassificat
                       alt={classification.title}
                       className='h-full w-full object-cover'
                     />
+                  ) : classification.type === 'DEFAULT' &&
+                    flashSale.product.images &&
+                    flashSale.product.images.length > 0 ? (
+                    <img
+                      src={flashSale.product.images[0].fileUrl}
+                      alt={classification.title}
+                      className='h-full w-full object-cover'
+                    />
                   ) : (
                     <Image className='h-4 w-4 text-muted-foreground' />
                   )}
                 </div>
                 <div className='flex-1 min-w-0'>
                   <div className='text-xs font-medium truncate capitalize text-foreground'>{classification.title}</div>
-                  <div className='text-[10px] text-muted-foreground'>SKU: {minifyString(classification.sku || '')}</div>
+                  <div className='text-[10px] text-muted-foreground truncate max-w-[200px]'>
+                    SKU: {classification.sku?.replace('#', '')}
+                  </div>
                 </div>
                 <div className='flex flex-col items-end min-w-[80px]'>
                   <div className='text-xs font-semibold text-primary'>{formatCurrency(classification.price || 0)}</div>

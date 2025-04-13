@@ -46,10 +46,11 @@ import {
   AddConsultantServiceRequestParams,
   UpdateConsultantServiceByIdRequestParams
 } from '@/network/apis/consultant-service/type'
-import { ConsultantServiceStatusEnum, ConsultantServiceTypeEnum } from '@/types/consultant-service'
+import { ConsultantServiceStatusEnum, ConsultantServiceTypeEnum, IConsultantService } from '@/types/consultant-service'
 import { TFile } from '@/types/file'
 
-import { convertConsultantServiceToForm, formSchema, SchemaType } from './helper'
+import { convertConsultantServiceToForm } from '../consultant-service/helper'
+import { formSchema, SchemaType } from './helper'
 
 const ConsultantServiceDetails = () => {
   const { id: consultantServiceId } = useParams()
@@ -301,7 +302,7 @@ const ConsultantServiceDetails = () => {
 
   useEffect(() => {
     if (detailConsultantServiceById?.data) {
-      const formData = convertConsultantServiceToForm(detailConsultantServiceById.data)
+      const formData = convertConsultantServiceToForm(detailConsultantServiceById.data as IConsultantService)
       form.reset(formData as unknown as SchemaType)
       replace(formData.serviceBookingFormData.questions as unknown as SchemaType['serviceBookingFormData']['questions'])
     }

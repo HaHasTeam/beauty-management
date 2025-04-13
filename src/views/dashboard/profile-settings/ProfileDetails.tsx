@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { SaveIcon, User2 } from 'lucide-react'
-import { useEffect, useId } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import Button from '@/components/button'
+import UploadFiles, { TriggerUploadRef } from '@/components/file-input/UploadFiles'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
@@ -18,6 +19,7 @@ import { defaultRequiredRegex, emailRegex, longRequiredRegex, phoneRegex } from 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getUserProfileApi, updateProfileApi } from '@/network/apis/user'
+import { FileStatusEnum, TFile } from '@/types/file'
 import { TUser, UserGenderEnum } from '@/types/user'
 
 import { convertFormIntoProfile, convertProfileIntoForm } from './helper'
@@ -35,7 +37,18 @@ const formSchema = z.object({
     .string()
     .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
     .refine(phoneRegex.pattern, phoneRegex.message()),
-  dob: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+  dob: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
+  avatar: z
+    .array(
+      z.object({
+        fileUrl: z.string().optional(),
+        name: z.string().optional(),
+        id: z.string().optional(),
+        status: z.nativeEnum(FileStatusEnum).optional()
+      })
+    )
+    .optional()
+    .default([])
 })
 
 const ProfileDetails = () => {
@@ -50,7 +63,8 @@ const ProfileDetails = () => {
       email: '',
       phone: '',
       dob: '',
-      gender: ''
+      gender: '',
+      avatar: []
     }
   })
   const handleServerError = useHandleServerError()
@@ -60,6 +74,7 @@ const ProfileDetails = () => {
     queryKey: [getUserProfileApi.queryKey],
     queryFn: getUserProfileApi.fn
   })
+  const triggerRef = useRef<TriggerUploadRef>(null)
 
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationKey: [updateProfileApi.mutationKey],
@@ -73,7 +88,21 @@ const ProfileDetails = () => {
 
   useEffect(() => {
     if (userProfileData?.data) {
-      form.reset(convertProfileIntoForm(userProfileData.data as unknown as TUser))
+      const userData = userProfileData.data as unknown as TUser
+      const formData = convertProfileIntoForm(userData)
+      form.reset({
+        ...formData,
+        avatar: userData.avatar
+          ? [
+              {
+                fileUrl: userData.avatar,
+                name: 'avatar',
+                id: userData.avatar,
+                status: FileStatusEnum.ACTIVE
+              }
+            ]
+          : []
+      })
     }
   }, [userProfileData?.data, form])
 
@@ -83,7 +112,14 @@ const ProfileDetails = () => {
       // The API needs a TUser type, but convertFormIntoProfile returns a type with a different 'role' structure
       // Using 'any' is necessary here to bridge this type gap since the API works correctly at runtime
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateProfileFn(convertFormIntoProfile(values) as any)
+      await triggerRef.current?.triggers[0]()
+      values = form.getValues()
+
+      const updateData = convertFormIntoProfile({
+        ...values,
+        avatar: values.avatar[0]?.fileUrl
+      })
+      await updateProfileFn(updateData)
 
       queryClient.invalidateQueries({
         queryKey: [getUserProfileApi.queryKey]
@@ -111,6 +147,31 @@ const ProfileDetails = () => {
           <Form {...form}>
             <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full' id={`form-${id}`}>
               <div className='gap-4 grid grid-flow-row grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
+                <FormField
+                  control={form.control}
+                  name='avatar'
+                  render={({ field }) => (
+                    <FormItem className='col-span-full'>
+                      <FormLabel required>Avatar</FormLabel>
+                      <FormControl>
+                        <UploadFiles
+                          triggerRef={triggerRef}
+                          dropZoneConfigOptions={{
+                            maxFiles: 1,
+                            accept: {
+                              'image/*': ['.png', '.jpg', '.jpeg']
+                            }
+                          }}
+                          field={{
+                            value: field.value as TFile[],
+                            onChange: field.onChange
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name='firstName'

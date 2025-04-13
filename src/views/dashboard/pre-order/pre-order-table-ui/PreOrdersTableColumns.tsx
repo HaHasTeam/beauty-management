@@ -44,11 +44,11 @@ export function getColumns(): ColumnDef<TPreOrder>[] {
         const image = row.original.product.images ? row.original.product.images[0].fileUrl : ''
 
         return (
-          <div className='flex gap-1 items-center'>
-            <Avatar className='rounded-lg'>
-              <AvatarImage src={image} className='bg-transparent size-5' />
+          <div className='flex items-center gap-2'>
+            <Avatar className='rounded-lg size-8'>
+              <AvatarImage src={image} className='bg-transparent' />
               <AvatarFallback className='bg-transparent'>
-                <Image size={24} />
+                <Image size={20} />
               </AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{productName}</span>

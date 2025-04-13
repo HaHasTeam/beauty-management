@@ -246,7 +246,7 @@ const ClassificationConfig = ({ form, triggerImageUploadRef }: Props) => {
                             name={`productClassifications.${index}.append.images`}
                             render={({ field }) => {
                               return (
-                                <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
+                                <FormItem className='col-span-3'>
                                   <FormLabel>Images Of Product</FormLabel>
                                   <UploadFiles
                                     triggerRef={triggerImageUploadRef}
