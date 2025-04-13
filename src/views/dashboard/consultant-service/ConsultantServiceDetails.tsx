@@ -1,3 +1,6 @@
+import 'react-quill-new/dist/quill.snow.css'
+import 'react-quill-new/dist/quill.bubble.css'
+
 import {
   closestCenter,
   DndContext,
@@ -16,6 +19,7 @@ import { ClipboardType, SaveIcon, Siren, Trash2 } from 'lucide-react'
 import { useEffect, useId, useRef } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { TbBrandAmigo } from 'react-icons/tb'
+import ReactQuill from 'react-quill-new'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/button'
@@ -48,9 +52,10 @@ import {
 } from '@/network/apis/consultant-service/type'
 import { ConsultantServiceStatusEnum, ConsultantServiceTypeEnum } from '@/types/consultant-service'
 import { TFile } from '@/types/file'
+import { modules } from '@/variables/textEditor'
 
 import DownloadSample from './DownloadSample'
-import { convertConsultantServiceToForm, formSchema, SchemaType } from './helper'
+import { convertConsultantServiceToForm, convertFormToService, formSchema, SchemaType } from './helper'
 import UploadConsultantFile from './UploadConsultantFile'
 
 const ConsultantServiceDetails = () => {
@@ -69,7 +74,9 @@ const ConsultantServiceDetails = () => {
   const form = useForm<SchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      description: '',
       images: [],
+      initialServiceBookingFormData: {},
       serviceBookingFormData: {
         questions: [
           {
@@ -122,20 +129,23 @@ const ConsultantServiceDetails = () => {
   }
 
   const onSubmit = async () => {
-    const triggerFns = triggerRef.current?.triggers
-    if (triggerFns) {
-      await Promise.all(triggerFns.map((trigger) => trigger()))
+    if (triggerRef.current?.triggers.length) {
+      for (const trigger of triggerRef.current.triggers) {
+        await trigger()
+      }
     }
-    const values = formSchema.parse(form.getValues())
+    const values = form.getValues()
 
+    const parsedValues = convertFormToService(values)
+    // return
     try {
       if (consultantServiceId) {
-        await updateConsultantServiceFn(values as UpdateConsultantServiceByIdRequestParams)
+        await updateConsultantServiceFn(parsedValues as unknown as UpdateConsultantServiceByIdRequestParams)
         return queryClient.invalidateQueries({
           queryKey: [getConsultantServiceByIdApi.queryKey, { consultantServiceId }]
         })
       } else {
-        await addConsultantServiceFn(values as AddConsultantServiceRequestParams)
+        await addConsultantServiceFn(parsedValues as unknown as AddConsultantServiceRequestParams)
       }
       handleBackToConsultantService()
     } catch (error) {
@@ -186,11 +196,10 @@ const ConsultantServiceDetails = () => {
   }
 
   const handleChangeStatus = async (status: ConsultantServiceStatusEnum) => {
-    const values = formSchema.parse(form.getValues())
     try {
       await updateConsultantServiceFn({
         id: consultantServiceId,
-        ...values,
+        ...form.getValues(),
         status
       } as UpdateConsultantServiceByIdRequestParams)
       queryClient.invalidateQueries({
@@ -286,7 +295,6 @@ const ConsultantServiceDetails = () => {
     switch (service?.status) {
       case ConsultantServiceStatusEnum.ACTIVE:
       case ConsultantServiceStatusEnum.BANNED:
-        return null
       default:
         return (
           <div className='flex items-center justify-end'>
@@ -304,7 +312,11 @@ const ConsultantServiceDetails = () => {
   useEffect(() => {
     if (detailConsultantServiceById?.data) {
       const formData = convertConsultantServiceToForm(detailConsultantServiceById.data)
-      form.reset(formData as unknown as SchemaType)
+      form.reset(formData as unknown as SchemaType, {
+        keepDirtyValues: false,
+        keepValues: false,
+        keepIsValid: false
+      })
       replace(formData.serviceBookingFormData.questions as unknown as SchemaType['serviceBookingFormData']['questions'])
     }
   }, [detailConsultantServiceById?.data, form, replace])
@@ -363,19 +375,47 @@ const ConsultantServiceDetails = () => {
                       </FormItem>
                     )}
                   />
+
+                  {/* Description */}
+                  <FormField
+                    control={form.control}
+                    name='description'
+                    render={({ field }) => (
+                      <FormItem className='sm:col-span-2 col-span-1'>
+                        <FormLabel required>Service Description</FormLabel>
+                        <FormControl>
+                          <div className=''>
+                            <ReactQuill
+                              theme='snow'
+                              modules={modules}
+                              value={field.value || ''}
+                              onChange={field.onChange}
+                              placeholder='Provide a detailed description of your service, its benefits, what to expect, etc.'
+                              className='text-base mb-0'
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <FormField
                     control={form.control}
                     name={`images`}
                     render={({ field }) => {
                       return (
                         <FormItem className='flex flex-col sm:col-span-2 col-span-1'>
-                          <FormLabel required>Images Of Service</FormLabel>
+                          <FormLabel required>Service Gallery</FormLabel>
                           <UploadFiles
                             triggerRef={triggerRef}
                             form={form}
                             field={field}
+                            isAcceptVideo
+                            maxImages={5}
+                            maxVideos={2}
                             dropZoneConfigOptions={{
-                              maxFiles: 6
+                              maxFiles: 5
                             }}
                           />
                           <FormMessage />

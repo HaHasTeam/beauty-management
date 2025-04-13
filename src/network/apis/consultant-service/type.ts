@@ -2,7 +2,7 @@ import { IConsultantService } from '@/types/consultant-service'
 
 export type AddConsultantServiceRequestParams = Pick<
   IConsultantService,
-  'images' | 'price' | 'serviceBookingFormData'
+  'images' | 'price' | 'serviceBookingFormData' | 'description'
 > & {
   systemService: string
 }
