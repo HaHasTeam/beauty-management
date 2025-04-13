@@ -44,7 +44,7 @@ const UploadConsultantFile: React.FC<Props> = ({ form }) => {
       .map((row: RowValues) => {
         const castRow = row as unknown as [string, string, string, string, string, string, string, string]
         return {
-          id: castRow[1] ? String(castRow[1]) : undefined,
+          id: undefined,
           question: castRow[2] || '',
           orderIndex: castRow[3] ? Number(castRow[3]) : undefined,
           mandatory: castRow[4] === 'Yes',

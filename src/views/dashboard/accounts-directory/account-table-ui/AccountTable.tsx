@@ -108,7 +108,7 @@ export function AccountTable({ data, pageCount, queryStates }: AccountTableProps
   })
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-4 overflow-y-auto'>
       <DataTable table={table} floatingBar={<AccountsTableFloatingBar table={table} />}>
         <DataTableToolbar table={table} filterFields={filterFields}>
           <AccountTableToolbarActions table={table} />

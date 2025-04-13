@@ -2,6 +2,7 @@ import { IAddress } from './address'
 import { TBankAccount } from './bank-account'
 import { IBrand } from './brand'
 import { TCartItem } from './cart-item'
+import { TFile } from './file'
 import { TMetaData } from './request'
 import { TRoleResponse } from './role'
 
@@ -36,6 +37,7 @@ export type TUser = TMetaData & {
   phone?: string
   dob?: string
   avatar?: string
+  files?: TFile[]
   status: UserStatusEnum | string
   isEmailVerify: boolean
   brands?: IBrand[]
@@ -46,6 +48,8 @@ export type TUser = TMetaData & {
   addresses?: IAddress[]
   bankAccounts?: TBankAccount[]
   cartItems?: TCartItem[]
+  certificates?: TFile[]
+  thumbnailImageList?: TFile[]
 }
 
 export type TUserFull = Omit<TUser, 'role'> & {

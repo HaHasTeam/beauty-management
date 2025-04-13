@@ -23,6 +23,10 @@ interface TimeSlotPickerProps {
   onBulkSlotChange?: (slots: Array<{ date: Date; slotIndex: number }>, isSelected: boolean) => void
   /** Set to true to make the component read-only (disables all interactions) */
   readOnly?: boolean
+  /** Type of slots to display - 'system' shows all slots, 'working' shows only active slots */
+  slotType?: 'system' | 'working'
+  /** Array of active slots from the system (used in 'working' slotType) */
+  activeSlots?: Array<{ date: Date; slotIndex: number }>
 }
 
 // Using theme colors
@@ -76,7 +80,9 @@ export function TimeSlotPicker({
   disabledSlots = [],
   maxHeight = 600, // Default max height in pixels
   onBulkSlotChange,
-  readOnly = false
+  readOnly = false,
+  slotType = 'system',
+  activeSlots = []
 }: TimeSlotPickerProps) {
   // Validate time range
   const validStartTime = Math.max(0, Math.min(23, startTime))
@@ -113,20 +119,34 @@ export function TimeSlotPicker({
   }
 
   const isSlotDisabled = (date: Date, slotIndex: number) => {
+    // In working mode, a slot is disabled if it's not in the activeSlots array
+    if (slotType === 'working') {
+      return !activeSlots.some(
+        (activeSlot) => format(activeSlot.date, 'EEEE') === format(date, 'EEEE') && activeSlot.slotIndex === slotIndex
+      )
+    }
+
+    // In system mode, use the original disabledSlots logic
     return disabledSlots.some(
       (disabledSlot) =>
         format(disabledSlot.date, 'EEEE') === format(date, 'EEEE') && disabledSlot.slotIndex === slotIndex
     )
   }
 
-  // Function to check if a time slot should be hidden (all days disabled)
-  const shouldHideTimeSlot = (slotIndex: number): boolean => {
-    // Check if all days for this time slot are disabled
-    return weekDays.every((day) => isSlotDisabled(day, slotIndex))
-  }
+  // Use all time slots for system mode, but filter for working mode
+  let visibleTimeSlots = timeSlots
 
-  // Filter out time slots where all days are disabled
-  const visibleTimeSlots = timeSlots.filter((_, slotIndex) => !shouldHideTimeSlot(slotIndex))
+  // For working mode, only show time slots that have at least one active day
+  if (slotType === 'working') {
+    visibleTimeSlots = timeSlots.filter((_, slotIndex) => {
+      // Check if this time slot has at least one active day across the week
+      return weekDays.some((day) => {
+        return activeSlots.some(
+          (slot) => format(slot.date, 'EEEE') === format(day, 'EEEE') && slot.slotIndex === slotIndex
+        )
+      })
+    })
+  }
 
   // Helper to get time period (morning, afternoon, evening)
   const getTimePeriod = (hour: number) => {
@@ -357,7 +377,10 @@ export function TimeSlotPicker({
           </div>
 
           {/* Time slots grid with max height and scrolling - only showing non-all-disabled slots */}
-          <div className='overflow-y-auto' style={{ maxHeight: `${maxHeight}px` }}>
+          <div
+            className='overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0'
+            style={{ maxHeight: `${maxHeight}px` }}
+          >
             {visibleTimeSlots.map((timeSlot, visibleIndex) => {
               const hour = parseInt(timeSlot.split(':')[0])
               const minute = parseInt(timeSlot.split(':')[1])
@@ -388,6 +411,15 @@ export function TimeSlotPicker({
                     const selected = isSlotSelected(day, originalSlotIndex)
                     const disabled = isSlotDisabled(day, originalSlotIndex) || readOnly
 
+                    // Check if slot is active in working mode
+                    const isActive =
+                      slotType === 'working'
+                        ? activeSlots.some(
+                            (slot) =>
+                              format(slot.date, 'EEEE') === format(day, 'EEEE') && slot.slotIndex === originalSlotIndex
+                          )
+                        : !disabled
+
                     // Apply special styling for active and inactive slots
                     return (
                       <div key={dayIndex} className='flex justify-center items-center p-1'>
@@ -399,8 +431,9 @@ export function TimeSlotPicker({
                               : disabled && !readOnly
                                 ? timeSlotColors.inactive[period as keyof typeof timeSlotColors.inactive]
                                 : timeSlotColors.unselected[period as keyof typeof timeSlotColors.unselected],
+                            // Make inactive slots more subtle, and active slots more outstanding
                             disabled && !readOnly
-                              ? 'opacity-40 cursor-not-allowed'
+                              ? 'opacity-30 cursor-not-allowed'
                               : readOnly
                                 ? selected
                                   ? 'cursor-default'
@@ -420,14 +453,21 @@ export function TimeSlotPicker({
                               ✓
                             </span>
                           ) : disabled && !readOnly ? (
-                            <span className='w-6 h-6 flex items-center justify-center text-muted'>✕</span>
+                            // Empty content for disabled slots
+                            <span className='w-6 h-6 flex items-center justify-center'></span>
                           ) : (
-                            <span className='w-6 h-6 flex items-center justify-center'>—</span>
+                            // Remove the dash symbol, keep only the background highlight for active slots
+                            <span
+                              className={cn(
+                                'w-6 h-6 flex items-center justify-center rounded-full',
+                                isActive ? 'bg-accent/50' : 'bg-transparent'
+                              )}
+                            ></span>
                           )}
 
-                          {/* Status indicator for active vs inactive slots - hide in readOnly mode if not selected */}
+                          {/* Status indicator for active vs inactive slots - make it more noticeable */}
                           {!disabled && !selected && !readOnly && (
-                            <span className='absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse'></span>
+                            <span className='absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm'></span>
                           )}
                         </button>
                       </div>

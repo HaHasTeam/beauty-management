@@ -17,7 +17,6 @@ import { Link } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
   DropdownMenu,
@@ -43,27 +42,6 @@ interface GetColumnsProps {
 }
 export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IResponseProduct>[] {
   return [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          className='-translate-x-2'
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 50
-    },
     {
       id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Product' />,
@@ -91,7 +69,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
     {
       accessorKey: 'sku',
       header: ({ column }) => <DataTableColumnHeader column={column} title='SKU' />,
-      cell: ({ cell }) => <div className='text-center'>{cell.row.original.sku}</div>,
+      cell: ({ cell }) => <div className='text-end'>{cell.row.original.sku}</div>,
       enableSorting: false,
       enableHiding: false,
       size: 150

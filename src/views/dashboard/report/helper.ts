@@ -106,36 +106,3 @@ export const formSchema = z.object({
 })
 
 export type SchemaType = z.infer<typeof formSchema>
-
-export const convertConsultantServiceToForm = (data: IConsultantService): FormType => {
-  return {
-    id: data?.id,
-    price: data.price,
-    images: data.images.filter((image) => image.status !== FileStatusEnum.INACTIVE),
-    systemService: data.systemService.id,
-    serviceBookingFormData: {
-      id: data.serviceBookingForm?.id,
-      title: data.serviceBookingForm.title,
-      questions: data.serviceBookingForm.questions.map((question) => {
-        return {
-          id: question?.id,
-          question: question.question,
-          orderIndex: question.orderIndex,
-          mandatory: question.mandatory,
-          images: question.images.filter((image) => image.status !== FileStatusEnum.INACTIVE),
-          type: question.type,
-          answers: question.answers
-            ? Object.keys(question.answers).map((key) => {
-                if (question.answers) {
-                  return {
-                    label: String(question.answers[key as keyof typeof question.answers]),
-                    value: key
-                  }
-                }
-              })
-            : null
-        }
-      })
-    }
-  } as FormType
-}

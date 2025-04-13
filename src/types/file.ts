@@ -16,6 +16,7 @@ export type CustomFile = File & {
   fileUrl?: string
   id?: string
   status?: FileStatusEnum
+  index?: number
 }
 
 export type TServerFile = TMetaData & {
