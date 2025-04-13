@@ -37,7 +37,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const formatCurrency = (amount?: number): string => {
       if (amount === 0) return '0'
       if (amount === undefined || isNaN(amount)) return ''
-      
+
       return new Intl.NumberFormat(locale, {
         maximumSignificantDigits: MAX_DIGITS
       }).format(amount)
@@ -51,12 +51,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         const hasDecimalPoint = inputString.includes('.')
         const [integerPart, decimal] = inputString.split('.').map((part) => part.replace(/\D/g, ''))
         const decimalPart = hasDecimalPoint ? `.${decimal}` : ''
-        
+
         const isEmpty = !integerPart && !decimal
         const isZero = integerPart === '0' && !decimal
-        
+
         const inputValue = isEmpty ? undefined : isZero ? 0 : Number(`${integerPart || '0'}${decimalPart}`)
-        
+
         const formattedInputValue = isEmpty ? '' : isZero ? '0' : `${formatCurrency(Number(integerPart))}${decimalPart}`
 
         switch (type) {
@@ -114,7 +114,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
               break
             }
-            
+
             setFormattedValue(formattedInputValue)
             if (onChange) onChange(inputValue as unknown as React.ChangeEvent<HTMLInputElement>)
             break
