@@ -35,34 +35,81 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isFileInput = type === 'file'
 
     const formatCurrency = (amount?: number): string => {
-      if (amount === 0) return '0'
       if (amount === undefined || isNaN(amount)) return ''
-      
+      if (amount === 0) return '0'
+
       return new Intl.NumberFormat(locale, {
         maximumSignificantDigits: MAX_DIGITS
       }).format(amount)
     }
 
-    const [formattedValue, setFormattedValue] = React.useState(isNumberInput ? formatCurrency(Number(value)) : value)
+    const [formattedValue, setFormattedValue] = React.useState(
+      isNumberInput ? (value === '' ? '' : formatCurrency(Number(value))) : value
+    )
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (isNumberInput) {
         const inputString = event.target.value.slice(0, MAX_DIGITS + 1)
 
+        // Handle empty input
+        if (!inputString) {
+          setFormattedValue('')
+          if (onChange) onChange(undefined as unknown as React.ChangeEvent<HTMLInputElement>)
+          return
+        }
+
         const hasDecimalPoint = inputString.includes('.')
         const [integerPart, decimal] = inputString.split('.').map((part) => part.replace(/\D/g, ''))
         const decimalPart = hasDecimalPoint ? `.${decimal}` : ''
-        
+
+        // Special handling for decimal inputs (0.x)
+        // Keep the exact format during entry to allow proper decimal input
+        if (hasDecimalPoint) {
+          if (integerPart === '' || integerPart === '0') {
+            // Case: ".x" or "0.x"
+            const formattedInput = `${integerPart || '0'}${decimalPart}`
+            setFormattedValue(formattedInput)
+
+            if (decimal === '') {
+              // Just entered the decimal point (e.g., "0.") - don't convert to number yet
+              if (onChange)
+                onChange(
+                  (integerPart === '0' || integerPart === ''
+                    ? 0
+                    : Number(integerPart)) as unknown as React.ChangeEvent<HTMLInputElement>
+                )
+            } else {
+              // Has some decimal digits
+              const numValue = parseFloat(formattedInput)
+              if (onChange) onChange(numValue as unknown as React.ChangeEvent<HTMLInputElement>)
+            }
+            return
+          }
+        }
+
         const isEmpty = !integerPart && !decimal
-        const isZero = integerPart === '0' && !decimal
-        
-        const inputValue = isEmpty ? undefined : isZero ? 0 : Number(`${integerPart || '0'}${decimalPart}`)
-        
-        const formattedInputValue = isEmpty ? '' : isZero ? '0' : `${formatCurrency(Number(integerPart))}${decimalPart}`
+
+        if (isEmpty) {
+          setFormattedValue('')
+          if (onChange) onChange(undefined as unknown as React.ChangeEvent<HTMLInputElement>)
+          return
+        }
+
+        const isZero = integerPart === '0' && !hasDecimalPoint
+
+        if (isZero) {
+          setFormattedValue('0')
+          if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
+          return
+        }
+
+        // Normal number formatting
+        const inputValue = Number(`${integerPart || '0'}${decimalPart}`)
+        const formattedInputValue = `${formatCurrency(Number(integerPart))}${decimalPart}`
 
         switch (type) {
           case 'percentage': {
             if (inputValue === undefined) {
-              setFormattedValue(formattedInputValue)
+              setFormattedValue('')
               if (onChange) onChange(undefined as unknown as React.ChangeEvent<HTMLInputElement>)
               return
             }
@@ -82,39 +129,20 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             break
           }
           case 'quantity': {
-            if (inputValue === undefined) {
-              setFormattedValue('')
-              if (onChange) onChange('' as unknown as React.ChangeEvent<HTMLInputElement>)
-              break
+            if (maxVal !== undefined && inputValue > maxVal) {
+              setFormattedValue(formatCurrency(maxVal))
+              if (onChange) onChange(maxVal as unknown as React.ChangeEvent<HTMLInputElement>)
+              return
             }
 
-            if (inputValue === 0) {
-              setFormattedValue('0')
-              if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
-              break
-            }
-
-            const integerPart = inputValue.toString().split('.')[0]
-            const integerFormatted = formatCurrency(Number(integerPart))
-
-            if (maxVal !== undefined) {
-              if (inputValue > maxVal) {
-                setFormattedValue(formatCurrency(maxVal))
-                if (onChange) onChange(maxVal as unknown as React.ChangeEvent<HTMLInputElement>)
-                break
-              }
-            }
-            setFormattedValue(integerFormatted)
-            if (onChange) onChange(Number(integerPart) as unknown as React.ChangeEvent<HTMLInputElement>)
+            // For whole numbers only in quantity
+            const integerValue = Math.floor(inputValue)
+            setFormattedValue(formatCurrency(integerValue))
+            if (onChange) onChange(integerValue as unknown as React.ChangeEvent<HTMLInputElement>)
             break
           }
           default: {
-            if (inputValue === 0) {
-              setFormattedValue('0')
-              if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
-              break
-            }
-            
+            // For general currency/number
             setFormattedValue(formattedInputValue)
             if (onChange) onChange(inputValue as unknown as React.ChangeEvent<HTMLInputElement>)
             break
@@ -140,11 +168,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     React.useEffect(() => {
       if (value !== undefined) {
-        const numberValue = type === 'percentage' ? Number(value) * 100 : Number(value)
-        const formValue = isNumberInput
-          ? formatCurrency(maxVal !== undefined ? (numberValue > maxVal ? maxVal : numberValue) : numberValue)
-          : value
-        setFormattedValue(formValue)
+        if (value === '') {
+          setFormattedValue('')
+        } else {
+          const numberValue = type === 'percentage' ? Number(value) * 100 : Number(value)
+          const formValue = isNumberInput
+            ? formatCurrency(maxVal !== undefined ? (numberValue > maxVal ? maxVal : numberValue) : numberValue)
+            : value
+          setFormattedValue(formValue)
+        }
       }
     }, [value, maxVal])
 

@@ -130,12 +130,17 @@ const CategoryDetails = () => {
   }
 
   const onSubmit = async (data: FormType) => {
+    //eslint-disable-next-line
+    if (!!data.parentCategory) {
+      delete data.parentCategory
+    }
+
     try {
       if (categoryId) {
         await updateCategoryFn({
+          ...data,
           name: data.name,
           detail: data.detail as FormType['detail'] as Record<string, CategoryDetailType>,
-          parentCategory: data.parentCategory,
           id: categoryId
         })
         return queryClient.invalidateQueries({

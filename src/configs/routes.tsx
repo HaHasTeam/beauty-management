@@ -390,8 +390,8 @@ export const routesConfig: TRoutes = {
     getPath: (params) => `/dashboard/system-services/update/${params.id}`
   },
   [Routes.CONSULTANT_SERVICE]: {
-    name: 'Consultant Service',
-    title: 'Consultant Service',
+    name: 'Consultant Services',
+    title: 'Consultant Services',
     description: 'Consultant Service',
     path: '/dashboard/consultant-service',
     getPath: () => '/dashboard/consultant-service'
