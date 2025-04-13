@@ -495,6 +495,7 @@ const UploadFiles = ({
     }
 
     return ''
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Thêm useEffect để cleanup các URL khi component unmount
@@ -512,6 +513,7 @@ const UploadFiles = ({
       })
       objectUrlCache.clear()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Helper function to categorize files by type

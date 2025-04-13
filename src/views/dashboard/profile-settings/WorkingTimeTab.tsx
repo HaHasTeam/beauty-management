@@ -276,6 +276,7 @@ const WorkingTimeTab = () => {
       // Initialize with empty array when consultant has no slots
       setSelectedSlots([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consultantSlotsData?.data])
 
   // Helper function to match slots by day and time - we'll use this in UI display logic
