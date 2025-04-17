@@ -37,7 +37,9 @@ export enum Routes {
   ADD_GROUP_PRODUCT = 'add-group-product',
   GROUP_PRODUCT_DETAILS = 'group-product-details',
   ORDER_DETAILS = 'order-details',
+  ORDER_PARENT_DETAIL = 'order-origin-details',
   ORDER_LIST = 'order-list',
+  ORDER_PARENT_LIST = 'order-list/origin',
   SYSTEM_SERVICE_LIST = 'system-services',
   SYSTEM_SERVICE_DETAILS = 'system-services-details',
   CREATE_SYSTEM_SERVICE = 'system-services/create',
@@ -49,12 +51,15 @@ export enum Routes {
   CONSULTANT_SERVICE_DETAILS = 'consultant-service-details',
   WORKING_TIME = 'working-time',
   REPORTS = 'reports',
+  BOOKING_LIST = 'bookings',
+  BOOKING_DETAIL = 'bookings-details',
   BLOG = 'blogs',
   CREATE_BLOG = 'add-blog',
   UPDATE_BLOG = 'update-blog',
   BLOG_DETAILS = 'blog-details',
   MY_BRAND_DASHBOARD = 'my-brand',
-  TRANSACTION_MANAGEMENT = 'transaction-management'
+  TRANSACTION_MANAGEMENT = 'transaction-management',
+  LIVESTREAM = 'liveStream'
 }
 
 export const routesConfig: TRoutes = {
@@ -228,6 +233,13 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/category/[id]',
     getPath: (params) => `/dashboard/category/${params.id}`
   },
+  [Routes.BOOKING_DETAIL]: {
+    name: 'Booking Details',
+    title: 'Booking Details',
+    description: 'View and manage booking details',
+    path: '/dashboard/bookings/:id',
+    getPath: (params) => `/dashboard/bookings/${params.id}`
+  },
   [Routes.REQUESTS_QUEUE]: {
     name: 'Requests Queue',
     title: 'Requests Queue',
@@ -360,6 +372,20 @@ export const routesConfig: TRoutes = {
     description: 'Beauty order',
     path: '/dashboard/orders/:id',
     getPath: (params) => `/dashboard/orders/${params.id}`
+  },
+  [Routes.ORDER_PARENT_LIST]: {
+    name: 'Orders & Requests',
+    title: 'Orders & Requests',
+    description: 'Order List',
+    path: '/dashboard/orders/origin',
+    getPath: () => '/dashboard/orders/origin'
+  },
+  [Routes.ORDER_PARENT_DETAIL]: {
+    name: 'Order Details',
+    title: 'Order Details',
+    description: 'Beauty order',
+    path: '/dashboard/orders/origin/:id',
+    getPath: (params) => `/dashboard/orders/origin/${params.id}`
   },
   [Routes.SYSTEM_SERVICE_LIST]: {
     name: 'System Services',

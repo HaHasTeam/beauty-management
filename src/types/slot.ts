@@ -1,3 +1,4 @@
+import { IBooking } from './booking'
 import { WeekDay } from './enum'
 import { TMetaData } from './request'
 import { TUser } from './user'
@@ -15,6 +16,13 @@ export type TSlotCreate = {
   startTime: string
   endTime: string
   isActive?: boolean
+}
+
+export type ISlot = TMetaData & {
+  weekDay: WeekDay
+  startTime: string
+  endTime: string
+  bookings: IBooking[]
 }
 
 export type TBulkSlotCreate = {

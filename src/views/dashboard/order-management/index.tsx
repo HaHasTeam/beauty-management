@@ -40,7 +40,7 @@ export default function OrderManagementPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value='orders'>
-          <h2 className='text-xl font-semibold mb-4'>{t('order.management', 'Orders Management')}</h2>
+          <h2 className='text-xl font-semibold mb-4'>{t('order.management', 'Order Management')}</h2>
           <OrderTable />
         </TabsContent>
         <TabsContent value='requests'>

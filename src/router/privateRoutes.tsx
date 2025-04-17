@@ -10,6 +10,7 @@ import BlogDetails from '@/views/dashboard/blog-management/BlogDetails'
 import CreateBlog from '@/views/dashboard/blog-management/CreateBlog'
 import UpdateBlog from '@/views/dashboard/blog-management/UpdateBlog'
 import Brands from '@/views/dashboard/brand-management'
+import BookingDetail from '@/views/dashboard/brand-management/booking-detail'
 import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
 import Category from '@/views/dashboard/category'
 import CategoryDetailById from '@/views/dashboard/category/[id]'
@@ -26,6 +27,7 @@ import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
 import MyBrandDashBoard from '@/views/dashboard/my-brand-dashboard'
 import OrderList from '@/views/dashboard/order-management'
+import OrderParentDetail from '@/views/dashboard/order-management/order-parent-detail'
 import OrderDetails from '@/views/dashboard/order-management/OrderDetails'
 import { RedirectToMainDashboard } from '@/views/dashboard/others'
 import PreOrder from '@/views/dashboard/pre-order'
@@ -175,6 +177,15 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
+        path: routesConfig[Routes.BOOKING_LIST].path.replace('/dashboard/', ''),
+        children: [
+          {
+            path: ':id',
+            element: <BookingDetail />
+          }
+        ]
+      },
+      {
         path: routesConfig[Routes.CONSULTANT_SERVICE].path.replace('/dashboard/', ''),
         children: [
           {
@@ -276,6 +287,16 @@ export const privateRoutes: RouteObject[] = [
             element: <OrderList />
           },
           { path: ':id', element: <OrderDetails /> }
+        ]
+      },
+      {
+        path: routesConfig[Routes.ORDER_PARENT_LIST].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <OrderList />
+          },
+          { path: ':id', element: <OrderParentDetail /> }
         ]
       },
       {

@@ -16,6 +16,11 @@ export type TFilterTransactionsParams = BaseParams<{
   maxAmount?: number
 }>
 
+export enum PAY_TYPE {
+  ORDER = 'ORDER',
+  BOOKING = 'BOOKING'
+}
+
 /**
  * Parameters for getting daily order statistics
  */
