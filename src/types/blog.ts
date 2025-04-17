@@ -6,6 +6,7 @@ export interface IServerCreateBlog {
   content: string
   status: BlogEnum
   authorId?: string
+  tag: string
 }
 export interface IBlogDetails {
   id: string
@@ -13,6 +14,7 @@ export interface IBlogDetails {
   updatedAt: string
   title: string
   content: string
+  tag: string
   status: BlogEnum
   author: TUser
 }

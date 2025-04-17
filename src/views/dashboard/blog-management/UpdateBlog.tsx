@@ -36,7 +36,8 @@ const UpdateBlog = () => {
   const defaultBlogValues = {
     title: '',
     content: '',
-    status: BlogEnum.UN_PUBLISHED
+    status: BlogEnum.UN_PUBLISHED,
+    tag: ''
   }
 
   const form = useForm<z.infer<typeof FormBlogSchema>>({
@@ -78,7 +79,8 @@ const UpdateBlog = () => {
       form.reset({
         title: blogData.data.title,
         content: blogData.data.content,
-        status: blogData.data.status
+        status: blogData.data.status,
+        tag: blogData.data.tag
       })
     } else {
       form.reset({
@@ -95,7 +97,8 @@ const UpdateBlog = () => {
       form.reset({
         title: blogData.data.title,
         content: blogData.data.content || '<p><br></p>',
-        status: blogData.data.status
+        status: blogData.data.status,
+        tag: blogData.data.tag
       })
     }
   }, [blogData, form])
@@ -108,7 +111,8 @@ const UpdateBlog = () => {
       const transformedData: IServerCreateBlog = {
         title: values.title,
         content: values.content,
-        status: values.status
+        status: values.status,
+        tag: values.tag
       }
 
       await updateBlogFn({ id: id ?? '', data: transformedData })
@@ -151,6 +155,26 @@ const UpdateBlog = () => {
                   <div className='w-full space-y-1'>
                     <FormControl>
                       <Input placeholder={t('updateBlog.titlePlaceholder')} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
+          {/* Tag Field */}
+          <FormField
+            control={form.control}
+            name='tag'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='flex w-full gap-2'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>{t('createBlog.tag')}</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <Input placeholder={t('createBlog.tagPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </div>

@@ -1,3 +1,5 @@
+import { FileText } from 'lucide-react'
+
 import { BookingStatusEnum } from '@/types/enum'
 
 export function getBookingStatusConfig(t: (key: string) => string) {
@@ -74,6 +76,19 @@ export function getBookingStatusConfig(t: (key: string) => string) {
       alertDescription: t('booking.statusDescription.formSubmitted'),
       nextStatus: BookingStatusEnum.WAIT_FOR_CONFIRMATION
     },
+    [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
+      borderColor: 'border-blue-300',
+      bgColor: 'bg-blue-100',
+      bgTagColor: 'bg-blue-300',
+      titleColor: 'text-blue-600',
+      alertVariant: 'bg-blue-100 rounded-lg p-3 border',
+      buttonBg: 'bg-green-600 hover:bg-green-800',
+      alertTitle: t('booking.status.completedConsultingCall'),
+      buttonText: t('booking.status.sendResultSheet'),
+      icon: FileText,
+      alertDescription: t('booking.statusDescription.completedConsultingCall'),
+      nextStatus: BookingStatusEnum.SENDED_RESULT_SHEET
+    },
     [BookingStatusEnum.SENDED_RESULT_SHEET]: {
       borderColor: 'border-indigo-300',
       bgColor: 'bg-indigo-100',
@@ -96,6 +111,18 @@ export function getBookingStatusConfig(t: (key: string) => string) {
       alertTitle: t('booking.refunded'),
       buttonText: '',
       alertDescription: t('booking.statusDescription.refunded'),
+      nextStatus: ''
+    },
+    [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
+      borderColor: 'border-purple-300',
+      bgColor: 'bg-purple-100',
+      bgTagColor: 'bg-purple-200',
+      titleColor: 'text-purple-600',
+      alertVariant: 'bg-purple-100 rounded-lg p-3 border',
+      buttonBg: 'bg-purple-600 hover:bg-purple-800',
+      alertTitle: t('booking.completedConsultingCall'),
+      buttonText: t('booking.viewConsultingCall'),
+      alertDescription: t('booking.statusDescription.completedConsultingCall'),
       nextStatus: ''
     }
   }

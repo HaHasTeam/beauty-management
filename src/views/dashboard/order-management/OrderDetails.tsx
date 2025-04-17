@@ -425,6 +425,9 @@ const OrderDetails = () => {
                     totalPlatformDiscount={useOrderData?.data?.platformVoucherDiscount}
                     totalPayment={useOrderData?.data?.totalPrice}
                     paymentMethod={useOrderData?.data?.paymentMethod}
+                    brandVoucherId={useOrderData?.data?.shopVoucherId}
+                    platformVoucherId={useOrderData?.data?.platformVoucherId}
+                    livestreamId={useOrderData?.data?.livestreamId}
                   />
                 </div>
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||

@@ -6,11 +6,12 @@ import {
   ICreatePreOrder,
   IOrder,
   IOrderFilter,
+  IOrderFilterFilter,
   IOrderItem,
   IRejectReturnRequestOrder,
   IReturnRequestOrder
 } from '@/types/order'
-import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
+import { TServerResponse, TServerResponseWithPagination, TServerResponseWithPaging } from '@/types/request'
 import { IStatusTracking } from '@/types/status-tracking'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
@@ -53,6 +54,36 @@ export const getAllOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>
     method: 'GET'
   })
 })
+
+export const filterOrdersParentApi = toQueryFetcher<IOrderFilterFilter, TServerResponseWithPagination<IOrder[]>>(
+  'filterOrdersParentApi',
+  async (filterData) => {
+    const { page, limit, sortBy, order, ...rest } = filterData || {}
+
+    const body: IOrderFilterFilter = {}
+    if (rest.search) {
+      body.search = rest.search
+    }
+
+    return privateRequest('/orders/filter-parent', {
+      method: 'POST',
+      data: body,
+      params: {
+        page,
+        limit,
+        sortBy,
+        order
+      }
+    })
+  }
+)
+
+export const getParentOrderByIdApi = toQueryFetcher<string, TServerResponse<IOrder>>(
+  'getParentOrderByIdApi',
+  async (orderId) => {
+    return privateRequest(`/orders/get-parent-by-id/${orderId}`)
+  }
+)
 
 export const getOnlyChildOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>>(
   'getOnlyChildOrderListApi',
@@ -241,6 +272,41 @@ export const filterOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithP
     }
 
     return privateRequest('/orders/filter', {
+      method: 'POST',
+      data: body,
+      params: {
+        page,
+        limit,
+        sortBy,
+        order
+      }
+    })
+  }
+)
+
+export const filterParentOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithPaging<IOrder[]>>(
+  'filterParentOrdersApi',
+  async (filterData) => {
+    const { page, limit, sortBy, order, ...rest } = filterData || {}
+
+    const body: IOrderFilter = {}
+    if (rest.search) {
+      body.search = rest.search
+    }
+    if (rest.statuses?.length) {
+      body.statuses = rest.statuses
+    }
+    if (rest.types?.length) {
+      body.types = rest.types
+    }
+    if (rest.paymentMethods?.length) {
+      body.paymentMethods = rest.paymentMethods
+    }
+    if (rest.productIds?.length) {
+      body.productIds = rest.productIds
+    }
+
+    return privateRequest('/orders/filter-parent', {
       method: 'POST',
       data: body,
       params: {

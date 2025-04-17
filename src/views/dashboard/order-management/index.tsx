@@ -1,4 +1,4 @@
-import { Package, RefreshCw } from 'lucide-react'
+import { Layers, Package, RefreshCw } from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { OrderStatic } from '@/components/ui/transaction-statics'
 
 import OrderRequestTable from './order-requests-table-ui'
 import OrderTable from './order-table-ui'
+import OrderParentTable from './parent-order-table-ui'
 
 export default function OrderManagementPage() {
   const { t } = useTranslation()
@@ -29,7 +30,11 @@ export default function OrderManagementPage() {
     <div className='flex flex-col gap-4'>
       <OrderStatic />
       <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
-        <TabsList className='w-fit grid-cols-2 mb-6'>
+        <TabsList className='w-fit grid-cols-3 mb-6'>
+          <TabsTrigger value='parent-orders' className='flex items-center gap-2'>
+            <Layers className='h-4 w-4' />
+            <span>{t('order.tabs.parent_orders', 'Parent Orders')}</span>
+          </TabsTrigger>
           <TabsTrigger value='orders' className='flex items-center gap-2'>
             <Package className='h-4 w-4' />
             <span>{t('order.tabs.orders', 'Orders')}</span>
@@ -40,12 +45,16 @@ export default function OrderManagementPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value='orders'>
-          <h2 className='text-xl font-semibold mb-4'>{t('order.management', 'Orders Management')}</h2>
+          <h2 className='text-xl font-semibold mb-4'>{t('order.management', 'Order Management')}</h2>
           <OrderTable />
         </TabsContent>
         <TabsContent value='requests'>
           <h2 className='text-xl font-semibold mb-4'>{t('order.management.requests', 'Order Requests')}</h2>
           <OrderRequestTable />
+        </TabsContent>
+        <TabsContent value='parent-orders'>
+          <h2 className='text-xl font-semibold mb-4'>{t('order.management.parent', 'Parent Orders')}</h2>
+          <OrderParentTable />
         </TabsContent>
       </Tabs>
     </div>

@@ -55,7 +55,16 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
       header: ({ column }) => <DataTableColumnHeader column={column} title={i18next.t('createBlog.title')} />,
       cell: ({ row }) => {
         const title = row.original.title ?? ''
-        return <div>{title}</div>
+        return <div className='line-clamp-1 overflow-ellipsis'>{title}</div>
+      },
+      size: 200
+    },
+    {
+      id: 'tag',
+      header: ({ column }) => <DataTableColumnHeader column={column} title={i18next.t('createBlog.tag')} />,
+      cell: ({ row }) => {
+        const tag = row.original.tag ?? ''
+        return <div className='line-clamp-1 overflow-ellipsis'>{tag}</div>
       },
       size: 200
     },

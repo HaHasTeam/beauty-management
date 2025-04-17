@@ -62,6 +62,9 @@ const BlogDetails = () => {
             </Link>
           </div>
         </div>
+        <p className='text-blue-500 underline italic text-sm flex flex-wrap line-clamp-1 overflow-ellipsis'>
+          {blogData.data?.tag}
+        </p>
         <p>{blogData.data?.author?.username && `${t('createBlog.author')}: ${blogData.data?.author?.username}`}</p>
         <div className='text-sm text-muted-foreground flex justify-between items-center'>
           <p>
