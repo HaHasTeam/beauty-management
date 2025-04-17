@@ -63,24 +63,10 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 const WorkingTimeTab = () => {
-  // DEBUG flag - set to false in production
-  const DEBUG = true
-
   const [selectedSlots, setSelectedSlots] = useState<{ date: Date; slotIndex: number; id?: string }[]>([])
   const [availableSlots, setAvailableSlots] = useState<{ date: Date; slotIndex: number; id?: string }[]>([])
-  const [disabledSlots, setDisabledSlots] = useState<{ date: Date; slotIndex: number }[]>([])
   const id = useId()
   const queryClient = useQueryClient()
-
-  // Helper debug log function
-  const debugLog = (...args: unknown[]) => {
-    if (DEBUG) {
-      // eslint-disable-next-line no-console
-      console.log(...args)
-    }
-  }
-
-  // Add component cleanup on unmount
 
   // Get current user from store
   const { user } = useStore(
@@ -262,23 +248,33 @@ const WorkingTimeTab = () => {
     }
   }, [consultantError, errorToast])
 
-  // Process the consultant's working slots data
+  // Process the system slots data to get only active slots
   useEffect(() => {
-    if (consultantSlotsData?.data) {
-      // Log the consultant data for debugging
-      debugLog('Consultant slots data:', consultantSlotsData.data)
+    if (slotsData?.data) {
+      // Filter only active slots from the system (isActive: true)
+      const activeSystemSlots = slotsData.data.filter((slot) => slot.isActive === true)
 
-      // Convert consultant's slots to our component format
+      // Convert active slots to our component format
+      const convertedActiveSlots = convertApiSlotsToComponentFormat(activeSystemSlots)
+
+      // Set available slots for the TimeSlotPicker - these are the ACTIVE system slots
+      setAvailableSlots(convertedActiveSlots)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slotsData?.data])
+
+  // Check if there are no available slots even after loading
+  const hasNoAvailableSlots = !isLoadingSlots && slotsData?.data && availableSlots.length === 0
+
+  // Add useEffect to initialize selectedSlots properly from consultantSlotsData
+  useEffect(() => {
+    if (consultantSlotsData?.data && consultantSlotsData.data.length > 0) {
+      // Convert consultant's working slots to component format
       const consultantWorkingSlots = convertApiSlotsToComponentFormat(consultantSlotsData.data)
-
-      // Log the converted slots
-      debugLog('Converted consultant slots:', consultantWorkingSlots)
-
-      // IMPORTANT: Set these as selected slots regardless of system slots
-      // This ensures the consultant's slots are always displayed
       setSelectedSlots(consultantWorkingSlots)
-
-      debugLog('Selected slots set directly from consultant data:', consultantWorkingSlots)
+    } else {
+      // Initialize with empty array when consultant has no slots
+      setSelectedSlots([])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consultantSlotsData?.data])
@@ -292,37 +288,6 @@ const WorkingTimeTab = () => {
     const day2 = format(slot2.date, 'EEEE')
     return day1 === day2 && slot1.slotIndex === slot2.slotIndex
   }
-
-  // Process the system slots data to get only active slots
-  useEffect(() => {
-    if (slotsData?.data) {
-      // Log the system slots data
-      // eslint-disable-next-line no-console
-      console.log('System slots data:', slotsData.data)
-
-      // Filter only active slots from the system (isActive: true)
-      const activeSystemSlots = slotsData.data.filter((slot) => slot.isActive)
-
-      // Convert active slots to our component format
-      const convertedActiveSlots = convertApiSlotsToComponentFormat(activeSystemSlots)
-
-      // Log the active slots
-      // eslint-disable-next-line no-console
-      console.log('Converted active system slots:', convertedActiveSlots)
-
-      // Set available slots for the TimeSlotPicker
-      setAvailableSlots(convertedActiveSlots)
-
-      // Create disabled slots (slots that are not active)
-      const nonActiveSlots = slotsData.data.filter((slot) => !slot.isActive)
-      const convertedNonActiveSlots = convertApiSlotsToComponentFormat(nonActiveSlots)
-      setDisabledSlots(convertedNonActiveSlots)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slotsData?.data])
-
-  // Check if there are no available slots even after loading
-  const hasNoAvailableSlots = !isLoadingSlots && slotsData?.data && availableSlots.length === 0
 
   // Add a useEffect to show a warning if consultant slots aren't in the system
   useEffect(() => {
@@ -576,7 +541,8 @@ const WorkingTimeTab = () => {
                   selectedSlots={selectedSlots}
                   onSelectSlot={handleSelectSlot}
                   onBulkSlotChange={handleBulkSlotChange}
-                  disabledSlots={disabledSlots}
+                  slotType='working'
+                  activeSlots={availableSlots}
                   startTime={0}
                   endTime={24}
                   maxHeight={500} // Limit height for better UX

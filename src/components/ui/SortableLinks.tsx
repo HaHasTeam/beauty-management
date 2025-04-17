@@ -25,7 +25,7 @@ const SortableLinks = <T extends BaseProps>({ item, children }: SortableLinkCard
   return (
     <div ref={setNodeRef} style={style} key={uniqueId}>
       <Card className='p-4 relative flex justify-between gap-5 group'>
-        {children}
+        <div className='flex-1'>{children}</div>
         <div className='flex justify-center items-center gap-4'>
           <button
             {...attributes}

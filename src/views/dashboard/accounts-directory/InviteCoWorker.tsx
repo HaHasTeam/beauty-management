@@ -42,6 +42,7 @@ const formSchema = z.object({
   role: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   brand: z.string().optional()
 })
+
 const InviteCoWorker = () => {
   const { userData } = useStore(
     useShallow((state) => {
@@ -91,24 +92,28 @@ const InviteCoWorker = () => {
   return (
     <Dialog open={isOpened || form.formState.isSubmitting} onOpenChange={setIsOpened}>
       <DialogTrigger asChild>
-        <Button variant={'outline'} size={'sm'}>
-          <UserPlus />
+        <Button variant={'outline'} size={'sm'} className='gap-2 hover:bg-primary/5'>
+          <UserPlus className='h-4 w-4' />
           <span>Invite Members</span>
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-2xl'>
-        <DialogHeader>
-          <DialogTitle>Invite Members</DialogTitle>
-          <DialogDescription>Send request to your members email to join your team.</DialogDescription>
+        <DialogHeader className='space-y-2'>
+          <DialogTitle className='text-xl font-semibold text-foreground'>Invite Members</DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Send request to your members email to join your team.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full gap-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full gap-2'>
             <FormField
               control={form.control}
               name='emails'
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Member emails</FormLabel>
+                <FormItem className='space-y-3'>
+                  <FormLabel required className='text-sm font-medium'>
+                    Member emails
+                  </FormLabel>
                   <FormControl>
                     <div className='flex items-center gap-2 w-full'>
                       <TagsInput
@@ -117,25 +122,11 @@ const InviteCoWorker = () => {
                         placeholder='Enter your member email'
                         className='flex-1'
                       />
-                      {/* <CompoundTooltip
-                        trigger={
-                          <Button className='px-3'>
-                            <UploadIcon />
-                          </Button>
-                        }
-                        content='Upload a CSV file with a list of emails to invite multiple members.'
-                      />
-                      <CompoundTooltip
-                        trigger={
-                          <Button className='px-3'>
-                            <PiMicrosoftExcelLogoBold />
-                          </Button>
-                        }
-                        content='Download a CSV template to fill in the list of emails to invite multiple members.'
-                      /> */}
                     </div>
                   </FormControl>
-                  <FormDescription>You can invite multiple members by entering their email addresses.</FormDescription>
+                  <FormDescription className='text-xs text-muted-foreground'>
+                    You can invite multiple members by entering their email addresses.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -144,11 +135,13 @@ const InviteCoWorker = () => {
               control={form.control}
               name='role'
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Members role</FormLabel>
+                <FormItem className='space-y-3'>
+                  <FormLabel required className='text-sm font-medium'>
+                    Members role
+                  </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className='w-full'>
                         <SelectValue placeholder='Select members role' />
                       </SelectTrigger>
                     </FormControl>
@@ -165,16 +158,28 @@ const InviteCoWorker = () => {
                       )}
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    You can assign a role to your members to manage their permissions. .
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type='submit' loading={form.formState.isSubmitting}>
-              Send Invitation To Members
-            </Button>
+            <div className='flex justify-end gap-3 pt-2'>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => setIsOpened(false)}
+                disabled={form.formState.isSubmitting}
+                className='hover:bg-muted'
+              >
+                Cancel
+              </Button>
+              <Button
+                type='submit'
+                loading={form.formState.isSubmitting}
+                className='bg-green-500 hover:bg-green-500/90'
+              >
+                Send Invitation
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

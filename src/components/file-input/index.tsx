@@ -200,9 +200,20 @@ export const FileUploader = forwardRef<HTMLDivElement, FileUploaderProps & React
 
     const getPreviewUrl = (index: number) => {
       if (!value) return ''
-      const file = value[index]
-      const url = URL.createObjectURL(file)
-      return url
+      const file = value[index] as unknown as CustomFile
+
+      // Kiểm tra nếu file có fileUrl
+      if (file.fileUrl && typeof file.fileUrl === 'string') {
+        return file.fileUrl
+      }
+
+      // Nếu không có fileUrl, tạo Object URL từ file
+      try {
+        return URL.createObjectURL(file as unknown as Blob)
+      } catch {
+        // Lỗi khi tạo object URL
+        return ''
+      }
     }
 
     return (
