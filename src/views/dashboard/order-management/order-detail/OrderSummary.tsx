@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
+import { Routes, routesConfig } from '@/configs/routes'
 import { PaymentMethod } from '@/types/enum'
 
 interface OrderSummaryProps {
@@ -8,13 +10,19 @@ interface OrderSummaryProps {
   totalPlatformDiscount: number
   totalPayment: number
   paymentMethod: PaymentMethod
+  brandVoucherId: string
+  platformVoucherId: string
+  livestreamId: string
 }
 export default function OrderSummary({
   totalProductCost,
   totalBrandDiscount,
   totalPlatformDiscount,
+  brandVoucherId,
+  platformVoucherId,
   totalPayment,
-  paymentMethod
+  paymentMethod,
+  livestreamId
 }: OrderSummaryProps) {
   const { t } = useTranslation()
 
@@ -28,7 +36,17 @@ export default function OrderSummary({
           </div>
 
           <div className='flex justify-between items-center'>
-            <span className='text-sm text-muted-foreground'>{t('cart.discountBrand')}</span>
+            <div>
+              <span className='text-sm text-muted-foreground'>{t('cart.discountBrand')}</span>
+              {brandVoucherId && (
+                <Link
+                  to={routesConfig[Routes.VOUCHER] + '/' + brandVoucherId}
+                  className='text-sm text-muted-foreground text-blue-500 no-underline'
+                >
+                  {brandVoucherId.substring(0, 8).toUpperCase()}
+                </Link>
+              )}
+            </div>
             <span className='text-green-700 font-medium'>
               {totalBrandDiscount > 0 ? '-' : ''}
               {t('productCard.price', { price: totalBrandDiscount })}
@@ -36,7 +54,17 @@ export default function OrderSummary({
           </div>
 
           <div className='flex justify-between items-center'>
-            <span className='text-sm text-muted-foreground'>{t('cart.discountPlatform')}</span>
+            <div>
+              <span className='text-sm text-muted-foreground'>{t('cart.discountPlatform')}</span>
+              {platformVoucherId && (
+                <Link
+                  to={routesConfig[Routes.VOUCHER] + '/' + platformVoucherId}
+                  className='text-sm text-muted-foreground text-blue-500 no-underline'
+                >
+                  {platformVoucherId.substring(0, 8).toUpperCase()}
+                </Link>
+              )}
+            </div>
             <span className='text-green-700 font-medium'>
               {totalPlatformDiscount > 0 ? '-' : ''}
               {t('productCard.price', { price: totalPlatformDiscount })}
@@ -58,6 +86,17 @@ export default function OrderSummary({
             <span className='text-sm sm:text-base'>{t('wallet.paymentMethod')}</span>
             <span className='font-semibold text-primary text-sm sm:text-base'>{t(`wallet.${paymentMethod}`)}</span>
           </div>
+          {livestreamId && (
+            <div className='flex justify-between items-center border-t pt-3'>
+              <span className='text-sm sm:text-base'>{t('productTag.liveStream')}</span>
+              <Link
+                to={routesConfig[Routes.LIVESTREAM] + '/' + livestreamId}
+                className='text-sm text-muted-foreground text-blue-500 no-underline'
+              >
+                {livestreamId.substring(0, 8).toUpperCase()}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

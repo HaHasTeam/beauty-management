@@ -13,4 +13,5 @@ export type IStatusTracking = {
   order: IOrder
   booking: TBooking
   mediaFiles: TFile[]
+  createdAt: string
 }

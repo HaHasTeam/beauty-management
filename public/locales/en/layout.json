@@ -689,6 +689,9 @@
     }
   },
   "order": {
+    "paymentTitle": "Payment Incomplete",
+    "payment": "Payment",
+    "requestManagement": "Request Management",
     "loading": "Loading order...",
     "viewDetail": "View details",
     "buyAgain": "Buy Again",
@@ -1560,5 +1563,130 @@
   },
   "backendError": {
     "invalidEmail": "Email is invalid"
+  },
+  "payment": {
+    "methods": {
+      "wallet": "E-Wallet",
+      "credit_card": "Credit Card",
+      "bank_transfer": "Bank Transfer",
+      "cash": "Cash",
+      "momo": "MoMo",
+      "zalopay": "ZaloPay",
+      "vnpay": "VNPay",
+      "paypal": "PayPal",
+      "stripe": "Stripe",
+      "visa_card": "Visa/Mastercard",
+      "none": "None"
+    },
+    "notifyPayment": "This order has not been paid. Waiting for the customer to complete the payment of {{total}} via {{method}} within {{val}}.",
+    "changePaymentMethod": "Change payment method",
+    "paymentSuccess": "Payment successful!",
+    "methodMessage": "For group-buying purchases, the default payment method is wallet. The amount will be automatically deducted once the group order is successfully completed. Please ensure your wallet has sufficient available balance to avoid any transaction interruptions.",
+    "notEnoughBalance": "Insufficient available balance"
+  },
+  "bookingStatus": {
+    "pending": "Pending",
+    "toPay": "To Pay",
+    "waitForConfirmation": "Waiting For Confirmation",
+    "bookingConfirmed": "Booking Confirmed",
+    "formSubmitted": "Form Submitted",
+    "resultSent": "Result Sent",
+    "completed": "Completed",
+    "refunded": "Refunded",
+    "cancelled": "Cancelled"
+  },
+  "tabs": {
+    "all": "All",
+    "deposit": "Deposits",
+    "withdraw": "Withdrawals",
+    "orderPurchase": "Purchases",
+    "bookingPurchase": "Bookings",
+    "orderRefund": "Refunds",
+    "bookingRefund": "Booking Refunds",
+    "orderCancel": "Cancelled Orders",
+    "bookingCancel": "Cancelled Bookings"
+  },
+  "statuses": {
+    "completed": "Completed",
+    "failed": "Failed",
+    "refunded": "Refunded",
+    "pending": "Pending",
+    "processing": "Processing"
+  },
+  "report": {
+    "title": "Report",
+    "searchPlaceholder": "Search reports...",
+    "attachment": "Attachment",
+    "reason": "Reason",
+    "files": "Files",
+    "relatedEntities": "Related Entities",
+    "relatedOrder": "Order",
+    "relatedBooking": "Booking",
+    "relatedTransaction": "Transaction",
+    "reportedBy": "Reported by",
+    "assignee": "Assigned To",
+    "viewDetail": "View Detail",
+    "statusTimeline": "Status Timeline",
+    "resultNote": "Result Note",
+    "lastUpdate": "Last update",
+    "create": "Create Report",
+    "new": "New Report",
+    "createDescription": "Please fill in the form below to report a new issue.",
+    "createSuccess": "Report created successfully",
+    "imagePreview": "Image Preview",
+    "form": {
+      "typeLabel": "Type Of Report",
+      "typePlaceholder": "Select type of report",
+      "orderLabel": "Report For Order",
+      "bookingLabel": "Report For Booking",
+      "reasonLabel": "Reason Of Report",
+      "reasonPlaceholder": "Select reason for reporting",
+      "otherReasonLabel": "Other Reason",
+      "otherReasonPlaceholder": "Please explain your reason for reporting in detail...",
+      "evidenceLabel": "Evidence For Report"
+    },
+    "reasonOptions": {
+      "incorrectItem": "Incorrect item received",
+      "damagedItem": "Damaged item received",
+      "lateDelivery": "Late delivery",
+      "qualityIssue": "Quality issue with product/service",
+      "paymentProblem": "Payment problem",
+      "appError": "Application error",
+      "other": "Other reason"
+    },
+    "tabs": {
+      "all": "All Reports",
+      "order": "Order Reports",
+      "transaction": "Transaction Reports",
+      "booking": "Booking Reports",
+      "system": "System Reports",
+      "other": "Other Reports"
+    },
+    "type": {
+      "order": "Order Issue",
+      "transaction": "Transaction Issue",
+      "booking": "Booking Issue",
+      "system_feature": "System Issue",
+      "other": "Other Issue"
+    },
+    "status": {
+      "initial": "Created",
+      "pending": "Pending",
+      "in_processing": "Processing",
+      "done": "Resolved",
+      "cancelled": "Cancelled"
+    }
+  },
+  "pagination": {
+    "previous": "Previous page",
+    "next": "Next page",
+    "pageInfo": "{{current}} / {{total}}"
+  },
+  "currency": {
+    "vnd": "Vietnam Dong"
+  },
+  "blog": {
+    "title": "Blogs",
+    "createdAt": "Created At"
   }
 }

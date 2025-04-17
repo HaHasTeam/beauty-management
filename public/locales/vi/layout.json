@@ -612,6 +612,9 @@
     "BANK_TRANSFER": "Thẻ tín dụng/ghi nợ"
   },
   "order": {
+    "paymentTitle": "Thanh toán chưa hoàn tất",
+    "payment": "Thanh toán",
+    "requestManagement": "Quản lý yêu cầu",
     "loading": "Đang tải đơn hàng...",
     "viewDetail": "Xem chi tiết",
     "buyAgain": "Mua lại",
@@ -1474,5 +1477,119 @@
   },
   "backendError": {
     "invalidEmail": "Email không hợp lệ"
+  },
+  "payment": {
+    "methods": {
+      "wallet": "Ví điện tử",
+      "credit_card": "Thẻ tín dụng",
+      "bank_transfer": "Chuyển khoản",
+      "cash": "Tiền mặt",
+      "momo": "MoMo",
+      "zalopay": "ZaloPay",
+      "vnpay": "VNPay",
+      "paypal": "PayPal",
+      "stripe": "Stripe",
+      "visa_card": "Visa/Mastercard",
+      "none": "Không có"
+    },
+    "notifyPayment": "Đơn hàng này chưa được thanh toán. Đang chờ khách hàng hoàn tất thanh toán số tiền {{total}} bằng {{method}} trong {{val}}.",
+    "changePaymentMethod": "Đổi phương thức thanh toán",
+    "paymentSuccess": "Thanh toán thành công!",
+    "methodMessage": "Đối với giao dịch mua nhóm, phương thức thanh toán mặc định là ví. Số tiền sẽ được tự động trừ khi đơn mua nhóm hoàn tất. Vui lòng đảm bảo số dư khả dụng hợp lệ trong ví để tránh gián đoạn giao dịch.",
+    "notEnoughBalance": "Số dư khả dụng không đủ"
+  },
+  "bookingStatus": {
+    "pending": "Đang chờ",
+    "toPay": "Chờ thanh toán",
+    "waitForConfirmation": "Chờ xác nhận",
+    "bookingConfirmed": "Đã xác nhận đặt lịch",
+    "formSubmitted": "Đã gửi biểu mẫu",
+    "resultSent": "Đã gửi kết quả",
+    "completed": "Đã hoàn thành",
+    "refunded": "Đã hoàn tiền",
+    "cancelled": "Đã hủy"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "ok": "OK",
+    "confirm": "Xác Nhận",
+    "create": "Tạo Mới",
+    "update": "Cập Nhật",
+    "delete": "Xóa",
+    "search": "Tìm kiếm",
+    "continue": "Tiếp tục"
+  },
+  "report": {
+    "title": "Báo cáo",
+    "searchPlaceholder": "Tìm kiếm báo cáo...",
+    "attachment": "Tệp đính kèm",
+    "reason": "Lý do",
+    "files": "Tệp tin",
+    "relatedEntities": "Liên kết với",
+    "relatedOrder": "Đơn hàng",
+    "relatedBooking": "Lịch hẹn",
+    "relatedTransaction": "Giao dịch",
+    "reportedBy": "Người báo cáo",
+    "assignee": "Người xử lý",
+    "viewDetail": "Xem chi tiết",
+    "statusTimeline": "Tiến trình xử lý",
+    "resultNote": "Ghi chú kết quả",
+    "lastUpdate": "Cập nhật lần cuối",
+    "create": "Tạo báo cáo",
+    "new": "Báo cáo mới",
+    "createDescription": "Vui lòng điền thông tin vào biểu mẫu dưới đây để báo cáo sự cố.",
+    "createSuccess": "Tạo báo cáo thành công",
+    "imagePreview": "Xem hình ảnh",
+    "form": {
+      "typeLabel": "Loại báo cáo",
+      "typePlaceholder": "Chọn loại báo cáo",
+      "orderLabel": "Báo cáo cho đơn hàng",
+      "bookingLabel": "Báo cáo cho lịch hẹn",
+      "reasonLabel": "Lý do báo cáo",
+      "reasonPlaceholder": "Chọn lý do báo cáo",
+      "otherReasonLabel": "Lý do khác",
+      "otherReasonPlaceholder": "Vui lòng giải thích chi tiết lý do báo cáo của bạn...",
+      "evidenceLabel": "Bằng chứng cho báo cáo"
+    },
+    "reasonOptions": {
+      "incorrectItem": "Nhận sai sản phẩm",
+      "damagedItem": "Sản phẩm bị hư hỏng",
+      "lateDelivery": "Giao hàng muộn",
+      "qualityIssue": "Vấn đề về chất lượng sản phẩm/dịch vụ",
+      "paymentProblem": "Vấn đề thanh toán",
+      "appError": "Lỗi ứng dụng",
+      "other": "Lý do khác"
+    },
+    "tabs": {
+      "all": "Tất cả báo cáo",
+      "order": "Báo cáo đơn hàng",
+      "transaction": "Báo cáo giao dịch",
+      "booking": "Báo cáo lịch hẹn",
+      "system": "Báo cáo hệ thống",
+      "other": "Báo cáo khác"
+    },
+    "type": {
+      "order": "Vấn đề đơn hàng",
+      "transaction": "Vấn đề giao dịch",
+      "booking": "Vấn đề lịch hẹn",
+      "system_feature": "Vấn đề hệ thống",
+      "other": "Vấn đề khác"
+    },
+    "status": {
+      "initial": "Đã tạo",
+      "pending": "Chờ xử lý",
+      "in_processing": "Đang xử lý",
+      "done": "Đã giải quyết",
+      "cancelled": "Đã hủy"
+    }
+  },
+  "pagination": {
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "pageInfo": "{{current}} / {{total}}"
+  },
+  "currency": {
+    "vnd": "Đồng Việt Nam"
   }
 }

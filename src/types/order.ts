@@ -23,6 +23,8 @@ export interface IOrderDetail {
   type: OrderEnum
   isFeedback: boolean
   platformVoucherDiscount: number
+  platformVoucherId: string
+  shopVoucherId: string
   shopVoucherDiscount: number
   productClassification: IClassification
   productClassificationPreOrder: null | IClassification
@@ -45,7 +47,10 @@ export interface IOrderItem {
   type: OrderEnum
   status: ShippingStatusEnum
   platformVoucherDiscount: number
+  platformVoucherId: string
   shopVoucherDiscount: number
+  shopVoucherId: string
+  livestreamId: string
   orderDetails: IOrderDetail[]
   voucher: TVoucher | null
   account: TUser
@@ -68,16 +73,28 @@ export interface IOrder {
   status: ShippingStatusEnum
   platformVoucherDiscount: number
   shopVoucherDiscount: number
+  platformVoucherId: string
+  shopVoucherId: string
+  livestreamId: string
   account: TUser
   brand?: TBrand
   children?: IOrder[]
   orderDetails?: IOrderDetail[]
+  isPaymentMethodUpdated: boolean
 }
 
 // Other interfaces (kept as they were, assuming they're still needed)
 export type IOrderFilter = BaseParams<{
   search?: string
   statuses?: ShippingStatusEnum[]
+  types?: OrderEnum[]
+  paymentMethods?: PaymentMethodEnum[]
+  productIds?: string[]
+}>
+
+export type IOrderFilterFilter = BaseParams<{
+  search?: string
+  statuses?: ShippingStatusEnum[] | undefined | ShippingStatusEnum
   types?: OrderEnum[]
   paymentMethods?: PaymentMethodEnum[]
   productIds?: string[]

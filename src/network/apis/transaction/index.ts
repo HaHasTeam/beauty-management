@@ -2,11 +2,12 @@ import _ from 'lodash'
 
 import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { ITransaction, TTransaction } from '@/types/transaction'
-import { toQueryFetcher } from '@/utils/query'
+import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 import {
   OrderStatic,
+  PAY_TYPE,
   TFilterTransactionsParams,
   TGetBrandRevenueStatisticsParams,
   TGetBrandRevenueStatisticsResponse,
@@ -22,6 +23,16 @@ export const getTransactionById = toQueryFetcher<string, TServerResponse<ITransa
     return privateRequest(`/transactions/${id}`)
   }
 )
+
+export const payTransactionApi = toMutationFetcher<
+  { orderId: string; id: string; type: PAY_TYPE },
+  TServerResponse<ITransaction>
+>('payTransactionApi', async (params) => {
+  return privateRequest(`/transactions/pay`, {
+    method: 'POST',
+    data: params
+  })
+})
 
 /**
  * Filter transactions with pagination
