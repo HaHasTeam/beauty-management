@@ -1,10 +1,12 @@
 import { TBooking } from '@/types/booking'
-import { TServerResponse } from '@/types/request'
+import { BookingTypeEnum } from '@/types/enum'
+import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 import {
   TAssignUserBookingParams,
+  TFilterBookingsParams,
   TNoteResultBookingParams,
   TRequestCreateBookingParams,
   TUpdateStatusBookingParams
@@ -15,6 +17,21 @@ export const getAllBookingsApi = toQueryFetcher<void, TServerResponse<TBooking[]
     method: 'GET'
   })
 })
+
+// API to filter bookings with multiple params
+export const filterBookingsApi = toQueryFetcher<TFilterBookingsParams, TServerResponseWithPaging<TBooking[]>>(
+  'filterBookingsApi',
+  async (params) => {
+    return privateRequest('/bookings/filter-booking', {
+      method: 'GET',
+      params: {
+        ...params,
+        type: params?.type || BookingTypeEnum.SERVICE
+      }
+    })
+  }
+)
+
 export const getMyBookingsApi = toQueryFetcher<void, TServerResponse<TBooking[]>>('getMyBookingsApi', async () => {
   return privateRequest(`/bookings/get-my-bookings/`, {
     method: 'GET'

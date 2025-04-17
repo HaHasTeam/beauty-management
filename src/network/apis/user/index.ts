@@ -82,7 +82,7 @@ export const inviteMultipleCoWorkersApi = toMutationFetcher<
   return Promise.all(requests)
 })
 
-export const getAllUserApi = toQueryFetcher<void, TServerResponse<TUserResponse[]>>('getAllUserApi', async () => {
+export const getAllUserApi = toQueryFetcher<void, TServerResponse<TUser[]>>('getAllUserApi', async () => {
   return privateRequest('/accounts')
 })
 

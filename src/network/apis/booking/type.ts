@@ -1,4 +1,5 @@
-import { BookingStatusEnum, BookingTypeEnum } from '@/types/enum'
+import { BookingStatusEnum, BookingTypeEnum, ServiceTypeEnum } from '@/types/enum'
+import { BaseParams } from '@/types/request'
 
 export type TRequestCreateBookingParams = {
   //"totalPrice": 100,
@@ -14,6 +15,21 @@ export type TRequestCreateBookingParams = {
   slot: string
   brandId: string
 }
+
+export type TFilterBookingsParams = BaseParams<{
+  consultantServiceId?: string
+  consultantAccountId?: string
+  systemServiceType?: ServiceTypeEnum
+  statuses?: string // comma-separated list of statuses
+  minTotalPrice?: number
+  maxTotalPrice?: number
+  feedbackRating?: number
+  startDate?: string
+  endDate?: string
+  search?: string
+  type?: BookingTypeEnum
+}>
+
 export type TUpdateStatusBookingParams = {
   id: string
   status: BookingStatusEnum
