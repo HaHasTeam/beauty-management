@@ -29,7 +29,8 @@ import BookingStatus from './BookingStatus'
 import CancelBookingDialog from './CancelBookingDialog'
 
 const BookingDetail = () => {
-  const { bookingId } = useParams()
+  const { id: bookingId } = useParams()
+
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [openCancelBookingDialog, setOpenCancelBookingDialog] = useState<boolean>(false)

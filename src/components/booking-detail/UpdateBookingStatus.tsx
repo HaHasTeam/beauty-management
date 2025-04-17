@@ -9,6 +9,7 @@ import { getBookingByIdApi, updateBookingStatusApi } from '@/network/apis/bookin
 import { IBooking } from '@/types/booking'
 import { BookingStatusEnum, ServiceTypeEnum } from '@/types/enum'
 import { IStatusTracking } from '@/types/statusTracking'
+import { handleRoomIdGenerate } from '@/utils/meetUrl'
 
 import Button from '../button'
 import { AlertDescription } from '../ui/alert'
@@ -53,7 +54,15 @@ export default function UpdateBookingStatus({
   async function handleUpdateStatus(status: BookingStatusEnum) {
     try {
       setIsLoading(true)
-      await updateBookingStatusFn({ id: booking?.id, status })
+
+      if (status == BookingStatusEnum.BOOKING_CONFIRMED) {
+        const meetUrl = handleRoomIdGenerate()
+
+        await updateBookingStatusFn({ id: booking?.id, status, meetUrl })
+      } else {
+        await updateBookingStatusFn({ id: booking?.id, status })
+      }
+
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
@@ -250,7 +259,13 @@ export default function UpdateBookingStatus({
           )}
 
           {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
-            <Button onClick={() => {}} loading={isLoading} className='bg-primary hover:bg-primary/80 flex gap-2'>
+            <Button
+              onClick={() => {
+                window.location.href = booking.meetUrl
+              }}
+              loading={isLoading}
+              className='bg-primary hover:bg-primary/80 flex gap-2'
+            >
               {t('button.joinMeeting')}
               <CircleChevronRight />
             </Button>

@@ -261,6 +261,13 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/accounts',
     getPath: () => '/dashboard/accounts'
   },
+  [Routes.BOOKING_LIST]: {
+    name: 'Booking List ',
+    title: 'Booking List',
+    description: 'Booking List',
+    path: '/dashboard/bookings',
+    getPath: () => '/dashboard/bookings'
+  },
   [Routes.ACCOUNT_DETAILS]: {
     name: 'Account Details',
     title: 'Account Details',

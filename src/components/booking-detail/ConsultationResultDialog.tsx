@@ -163,6 +163,18 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
                           ))}
                         </div>
                       )}
+                      <div className='flex gap-2 items-center'>
+                        {(answer.images ?? []).map((item) => {
+                          return (
+                            <ImageWithFallback
+                              src={item.fileUrl}
+                              fallback={fallBackImage}
+                              alt={''}
+                              className='object-cover aspect-square w-32 h-32'
+                            />
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
                 ))}

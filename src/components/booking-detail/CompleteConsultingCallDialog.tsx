@@ -102,7 +102,10 @@ const CompleteConsultingCallDialog: React.FC<CompleteConsultingCallDialogProps> 
       await updateBookingStatusFn({
         id: booking?.id,
         status: 'COMPLETED_CONSULTING_CALL',
-        mediaFiles,
+        mediaFiles: mediaFiles.map((item) => ({
+          name: '',
+          fileUrl: item
+        })),
         resultNote: values.resultNote
       })
       setIsLoading(false)
