@@ -112,18 +112,6 @@ export function getBookingStatusConfig(t: (key: string) => string) {
       buttonText: '',
       alertDescription: t('booking.statusDescription.refunded'),
       nextStatus: ''
-    },
-    [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
-      borderColor: 'border-purple-300',
-      bgColor: 'bg-purple-100',
-      bgTagColor: 'bg-purple-200',
-      titleColor: 'text-purple-600',
-      alertVariant: 'bg-purple-100 rounded-lg p-3 border',
-      buttonBg: 'bg-purple-600 hover:bg-purple-800',
-      alertTitle: t('booking.completedConsultingCall'),
-      buttonText: t('booking.viewConsultingCall'),
-      alertDescription: t('booking.statusDescription.completedConsultingCall'),
-      nextStatus: ''
     }
   }
 }
