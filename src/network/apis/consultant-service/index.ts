@@ -48,14 +48,8 @@ export const getConsultantServiceFilterApi = toQueryFetcher<
   GetConsultantServiceFilterRequestParams,
   TServerResponseWithPaging<IConsultantService[]>
 >('getConsultantServiceFilterApi', async (params) => {
-  const response = await privateRequest(`/consultant-services/filter-consultant-services`, {
+  return privateRequest(`/consultant-services/filter-consultant-services`, {
     method: 'GET',
     params: params
   })
-  return {
-    message: 'sucess',
-    data: {
-      ...(response as TServerResponseWithPaging<IConsultantService[]>['data'])
-    }
-  }
 })

@@ -51,7 +51,7 @@ export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TSer
     if (filterParams.types?.length) {
       dataPre.types = filterParams.types
     }
-    return privateRequest('/transactions/filter-for-admin', {
+    return privateRequest('/transactions/filter', {
       method: 'POST',
       data: dataPre,
       params: {
