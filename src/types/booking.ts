@@ -1,10 +1,6 @@
 import { IBranch2 } from './Branch'
-<<<<<<< HEAD
 import { TBrand } from './brand'
 import { IConsultantService, IConsultantServiceDetailServer } from './consultant-service'
-=======
-import { IConsultantService } from './consultant-service'
->>>>>>> 82b23c5 (feat: add booking table and parent-order)
 import { BookingStatusEnum, BookingTypeEnum, PaymentMethod } from './enum'
 import { PaymentMethodEnum } from './payment'
 import { TMetaData } from './request'
