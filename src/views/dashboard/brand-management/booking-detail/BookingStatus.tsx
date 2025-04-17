@@ -16,7 +16,7 @@ export default function BookingStatus({ status, size = 'medium' }: BookingStatus
   const sizeClasses = {
     small: 'px-1 text-xs',
     medium: 'px-2 py-1 text-sm sm:text-xs',
-    large: 'p-3 lg:text-base md:text-sm sm:text-xs',
+    large: 'p-3 lg:text-base md:text-sm sm:text-xs'
   }
 
   // Define color based on status

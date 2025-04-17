@@ -912,6 +912,9 @@
     "brand": "Brand"
   },
   "validation": {
+    "tagRequired": "Slug must be at least 3 characters.",
+    "tagRequiredMax": "Slug must be less than 100 characters.",
+    "tagRegex": "Slug can only contain lowercase letters, numbers, and hyphens.",
     "requiredText": "This field is required",
     "onlyInteger": "Please enter a valid integer",
     "email": "Please enter a valid email address",
@@ -1520,6 +1523,8 @@
   },
   "createBlog": {
     "title": "Title",
+    "tag": "Slug",
+    "tagPlaceholder": "Enter slug",
     "titlePlaceholder": "Enter title",
     "content": "Content",
     "contentPlaceholder": "Enter content",

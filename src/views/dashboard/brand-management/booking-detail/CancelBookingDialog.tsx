@@ -15,7 +15,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
-import { cancelBookingApi, getBookingByIdApi } from '@/network/apis/booking'
+import { cancelBookingApi, getBookingByIdApi } from '@/network/apis/booking/details'
 
 interface CancelBookingDialogProps {
   open: boolean

@@ -1,3 +1,5 @@
+import { FileText } from 'lucide-react'
+
 import { BookingStatusEnum } from '@/types/enum'
 
 export function getBookingStatusConfig(t: (key: string) => string) {
@@ -73,6 +75,19 @@ export function getBookingStatusConfig(t: (key: string) => string) {
       buttonText: t('booking.reviewForm'),
       alertDescription: t('booking.statusDescription.formSubmitted'),
       nextStatus: BookingStatusEnum.WAIT_FOR_CONFIRMATION
+    },
+    [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
+      borderColor: 'border-blue-300',
+      bgColor: 'bg-blue-100',
+      bgTagColor: 'bg-blue-300',
+      titleColor: 'text-blue-600',
+      alertVariant: 'bg-blue-100 rounded-lg p-3 border',
+      buttonBg: 'bg-green-600 hover:bg-green-800',
+      alertTitle: t('booking.status.completedConsultingCall'),
+      buttonText: t('booking.status.sendResultSheet'),
+      icon: FileText,
+      alertDescription: t('booking.statusDescription.completedConsultingCall'),
+      nextStatus: BookingStatusEnum.SENDED_RESULT_SHEET
     },
     [BookingStatusEnum.SENDED_RESULT_SHEET]: {
       borderColor: 'border-indigo-300',

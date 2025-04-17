@@ -9,7 +9,7 @@ const ProductClassificationCombobox = ({ onSelect, placeholder }: ProductClassif
     onSelect(classification)
     placeholder.toString()
   }
-  return <div>ProductClassificationCombobox</div>
+  return <div onClick={() => handleSelectProduct}>ProductClassificationCombobox</div>
 }
 
 export default ProductClassificationCombobox
