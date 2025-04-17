@@ -36,14 +36,14 @@ const SystemServiceForm = ({
 }: SystemServiceFormProps) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { data: useCategoryData, isFetching: isGettingCategory } = useQuery({
+  const { data: useCategoryData } = useQuery({
     queryKey: [getAllCategoryApi.queryKey],
     queryFn: getAllCategoryApi.fn
   })
   return (
     <>
       {isLoading && <LoadingLayer />}
-      {!isGettingCategory && (
+      {
         <Form {...form}>
           <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
             <div className='w-full p-4 lg:p-6 bg-white rounded-lg shadow-md space-y-4'>
@@ -94,7 +94,7 @@ const SystemServiceForm = ({
             </div>
           </form>
         </Form>
-      )}
+      }
     </>
   )
 }
