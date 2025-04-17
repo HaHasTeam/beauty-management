@@ -473,5 +473,12 @@ export const routesConfig: TRoutes = {
     description: 'Original Order Details',
     path: '/dashboard/orders/origin/:id',
     getPath: (params) => `/dashboard/orders/origin/${params.id}`
+  },
+  [Routes.BOOKING_LIST]: {
+    name: 'Booking List',
+    title: 'Booking List',
+    description: 'Booking List',
+    path: '/dashboard/bookings',
+    getPath: () => '/dashboard/bookings'
   }
 }
