@@ -316,6 +316,11 @@
       "title": "Không tìm thấy đánh giá",
       "description": "Đánh giá này có thể đã bị xóa hoặc không tồn tại.",
       "button": "Quay lại"
+    },
+    "bookingDetail": {
+      "title": "Không tìm thấy đặt lịch",
+      "description": "Đặt lịch bạn đang tìm kiếm không tồn tại hoặc bạn không có quyền xem nó.",
+      "button": "Xem đặt lịch của tôi"
     }
   },
   "productDetail": {
@@ -1225,7 +1230,11 @@
     "imagesFile": "hình ảnh",
     "videos": "Videos",
     "videosFile": "video",
-    "imagesVideos": "Hình ảnh/Video"
+    "imagesVideos": "Hình ảnh/Video",
+
+    "videoFile": "video",
+    "uploadHint": "Nhấp hoặc kéo tệp để tải lên",
+    "maxFileSize": "Kích thước tệp tối đa: {{size}}MB"
   },
   "orderEvidence": {
     "description": {
@@ -1413,6 +1422,7 @@
     "resultSheetSent": "Đã gửi bảng kết quả",
     "viewResults": "Xem kết quả",
     "refunded": "Đã hoàn tiền",
+
     "statusDescription": {
       "waitConfirm": "Đặt chỗ của bạn đang chờ xác nhận từ nhà cung cấp dịch vụ. Bạn sẽ được thông báo khi nó được xác nhận.",
       "confirmed": "Đặt chỗ của bạn đã được xác nhận. Nhà cung cấp dịch vụ đã sẵn sàng cung cấp dịch vụ theo lịch trình.",
@@ -1421,7 +1431,66 @@
       "toPay": "Cần thanh toán để tiếp tục với đặt chỗ này. Vui lòng hoàn tất thanh toán để tiếp tục.",
       "formSubmitted": "Biểu mẫu đặt dịch vụ của bạn đã được gửi thành công. Chúng tôi đang xem xét thông tin của bạn.",
       "resultSheetSent": "Bảng kết quả cho dịch vụ của bạn đã được gửi. Bạn có thể xem kết quả chi tiết ngay bây giờ.",
-      "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn."
+      "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn.",
+      "waitForConfirmation": "Đặt lịch của bạn đang chờ xác nhận từ nhà tư vấn.",
+      "bookingConfirmed": "Đặt lịch của bạn đã được xác nhận. Vui lòng gửi biểu mẫu đặt lịch để tiếp tục.",
+      "serviceBookingFormSubmitted": "Biểu mẫu đặt lịch của bạn đã được gửi. Vui lòng tham gia cuộc gọi tư vấn theo lịch đã hẹn.",
+      "completedConsultingCall": "Cuộc gọi tư vấn đã hoàn thành. Đang chờ bảng kết quả.",
+      "sendedResultSheet": "Bảng kết quả đã được gửi. Vui lòng xem xét và đánh dấu là đã hoàn thành."
+    },
+    "suggestedProducts": "Sản phẩm đề xuất",
+    "searchForProducts": "Tìm kiếm sản phẩm",
+    "filterByClassification": "Lọc theo phân loại",
+    "selectProducts": "Chọn sản phẩm",
+    "completeConsultation": "Hoàn thành tư vấn",
+    "completeConsultationDescription": "Vui lòng điền đánh giá của bạn cho từng phần và đề xuất sản phẩm cho khách hàng dựa trên buổi tư vấn.",
+    "customerResponses": "Phản hồi của khách hàng",
+    "yourEvaluation": "Đánh giá của bạn",
+    "enterYourEvaluation": "Nhập đánh giá của bạn tại đây...",
+    "imagesHint": "Tải lên tối đa 3 hình ảnh để hỗ trợ đánh giá của bạn",
+    "submitConsultationResultSuccess": "Kết quả tư vấn đã được gửi thành công!",
+    "detail": "Chi tiết đặt lịch",
+    "statusLabel": "Trạng thái",
+    "timeline": "Dòng thời gian",
+    "consultantInfo": "Thông tin tư vấn viên",
+    "chatWithConsultant": "Trò chuyện với tư vấn viên",
+    "viewProfile": "Xem hồ sơ",
+    "appointmentDetails": "Chi tiết cuộc hẹn",
+    "date": "Ngày",
+    "duration": "Thời lượng",
+    "minutes": "phút",
+    "notes": "Ghi chú",
+    "joinMeeting": "Tham gia cuộc họp",
+    "customerInfo": "Thông tin khách hàng",
+    "serviceDetails": "Chi tiết dịch vụ",
+    "cancelBooking": "Hủy đặt lịch",
+    "paymentMethod": "Phương thức thanh toán",
+    "paymentSummary": "Tổng kết thanh toán",
+    "subtotal": "Tạm tính",
+    "created": "Đã tạo đặt lịch",
+    "system": "Hệ thống",
+    "discount": "Giảm giá",
+    "total": "Tổng cộng",
+    "updateBookingStatusSuccess": "Cập nhật trạng thái đặt lịch thành công",
+    "status": {
+      "TO_PAY": "Chờ thanh toán",
+      "WAIT_FOR_CONFIRMATION": "Chờ xác nhận",
+      "BOOKING_CONFIRMED": "Đã xác nhận",
+      "COMPLETED": "Hoàn thành",
+      "CANCELLED": "Đã hủy",
+      "SENDED_RESULT_SHEET": "Đã gửi kết quả",
+      "toPay": "Chờ thanh toán",
+      "formSubmitted": "Đã gửi biểu mẫu",
+      "waitForConfirmation": "Chờ xác nhận",
+      "confirmBooking": "Xác nhận đặt lịch",
+      "bookingConfirmed": "Đã xác nhận đặt lịch",
+      "completed": "Đã hoàn thành",
+      "submitBookingForm": "Gửi biểu mẫu đặt lịch",
+      "bookingFormSubmitted": "Đã gửi biểu mẫu đặt lịch",
+      "completeConsultingCall": "Hoàn thành cuộc gọi tư vấn",
+      "completedConsultingCall": "Đã hoàn thành cuộc gọi tư vấn",
+      "sendResultSheet": "Gửi bảng kết quả",
+      "sendedResultSheet": "Đã gửi bảng kết quả"
     }
   },
   "reason": {
@@ -1497,6 +1566,14 @@
       "visa_card": "Visa/Mastercard",
       "none": "Không có"
     },
+    "method": {
+      "CASH": "Tiền mặt",
+      "CREDIT_CARD": "Thẻ tín dụng",
+      "BANK_TRANSFER": "Chuyển khoản ngân hàng",
+      "PAYPAL": "PayPal",
+      "STRIPE": "Stripe",
+      "OTHER": "Khác"
+    },
     "notifyPayment": "Đơn hàng này chưa được thanh toán. Đang chờ khách hàng hoàn tất thanh toán số tiền {{total}} bằng {{method}} trong {{val}}.",
     "changePaymentMethod": "Đổi phương thức thanh toán",
     "paymentSuccess": "Thanh toán thành công!",
@@ -1514,17 +1591,7 @@
     "refunded": "Đã hoàn tiền",
     "cancelled": "Đã hủy"
   },
-  "common": {
-    "cancel": "Hủy",
-    "save": "Lưu",
-    "ok": "OK",
-    "confirm": "Xác Nhận",
-    "create": "Tạo Mới",
-    "update": "Cập Nhật",
-    "delete": "Xóa",
-    "search": "Tìm kiếm",
-    "continue": "Tiếp tục"
-  },
+
   "report": {
     "title": "Báo cáo",
     "searchPlaceholder": "Tìm kiếm báo cáo...",
@@ -1596,5 +1663,60 @@
   },
   "currency": {
     "vnd": "Đồng Việt Nam"
+  },
+  "common": {
+    "cancel": "Hủy",
+
+    "save": "Lưu",
+
+    "edit": "Sửa",
+    "add": "Thêm",
+    "remove": "Xóa bỏ",
+
+    "filter": "Lọc",
+    "loading": "Đang tải...",
+
+    "ok": "OK",
+    "confirm": "Xác Nhận",
+    "create": "Tạo Mới",
+    "update": "Cập Nhật",
+    "delete": "Xóa",
+    "search": "Tìm kiếm",
+    "continue": "Tiếp tục"
+  },
+  "product": {
+    "selectProducts": "Chọn sản phẩm",
+    "selectVariation": "Chọn biến thể sản phẩm",
+    "searchProducts": "Tìm kiếm sản phẩm...",
+    "filterByClassification": "Lọc theo phân loại",
+    "noProductsFound": "Không tìm thấy sản phẩm. Hãy thử từ khóa khác.",
+    "searchToAddProducts": "Tìm kiếm sản phẩm để thêm",
+    "scrollToLoadMore": "Cuộn để tải thêm",
+    "productsSelected": "Đã chọn {{count}} sản phẩm",
+    "inStock": "còn hàng",
+    "outOfStock": "hết hàng",
+    "default": "Mặc định",
+    "noImage": "Không có ảnh",
+    "price": "Giá",
+    "quantity": "Số lượng",
+    "addToSelection": "Thêm vào lựa chọn",
+    "removeFromSelection": "Xóa khỏi lựa chọn"
+  },
+  "consultation": {
+    "completeTitle": "Hoàn thành tư vấn",
+    "completeDescription": "Vui lòng điền đánh giá của bạn cho từng phần và đề xuất sản phẩm cho khách hàng dựa trên buổi tư vấn.",
+    "customerResponses": "Phản hồi của khách hàng",
+    "yourEvaluation": "Đánh giá của bạn",
+    "enterEvaluation": "Nhập đánh giá của bạn tại đây...",
+    "uploadImages": "Tải lên hình ảnh",
+    "imagesHint": "Tải lên tối đa 3 hình ảnh để hỗ trợ đánh giá của bạn",
+    "suggestedProducts": "Sản phẩm đề xuất",
+    "searchProducts": "Tìm kiếm sản phẩm",
+    "selectProducts": "Chọn sản phẩm",
+    "submitSuccess": "Kết quả tư vấn đã được gửi thành công!",
+    "productsSelected": "Đã chọn {{count}} sản phẩm"
+  },
+  "store": {
+    "chat": "Trò chuyện"
   }
 }
