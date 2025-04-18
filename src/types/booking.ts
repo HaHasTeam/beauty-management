@@ -20,7 +20,7 @@ export type TBooking = TMetaData & {
   record: string
   type: BookingTypeEnum
   status: BookingStatusEnum
-  consultantService: null
+  consultantService: IConsultantService
   brand?: IBranch2
   account?: TUser
   slot: TSlot

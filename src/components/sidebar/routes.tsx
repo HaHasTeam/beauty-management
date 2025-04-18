@@ -4,6 +4,7 @@ import {
   BookA,
   Boxes,
   Brush,
+  Calendar,
   CalendarClock,
   Clock,
   Flag,
@@ -33,6 +34,12 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.MY_BRAND_DASHBOARD].name,
     path: routesConfig[Routes.MY_BRAND_DASHBOARD].path,
     icon: <BookA className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false
+  },
+  {
+    name: routesConfig[Routes.BOOKINGS_AND_REQUESTS].name,
+    path: routesConfig[Routes.BOOKINGS_AND_REQUESTS].path,
+    icon: <Calendar className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false
   },
   {

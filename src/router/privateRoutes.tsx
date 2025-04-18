@@ -9,6 +9,7 @@ import BlogManagement from '@/views/dashboard/blog-management'
 import BlogDetails from '@/views/dashboard/blog-management/BlogDetails'
 import CreateBlog from '@/views/dashboard/blog-management/CreateBlog'
 import UpdateBlog from '@/views/dashboard/blog-management/UpdateBlog'
+import BookingManagement from '@/views/dashboard/booking-management'
 import Brands from '@/views/dashboard/brand-management'
 import BookingDetail from '@/views/dashboard/brand-management/booking-detail'
 import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
@@ -53,8 +54,6 @@ import VoucherDetailPage from '@/views/dashboard/voucher-management/VoucherDetai
 import WorkingTime from '@/views/dashboard/working-time'
 
 import AuthGuard from './guard/AuthGuard'
-// import Brands from '@/views/dashboard/brand-management'
-// import Brands from '@/views/dashboard/brand-management'\
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -72,6 +71,10 @@ export const privateRoutes: RouteObject[] = [
       {
         path: routesConfig[Routes.DASHBOARD_HOME].path.replace('/dashboard/', ''),
         element: <DashboardHome />
+      },
+      {
+        path: routesConfig[Routes.BOOKINGS_AND_REQUESTS].path.replace('/dashboard/', ''),
+        element: <BookingManagement />
       },
       {
         path: routesConfig[Routes.REQUESTS_QUEUE].path.replace('/dashboard/', ''),
