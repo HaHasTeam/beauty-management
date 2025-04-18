@@ -261,7 +261,9 @@ export default function UpdateBookingStatus({
           {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
             <Button
               onClick={() => {
-                window.location.href = booking.meetUrl
+                if (booking.meetUrl) {
+                  window.open(booking.meetUrl, '_blank', 'noopener,noreferrer')
+                }
               }}
               loading={isLoading}
               className='bg-primary hover:bg-primary/80 flex gap-2'

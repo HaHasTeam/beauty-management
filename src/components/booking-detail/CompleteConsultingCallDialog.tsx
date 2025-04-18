@@ -122,7 +122,7 @@ const CompleteConsultingCallDialog: React.FC<CompleteConsultingCallDialogProps> 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='md:max-w-xl sm:max-w-lg'>
         <DialogHeader>
-          <DialogTitle className='text-primary'>{t('booking.completeConsultingCall')}</DialogTitle>
+          <DialogTitle className='text-primary'>{t('booking.status.completeConsultingCall')}</DialogTitle>
           <DialogDescription className='text-justify'>
             {t('booking.completeConsultingCallDescription')}
           </DialogDescription>

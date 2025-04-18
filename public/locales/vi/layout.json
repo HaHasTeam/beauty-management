@@ -125,7 +125,8 @@
     "export": "Xuất",
     "update": "Cập nhật",
     "viewDetails": "Xem chi tiết",
-    "upload": "Tải lên"
+    "upload": "Tải lên",
+    "joinMeeting": "Tham gia cuộc họp"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -454,6 +455,7 @@
     "totalCost": "Tổng tiền hàng",
     "totalDiscount": "Tổng giảm giá từ voucher",
     "totalPayment": "Tổng tiền thanh toán",
+
     "discountDetails": "Chi tiết khuyến mãi",
     "productLeft": "Còn {{count}} sản phẩm",
     "updateClassificationSuccess": "Thay đổi phân loại sản phẩm thành công!",
@@ -1422,6 +1424,8 @@
     "resultSheetSent": "Đã gửi bảng kết quả",
     "viewResults": "Xem kết quả",
     "refunded": "Đã hoàn tiền",
+    "totalPayment": "Tổng tiền thanh toán",
+    "serviceFee": "Phí dịch vụ",
 
     "statusDescription": {
       "waitConfirm": "Đặt chỗ của bạn đang chờ xác nhận từ nhà cung cấp dịch vụ. Bạn sẽ được thông báo khi nó được xác nhận.",
@@ -1439,6 +1443,7 @@
       "sendedResultSheet": "Bảng kết quả đã được gửi. Vui lòng xem xét và đánh dấu là đã hoàn thành."
     },
     "suggestedProducts": "Sản phẩm đề xuất",
+    "completeConsultingCallDescription": "Vui lòng cung cấp chi tiết về việc hoàn thành cuộc gọi tư vấn bao gồm các tệp phương tiện và ghi chú liên quan.",
     "searchForProducts": "Tìm kiếm sản phẩm",
     "filterByClassification": "Lọc theo phân loại",
     "selectProducts": "Chọn sản phẩm",
@@ -1472,6 +1477,10 @@
     "discount": "Giảm giá",
     "total": "Tổng cộng",
     "updateBookingStatusSuccess": "Cập nhật trạng thái đặt lịch thành công",
+    "videosHint": "Tải lên video liên quan đến cuộc gọi tư vấn",
+
+    "resultNoteDescription": "Thêm bất kỳ ghi chú hoặc quan sát nào từ cuộc gọi tư vấn",
+    "resultNotePlaceholder": "Nhập ghi chú của bạn tại đây...",
     "status": {
       "TO_PAY": "Chờ thanh toán",
       "WAIT_FOR_CONFIRMATION": "Chờ xác nhận",
@@ -1675,7 +1684,7 @@
 
     "filter": "Lọc",
     "loading": "Đang tải...",
-
+    "submit": "Gửi",
     "ok": "OK",
     "confirm": "Xác Nhận",
     "create": "Tạo Mới",
