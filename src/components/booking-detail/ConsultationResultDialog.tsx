@@ -1,10 +1,12 @@
+'use client'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ImageIcon } from 'lucide-react'
+import { ImageIcon, Search, X } from 'lucide-react'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import Button from '@/components/button'
@@ -16,12 +18,14 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { updateBookingStatusApi } from '@/network/apis/booking/details'
 import { getConsultationResultSchema } from '@/schemas/booking.schema'
-import { IBooking } from '@/types/booking'
+import type { IBooking } from '@/types/booking'
 import { BookingStatusEnum } from '@/types/enum'
+import type { IResponseProduct } from '@/types/product'
 
 import UploadMediaFiles from '../file-input/UploadMediaFiles'
 import ImageWithFallback from '../image/ImageWithFallback'
-import ProductClassificationCombobox from '../product/ProductClassificationCombobox'
+import ProductSearchDialog from '../product/ProductSearchDialog'
+import { Badge } from '../ui/badge'
 import { ScrollArea } from '../ui/scroll-area'
 
 interface CompleteConsultingCallDialogProps {
@@ -67,6 +71,9 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
     suggestedProductClassifications: []
   }
 
+  const [searchModalVisible, setSearchModalVisible] = useState(false)
+  const [selectedProducts, setSelectedProducts] = useState<IResponseProduct[]>([])
+
   const form = useForm<z.infer<typeof ConsultationResultSchema>>({
     resolver: zodResolver(ConsultationResultSchema),
     defaultValues: defaultFormValues
@@ -74,6 +81,7 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
 
   const handleReset = () => {
     form.reset(defaultFormValues)
+    setSelectedProducts([])
   }
 
   const { mutateAsync: updateBookingStatusFn } = useMutation({
@@ -107,29 +115,61 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
     }
   }
 
-  // Function to add a product classification
-  const handleAddProductClassification = (classification: { id: string; name: string }) => {
-    const currentValues = form.getValues().suggestedProductClassifications || []
-    const exists = currentValues.some((p) => p.productClassificationId === classification.id)
-
-    if (!exists) {
-      const updatedClassifications = [
-        ...currentValues,
-        {
-          productClassificationId: classification.id,
-          name: classification.name
-        }
-      ]
-
-      form.setValue('suggestedProductClassifications', updatedClassifications)
-    }
-  }
-
   // Function to remove a product classification
   const handleRemoveProductClassification = (id: string) => {
     const currentValues = form.getValues().suggestedProductClassifications
     const updatedClassifications = currentValues.filter((p) => p.productClassificationId !== id)
     form.setValue('suggestedProductClassifications', updatedClassifications)
+
+    // Also update the selectedProducts state to keep them in sync
+    setSelectedProducts((prev) =>
+      prev.filter((p) => {
+        // Check if this product has the classification that was removed
+        const hasClassification = p.productClassifications?.some((c) => c.id === id)
+        // If no classifications or doesn't have the removed one, keep it
+        if (!hasClassification) {
+          // If this product has no other classifications in the form, remove it
+          const productStillHasClassifications = updatedClassifications.some((uc) =>
+            p.productClassifications?.some((pc) => pc.id === uc.productClassificationId)
+          )
+          return productStillHasClassifications || !p.productClassifications?.length
+        }
+        return !hasClassification
+      })
+    )
+  }
+
+  // Function to handle product selection from the search dialog
+  const handleSelectProducts = (products: IResponseProduct[]) => {
+    setSelectedProducts(products)
+
+    // Generate a fallback ID in case product.id is undefined
+    const generateFallbackId = () => {
+      return `fallback-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+    }
+
+    // Map products to the format expected by the form
+    const productClassifications = products.map((product) => {
+      // If the product has classifications, use the first one
+      if (product.productClassifications && product.productClassifications.length > 0) {
+        const classification = product.productClassifications[0]
+        return {
+          // Ensure productClassificationId is always a string
+          productClassificationId: classification.id || product.id || generateFallbackId(),
+          name: classification.title || product.name || 'Unknown Product'
+        }
+      }
+
+      // If no classifications, use the product ID directly
+      return {
+        // Ensure productClassificationId is always a string
+        productClassificationId: product.id || generateFallbackId(),
+        name: product.name || 'Unknown Product'
+      }
+    })
+
+    // Update the form value
+    form.setValue('suggestedProductClassifications', productClassifications)
   }
 
   // Display booking form answers for reference
@@ -163,6 +203,19 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
                           ))}
                         </div>
                       )}
+                      <div className='flex gap-2 items-center mt-2'>
+                        {(answer.images ?? []).map((item, imageIndex) => {
+                          return (
+                            <ImageWithFallback
+                              key={imageIndex}
+                              src={item.fileUrl || '/placeholder.svg'}
+                              fallback={fallBackImage}
+                              alt={''}
+                              className='object-cover aspect-square w-32 h-32 rounded-md'
+                            />
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -228,7 +281,7 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
                                         className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'
                                       >
                                         <ImageWithFallback
-                                          src={URL.createObjectURL(file)}
+                                          src={URL.createObjectURL(file) || '/placeholder.svg'}
                                           alt={file.name}
                                           fallback={fallBackImage}
                                           className='object-contain w-full h-full rounded-lg'
@@ -259,39 +312,59 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
                 <div className='p-4 border border-primary rounded-md'>
                   <h3 className='font-medium mb-4 text-primary'>{t('booking.suggestedProducts')}</h3>
 
-                  <ProductClassificationCombobox
-                    onSelect={handleAddProductClassification}
-                    placeholder={t('booking.searchForProducts')}
-                  />
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex gap-2'>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        className='flex items-center gap-2 w-full'
+                        onClick={() => setSearchModalVisible(true)}
+                      >
+                        <Search className='h-4 w-4' />
+                        {t('booking.searchForProducts')}
+                      </Button>
+                    </div>
 
-                  <div className='mt-4 space-y-2'>
-                    {form.watch('suggestedProductClassifications')?.map((product, idx) => (
-                      <div key={idx} className='flex items-center justify-between bg-muted p-2 rounded'>
-                        <span>{product.name}</span>
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          onClick={() => handleRemoveProductClassification(product.productClassificationId)}
-                        >
-                          {t('button.remove')}
-                        </Button>
+                    {/* Display selected products */}
+                    {form.watch('suggestedProductClassifications')?.length > 0 && (
+                      <div className='flex flex-wrap gap-2 mt-2'>
+                        {form.watch('suggestedProductClassifications')?.map((product, idx) => (
+                          <Badge key={idx} variant='secondary' className='flex items-center gap-1 px-3 py-1.5'>
+                            <span className='max-w-[200px] truncate'>{product.name}</span>
+                            <button
+                              type='button'
+                              onClick={() => handleRemoveProductClassification(product.productClassificationId)}
+                              className='ml-1 rounded-full hover:bg-muted p-0.5'
+                            >
+                              <X className='h-3 w-3' />
+                            </button>
+                          </Badge>
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
 
                 <div className='flex justify-end space-x-2'>
                   <Button variant='outline' type='button' onClick={onClose}>
-                    {t('button.cancel')}
+                    {t('common.cancel')}
                   </Button>
                   <Button type='submit' loading={isLoading}>
-                    {t('button.submit')}
+                    {t('common.submit')}
                   </Button>
                 </div>
               </form>
             </Form>
           </ScrollArea>
         </div>
+        {/* Product Search Dialog */}
+        <ProductSearchDialog
+          open={searchModalVisible}
+          onOpenChange={setSearchModalVisible}
+          onSelectProducts={handleSelectProducts}
+          initialSelectedProducts={selectedProducts}
+          title={t('booking.selectProducts')}
+        />
       </DialogContent>
     </Dialog>
   )

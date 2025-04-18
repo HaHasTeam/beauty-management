@@ -209,6 +209,11 @@
       "description": "You have no active chats",
       "button": "Start a new chat"
     },
+    "bookingDetail": {
+      "title": "Booking Not Found",
+      "description": "The booking you're looking for doesn't exist or you don't have permission to view it.",
+      "button": "View My Bookings"
+    },
     "creditCard": {
       "title": "No credit cards",
       "description": "Please add some credit card to your account",
@@ -1275,7 +1280,10 @@
     "imagesFile": "images",
     "videos": "Videos",
     "videosFile": "videos",
-    "imagesVideos": "Images/Videos"
+    "imagesVideos": "Images/Videos",
+    "videoFile": "videos",
+    "uploadHint": "Click or drag files to upload",
+    "maxFileSize": "Maximum file size: {{size}}MB"
   },
   "orderEvidence": {
     "description": {
@@ -1471,7 +1479,67 @@
       "toPay": "Payment is required to proceed with this booking. Please complete the payment to continue.",
       "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
       "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
-      "refunded": "The payment for this booking has been refunded to your original payment method."
+      "refunded": "The payment for this booking has been refunded to your original payment method.",
+
+      "waitForConfirmation": "Your booking is waiting for confirmation from the consultant.",
+      "bookingConfirmed": "Your booking has been confirmed. Please submit the booking form to proceed.",
+      "serviceBookingFormSubmitted": "Your booking form has been submitted. Please join the consulting call at the scheduled time.",
+      "completedConsultingCall": "The consulting call has been completed. Waiting for the result sheet.",
+      "sendedResultSheet": "The result sheet has been sent. Please review and mark as completed."
+    },
+    "suggestedProducts": "Suggested Products",
+    "searchForProducts": "Search for products",
+    "filterByClassification": "Filter by classification",
+    "selectProducts": "Select Products",
+    "completeConsultation": "Complete Consultation",
+    "completeConsultationDescription": "Please fill in your evaluation for each section and suggest products for the customer based on your consultation.",
+    "customerResponses": "Customer Responses",
+    "yourEvaluation": "Your Evaluation",
+    "enterYourEvaluation": "Enter your evaluation here...",
+    "imagesHint": "Upload up to 3 images to support your evaluation",
+    "submitConsultationResultSuccess": "Consultation result submitted successfully!",
+    "detail": "Booking Detail",
+    "statusLabel": "Status",
+    "timeline": "Timeline",
+    "consultantInfo": "Consultant Information",
+    "chatWithConsultant": "Chat with Consultant",
+    "viewProfile": "View Profile",
+    "appointmentDetails": "Appointment Details",
+    "date": "Date",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "notes": "Notes",
+    "joinMeeting": "Join Meeting",
+    "customerInfo": "Customer Information",
+    "serviceDetails": "Service Details",
+    "cancelBooking": "Cancel Booking",
+
+    "paymentMethod": "Payment Method",
+    "paymentSummary": "Payment Summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "total": "Total",
+    "created": "Booking Created",
+    "system": "System",
+    "status": {
+      "TO_PAY": "To Pay",
+      "WAIT_FOR_CONFIRMATION": "Waiting for Confirmation",
+      "BOOKING_CONFIRMED": "Booking Confirmed",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "SENDED_RESULT_SHEET": "Result Sheet Sent",
+      "toPay": "To Pay",
+      "waitForConfirmation": "Wait for Confirmation",
+      "confirmBooking": "Confirm Booking",
+      "bookingConfirmed": "Booking Confirmed",
+      "submitBookingForm": "Submit Booking Form",
+      "bookingFormSubmitted": "Booking Form Submitted",
+      "formSubmitted": "Form Submitted",
+      "completed": "Đã hoàn thành",
+      "completeConsultingCall": "Complete Consulting Call",
+      "completedConsultingCall": "Completed Consulting Call",
+      "sendResultSheet": "Send Result Sheet",
+      "sendedResultSheet": "Result Sheet Sent"
     }
   },
   "reason": {
@@ -1518,8 +1586,15 @@
   },
   "common": {
     "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
     "delete": "Delete",
-    "close": "Close"
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading..."
   },
   "createBlog": {
     "title": "Title",
@@ -1582,6 +1657,14 @@
       "stripe": "Stripe",
       "visa_card": "Visa/Mastercard",
       "none": "None"
+    },
+    "method": {
+      "CASH": "Cash",
+      "CREDIT_CARD": "Credit Card",
+      "BANK_TRANSFER": "Bank Transfer",
+      "PAYPAL": "PayPal",
+      "STRIPE": "Stripe",
+      "OTHER": "Other"
     },
     "notifyPayment": "This order has not been paid. Waiting for the customer to complete the payment of {{total}} via {{method}} within {{val}}.",
     "changePaymentMethod": "Change payment method",
@@ -1693,5 +1776,41 @@
   "blog": {
     "title": "Blogs",
     "createdAt": "Created At"
+  },
+
+  "product": {
+    "selectProducts": "Select Products",
+    "selectVariation": "Select Product Variation",
+    "searchProducts": "Search products...",
+    "filterByClassification": "Filter by classification",
+    "noProductsFound": "No products found. Try a different search term.",
+    "searchToAddProducts": "Search for products to add",
+    "scrollToLoadMore": "Scroll to load more",
+    "productsSelected": "{{count}} products selected",
+    "inStock": "in stock",
+    "outOfStock": "out of stock",
+    "default": "Default",
+    "noImage": "No image",
+    "price": "Price",
+    "quantity": "Quantity",
+    "addToSelection": "Add to selection",
+    "removeFromSelection": "Remove from selection"
+  },
+  "consultation": {
+    "completeTitle": "Complete Consultation",
+    "completeDescription": "Please fill in your evaluation for each section and suggest products for the customer based on your consultation.",
+    "customerResponses": "Customer Responses",
+    "yourEvaluation": "Your Evaluation",
+    "enterEvaluation": "Enter your evaluation here...",
+    "uploadImages": "Upload Images",
+    "imagesHint": "Upload up to 3 images to support your evaluation",
+    "suggestedProducts": "Suggested Products",
+    "searchProducts": "Search for products",
+    "selectProducts": "Select Products",
+    "submitSuccess": "Consultation result submitted successfully!",
+    "productsSelected": "{{count}} products selected"
+  },
+  "store": {
+    "chat": "Chat"
   }
 }

@@ -37,6 +37,15 @@ export const updateProductApi = toMutationFetcher<UpdateProductParams, TServerRe
   }
 )
 
+export const getProductFilterMutationApi = toMutationFetcher<
+  TGetProductFilterRequestParams,
+  TServerResponse<{ total: string }, IResponseProduct[]>
+>('getRecommendProducts', async (params) => {
+  return publicRequest('/products/filter-product', {
+    method: 'GET',
+    params
+  })
+})
 export const getProductByBrandIdApi = toQueryFetcher<TGetProductByBrandIdRequestParams, TServerResponse<TProduct[]>>(
   'getProductByBrandIdApi',
   async (params) => {
