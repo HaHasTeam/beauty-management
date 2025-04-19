@@ -42,6 +42,7 @@ import { getSomeoneSlotApi } from '@/network/apis/slots'
 import { useStore } from '@/stores/store'
 import { BookingStatusEnum, BookingTypeEnum } from '@/types/enum'
 import type { TSlot } from '@/types/slot'
+import { handleRoomIdGenerate } from '@/utils/meetUrl'
 
 const formSchema = z.object({
   selectedDate: z.date({
@@ -54,7 +55,6 @@ const formSchema = z.object({
 })
 
 type FormValues = z.infer<typeof formSchema>
-export const url = import.meta.env.VITE_SITE_URL
 
 function ScheduleMeeting() {
   const navigate = useNavigate()
@@ -96,12 +96,6 @@ function ScheduleMeeting() {
     mutationKey: [getSomeoneSlotApi.mutationKey],
     mutationFn: getSomeoneSlotApi.fn
   })
-
-  const handleRoomIdGenerate = () => {
-    const randomId = Math.random().toString(36).substring(2, 9)
-    const timestamp = Date.now().toString().substring(-4)
-    return `${url}/room/${randomId + timestamp}?type=one-on-one`
-  }
 
   const [availableSlots, setAvailableSlots] = useState<TSlot[]>([])
   const [isLoadingSlots, setIsLoadingSlots] = useState(false)

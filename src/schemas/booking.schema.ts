@@ -92,6 +92,31 @@ export const getConsultationResultSchema = () => {
         section: z.string().min(1, i18next.t('validation.required')),
         orderIndex: z.number().int().min(0),
         answers: z.string().min(1, i18next.t('validation.required')),
+        images: z.array(z.instanceof(File)).optional()
+      })
+    ),
+    suggestedProductClassifications: z.array(
+      z.object({
+        productClassificationId: z.string(),
+        name: z.string().min(1, i18next.t('validation.required'))
+      })
+    )
+  })
+}
+export const getConsultationResultWithImageSchema = () => {
+  return z.object({
+    criteriaId: z.string(),
+    criteria: z.array(
+      z.object({
+        section: z.string().min(1, i18next.t('validation.required')),
+        orderIndex: z.number().int().min(0)
+      })
+    ),
+    results: z.array(
+      z.object({
+        section: z.string().min(1, i18next.t('validation.required')),
+        orderIndex: z.number().int().min(0),
+        answers: z.string().min(1, i18next.t('validation.required')),
         images: z.array(ImageSchema).optional()
       })
     ),
@@ -103,8 +128,8 @@ export const getConsultationResultSchema = () => {
     )
   })
 }
-
 export const ConsultationResultSchema = getConsultationResultSchema()
+export const ConsultationResultWithImageSchema = getConsultationResultWithImageSchema()
 
 export const BookingFormAnswerSchema = getBookingFormAnswerSchema()
 

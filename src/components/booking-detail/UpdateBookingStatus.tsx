@@ -1,19 +1,23 @@
+'use client'
+
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Calendar, CircleChevronRight, Clock, FileText, Siren, VideoIcon } from 'lucide-react'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Calendar, CircleChevronRight, Clock, Eye, FileText, Siren, VideoIcon } from 'lucide-react'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getBookingByIdApi, updateBookingStatusApi } from '@/network/apis/booking/details'
-import { IBooking } from '@/types/booking'
+import type { IBooking } from '@/types/booking'
 import { BookingStatusEnum, ServiceTypeEnum } from '@/types/enum'
-import { IStatusTracking } from '@/types/statusTracking'
+import type { IStatusTracking } from '@/types/statusTracking'
 
 import Button from '../button'
 import { AlertDescription } from '../ui/alert'
+import BookingFormAnswersDialog from './BookingFormAnswersDialog'
 import CompleteConsultingCallDialog from './CompleteConsultingCallDialog'
 import ConsultationResultDialog from './ConsultationResultDialog'
+import ConsultationResultInfoDialog from './ConsultationResultInfoDialog'
 import ServiceBookingFormDialog from './ServiceBookingFormDialog'
 
 interface UpdateBookingStatusProps {
@@ -37,6 +41,8 @@ export default function UpdateBookingStatus({
   const [isOpenBookingFormDialog, setIsOpenBookingFormDialog] = useState<boolean>(false)
   const [isOpenConsultationResultDialog, setIsOpenConsultationResultDialog] = useState<boolean>(false)
   const [isOpenCompleteConsultingCallDialog, setIsOpenCompleteConsultingCallDialog] = useState<boolean>(false)
+  const [isViewBookingFormDialog, setIsViewBookingFormDialog] = useState<boolean>(false)
+  const [isViewConsultationResultDialog, setIsViewConsultationResultDialog] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
   const { mutateAsync: updateBookingStatusFn } = useMutation({
@@ -132,6 +138,7 @@ export default function UpdateBookingStatus({
       alertDescription: t('booking.statusDescription.completedConsultingCall'),
       nextStatus: BookingStatusEnum.SENDED_RESULT_SHEET
     },
+
     [BookingStatusEnum.SENDED_RESULT_SHEET]: {
       borderColor: 'border-green-300',
       bgColor: 'bg-green-100',
@@ -158,6 +165,7 @@ export default function UpdateBookingStatus({
       alertDescription: t('booking.statusDescription.completed'),
       nextStatus: ''
     },
+
     [BookingStatusEnum.CANCELLED]: {
       borderColor: 'border-red-300',
       bgColor: 'bg-red-100',
@@ -200,12 +208,34 @@ export default function UpdateBookingStatus({
               <IconComponent className={`${config.titleColor} size-6`} />
             </div>
             <div className='flex flex-col gap-1'>
-              <div>
+              <div className='flex items-center'>
                 <span
                   className={`px-2 py-1 sm:text-sm text-xs rounded-full uppercase cursor-default font-bold ${config.titleColor} ${config.bgTagColor}`}
                 >
                   {config.alertTitle}
                 </span>
+
+                {/* Add eye button for viewing details */}
+                {(booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED ||
+                  booking.status === BookingStatusEnum.SENDED_RESULT_SHEET ||
+                  booking.status === BookingStatusEnum.COMPLETED) && (
+                  <button
+                    onClick={() => {
+                      if (booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED) {
+                        setIsViewBookingFormDialog(true)
+                      } else if (
+                        booking.status === BookingStatusEnum.SENDED_RESULT_SHEET ||
+                        booking.status === BookingStatusEnum.COMPLETED
+                      ) {
+                        setIsViewConsultationResultDialog(true)
+                      }
+                    }}
+                    className='ml-2 p-1 rounded-full hover:bg-primary/10 transition-colors'
+                    title={t('booking.viewDetails')}
+                  >
+                    <Eye className='h-4 w-4 text-primary' />
+                  </button>
+                )}
               </div>
               <AlertDescription>{config.alertDescription}</AlertDescription>
             </div>
@@ -250,7 +280,13 @@ export default function UpdateBookingStatus({
           )}
 
           {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
-            <Button onClick={() => {}} loading={isLoading} className='bg-primary hover:bg-primary/80 flex gap-2'>
+            <Button
+              onClick={() => {
+                window.location.href = booking.meetUrl
+              }}
+              loading={isLoading}
+              className='bg-primary hover:bg-primary/80 flex gap-2'
+            >
               {t('button.joinMeeting')}
               <CircleChevronRight />
             </Button>
@@ -334,6 +370,23 @@ export default function UpdateBookingStatus({
         <ConsultationResultDialog
           isOpen={isOpenConsultationResultDialog}
           onClose={() => setIsOpenConsultationResultDialog(false)}
+          booking={booking}
+        />
+      )}
+
+      {/* View Dialogs */}
+      {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
+        <BookingFormAnswersDialog
+          isOpen={isViewBookingFormDialog}
+          setOpen={() => setIsViewBookingFormDialog(false)}
+          booking={booking}
+        />
+      )}
+
+      {(booking.status === BookingStatusEnum.SENDED_RESULT_SHEET || booking.status === BookingStatusEnum.COMPLETED) && (
+        <ConsultationResultInfoDialog
+          isOpen={isViewConsultationResultDialog}
+          onClose={() => setIsViewConsultationResultDialog(false)}
           booking={booking}
         />
       )}

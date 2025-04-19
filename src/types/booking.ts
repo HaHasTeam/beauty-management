@@ -41,21 +41,22 @@ export type IBooking = TMetaData & {
   endTime: string
   voucherDiscount: number
   paymentMethod: PaymentMethodEnum
-  notes: string
+  notes: string | null
   meetUrl: string
-  record: string
+  record: string | null
   type: BookingTypeEnum
   status: BookingStatusEnum
-  voucher: TVoucher
+  voucher: TVoucher | null
   slot: ISlot
   account: TUser
   brand: TBrand
-  assigneeToInterview: TUser
-  resultNote: string
+  assigneeToInterview: TUser | null
+  resultNote: string | null
   consultantService: IConsultantService
   statusTrackings: IStatusTracking[]
   report: Report
   bookingFormAnswer: IBookingFormAnswer
+  consultationResult: IConsultationResult | null
 }
 export type IBookingServer = TMetaData & {
   totalPrice: number
