@@ -32,7 +32,7 @@ const BookingStatusTracking = ({ statusTrackingData }: { statusTrackingData: ISt
         icon: <MessageSquare className='w-5 h-5' />
       },
       [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
-        text: t('booking.status.completed'),
+        text: t('booking.status.completedConsultingCall'),
         icon: <MessageSquare className='w-5 h-5' />
       },
       [BookingStatusEnum.REFUNDED]: {

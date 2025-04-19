@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ImageIcon, Search, X } from 'lucide-react'
+import { ImageIcon, Search, Trash2 } from 'lucide-react'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -11,27 +11,50 @@ import type { z } from 'zod'
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
+import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { updateBookingStatusApi } from '@/network/apis/booking/details'
+import { uploadFilesApi } from '@/network/apis/file'
 import { getConsultationResultSchema } from '@/schemas/booking.schema'
 import type { IBooking } from '@/types/booking'
 import { BookingStatusEnum } from '@/types/enum'
-import type { IResponseProduct } from '@/types/product'
+import type { IResponseProduct, IServerProductClassification } from '@/types/product'
 
 import UploadMediaFiles from '../file-input/UploadMediaFiles'
 import ImageWithFallback from '../image/ImageWithFallback'
 import ProductSearchDialog from '../product/ProductSearchDialog'
-import { Badge } from '../ui/badge'
 import { ScrollArea } from '../ui/scroll-area'
+
+// Extend IResponseProduct to include selectedClassification
+interface ExtendedResponseProduct extends IResponseProduct {
+  selectedClassification?: IServerProductClassification
+}
 
 interface CompleteConsultingCallDialogProps {
   booking: IBooking
   isOpen: boolean
   onClose: () => void
+}
+
+// Define a type for selected products with classification
+// interface SelectedProductWithClassification {
+//   product: IResponseProduct
+//   classification?: IServerProductClassification
+// }
+
+// Extended type for product classifications with additional data
+interface ExtendedProductClassification {
+  productClassificationId: string
+  name: string
+  price?: number
+  imageUrl?: string
+  productId: string
+  productName: string
+  classificationType?: string
 }
 
 const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsultingCallDialogProps) => {
@@ -72,7 +95,10 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
   }
 
   const [searchModalVisible, setSearchModalVisible] = useState(false)
-  const [selectedProducts, setSelectedProducts] = useState<IResponseProduct[]>([])
+  const [selectedProducts, setSelectedProducts] = useState<ExtendedResponseProduct[]>([])
+  const [productClassificationsMap, setProductClassificationsMap] = useState<
+    Map<string, ExtendedProductClassification>
+  >(new Map())
 
   const form = useForm<z.infer<typeof ConsultationResultSchema>>({
     resolver: zodResolver(ConsultationResultSchema),
@@ -82,6 +108,22 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
   const handleReset = () => {
     form.reset(defaultFormValues)
     setSelectedProducts([])
+    setProductClassificationsMap(new Map())
+  }
+
+  const { mutateAsync: uploadFilesFn } = useMutation({
+    mutationKey: [uploadFilesApi.mutationKey],
+    mutationFn: uploadFilesApi.fn
+  })
+
+  const convertFileToUrl = async (files: File[]) => {
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
+
+    const uploadedFilesResponse = await uploadFilesFn(formData)
+    return uploadedFilesResponse.data
   }
 
   const { mutateAsync: updateBookingStatusFn } = useMutation({
@@ -100,10 +142,27 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
   const handleSubmit = async (values: z.infer<typeof ConsultationResultSchema>) => {
     try {
       setIsLoading(true)
+
+      const formatReulst = await Promise.all(
+        values.results.map(async (item) => {
+          const imgUrls = item.images ? await convertFileToUrl(item.images) : []
+
+          return {
+            ...item,
+            images: imgUrls.map((el) => ({
+              name: '',
+              fileUrl: el
+            }))
+          }
+        })
+      )
       await updateBookingStatusFn({
         id: booking.id,
         status: BookingStatusEnum.SENDED_RESULT_SHEET,
-        consultationResult: values
+        consultationResult: {
+          ...values,
+          results: formatReulst
+        }
       })
       setIsLoading(false)
     } catch (error) {
@@ -117,59 +176,91 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
 
   // Function to remove a product classification
   const handleRemoveProductClassification = (id: string) => {
+    // Get the current product classifications from the form
     const currentValues = form.getValues().suggestedProductClassifications
+
+    // Filter out the one to remove
     const updatedClassifications = currentValues.filter((p) => p.productClassificationId !== id)
+
+    // Update the form value
     form.setValue('suggestedProductClassifications', updatedClassifications)
 
-    // Also update the selectedProducts state to keep them in sync
-    setSelectedProducts((prev) =>
-      prev.filter((p) => {
-        // Check if this product has the classification that was removed
-        const hasClassification = p.productClassifications?.some((c) => c.id === id)
-        // If no classifications or doesn't have the removed one, keep it
-        if (!hasClassification) {
-          // If this product has no other classifications in the form, remove it
-          const productStillHasClassifications = updatedClassifications.some((uc) =>
-            p.productClassifications?.some((pc) => pc.id === uc.productClassificationId)
-          )
-          return productStillHasClassifications || !p.productClassifications?.length
-        }
-        return !hasClassification
-      })
-    )
+    // Remove from the map
+    const newMap = new Map(productClassificationsMap)
+    newMap.delete(id)
+    setProductClassificationsMap(newMap)
+
+    // Update the selected products state
+    const productId = Array.from(productClassificationsMap.values()).find(
+      (item) => item.productClassificationId === id
+    )?.productId
+
+    if (productId) {
+      setSelectedProducts((prev) =>
+        prev.filter(
+          (item) => item.id !== productId || (item.selectedClassification && item.selectedClassification.id !== id)
+        )
+      )
+    }
   }
 
   // Function to handle product selection from the search dialog
-  const handleSelectProducts = (products: IResponseProduct[]) => {
-    setSelectedProducts(products)
+  const handleSelectProducts = (products: ExtendedResponseProduct[]) => {
+    // Create a new map to store extended product classification data
+    const newProductClassificationsMap = new Map<string, ExtendedProductClassification>()
+    const formProductClassifications: { productClassificationId: string; name: string }[] = []
 
-    // Generate a fallback ID in case product.id is undefined
-    const generateFallbackId = () => {
-      return `fallback-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
-    }
+    // Process each product
+    products.forEach((product) => {
+      // Get the selected classification from the product
+      const selectedClassification = product.selectedClassification
 
-    // Map products to the format expected by the form
-    const productClassifications = products.map((product) => {
-      // If the product has classifications, use the first one
-      if (product.productClassifications && product.productClassifications.length > 0) {
-        const classification = product.productClassifications[0]
-        return {
-          // Ensure productClassificationId is always a string
-          productClassificationId: classification.id || product.id || generateFallbackId(),
-          name: classification.title || product.name || 'Unknown Product'
+      // Add to form data and map
+      if (selectedClassification) {
+        const classificationId = selectedClassification.id || ''
+        const classificationTitle = selectedClassification.title == 'Default' ? '' : selectedClassification.title || ''
+
+        // Only add if we have a valid classification ID
+        if (classificationId) {
+          formProductClassifications.push({
+            productClassificationId: classificationId,
+            name: product.name || ''
+          })
+
+          newProductClassificationsMap.set(classificationId, {
+            productClassificationId: classificationId,
+            name: classificationTitle,
+            price: selectedClassification.price,
+            imageUrl: product.images?.[0]?.fileUrl,
+            productId: product.id || '',
+            productName: product.name || '',
+            classificationType: classificationTitle === 'default' ? '' : classificationTitle
+          })
         }
-      }
+      } else {
+        // If no classification, use the product directly
+        const productId = product.id || ''
+        if (productId) {
+          formProductClassifications.push({
+            productClassificationId: productId,
+            name: product.name || ''
+          })
 
-      // If no classifications, use the product ID directly
-      return {
-        // Ensure productClassificationId is always a string
-        productClassificationId: product.id || generateFallbackId(),
-        name: product.name || 'Unknown Product'
+          newProductClassificationsMap.set(productId, {
+            productClassificationId: productId,
+            name: product.name || '',
+            imageUrl: product.images?.[0]?.fileUrl,
+            productId: productId,
+            productName: product.name || ''
+          })
+        }
       }
     })
 
-    // Update the form value
-    form.setValue('suggestedProductClassifications', productClassifications)
+    // Update states
+    setSelectedProducts(products)
+    setProductClassificationsMap(newProductClassificationsMap)
+    form.setValue('suggestedProductClassifications', formProductClassifications)
   }
 
   // Display booking form answers for reference
@@ -325,20 +416,50 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
                       </Button>
                     </div>
 
-                    {/* Display selected products */}
+                    {/* Display selected products as cards */}
                     {form.watch('suggestedProductClassifications')?.length > 0 && (
-                      <div className='flex flex-wrap gap-2 mt-2'>
-                        {form.watch('suggestedProductClassifications')?.map((product, idx) => (
-                          <Badge key={idx} variant='secondary' className='flex items-center gap-1 px-3 py-1.5'>
-                            <span className='max-w-[200px] truncate'>{product.name}</span>
-                            <button
-                              type='button'
-                              onClick={() => handleRemoveProductClassification(product.productClassificationId)}
-                              className='ml-1 rounded-full hover:bg-muted p-0.5'
-                            >
-                              <X className='h-3 w-3' />
-                            </button>
-                          </Badge>
+                      <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4'>
+                        {Array.from(productClassificationsMap.values()).map((product) => (
+                          <Card key={product.productClassificationId} className='overflow-hidden border border-muted'>
+                            <CardContent className='p-3 flex gap-3'>
+                              {/* Product Image */}
+                              <div className='h-16 w-16 rounded-md overflow-hidden flex-shrink-0'>
+                                <ImageWithFallback
+                                  src={product.imageUrl || '/placeholder.svg'}
+                                  fallback={fallBackImage}
+                                  alt={product.productName}
+                                  className='object-cover w-full h-full'
+                                />
+                              </div>
+
+                              {/* Product Info */}
+                              <div className='flex-1 min-w-0 flex flex-col justify-between'>
+                                <div>
+                                  <p className='font-medium truncate'>{product.productName}</p>
+                                  {product.classificationType && (
+                                    <p className='text-sm text-muted-foreground truncate'>
+                                      {product.classificationType}
+                                    </p>
+                                  )}
+                                </div>
+
+                                <div className='flex justify-between items-center mt-1'>
+                                  <p className='font-medium'>
+                                    {product.price !== undefined
+                                      ? t('productCard.price', { price: product.price })
+                                      : t('product.priceNotAvailable')}
+                                  </p>
+                                  <button
+                                    type='button'
+                                    onClick={() => handleRemoveProductClassification(product.productClassificationId)}
+                                    className='text-destructive hover:text-destructive/80 transition-colors'
+                                  >
+                                    <Trash2 className='h-4 w-4' />
+                                  </button>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
                         ))}
                       </div>
                     )}

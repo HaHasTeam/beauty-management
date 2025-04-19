@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-'use client'
-
 import { useMutation } from '@tanstack/react-query'
 import { Check, ChevronRight, Loader2, Search, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -20,11 +18,15 @@ import type { IResponseProduct, IServerProductClassification } from '@/types/pro
 
 import ImageWithFallback from '../image/ImageWithFallback'
 
+interface ExtendedResponseProduct extends IResponseProduct {
+  selectedClassification?: IServerProductClassification
+}
+
 interface ProductSearchDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSelectProducts: (products: IResponseProduct[]) => void
-  initialSelectedProducts?: IResponseProduct[]
+  onSelectProducts: (products: ExtendedResponseProduct[]) => void
+  initialSelectedProducts?: ExtendedResponseProduct[]
   title?: string
 }
 
@@ -124,6 +126,7 @@ export default function ProductSearchDialog({
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 500)
   const [products, setProducts] = useState<IResponseProduct[]>([])
+  const [allProducts, setAllProducts] = useState<IResponseProduct[]>([])
 
   // Use a separate state for selected products with their classifications
   const [selectedProductsWithClassifications, setSelectedProductsWithClassifications] = useState<
@@ -150,14 +153,15 @@ export default function ProductSearchDialog({
   // Initialize selected products from props
   useEffect(() => {
     if (open) {
-      // Convert initialSelectedProducts to our internal format
-      const initialWithClassifications = initialSelectedProducts.map((product) => ({
-        product,
-        classification: undefined // We don't know the classification from the initial data
-      }))
-      setSelectedProductsWithClassifications(initialWithClassifications)
+      // Process initialSelectedProducts to extract any selected classifications
+      const initialWithClassifications = initialSelectedProducts.map((product) => {
+        return {
+          product,
+          classification: product.selectedClassification
+        }
+      })
 
-      // Reset pagination when dialog opens
+      setSelectedProductsWithClassifications(initialWithClassifications)
       setPage(1)
       setHasMore(true)
 
@@ -166,7 +170,7 @@ export default function ProductSearchDialog({
         fetchProducts(true)
       }
     }
-  }, [initialSelectedProducts, open, debouncedSearchQuery])
+  }, [initialSelectedProducts, open])
 
   // Focus input when dialog opens
   useEffect(() => {
@@ -187,6 +191,20 @@ export default function ProductSearchDialog({
       }
     }
   }, [debouncedSearchQuery])
+
+  // Merge search results with selected products that aren't in the search results
+  useEffect(() => {
+    // Get IDs of products in search results
+    const searchResultIds = new Set(products.map((product) => product.id))
+
+    // Get selected products that aren't in search results
+    const selectedProductsNotInSearch = selectedProductsWithClassifications
+      .filter((item) => !searchResultIds.has(item.product.id))
+      .map((item) => item.product)
+
+    // Combine search results with selected products not in search
+    setAllProducts([...products, ...selectedProductsNotInSearch])
+  }, [products, selectedProductsWithClassifications])
 
   // Fetch products function
   const fetchProducts = useCallback(
@@ -327,10 +345,15 @@ export default function ProductSearchDialog({
   // Handle confirm selection
   const handleConfirm = useCallback(() => {
     // Convert our internal format back to the expected output format
+    // Add the selected classification to each product
     const selectedProducts = selectedProductsWithClassifications.map((item) => {
-      // If we need to pass the classification information, we could add it to a temporary property
-      // or modify the API contract to accept a different format
-      return item.product
+      // Create a new object with the product properties and the extended property
+      const extendedProduct: ExtendedResponseProduct = {
+        ...item.product,
+        selectedClassification: item.classification
+      }
+
+      return extendedProduct
     })
 
     onSelectProducts(selectedProducts)
@@ -351,7 +374,7 @@ export default function ProductSearchDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className='sm:max-w-[600px] max-h-[90vh] flex flex-col'>
+        <DialogContent className='sm:max-w-[600px] max-h-[90vh] flex flex-col overflow-hidden'>
           <DialogHeader>
             <DialogTitle>{title || t('product.selectProducts')}</DialogTitle>
           </DialogHeader>
@@ -385,30 +408,35 @@ export default function ProductSearchDialog({
           </div>
 
           {selectedProductsWithClassifications.length > 0 && (
-            <div className='flex flex-wrap gap-2 mb-4'>
-              {selectedProductsWithClassifications.map((item) => (
-                <Badge key={item.product.id} variant='secondary' className='flex items-center gap-1 px-3 py-1.5'>
-                  <span className='max-w-[200px] truncate'>
-                    {item.product.name}
-                    {item.classification && ` (${item.classification.title || t('product.default')})`}
-                  </span>
-                  <button
-                    type='button'
-                    onClick={() => removeSelectedProduct(item.product.id)}
-                    className='ml-1 rounded-full hover:bg-muted p-0.5'
-                  >
-                    <X className='h-3 w-3' />
-                  </button>
-                </Badge>
-              ))}
-            </div>
+            <ScrollArea className='w-full max-h-[100px] mb-4 overflow-y-auto'>
+              <div className='flex flex-wrap gap-2 p-1'>
+                {selectedProductsWithClassifications.map((item) => (
+                  <Badge key={item.product.id} variant='secondary' className='flex items-center gap-1 px-3 py-1.5'>
+                    <span className='max-w-[200px] truncate'>
+                      {item.product.name}
+                      {item.classification && ` (${item.classification.title || t('product.default')})`}
+                    </span>
+                    <button
+                      type='button'
+                      onClick={() => removeSelectedProduct(item.product.id)}
+                      className='ml-1 rounded-full hover:bg-muted p-0.5'
+                    >
+                      <X className='h-3 w-3' />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            </ScrollArea>
           )}
 
-          <ScrollArea className='flex-1 rounded-md' onScrollCapture={handleScroll} ref={scrollAreaRef}>
-            {products.length > 0 ? (
+          <ScrollArea
+            className='flex-1 rounded-md max-h-[400px] overflow-y-auto'
+            onScrollCapture={handleScroll}
+            ref={scrollAreaRef}
+          >
+            {allProducts.length > 0 ? (
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 p-2'>
-                {/* Update the product card rendering in the main component to remove discount price and tag display */}
-                {products.map((product) => {
+                {allProducts.map((product) => {
                   // Get cheapest classification
                   const productClassification = getCheapestClassification(product.productClassifications || [])
 
@@ -470,15 +498,19 @@ export default function ProductSearchDialog({
               </div>
             )}
 
-            {isLoading && (
-              <div className='flex justify-center items-center p-4'>
-                <Loader2 className='h-6 w-6 animate-spin text-primary' />
+            {hasMore && products.length > 0 && (
+              <div className='py-4 text-center'>
+                <Button variant='outline' onClick={() => fetchProducts()} disabled={isLoading} className='w-full'>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      {t('common.loading')}
+                    </>
+                  ) : (
+                    t('product.loadMore')
+                  )}
+                </Button>
               </div>
-            )}
-
-            {/* Load more indicator */}
-            {hasMore && !isLoading && products.length > 0 && (
-              <div className='py-4 text-center text-sm text-muted-foreground'>{t('product.scrollToLoadMore')}</div>
             )}
           </ScrollArea>
 

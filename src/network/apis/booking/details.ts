@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { BookingFormAnswerSchema, ConsultationResultSchema } from '@/schemas/booking.schema'
+import { BookingFormAnswerSchema, ConsultationResultWithImageSchema } from '@/schemas/booking.schema'
 import { IBooking } from '@/types/booking'
 import { TServerFile } from '@/types/file'
 import { TServerResponse } from '@/types/request'
@@ -29,7 +29,7 @@ interface UpdateBookingStatusParams {
   id: string
   status: string
   bookingFormAnswer?: z.infer<typeof BookingFormAnswerSchema>
-  consultationResult?: z.infer<typeof ConsultationResultSchema>
+  consultationResult?: z.infer<typeof ConsultationResultWithImageSchema>
   mediaFiles?: Omit<TServerFile, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'type'>[]
   resultNote?: string
   meetUrl?: string

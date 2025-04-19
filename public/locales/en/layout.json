@@ -125,7 +125,8 @@
     "export": "Export",
     "update": "Update",
     "viewDetails": "View details",
-    "upload": "Upload"
+    "upload": "Upload",
+    "joinMeeting": "Join Meeting"
   },
   "noData": "No matching data found",
   "sell": {
@@ -1255,6 +1256,7 @@
       "RETURNING": "Provide evidence of the return process.",
       "REFUNDED": "Upload proof of return completion and refund."
     },
+
     "videosHint": {
       "TO_SHIP": "A 360° view of the package to confirm it's properly sealed.",
       "SHIPPING": "Record handover moment or a short clip of the sealed package before shipping.",
@@ -1480,7 +1482,6 @@
       "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
       "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
       "refunded": "The payment for this booking has been refunded to your original payment method.",
-
       "waitForConfirmation": "Your booking is waiting for confirmation from the consultant.",
       "bookingConfirmed": "Your booking has been confirmed. Please submit the booking form to proceed.",
       "serviceBookingFormSubmitted": "Your booking form has been submitted. Please join the consulting call at the scheduled time.",
@@ -1513,7 +1514,8 @@
     "customerInfo": "Customer Information",
     "serviceDetails": "Service Details",
     "cancelBooking": "Cancel Booking",
-
+    "totalPayment": "Total payment",
+    "serviceFee": "Service Fee",
     "paymentMethod": "Payment Method",
     "paymentSummary": "Payment Summary",
     "subtotal": "Subtotal",
@@ -1521,6 +1523,11 @@
     "total": "Total",
     "created": "Booking Created",
     "system": "System",
+    "completeConsultingCallDescription": "Please provide details about the consulting call completion including any relevant media files and notes.",
+    "updateBookingStatusSuccess": "Booking status updated successfully",
+    "videosHint": "Upload videos related to the consulting call",
+    "resultNoteDescription": "Add any additional notes or observations from the consulting call",
+    "resultNotePlaceholder": "Enter your notes here...",
     "status": {
       "TO_PAY": "To Pay",
       "WAIT_FOR_CONFIRMATION": "Waiting for Confirmation",
@@ -1535,7 +1542,7 @@
       "submitBookingForm": "Submit Booking Form",
       "bookingFormSubmitted": "Booking Form Submitted",
       "formSubmitted": "Form Submitted",
-      "completed": "Đã hoàn thành",
+      "completed": "Completed",
       "completeConsultingCall": "Complete Consulting Call",
       "completedConsultingCall": "Completed Consulting Call",
       "sendResultSheet": "Send Result Sheet",
@@ -1590,6 +1597,8 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
+    "submit": "Submit",
+
     "add": "Add",
     "remove": "Remove",
     "search": "Search",

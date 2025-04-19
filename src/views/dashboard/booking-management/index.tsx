@@ -1,25 +1,6 @@
-// import { useQueryState } from 'nuqs'
-// import { useTranslation } from 'react-i18next'
-// import { useLocation, useNavigate } from 'react-router-dom'
-
 import BookingTable from './booking-table-ui'
 
 export default function BookingManagementPage() {
-  // const { t } = useTranslation()
-  // const location = useLocation()
-  // const navigate = useNavigate()
-
-  // // Define the tab query state with nuqs
-  // const [activeTab, setActiveTab] = useQueryState('tab', { defaultValue: 'bookings' })
-
-  // // Handle tab change - clear other URL params
-  // const handleTabChange = (value: string) => {
-  //   setActiveTab(value)
-
-  // Clear all other query params by navigating to the current path with only the tab param
-  // navigate({ pathname: location.pathname, search: `?tab=${value}` })
-  // }
-
   return (
     <div className='flex flex-col gap-4'>
       {/* <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
