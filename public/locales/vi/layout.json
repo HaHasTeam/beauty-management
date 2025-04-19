@@ -1426,7 +1426,12 @@
     "refunded": "Đã hoàn tiền",
     "totalPayment": "Tổng tiền thanh toán",
     "serviceFee": "Phí dịch vụ",
-
+    "bookingFormAnswers": "Câu Trả Lời Biểu Mẫu Đặt Lịch",
+    "noBookingFormAnswers": "Không có câu trả lời biểu mẫu đặt lịch",
+    "questionImages": "Hình Ảnh Câu Hỏi",
+    "answer": "Câu Trả Lời",
+    "noAnswerProvided": "Không có câu trả lời nào được cung cấp",
+    "answerImages": "Hình Ảnh Câu Trả Lời",
     "statusDescription": {
       "waitConfirm": "Đặt chỗ của bạn đang chờ xác nhận từ nhà cung cấp dịch vụ. Bạn sẽ được thông báo khi nó được xác nhận.",
       "confirmed": "Đặt chỗ của bạn đã được xác nhận. Nhà cung cấp dịch vụ đã sẵn sàng cung cấp dịch vụ theo lịch trình.",
