@@ -1473,6 +1473,12 @@
     "resultSheetSent": "Result Sheet Sent",
     "viewResults": "View Results",
     "refunded": "Refunded",
+    "bookingFormAnswers": "Booking Form Answers",
+    "noBookingFormAnswers": "No booking form answers available",
+    "questionImages": "Question Images",
+    "answer": "Answer",
+    "noAnswerProvided": "No answer provided",
+    "answerImages": "Answer Images",
     "statusDescription": {
       "waitConfirm": "Your booking is waiting for confirmation from the service provider. You will be notified once it's confirmed.",
       "confirmed": "Your booking has been confirmed. The service provider is ready to deliver the service as scheduled.",
