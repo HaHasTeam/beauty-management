@@ -28,11 +28,11 @@ const BookingStatusTracking = ({ statusTrackingData }: { statusTrackingData: ISt
         icon: <MessageSquare className='w-5 h-5' />
       },
       [BookingStatusEnum.SENDED_RESULT_SHEET]: {
-        text: t('booking.status.resultSent'),
+        text: t('booking.status.sendedResultSheet'),
         icon: <MessageSquare className='w-5 h-5' />
       },
-      [BookingStatusEnum.COMPLETED]: {
-        text: t('booking.status.completed'),
+      [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
+        text: t('booking.status.completedConsultingCall'),
         icon: <MessageSquare className='w-5 h-5' />
       },
       [BookingStatusEnum.REFUNDED]: {
@@ -40,7 +40,7 @@ const BookingStatusTracking = ({ statusTrackingData }: { statusTrackingData: ISt
         icon: <CreditCard className='w-5 h-5' />
       },
       [BookingStatusEnum.CANCELLED]: {
-        text: t('booking.status.cancelled'),
+        text: t('booking.cancelled'),
         icon: <Calendar className='w-5 h-5' />
       }
     }

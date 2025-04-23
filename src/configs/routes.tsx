@@ -264,6 +264,13 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/accounts',
     getPath: () => '/dashboard/accounts'
   },
+  // [Routes.BOOKING_LIST]: {
+  //   name: 'Booking List ',
+  //   title: 'Booking List',
+  //   description: 'Booking List',
+  //   path: '/dashboard/bookings',
+  //   getPath: () => '/dashboard/bookings'
+  // },
   [Routes.ACCOUNT_DETAILS]: {
     name: 'Account Details',
     title: 'Account Details',
@@ -473,5 +480,12 @@ export const routesConfig: TRoutes = {
     description: 'Original Order Details',
     path: '/dashboard/orders/origin/:id',
     getPath: (params) => `/dashboard/orders/origin/${params.id}`
+  },
+  [Routes.BOOKING_LIST]: {
+    name: 'Booking List',
+    title: 'Booking List',
+    description: 'Booking List',
+    path: '/dashboard/bookings',
+    getPath: () => '/dashboard/bookings'
   }
 }
