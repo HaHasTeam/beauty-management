@@ -55,6 +55,15 @@ export const getAllOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>
   })
 })
 
+export const getAllChildOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>>(
+  'getAllChildOrderListApi',
+  async () => {
+    return privateRequest('/orders/get-children', {
+      method: 'GET'
+    })
+  }
+)
+
 export const filterOrdersParentApi = toQueryFetcher<IOrderFilterFilter, TServerResponseWithPagination<IOrder[]>>(
   'filterOrdersParentApi',
   async (filterData) => {

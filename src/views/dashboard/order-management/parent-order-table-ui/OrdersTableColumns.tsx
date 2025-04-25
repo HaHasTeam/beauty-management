@@ -18,7 +18,6 @@ import { getDisplayString } from '@/utils/string'
 
 import { OrderItemsCell } from './OrderItemsCell'
 import { OrderResultCell } from './OrderResultCell'
-import { OrderStatusCell } from './OrderStatusCell'
 import { OrderTypeCell } from './OrderTypeCell'
 
 // Custom filter functions for use with table
@@ -178,15 +177,15 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>
       },
       size: 340
     },
-    {
-      accessorKey: 'status',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
-      cell: ({ row }) => <OrderStatusCell order={row.original} />,
-      filterFn: (row, id, value) => {
-        return Array.isArray(value) && value.includes(row.getValue(id))
-      },
-      size: 150
-    },
+    // {
+    //   accessorKey: 'status',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+    //   cell: ({ row }) => <OrderStatusCell order={row.original} />,
+    //   filterFn: (row, id, value) => {
+    //     return Array.isArray(value) && value.includes(row.getValue(id))
+    //   },
+    //   size: 150
+    // },
     {
       id: 'orderDetails',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Order Items' />,

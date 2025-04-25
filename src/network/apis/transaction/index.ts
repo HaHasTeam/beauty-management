@@ -137,3 +137,18 @@ export const getBrandRevenueStatistics = toQueryFetcher<
     data: cleanedData
   })
 })
+
+/**
+ * Get all transactions (assuming GET request)
+ */
+export const getAllTransactions = toQueryFetcher<
+  void, // Assuming no specific parameters needed
+  TServerResponse<TTransaction[]> // Assuming a paginated response like filterTransactions
+>(
+  'getAllTransactions', // Unique query key
+  async () => {
+    return privateRequest('/transactions', {
+      method: 'GET' // Assuming GET method
+    })
+  }
+)
