@@ -43,8 +43,9 @@ export function ReportResultCell({ report }: ReportResultCellProps) {
         <div className='flex-1 min-w-0'>
           <div className='flex items-center'>
             <span className='font-medium text-gray-700 text-sm mr-1'>Assigned to:</span>
-            <span className='font-medium text-gray-900 text-sm'>{report.assignee.username}</span>
+            <span className='font-medium text-gray-900 text-sm truncate'>{report.assignee.username}</span>
           </div>
+          <p className='text-sm text-gray-500 truncate'>{report.assignee.email}</p>
           <p className='text-sm text-gray-500 mt-0.5'>{formatDate(report.updatedAt)}</p>
         </div>
       </div>
@@ -55,13 +56,20 @@ export function ReportResultCell({ report }: ReportResultCellProps) {
   const renderResultNote = () => {
     if (!report.resultNote) return null
 
+    // Determine color based on status
+    const isApproved = report.status === ReportStatusEnum.APPROVED
+    const bgColor = isApproved ? 'bg-green-50' : 'bg-red-50'
+    const iconColor = isApproved ? 'text-green-400' : 'text-red-400'
+    const titleColor = isApproved ? 'text-green-800' : 'text-red-800'
+    const textColor = isApproved ? 'text-green-700' : 'text-red-700'
+
     return (
-      <div className='mt-2 rounded bg-blue-50 p-3 w-full'>
+      <div className={`mt-2 rounded ${bgColor} p-3 w-full`}>
         <div className='flex gap-2'>
-          <AlertCircleIcon className='h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5' />
+          <AlertCircleIcon className={`h-5 w-5 ${iconColor} flex-shrink-0 mt-0.5`} />
           <div className='flex-1 min-w-0'>
-            <div className='text-sm text-blue-700 font-medium'>Result:</div>
-            <p className='text-sm text-blue-600 break-words mt-1'>{report.resultNote}</p>
+            <div className={`text-sm ${titleColor} font-medium`}>Result note:</div>
+            <p className={`text-sm ${textColor} break-words mt-1`}>{report.resultNote}</p>
           </div>
         </div>
       </div>
@@ -159,6 +167,21 @@ export function ReportResultCell({ report }: ReportResultCellProps) {
       )
 
     case ReportStatusEnum.APPROVED:
+      return (
+        <div className='w-full'>
+          <div className='flex items-start'>
+            <div className='flex-1'>
+              {renderReason()}
+              {renderAssignee()}
+              {renderResultNote()}
+            </div>
+            {renderFileToggle()}
+          </div>
+          {isDetailsOpen && renderFiles()}
+        </div>
+      )
+
+    case ReportStatusEnum.REJECTED:
       return (
         <div className='w-full'>
           <div className='flex items-start'>

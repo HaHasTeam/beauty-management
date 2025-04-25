@@ -1,28 +1,34 @@
+import { useState } from 'react'
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import BookingStatic from '@/components/ui/transaction-statics/booking'
+
 import BookingTable from './booking-table-ui'
 
 export default function BookingManagementPage() {
+  const [tab, setTab] = useState<'bookings-statistics' | 'brand-recommendation-statistics'>('bookings-statistics')
   return (
     <div className='flex flex-col gap-4'>
-      {/* <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
+      <Tabs
+        className='w-full'
+        value={tab}
+        onValueChange={(value) => setTab(value as 'bookings-statistics' | 'brand-recommendation-statistics')}
+      >
         <TabsList className='w-fit grid-cols-2 mb-6'>
-          <TabsTrigger value='bookings' className='flex items-center gap-2'>
-            <Calendar className='h-4 w-4' />
-            <span>{t('booking.tabs.bookings', 'Bookings')}</span>
+          <TabsTrigger value='bookings-statistics' className='flex items-center gap-2'>
+            <span>Bookings Statistics</span>
           </TabsTrigger>
-          <TabsTrigger value='requests' className='flex items-center gap-2'>
-            <RefreshCw className='h-4 w-4' />
-            <span>{t('booking.tabs.requests', 'Requests')}</span>
-          </TabsTrigger>
+          {/* <TabsTrigger value='brand-recommendation-statistics' className='flex items-center gap-2'>
+            <span>Brand Recommendation Statistics</span>
+          </TabsTrigger> */}
         </TabsList>
-        <TabsContent value='bookings'>
-          <h2 className='text-xl font-semibold mb-4'>{t('booking.management', 'Bookings Management')}</h2>
-          <BookingTable />
+        <TabsContent value='bookings-statistics'>
+          <BookingStatic />
         </TabsContent>
-        <TabsContent value='requests'>
-          <h2 className='text-xl font-semibold mb-4'>{t('booking.management.requests', 'Booking Requests')}</h2>
-          <BookingRequestsTable />
-        </TabsContent>
-      </Tabs> */}
+        {/* <TabsContent value='brand-recommendation-statistics'>
+          <BrandRecommendStatic />
+        </TabsContent> */}
+      </Tabs>
       {/* <h2 className='text-xl font-semibold mb-4'>{t('booking.management', 'Bookings Management')}</h2> */}
       <BookingTable />
     </div>

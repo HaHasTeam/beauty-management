@@ -29,28 +29,33 @@ export function OrderResultCell({ order }: OrderResultCellProps) {
   return (
     <div className='w-full bg-card rounded-md'>
       <div className='p-1.5'>
-        {/* Combined row with address, notes and expand button */}
-        <div className='flex items-center justify-between gap-x-2'>
-          <div className='flex-1 flex items-center gap-x-3 overflow-hidden'>
-            <div className='truncate flex items-center gap-1'>
-              <MapPin className='h-3 w-3 text-primary flex-shrink-0' />
-              <span className='text-foreground font-medium whitespace-nowrap text-xs'>Address:</span>
-              <span className='truncate text-xs text-muted-foreground'>{shippingAddress}</span>
+        {/* Wrapper to constrain width ONLY for the unexpanded row */}
+        <div className='max-w-sm'>
+          {' '}
+          {/* Adjust max-w-sm as needed (e.g., max-w-xs, max-w-md) */}
+          {/* Combined row with address, notes and expand button */}
+          <div className='flex items-center justify-between gap-x-2'>
+            <div className='flex-1 flex items-center gap-x-3 overflow-hidden'>
+              <div className='truncate flex items-center gap-1'>
+                <MapPin className='h-3 w-3 text-primary flex-shrink-0' />
+                <span className='text-foreground font-medium whitespace-nowrap text-xs'>Address:</span>
+                <span className='truncate text-xs text-muted-foreground'>{shippingAddress}</span>
+              </div>
+              <div className='truncate flex items-center gap-1'>
+                <MessageSquare className='h-3 w-3 text-primary flex-shrink-0' />
+                <span className='text-foreground font-medium whitespace-nowrap text-xs'>Notes:</span>
+                <span className='truncate text-xs text-muted-foreground'>{notes}</span>
+              </div>
             </div>
-            <div className='truncate flex items-center gap-1'>
-              <MessageSquare className='h-3 w-3 text-primary flex-shrink-0' />
-              <span className='text-foreground font-medium whitespace-nowrap text-xs'>Notes:</span>
-              <span className='truncate text-xs text-muted-foreground'>{notes}</span>
-            </div>
+            <Button
+              variant='ghost'
+              size='sm'
+              className='h-6 w-6 p-0 flex-shrink-0 text-muted-foreground hover:text-foreground hover:bg-accent ml-1'
+              onClick={toggleExpanded}
+            >
+              {expanded ? <ChevronUp className='h-3.5 w-3.5' /> : <ChevronDown className='h-3.5 w-3.5' />}
+            </Button>
           </div>
-          <Button
-            variant='ghost'
-            size='sm'
-            className='h-6 w-6 p-0 flex-shrink-0 text-muted-foreground hover:text-foreground hover:bg-accent ml-1'
-            onClick={toggleExpanded}
-          >
-            {expanded ? <ChevronUp className='h-3.5 w-3.5' /> : <ChevronDown className='h-3.5 w-3.5' />}
-          </Button>
         </div>
 
         {expanded && (

@@ -32,8 +32,13 @@
     --chart-green: 142 71% 45%;
     --chart-foreground: 345 57% 0%;
     --chart-muted: 345 24% 91%;
-    --chart-gray: #4d4d4d;
     --chart-yellow: 50 100% 47%;
+    /* Grayscale chart colors (Light Mode) */
+    --chart-gray-1: 0 0% 15%; /* Darkest Gray */
+    --chart-gray-2: 0 0% 32%; /* Dark Gray */
+    --chart-gray-3: 0 0% 45%; /* Medium Gray */
+    --chart-gray-4: 0 0% 64%; /* Light Gray */
+    --chart-gray-5: 0 0% 83%; /* Lightest Gray */
 
     /* mới thêm vào biến mới nè  */
     --warning: 38 92% 50%;
@@ -60,6 +65,13 @@
     --neutral-light: 210 3% 89%;
     --neutral-dark: 210 3% 24%;
     --neutral-border: 210 3% 84%;
+
+    /* Spectrum Colors (Light Mode) */
+    --chart-red: 0 84% 60%;
+    --chart-orange: 25 95% 53%;
+    --chart-blue: 217 91% 60%;
+    --chart-indigo: 250 84% 65%;
+    --chart-violet: 271 91% 65%;
   }
 
   .dark {
@@ -91,7 +103,14 @@
     --chart-foreground: 345 24% 98%;
     --chart-muted: 345 24% 91%;
     --chart-yellow: 50 100% 50%;
-    --chart-gray: #262626, /* mới thêm vào biến mới nè  */ --warning: 48 96% 89%;
+    /* Grayscale chart colors (Dark Mode) */
+    --chart-gray-1: 0 0% 83%; /* Lightest Gray */
+    --chart-gray-2: 0 0% 64%; /* Light Gray */
+    --chart-gray-3: 0 0% 45%; /* Medium Gray */
+    --chart-gray-4: 0 0% 32%; /* Dark Gray */
+    --chart-gray-5: 0 0% 15%; /* Darkest Gray */
+
+    /* mới thêm vào biến mới nè  */ --warning: 48 96% 89%;
     --warning-foreground: 38 92% 50%;
     --success: 144 70% 96%;
     --success-foreground: 142 71% 45%;
@@ -114,6 +133,13 @@
     --neutral-light: 210 3% 89%;
     --neutral-dark: 210 3% 24%;
     --neutral-border: 210 3% 84%;
+
+    /* Spectrum Colors (Dark Mode) */
+    --chart-red: 0 72% 51%;
+    --chart-orange: 25 89% 50%;
+    --chart-blue: 217 89% 61%;
+    --chart-indigo: 250 77% 68%;
+    --chart-violet: 271 91% 70%;
   }
 }
 
