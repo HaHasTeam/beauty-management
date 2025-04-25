@@ -34,7 +34,7 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useToast } from '@/hooks/useToast'
 import { activateAccountMutateApi } from '@/network/apis/auth'
-import { getAllUserApi } from '@/network/apis/user'
+import { getAccountFilterApi } from '@/network/apis/user'
 import { reasonSchema } from '@/schemas'
 import { TUser, UserStatusEnum } from '@/types/user'
 
@@ -84,7 +84,7 @@ export function UpdateStatusAccountDialog({
       const updatePromises = accounts.map((item) => updateStatusAccountMutation(item.id))
       // Wait for all updates to complete
       await Promise.all(updatePromises)
-      await queryClient.invalidateQueries({ queryKey: [getAllUserApi.queryKey] })
+      await queryClient.invalidateQueries({ queryKey: [getAccountFilterApi.queryKey] })
       form.reset()
       props.onOpenChange?.(false)
     } catch (error) {

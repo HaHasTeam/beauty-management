@@ -11,6 +11,7 @@ import { getBookingByIdApi, updateBookingStatusApi } from '@/network/apis/bookin
 import type { IBooking } from '@/types/booking'
 import { BookingStatusEnum, ServiceTypeEnum } from '@/types/enum'
 import type { IStatusTracking } from '@/types/statusTracking'
+import { handleRoomIdGenerate } from '@/utils/meetUrl'
 
 import Button from '../button'
 import { AlertDescription } from '../ui/alert'
@@ -58,8 +59,14 @@ export default function UpdateBookingStatus({
 
   async function handleUpdateStatus(status: BookingStatusEnum) {
     try {
-      setIsLoading(true)
-      await updateBookingStatusFn({ id: booking?.id, status })
+      if (status == BookingStatusEnum.BOOKING_CONFIRMED) {
+        const meetUrl = handleRoomIdGenerate()
+        setIsLoading(true)
+        await updateBookingStatusFn({ id: booking?.id, status, meetUrl })
+      } else {
+        setIsLoading(true)
+        await updateBookingStatusFn({ id: booking?.id, status })
+      }
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
