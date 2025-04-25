@@ -168,7 +168,7 @@ const FlashSaleDetails = () => {
             </div>
             <AlertAction
               onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
+                handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
               }}
               loading={isUpdatingFlashSale}
               variant={'default'}
@@ -192,15 +192,15 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
+            {/* <AlertAction
               onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.ACTIVE)
+                handleChangeStatus(FlashSaleStatusEnum.WAITING)
               }}
               loading={isUpdatingFlashSale}
               variant={'success'}
             >
               {'Open event'}
-            </AlertAction>
+            </AlertAction> */}
           </Alert>
         )
       case FlashSaleStatusEnum.WAITING:
@@ -223,7 +223,7 @@ const FlashSaleDetails = () => {
             </div>
             <AlertAction
               onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
+                handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
               }}
               loading={isUpdatingFlashSale}
               variant={'default'}
@@ -250,7 +250,7 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
+            {/* <AlertAction
               onClick={() => {
                 handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
               }}
@@ -258,7 +258,7 @@ const FlashSaleDetails = () => {
               variant={'default'}
             >
               {'Reopen event'}
-            </AlertAction>
+            </AlertAction> */}
           </Alert>
         )
       default:

@@ -91,7 +91,9 @@ export default function BrandDashboard() {
           </div>
           <div>
             <h1 className='text-3xl font-bold'>{brand.name}</h1>
-            <p className='text-muted-foreground'>{brand.description || 'No description available'}</p>
+            <p className='text-muted-foreground line-clamp-4 max-w-[800px]'>
+              {brand.description || 'No description available'}
+            </p>
             <p className='text-xs text-muted-foreground mt-1'>ID: {brand.id?.substring(0, 8).toUpperCase() || 'N/A'}</p>
           </div>
         </div>
@@ -111,28 +113,8 @@ export default function BrandDashboard() {
         </TabsList>
 
         <TabsContent value='overview'>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <Card>
-              <CardHeader className='bg-primary/5 pb-2'>
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>Manage your brand and products</CardDescription>
-              </CardHeader>
-              <CardContent className='flex flex-col gap-3 pt-4'>
-                <Button asChild className='w-full'>
-                  <a href='/dashboard/update'>Update Brand Information</a>
-                </Button>
-
-                <UploadDocumentDialog brand={brand} buttonText='Upload New Document' buttonClassName='w-full' />
-                <Button asChild className='w-full'>
-                  <a href='/dashboard/products/create'>Create Product</a>
-                </Button>
-                <Button asChild className='w-full'>
-                  <a href='/dashboard/vouchers/create'>Create Voucher</a>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className='md:col-span-2'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <Card className='w-full'>
               <CardHeader className='bg-primary/5 pb-2'>
                 <CardTitle>Brand Information</CardTitle>
                 <CardDescription>Last updated on {formatDate(brand.updatedAt || '')}</CardDescription>
@@ -176,47 +158,46 @@ export default function BrandDashboard() {
                 </div>
               </CardContent>
             </Card>
+            <Card className='w-full'>
+              <CardHeader className='bg-primary/5 pb-2'>
+                <CardTitle>Reviewer Information</CardTitle>
+                <CardDescription>Your brand reviewer details</CardDescription>
+              </CardHeader>
+              <CardContent className='pt-4'>
+                {brand.reviewer ? (
+                  <div className='flex items-center gap-4'>
+                    <div className='h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center shadow-sm'>
+                      {brand.reviewer.avatar ? (
+                        <img
+                          src={brand.reviewer.avatar || '/placeholder.svg'}
+                          alt={`${brand.reviewer.firstName || ''} ${brand.reviewer.lastName || ''}`}
+                          className='w-full h-full rounded-full object-cover'
+                        />
+                      ) : (
+                        <span className='text-xl font-medium text-primary'>
+                          {brand.reviewer.firstName?.charAt(0) || ''}
+                          {brand.reviewer.lastName?.charAt(0) || ''}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <p className='font-medium text-lg'>
+                        {brand.reviewer.firstName || ''} {brand.reviewer.lastName || ''}
+                      </p>
+                      <p className='text-sm text-muted-foreground'>{brand.reviewer.email || ''}</p>
+                      <Badge variant='outline' className='mt-1'>
+                        Reviewer
+                      </Badge>
+                    </div>
+                  </div>
+                ) : (
+                  <div className='flex flex-col items-center justify-center py-6 text-center bg-muted/20 rounded-lg'>
+                    <p className='text-muted-foreground'>No reviewer assigned yet</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
-
-          <Card className='mt-6'>
-            <CardHeader className='bg-primary/5 pb-2'>
-              <CardTitle>Reviewer Information</CardTitle>
-              <CardDescription>Your brand reviewer details</CardDescription>
-            </CardHeader>
-            <CardContent className='pt-4'>
-              {brand.reviewer ? (
-                <div className='flex items-center gap-4'>
-                  <div className='h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center shadow-sm'>
-                    {brand.reviewer.avatar ? (
-                      <img
-                        src={brand.reviewer.avatar || '/placeholder.svg'}
-                        alt={`${brand.reviewer.firstName || ''} ${brand.reviewer.lastName || ''}`}
-                        className='w-full h-full rounded-full object-cover'
-                      />
-                    ) : (
-                      <span className='text-xl font-medium text-primary'>
-                        {brand.reviewer.firstName?.charAt(0) || ''}
-                        {brand.reviewer.lastName?.charAt(0) || ''}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <p className='font-medium text-lg'>
-                      {brand.reviewer.firstName || ''} {brand.reviewer.lastName || ''}
-                    </p>
-                    <p className='text-sm text-muted-foreground'>{brand.reviewer.email || ''}</p>
-                    <Badge variant='outline' className='mt-1'>
-                      Reviewer
-                    </Badge>
-                  </div>
-                </div>
-              ) : (
-                <div className='flex flex-col items-center justify-center py-6 text-center bg-muted/20 rounded-lg'>
-                  <p className='text-muted-foreground'>No reviewer assigned yet</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value='documents'>
@@ -255,9 +236,6 @@ export default function BrandDashboard() {
                           <a href={doc.fileUrl} target='_blank' rel='noopener noreferrer'>
                             View
                           </a>
-                        </Button>
-                        <Button variant='outline' size='sm' asChild>
-                          <a href={`/dashboard/documents/update/${doc.id}`}>Update</a>
                         </Button>
                       </div>
                     </div>

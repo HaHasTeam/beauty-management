@@ -20,7 +20,7 @@ import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { addPreOderApi, getPreOrderByIdApi, updatePreOrderApi } from '@/network/apis/pre-order'
 import { TAddPreOderRequestParams, TUpdatePreOrderRequestParams } from '@/network/apis/pre-order/type'
-import { PreOrderStatusEnum } from '@/types/pre-order'
+import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 import { ProductClassificationTypeEnum } from '@/types/product'
 
 import ClassificationConfig from './ClassificationConfig'
@@ -145,7 +145,7 @@ const PreOrderDetails = () => {
     }
   }
 
-  const getHeader = () => {
+  const getHeader = (preProductData: TPreOrder) => {
     if (!itemId) return null
     switch (preProductData?.status) {
       case PreOrderStatusEnum.ACTIVE:
@@ -166,7 +166,7 @@ const PreOrderDetails = () => {
             </div>
             <AlertAction
               onClick={() => {
-                handleChangeStatus(PreOrderStatusEnum.INACTIVE)
+                handleChangeStatus(PreOrderStatusEnum.CANCELLED)
               }}
               loading={isUpdatingPreProduct}
               variant={'default'}
@@ -186,19 +186,20 @@ const PreOrderDetails = () => {
                   <span className='font-bold uppercase text-xs'>status</span>
                 </AlertTitle>
                 <AlertDescription>
-                  This pre-order product is currently inactive and not visible to your customers.
+                  This pre-order product is currently inactive and not visible to your customers. To update, you must
+                  first update the start time and end time of the event.
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
+            {/* <AlertAction
               onClick={() => {
-                handleChangeStatus(PreOrderStatusEnum.ACTIVE)
+                handleChangeStatus(PreOrderStatusEnum.WAITING)
               }}
               loading={isUpdatingPreProduct}
               variant={'success'}
             >
               {'Open event'}
-            </AlertAction>
+            </AlertAction> */}
           </Alert>
         )
       case PreOrderStatusEnum.WAITING:
@@ -221,7 +222,7 @@ const PreOrderDetails = () => {
             </div>
             <AlertAction
               onClick={() => {
-                handleChangeStatus(PreOrderStatusEnum.INACTIVE)
+                handleChangeStatus(PreOrderStatusEnum.CANCELLED)
               }}
               loading={isUpdatingPreProduct}
               variant={'default'}
@@ -248,7 +249,7 @@ const PreOrderDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
+            {/* <AlertAction
               onClick={() => {
                 handleChangeStatus(PreOrderStatusEnum.INACTIVE)
               }}
@@ -256,7 +257,7 @@ const PreOrderDetails = () => {
               variant={'default'}
             >
               {'Close event'}
-            </AlertAction>
+            </AlertAction> */}
           </Alert>
         )
       default:
@@ -282,7 +283,7 @@ const PreOrderDetails = () => {
   return (
     <>
       {isGettingPreProduct && <LoadingContentLayer />}
-      {getHeader()}
+      {preProductData && getHeader(preProductData)}
       <Form {...form}>
         <form
           noValidate

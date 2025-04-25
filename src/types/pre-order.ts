@@ -14,7 +14,8 @@ export enum PreOrderStatusEnum {
   ACTIVE = 'ACTIVE',
   SOLD_OUT = 'SOLD_OUT',
   WAITING = 'WAITING',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
+  CANCELLED = 'CANCELLED'
 }
 
 export type IPreOrder = TMetaData & {
