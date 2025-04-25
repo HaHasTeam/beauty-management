@@ -71,7 +71,7 @@ const PersonalDetailsTab: React.FC<PersonalDetailsTabProps> = ({ account, isLoad
         <CardTitle>Personal Information</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='grid gap-6 md:grid-cols-2'>
+        <div className='grid gap-4 md:grid-cols-2'>
           <ReadOnlyField label='First Name' value={account.firstName} />
           <ReadOnlyField label='Last Name' value={account.lastName} />
           <ReadOnlyField label='Username' value={account.username} />
@@ -103,9 +103,6 @@ const PersonalDetailsTab: React.FC<PersonalDetailsTabProps> = ({ account, isLoad
           </div>
 
           <ReadOnlyField label='Date of Birth' value={formatDate(account.dob)} />
-          <ReadOnlyField label='Major Title' value={account.majorTitle} />
-          <ReadOnlyField label='Years of Experience' value={account.yoe ? `${account.yoe} years` : undefined} />
-          <ReadOnlyField label='Description' value={account.description} />
         </div>
       </CardContent>
     </Card>

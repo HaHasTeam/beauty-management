@@ -10,6 +10,7 @@ import AccountDetailsHeader from './AccountDetailsHeader'
 import AddressesTab from './AddressesTab'
 import BankAccountsTab from './BankAccountsTab'
 import PersonalDetailsTab from './PersonalDetailsTab'
+import WorkingProfileTab from './WorkingProfileTab'
 import WorkingTimeTab from './WorkingTimeTab'
 
 const AccountDetails = () => {
@@ -34,6 +35,15 @@ const AccountDetails = () => {
     return roleValue === 'CONSULTANT'
   }, [account])
 
+  const isOperator = React.useMemo(() => {
+    if (!account) return false
+
+    // Handle both string and object role types
+    const roleValue = typeof account.role === 'string' ? account.role : account.role?.role
+
+    return roleValue === 'OPERATOR'
+  }, [account])
+
   if (isLoading && !account) {
     return (
       <div className='flex justify-center items-center h-[400px]'>
@@ -50,11 +60,12 @@ const AccountDetails = () => {
       <AccountDetailsHeader account={account} isLoading={isLoading} />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className='space-y-4'>
-        <TabsList className='w-fit grid-cols-2 md:grid-cols-4 lg:w-auto'>
+        <TabsList className='w-fit grid-cols-2 md:grid-cols-5 lg:w-auto'>
           <TabsTrigger value='personal'>Personal Information</TabsTrigger>
           <TabsTrigger value='addresses'>Addresses</TabsTrigger>
           <TabsTrigger value='bank-accounts'>Bank Accounts</TabsTrigger>
-          {isConsultant && <TabsTrigger value='working-time'>Working Schedule</TabsTrigger>}
+          {(isConsultant || isOperator) && <TabsTrigger value='working-time'>Working Schedule</TabsTrigger>}
+          {isConsultant && <TabsTrigger value='working-profile'>Working Profile</TabsTrigger>}
         </TabsList>
 
         <TabsContent value='personal' className='space-y-4'>
@@ -69,11 +80,15 @@ const AccountDetails = () => {
           <BankAccountsTab account={account} isLoading={isLoading} />
         </TabsContent>
 
-        {isConsultant && (
+        {(isConsultant || isOperator) && (
           <TabsContent value='working-time' className='space-y-4'>
             <WorkingTimeTab accountId={id} />
           </TabsContent>
         )}
+
+        <TabsContent value='working-profile' className='space-y-4'>
+          <WorkingProfileTab />
+        </TabsContent>
       </Tabs>
     </div>
   )

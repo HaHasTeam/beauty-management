@@ -1,40 +1,81 @@
 import { useQuery } from '@tanstack/react-query'
-import { Image } from 'lucide-react'
-import { ChangeEvent, forwardRef, HTMLAttributes, useCallback, useMemo } from 'react'
+import { User as UserIcon } from 'lucide-react'
+import { forwardRef, HTMLAttributes, ReactElement, ReactNode, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+// Removed react-select type imports
+// import { GroupBase, OnChangeValue, Select } from 'react-select'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { getAccountFilterApi } from '@/network/apis/user'
 import { TGetAccountFilterRequestParams } from '@/network/apis/user/type'
 import { useStore } from '@/stores/store'
 import { TUser } from '@/types/user'
 
-import { InputProps } from '../ui/input'
 import { TOption } from '../ui/react-select'
-import AsyncSelect from '../ui/react-select/AsyncSelect'
+import LocalAsyncSelect from '../ui/react-select/AsyncSelect'
 
-type Props = HTMLAttributes<HTMLSelectElement> &
-  InputProps & {
-    query?: TGetAccountFilterRequestParams
-    includeSelf?: boolean
-  }
+// Define Props using react-select types - Simplified
+type SelectUserProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'value'> & {
+  query?: TGetAccountFilterRequestParams
+  includeSelf?: boolean
+  multiple?: boolean
+  value?: string | string[] | null
+  onChange?: (value: string | string[] | null) => void
+  placeholder?: string
+  className?: string
+  // Removed complex Omit for now
+}
 
-const getItemDisplay = (user: TUser) => {
+// Simple initials helper function
+const getInitials = (name: string): string => {
+  const words = name.split(' ').filter(Boolean)
+  if (words.length === 0) return ''
+  if (words.length === 1) return words[0].charAt(0).toUpperCase()
+  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase()
+}
+
+// Apply truncation and force height/nowrap
+const getItemDisplay = (user: TUser, isSelf: boolean): ReactElement => {
   const imgUrl = user?.avatar
+  const name = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || user.username
+  const email = user.email
+  const initials = getInitials(name)
+  const role = typeof user.role === 'string' ? user.role.toLowerCase().replace(/_/g, ' ') : 'User'
+
   return (
-    <div className='flex items-center gap-1'>
-      <Avatar className='bg-transparent size-5'>
-        <AvatarImage src={imgUrl} />
-        <AvatarFallback className='bg-transparent'>
-          <Image className='size-4' />
+    <div className='flex items-center gap-3 py-1.5 px-1 w-full overflow-hidden whitespace-nowrap h-fit'>
+      <Avatar className='size-5 border border-slate-100 shadow-sm flex-shrink-0'>
+        <AvatarImage src={imgUrl} alt={name} />
+        <AvatarFallback className='text-xs font-medium bg-slate-100 text-slate-600'>
+          {initials || <UserIcon className='size-4' />}
         </AvatarFallback>
       </Avatar>
-      <span>{user?.email}</span>
+      <div className='flex-1 min-w-0 flex items-center gap-2 justify-between'>
+        <div className='flex-1 min-w-0 flex items-baseline gap-2'>
+          <span className='text-sm font-medium text-slate-800 truncate' title={name}>
+            {name}
+          </span>
+          <span className='text-xs text-muted-foreground truncate' title={email}>
+            {email}
+          </span>
+        </div>
+        <div className='flex items-center gap-1.5 flex-shrink-0'>
+          {isSelf && (
+            <Badge variant='secondary' className='text-xs px-1.5 py-0 h-4'>
+              Me
+            </Badge>
+          )}
+          <span className='capitalize text-[11px] bg-slate-100 px-1.5 rounded font-medium'>{role}</span>
+        </div>
+      </div>
     </div>
   )
 }
 
-const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
+// Revert Ref type to HTMLDivElement based on reference file format
+const SelectUser = forwardRef<HTMLDivElement, SelectUserProps>((props, ref) => {
   const {
     placeholder = 'Select a user',
     className,
@@ -42,80 +83,102 @@ const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
     onChange,
     value,
     multiple = false,
-    includeSelf = false
+    includeSelf = false,
+    ...rest
   } = props
+
+  const { t } = useTranslation()
 
   const { data: filteredAccounts, isFetching: isGettingFilteredAccounts } = useQuery({
     queryKey: [getAccountFilterApi.queryKey, query as TGetAccountFilterRequestParams],
     queryFn: getAccountFilterApi.fn
   })
-  const { user: self } = useStore(
-    useShallow((state) => {
-      return {
-        user: state.user
-      }
-    })
-  )
+  const { user: self } = useStore(useShallow((state) => ({ user: state.user })))
 
   const listUser = useMemo(() => {
-    const extraItem = includeSelf && self ? [self] : []
-    return [...extraItem, ...(filteredAccounts?.data.items || [])]
+    const selfUser = includeSelf && self ? [self] : []
+    const otherUsers = filteredAccounts?.data.items || []
+    const uniqueOtherUsers = otherUsers.filter((u) => !(includeSelf && self && u.id === self.id))
+    return [...selfUser, ...uniqueOtherUsers]
   }, [includeSelf, self, filteredAccounts?.data.items])
 
-  const userOptions = useMemo(() => {
+  const getUserLabel = useCallback(
+    (user: TUser, isSelf: boolean): string => {
+      const name = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || user.username
+      const email = user.email
+      return isSelf ? `${t('common.me', 'Me')} - ${name} (${email})` : `${name} (${email})`
+    },
+    [t]
+  )
+
+  const userOptions: TOption[] = useMemo(() => {
     if (!listUser) return []
-    return listUser.map((user) => ({
-      value: user?.id,
-      label: self?.id === user.id ? 'Me' + ` | ${user.email}` : user?.email,
-      display: getItemDisplay({ ...user, email: self?.id === user.id ? 'Me' + ` | ${user.email}` : user?.email })
-    }))
-  }, [listUser, self])
+    return listUser.map((user) => {
+      const isSelf = self?.id === user.id
+      return {
+        value: user.id,
+        label: getUserLabel(user, isSelf),
+        display: getItemDisplay(user, isSelf)
+      }
+    })
+  }, [listUser, self, getUserLabel])
 
   const selectedOptions = useMemo(() => {
-    if (multiple) {
-      if (!value) return []
-      const options = value as string[]
-      return options
-        .map((option) => {
-          const item = listUser.find((item) => item.id === option)
-          if (!item) return null
-          return {
-            value: item?.id,
-            label: self?.id === item.id ? 'Me' + ` | ${item.email}` : item?.email,
-            display: getItemDisplay({
-              ...item,
-              email: self?.id === item.id ? 'Me' + ` | ${item.email}` : item?.email
-            })
-          }
-        })
-        .filter(Boolean)
-    } else {
-      if (!value) return null
-      const item = listUser.find((item) => item.id === value)
-      if (!item) return null
+    const findOption = (id: string): TOption | null => {
+      const user = listUser.find((item) => item.id === id)
+      if (!user) return null
+      const isSelf = self?.id === user.id
       return {
-        value: item?.id,
-        label: self?.id === item.id ? 'Me' + ` | ${item.email}` : item?.email,
-        display: getItemDisplay(item as TUser)
+        value: user.id,
+        label: getUserLabel(user, isSelf),
+        display: getItemDisplay(user, isSelf)
       }
     }
-  }, [value, listUser, multiple, self])
+
+    if (multiple) {
+      if (!Array.isArray(value)) return []
+      return value.map(findOption).filter((opt): opt is TOption => opt !== null)
+    } else {
+      if (typeof value !== 'string') return null
+      return findOption(value)
+    }
+  }, [value, listUser, multiple, self, getUserLabel])
 
   const promiseOptions = useCallback(
-    (inputValue: string) => {
-      if (!inputValue) {
-        return Promise.resolve(userOptions)
-      }
-      const filteredOptions = userOptions.filter((option) =>
-        option.label?.toLowerCase().includes(inputValue.toLowerCase())
-      )
-      return Promise.resolve(filteredOptions)
+    (inputValue: string): Promise<TOption[]> => {
+      const lowerInputValue = inputValue.toLowerCase()
+      const filtered = userOptions.filter((option) => option.label?.toLowerCase().includes(lowerInputValue))
+      return Promise.resolve(filtered)
     },
     [userOptions]
   )
 
+  // Revert handler signature to use 'any'
+  const handleChange = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (newValue: any) => {
+      if (multiple) {
+        const selectedValues = newValue as TOption[] | null
+        onChange?.(selectedValues?.map((opt) => opt.value as string) ?? [])
+      } else {
+        const selectedValue = newValue as TOption | null
+        onChange?.(selectedValue?.value != null ? String(selectedValue.value) : null)
+      }
+    },
+    [multiple, onChange]
+  )
+
+  // Revert formatOptionLabel signature to use 'any'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formatOptionLabel = (data: any): ReactNode => {
+    return data?.display as ReactElement
+  }
+
   return (
-    <AsyncSelect
+    <LocalAsyncSelect
+      {...rest}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ref={ref as any}
       cacheOptions
       defaultOptions={userOptions}
       loadOptions={promiseOptions}
@@ -126,15 +189,8 @@ const SelectUser = forwardRef<HTMLSelectElement, Props>((props) => {
       isLoading={isGettingFilteredAccounts}
       isClearable
       isSearchable
-      onChange={(options) => {
-        if (multiple) {
-          const optionValues = options as TOption[]
-          if (onChange) onChange(optionValues.map((option) => option.value) as unknown as ChangeEvent<HTMLInputElement>)
-        } else {
-          const optionValues = options as TOption
-          if (onChange) onChange(optionValues?.value as unknown as ChangeEvent<HTMLInputElement>)
-        }
-      }}
+      onChange={handleChange}
+      formatOptionLabel={formatOptionLabel}
     />
   )
 })

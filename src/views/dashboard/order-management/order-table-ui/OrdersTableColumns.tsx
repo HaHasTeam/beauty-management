@@ -1,5 +1,5 @@
 import type { ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, EyeIcon, SettingsIcon } from 'lucide-react'
+import { Ellipsis, EyeIcon, Mail, Phone, SettingsIcon } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -113,17 +113,28 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>
       header: ({ column }) => <DataTableColumnHeader column={column} title='Recipient' />,
       cell: ({ row }) => {
         const name = row.original.recipientName || 'Unknown Recipient'
-        // Use account avatar if available, or first letter as fallback
         const user = row.original.account
         const avatarUrl = user?.avatar || ''
+        const phone = user?.phone || 'N/A'
+        const email = user?.email || 'N/A'
 
         return (
-          <div className='flex gap-1 items-center'>
+          <div className='flex gap-2 items-start'>
             <Avatar className='rounded-full'>
               <AvatarImage src={avatarUrl} className='size-5' />
-              <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
+              <AvatarFallback className='text-xs'>{name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
-            <span className='max-w-[31.25rem] truncate'>{name}</span>
+            <div className='flex flex-col'>
+              <span className='font-medium truncate'>{name}</span>
+              <div className='flex items-center gap-1 text-muted-foreground'>
+                <Phone className='h-3 w-3' />
+                <span className='text-xs truncate'>{phone}</span>
+              </div>
+              <div className='flex items-center gap-1 text-muted-foreground'>
+                <Mail className='h-3 w-3' />
+                <span className='text-xs truncate'>{email}</span>
+              </div>
+            </div>
           </div>
         )
       },
