@@ -42,6 +42,9 @@ export type OrderStatic = {
     totalQuantity: number
     totalPlatformVoucherDiscount: number
     totalShopVoucherDiscount: number
+    actualRevenue: number
+    orderCount: number
+    totalCommissionFee: number
   }
   items: {
     date: string
@@ -49,6 +52,9 @@ export type OrderStatic = {
     totalQuantity: number
     totalPlatformVoucherDiscount: number
     totalShopVoucherDiscount: number
+    actualRevenue: number
+    orderCount: number
+    totalCommissionFee: number
   }[]
 }
 export enum StatisticsTimeEnum {

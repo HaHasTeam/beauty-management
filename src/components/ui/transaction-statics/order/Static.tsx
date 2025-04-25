@@ -3,7 +3,7 @@
 import { InteractiveAreaChart } from '@/components/ui/chart/InteractiveAreaChart'
 import { OrderStatic } from '@/network/apis/transaction/type'
 import { formatCurrency } from '@/utils/number'
-import { Banknote, CreditCard, InfoIcon, Tag, ShoppingCart } from 'lucide-react'
+import { Banknote, CreditCard, DollarSign, InfoIcon, ListOrdered, Percent, ShoppingCart, Tag } from 'lucide-react'
 
 type StaticProps = {
   data: OrderStatic | undefined
@@ -22,6 +22,14 @@ const Static = ({ data }: StaticProps) => {
     shopDiscount: {
       label: 'Shop Discount',
       color: 'chart-yellow'
+    },
+    actualRevenue: {
+      label: 'Actual Revenue',
+      color: 'chart-blue'
+    },
+    totalCommissionFee: {
+      label: 'Commission Fee',
+      color: 'chart-gray-4'
     }
   }
 
@@ -33,65 +41,89 @@ const Static = ({ data }: StaticProps) => {
     )
   }
 
-  // Check if the data has the expected properties
-  console.log('Data structure:', {
-    totalSample: data.total,
-    itemSample: data.items[0]
-  })
-
   const chartData = data.items.map((item) => ({
     date: item.date,
     revenue: item.totalRevenue,
     platformDiscount: item.totalPlatformVoucherDiscount,
-    shopDiscount: item.totalShopVoucherDiscount
+    shopDiscount: item.totalShopVoucherDiscount,
+    actualRevenue: item.actualRevenue,
+    totalCommissionFee: item.totalCommissionFee
   }))
 
   // Create a React node for the description with cards and icons
   const descriptionNode = (
-    <div className='w-full grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2'>
-      <div className='w-full flex items-start space-x-4 rounded-lg border border-blue-500/20 p-3 bg-blue-500/5 hover:bg-blue-500/10 transition-colors'>
-        <div className='rounded-full bg-blue-500/20 p-2 shrink-0'>
-          <ShoppingCart className='h-4 w-4 text-blue-500' />
-        </div>
-        <div className='min-w-0 flex-1 overflow-hidden'>
-          <p className='text-sm font-medium text-muted-foreground truncate'>Total Orders</p>
-          <p className='text-lg md:text-xl font-bold truncate text-blue-500'>{data.total.totalQuantity}</p>
-        </div>
-      </div>
-
-      <div className='w-full flex items-start space-x-4 rounded-lg border border-primary/20 p-3 bg-primary/5 hover:bg-primary/10 transition-colors'>
-        <div className='rounded-full bg-primary/20 p-2 shrink-0'>
-          <Banknote className='h-4 w-4 text-primary' />
+    <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2'>
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-[hsl(var(--chart-1))] p-3 bg-[hsla(var(--chart-1)/0.05)] hover:bg-[hsla(var(--chart-1)/0.1)] transition-colors'>
+        <div className='rounded-full bg-[hsla(var(--chart-1)/0.2)] p-2 shrink-0'>
+          <Banknote className='h-4 w-4 text-[hsl(var(--chart-1))] ' />
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Revenue</p>
-          <p className='text-lg md:text-xl font-bold truncate text-primary'>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-1))]'>
             {formatCurrency(data.total.totalRevenue, 'vi-VN')}
           </p>
         </div>
       </div>
-
-      <div className='w-full flex items-start space-x-4 rounded-lg border border-green-500/20 p-3 bg-green-500/5 hover:bg-green-500/10 transition-colors'>
-        <div className='rounded-full bg-green-500/20 p-2 shrink-0'>
-          <CreditCard className='h-4 w-4 text-green-500' />
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-[hsl(var(--chart-blue))] p-3 bg-[hsla(var(--chart-blue)/0.05)] hover:bg-[hsla(var(--chart-blue)/0.1)] transition-colors'>
+        <div className='rounded-full bg-[hsla(var(--chart-blue)/0.2)] p-2 shrink-0'>
+          <DollarSign className='h-4 w-4 text-[hsl(var(--chart-blue))] ' />
+        </div>
+        <div className='min-w-0 flex-1 overflow-hidden'>
+          <p className='text-sm font-medium text-muted-foreground truncate'>Actual Revenue</p>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-blue))]'>
+            {formatCurrency(data.total.actualRevenue, 'vi-VN')}
+          </p>
+        </div>
+      </div>
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-[hsl(var(--chart-gray-4))] p-3 bg-[hsla(var(--chart-gray-4)/0.05)] hover:bg-[hsla(var(--chart-gray-4)/0.1)] transition-colors'>
+        <div className='rounded-full bg-[hsla(var(--chart-gray-4)/0.2)] p-2 shrink-0'>
+          <Percent className='h-4 w-4 text-[hsl(var(--chart-gray-4))] ' />
+        </div>
+        <div className='min-w-0 flex-1 overflow-hidden'>
+          <p className='text-sm font-medium text-muted-foreground truncate'>Commission Fee</p>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-gray-4))]'>
+            {formatCurrency(data.total.totalCommissionFee, 'vi-VN')}
+          </p>
+        </div>
+      </div>
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-orange-500/20 p-3 bg-orange-500/5 hover:bg-orange-500/10 transition-colors'>
+        <div className='rounded-full bg-orange-500/20 p-2 shrink-0'>
+          <ListOrdered className='h-4 w-4 text-orange-500' />
+        </div>
+        <div className='min-w-0 flex-1 overflow-hidden'>
+          <p className='text-sm font-medium text-muted-foreground truncate'>Order Count</p>
+          <p className='text-lg md:text-xl font-bold truncate text-orange-500'>{data.total.orderCount}</p>
+        </div>
+      </div>
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-[hsl(var(--chart-green))] p-3 bg-[hsla(var(--chart-green)/0.05)] hover:bg-[hsla(var(--chart-green)/0.1)] transition-colors'>
+        <div className='rounded-full bg-[hsla(var(--chart-green)/0.2)] p-2 shrink-0'>
+          <CreditCard className='h-4 w-4 text-[hsl(var(--chart-green))] ' />
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Platform Discount</p>
-          <p className='text-lg md:text-xl font-bold truncate text-green-500'>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-green))]'>
             {formatCurrency(data.total.totalPlatformVoucherDiscount, 'vi-VN')}
           </p>
         </div>
       </div>
-
-      <div className='w-full flex items-start space-x-4 rounded-lg border border-yellow-500/20 p-3 bg-yellow-500/5 hover:bg-yellow-500/10 transition-colors'>
-        <div className='rounded-full bg-yellow-500/20 p-2 shrink-0'>
-          <Tag className='h-4 w-4 text-yellow-500' />
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-[hsl(var(--chart-yellow))] p-3 bg-[hsla(var(--chart-yellow)/0.05)] hover:bg-[hsla(var(--chart-yellow)/0.1)] transition-colors'>
+        <div className='rounded-full bg-[hsla(var(--chart-yellow)/0.2)] p-2 shrink-0'>
+          <Tag className='h-4 w-4 text-[hsl(var(--chart-yellow))] ' />
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Shop Discount</p>
-          <p className='text-lg md:text-xl font-bold truncate text-yellow-500'>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-yellow))]'>
             {formatCurrency(data.total.totalShopVoucherDiscount, 'vi-VN')}
           </p>
+        </div>
+      </div>
+      <div className='w-full flex items-start space-x-4 rounded-lg border border-[hsl(var(--chart-violet))] p-3 bg-[hsla(var(--chart-violet)/0.05)] hover:bg-[hsla(var(--chart-violet)/0.1)] transition-colors'>
+        <div className='rounded-full bg-[hsla(var(--chart-violet)/0.2)] p-2 shrink-0'>
+          <ShoppingCart className='h-4 w-4 text-[hsl(var(--chart-violet))] ' />
+        </div>
+        <div className='min-w-0 flex-1 overflow-hidden'>
+          <p className='text-sm font-medium text-muted-foreground truncate'>Total Quantity Sold</p>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-violet))]'>{data.total.totalQuantity}</p>
         </div>
       </div>
     </div>
