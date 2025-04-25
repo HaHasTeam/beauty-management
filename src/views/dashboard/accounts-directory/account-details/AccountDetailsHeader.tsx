@@ -1,6 +1,9 @@
+import 'react-quill-new/dist/quill.bubble.css'
+
 import { format } from 'date-fns'
 import { CircleSlash, LucideIcon, Shield } from 'lucide-react'
 import * as React from 'react'
+import ReactQuill from 'react-quill-new'
 
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -200,8 +203,8 @@ const AccountDetailsHeader: React.FC<AccountDetailsHeaderProps> = ({ account, is
             )}
 
             {account.description && (
-              <div className='mt-4'>
-                <p className='text-sm text-muted-foreground'>{account.description}</p>
+              <div className='mt-4 prose prose-sm max-w-none [&>.ql-bubble>.ql-editor]:p-0'>
+                <ReactQuill value={account.description} readOnly={true} theme='bubble' modules={{ toolbar: false }} />
               </div>
             )}
           </div>

@@ -989,6 +989,7 @@ const UploadFiles = ({
                           <ProductFileUploaderItem
                             key={file?.index}
                             index={file?.index ?? 0}
+                            readOnly={readOnly}
                             className='p-0 flex items-center justify-between rounded-lg hover:border-primary'
                           >
                             <div className='w-full h-full'>
@@ -1010,6 +1011,7 @@ const UploadFiles = ({
                           <ProductFileUploaderItem
                             key={file?.index}
                             index={file?.index ?? 0}
+                            readOnly={readOnly}
                             className={`${isFullWidth ? 'w-full h-16' : 'w-32 h-32'} p-0 flex items-center justify-between rounded-lg hover:border-primary`}
                           >
                             <PreviewDialog
