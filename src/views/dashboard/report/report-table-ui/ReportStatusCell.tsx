@@ -31,7 +31,7 @@ export function ReportStatusCell({ report }: ReportStatusCellProps) {
       return (
         <Badge variant='outline' className='border-green-200 bg-green-50 text-green-700 gap-1'>
           <CheckIcon className='h-3.5 w-3.5' />
-          <span>Done</span>
+          <span>Approved</span>
         </Badge>
       )
 
@@ -40,6 +40,14 @@ export function ReportStatusCell({ report }: ReportStatusCellProps) {
         <Badge variant='outline' className='border-red-200 bg-red-50 text-red-700 gap-1'>
           <XIcon className='h-3.5 w-3.5' />
           <span>Cancelled</span>
+        </Badge>
+      )
+
+    case ReportStatusEnum.REJECTED:
+      return (
+        <Badge variant='outline' className='border-red-200 bg-red-50 text-red-700 gap-1'>
+          <XIcon className='h-3.5 w-3.5' />
+          <span>Rejected</span>
         </Badge>
       )
 

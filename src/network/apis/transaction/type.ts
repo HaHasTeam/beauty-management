@@ -36,21 +36,30 @@ export type TGetDailyOrderStatisticsParams = {
   flashSaleIds?: string[]
 }
 
-export type OrderStatic = {
-  total: {
-    totalRevenue: number
-    totalQuantity: number
-    totalPlatformVoucherDiscount: number
-    totalShopVoucherDiscount: number
-  }
-  items: {
-    date: string
-    totalRevenue: number
-    totalQuantity: number
-    totalPlatformVoucherDiscount: number
-    totalShopVoucherDiscount: number
-  }[]
+export type OrderStaticItem = {
+  date: string
+  totalRevenue: number
+  totalPlatformVoucherDiscount: number
+  totalShopVoucherDiscount: number
+  actualRevenue: number
+  totalCommissionFee: number
 }
+
+export type OrderStaticTotal = {
+  totalRevenue: number
+  totalPlatformVoucherDiscount: number
+  totalShopVoucherDiscount: number
+  totalQuantity: number
+  orderCount: number
+  actualRevenue: number
+  totalCommissionFee: number
+}
+
+export type OrderStatic = {
+  total: OrderStaticTotal
+  items: OrderStaticItem[]
+}
+
 export enum StatisticsTimeEnum {
   ALL_TIME = 'ALL_TIME',
   SPECIFIC_TIME = 'SPECIFIC_TIME'
@@ -83,4 +92,34 @@ export type TGetBrandRevenueStatisticsResponse = {
     count: number
     sumTotalPrice: number
   }
+}
+
+// types for get-daily-booking-statistics
+export type TGetDailyBookingStatisticsParams = {
+  startDate?: string
+  endDate?: string
+  consultantId?: string
+}
+
+export type BookingStatDetail = {
+  count: number
+  totalPrice: number
+  commissionFee: number // Assuming this exists based on response shape
+  actualRevenue: number // Assuming this exists based on response shape
+}
+
+export type BookingStaticItem = {
+  date: string
+  refunded: BookingStatDetail
+  booked: BookingStatDetail
+}
+
+export type BookingStaticTotal = {
+  refunded: BookingStatDetail
+  booked: BookingStatDetail
+}
+
+export type BookingStatic = {
+  total: BookingStaticTotal
+  items: BookingStaticItem[]
 }

@@ -30,10 +30,10 @@ export function getColumns(): ColumnDef<TFlashSale>[] {
 
         return (
           <div className='flex gap-1 items-center'>
-            <Avatar className='rounded-lg'>
+            <Avatar className='rounded-lg size-5 '>
               <AvatarImage src={image} className='bg-transparent size-5' />
-              <AvatarFallback className='bg-transparent'>
-                <Image size={24} />
+              <AvatarFallback className='bg-transparent flex items-center justify-center'>
+                <Image size={20} />
               </AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{productName}</span>
