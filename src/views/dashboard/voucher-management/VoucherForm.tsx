@@ -32,6 +32,7 @@ import {
   DiscountTypeEnum,
   discountTypeEnumArray,
   StatusEnum,
+  VoucherEnum,
   voucherEnumArray,
   VoucherVisibilityEnum
 } from '@/types/enum'
@@ -174,11 +175,13 @@ function VoucherForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {voucherEnumArray.map((item) => (
-                          <SelectItem key={item.id} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
+                        {voucherEnumArray
+                          .filter((el) => el.value !== VoucherEnum.GROUP_BUYING)
+                          .map((item) => (
+                            <SelectItem key={item.id} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
 

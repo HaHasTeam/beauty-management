@@ -32,7 +32,7 @@ import { Form } from '@/components/ui/form'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useToast } from '@/hooks/useToast'
-import { filterVouchersApi, getAllVouchersApi, updateStatusVoucherByIdApi } from '@/network/apis/voucher'
+import { filterVouchersApi, updateStatusVoucherByIdApi } from '@/network/apis/voucher'
 import { reasonSchema } from '@/schemas'
 import { StatusEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
@@ -82,7 +82,7 @@ export function UpdateStatusVoucherDialog({
         message: `Voucher${Vouchers.length > 1 ? 's' : ''} ${actionText} successfully`,
         description: `Successfully ${actionText} ${Vouchers.length} voucher${Vouchers.length > 1 ? 's' : ''}.`
       })
-      queryClient.invalidateQueries({ queryKey: [getAllVouchersApi.queryKey] })
+
       queryClient.invalidateQueries({ queryKey: [filterVouchersApi.queryKey] })
     }
   })
