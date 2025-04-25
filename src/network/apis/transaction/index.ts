@@ -6,11 +6,13 @@ import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 import {
+  BookingStatic,
   OrderStatic,
   PAY_TYPE,
   TFilterTransactionsParams,
   TGetBrandRevenueStatisticsParams,
   TGetBrandRevenueStatisticsResponse,
+  TGetDailyBookingStatisticsParams,
   TGetDailyOrderStatisticsParams
 } from './type'
 
@@ -149,6 +151,32 @@ export const getAllTransactions = toQueryFetcher<
   async () => {
     return privateRequest('/transactions', {
       method: 'GET' // Assuming GET method
+    })
+  }
+)
+
+/**
+ * Get daily booking statistics
+ */
+export const getDailyBookingStatistics = toQueryFetcher<
+  TGetDailyBookingStatisticsParams, // Input parameter type
+  TServerResponse<BookingStatic> // Expected response type
+>(
+  'getDailyBookingStatistics', // Unique query key
+  async (params) => {
+    // Remove falsy values and empty arrays before sending
+    const cleanedData = _.omitBy(params, (value) => {
+      if (value === undefined || value === null) return true
+      if (typeof value === 'string' && value === '') return true
+      // consultantId might be relevant even if false/0, keep those
+      // if (typeof value === 'boolean' && value === false) return true
+      if (Array.isArray(value) && value.length === 0) return true
+      return false
+    })
+
+    return privateRequest(`/transactions/get-daily-booking-statistics`, {
+      method: 'POST',
+      data: cleanedData
     })
   }
 )

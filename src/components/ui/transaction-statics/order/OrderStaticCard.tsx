@@ -262,7 +262,7 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
           <div className='flex items-center justify-end px-4 py-2'>
             <Select onValueChange={handleTimeRangeChange}>
               <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
-                <SelectValue placeholder='Last 3 months' />
+                <SelectValue placeholder='Select Time Range' />
               </SelectTrigger>
               <SelectContent className='rounded-xl'>
                 <SelectItem value='90d' className='rounded-lg'>
