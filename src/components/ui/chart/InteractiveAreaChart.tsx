@@ -85,7 +85,7 @@ export function InteractiveAreaChart({
             const dataKey = entry.dataKey
             // Check if config exists for safety
             if (!config[dataKey]) return null
-            
+
             const colorVar = `--${config[dataKey].color}`
             const formattedValue = formatCurrency(entry.value, 'vi-VN')
 

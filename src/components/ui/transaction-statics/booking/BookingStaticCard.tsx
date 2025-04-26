@@ -29,7 +29,7 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
   const { data: consultantData } = useQuery({
     queryKey: [getAllUserApi.queryKey],
     queryFn: getAllUserApi.fn,
-    enabled: isAdmin ,
+    enabled: isAdmin,
     select: (data) => data.data.filter((user) => user.role === RoleEnum.CONSULTANT)
   })
 
@@ -53,15 +53,17 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
       }
     ]
 
-    if (isAdmin && consultants.length > 0) { 
+    if (isAdmin && consultants.length > 0) {
       fields.push({
         id: 'consultantId',
         label: 'Consultant',
-        options: consultants.map((consultant) => ({
-          // Using ID as placeholder label - CORRECT THIS LATER
-          label: consultant.email,
-          value: consultant.id ?? '' 
-        })).filter(opt => opt.value), 
+        options: consultants
+          .map((consultant) => ({
+            // Using ID as placeholder label - CORRECT THIS LATER
+            label: consultant.email,
+            value: consultant.id ?? ''
+          }))
+          .filter((opt) => opt.value),
         isCustomFilter: true,
         isSingleChoice: true
       })
@@ -72,9 +74,9 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
 
   // Update useDataTable generic type
   const { table } = useDataTable<TGetDailyBookingStatisticsParams>({
-    data: [], 
-    columns: [], 
-    pageCount: 0, 
+    data: [],
+    columns: [],
+    pageCount: 0,
     queryStates,
     filterFields,
     shallow: false,
@@ -82,30 +84,30 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
   })
 
   // Handle time range selection (remains the same logic, adjusted queryState type)
-  const handleTimeRangeChange = (value: string) => { 
-     if (!queryStates) return
+  const handleTimeRangeChange = (value: string) => {
+    if (!queryStates) return
     const [, setQueryState] = queryStates
 
-    let startDate: Date | undefined;
-    let endDate: Date | undefined;
-    const today = new Date();
+    let startDate: Date | undefined
+    let endDate: Date | undefined
+    const today = new Date()
 
     if (value === '90d') {
-      startDate = new Date();
-      startDate.setDate(today.getDate() - 90);
-      endDate = today;
+      startDate = new Date()
+      startDate.setDate(today.getDate() - 90)
+      endDate = today
     } else if (value === '30d') {
-      startDate = new Date();
+      startDate = new Date()
       startDate.setDate(today.getDate() - 30)
-      endDate = today;
+      endDate = today
     } else if (value === '7d') {
-      startDate = new Date();
-      startDate.setDate(today.getDate() - 7);
-      endDate = today;
+      startDate = new Date()
+      startDate.setDate(today.getDate() - 7)
+      endDate = today
     }
     // Handle 'custom' implicitly by filters, clear dates if needed
-    const startDateString = startDate ? startDate.toISOString().split('T')[0] : undefined;
-    const endDateString = endDate ? endDate.toISOString().split('T')[0] : undefined;
+    const startDateString = startDate ? startDate.toISOString().split('T')[0] : undefined
+    const endDateString = endDate ? endDate.toISOString().split('T')[0] : undefined
 
     setQueryState((prev: DataTableQueryState<TGetDailyBookingStatisticsParams>) => ({
       ...prev,
@@ -115,14 +117,13 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
         endDate: endDateString
       }
     }))
-
   }
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
       <CardWithFacetFilters mainContent={<Static data={data} />}>
         <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
-         <div className='flex items-center justify-end px-4 py-2'>
+          <div className='flex items-center justify-end px-4 py-2'>
             <Select onValueChange={handleTimeRangeChange}>
               <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
                 <SelectValue placeholder='Select Time Range' />
