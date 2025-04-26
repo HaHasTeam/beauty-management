@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import {

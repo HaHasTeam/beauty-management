@@ -1432,6 +1432,10 @@
     "answer": "Câu Trả Lời",
     "noAnswerProvided": "Không có câu trả lời nào được cung cấp",
     "answerImages": "Hình Ảnh Câu Trả Lời",
+    "submitBookingFormSuccess": "Gửi biểu mẫu đặt lịch thành công",
+    "enterYourAnswer": "Nhập câu trả lời của bạn",
+    "serviceBookingForm": "Biểu mẫu đặt dịch vụ",
+    "serviceBookingFormDescription": "Vui lòng điền vào biểu mẫu này để hoàn tất đặt lịch của bạn",
     "statusDescription": {
       "waitConfirm": "Đặt chỗ của bạn đang chờ xác nhận từ nhà cung cấp dịch vụ. Bạn sẽ được thông báo khi nó được xác nhận.",
       "confirmed": "Đặt chỗ của bạn đã được xác nhận. Nhà cung cấp dịch vụ đã sẵn sàng cung cấp dịch vụ theo lịch trình.",

@@ -110,7 +110,8 @@
     --chart-gray-4: 0 0% 32%; /* Dark Gray */
     --chart-gray-5: 0 0% 15%; /* Darkest Gray */
 
-    /* mới thêm vào biến mới nè  */ --warning: 48 96% 89%;
+    /* mới thêm vào biến mới nè  */
+    --warning: 48 96% 89%;
     --warning-foreground: 38 92% 50%;
     --success: 144 70% 96%;
     --success-foreground: 142 71% 45%;

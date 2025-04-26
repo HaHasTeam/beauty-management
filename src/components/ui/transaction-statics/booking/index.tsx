@@ -19,16 +19,18 @@ export default function IndexPage() {
   const { user } = useStore()
   const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
 
-  const queryParams: TGetDailyBookingStatisticsParams | undefined = React.useMemo(() => ({
-    startDate: queryStates[0].fieldFilters?.startDate as string | undefined,
-    endDate: queryStates[0].fieldFilters?.endDate as string | undefined,
-    consultantId: isAdmin ? queryStates[0].fieldFilters?.consultantId as string | undefined : user?.id
-  }), [queryStates[0].fieldFilters, isAdmin, user?.id])
-
+  const queryParams: TGetDailyBookingStatisticsParams | undefined = React.useMemo(
+    () => ({
+      startDate: queryStates[0].fieldFilters?.startDate as string | undefined,
+      endDate: queryStates[0].fieldFilters?.endDate as string | undefined,
+      consultantId: isAdmin ? (queryStates[0].fieldFilters?.consultantId as string | undefined) : user?.id
+    }),
+    [queryStates[0].fieldFilters, isAdmin, user?.id]
+  )
 
   const { data: bookingStaticResponse, isLoading: isBookingStaticLoading } = useQuery({
     queryKey: [getDailyBookingStatistics.queryKey, queryParams],
-    queryFn: getDailyBookingStatistics.fn,
+    queryFn: getDailyBookingStatistics.fn
   })
 
   const bookingStaticData = bookingStaticResponse?.data
