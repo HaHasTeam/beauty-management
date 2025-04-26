@@ -6,10 +6,10 @@ import { Shell } from '@/components/ui/shell'
 import { DataTableQueryState } from '@/types/table'
 import { RoleEnum } from '@/types/enum'
 import { useStore } from '@/stores/store'
-import {  BrandRecommendCard } from './BrandRecomendCard'
+import { BrandRecommendCard } from './BrandRecomendCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card } from '@/components/ui/card'
-  import { getConsultantRecommendationPercentageApi } from '@/network/apis/user'
+import { getConsultantRecommendationPercentageApi } from '@/network/apis/user'
 import { TConsultantRecommendationData, TGetConsultantRecommendationParams } from '@/network/apis/user/type'
 
 export default function IndexPage() {
@@ -19,13 +19,16 @@ export default function IndexPage() {
   const { user } = useStore()
   const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
 
-  const queryParams: TGetConsultantRecommendationParams | undefined = React.useMemo(() => ({
-    consultantId: (isAdmin ? (queryStates[0].fieldFilters?.consultantId as string)  : user?.id) as string
-  }), [queryStates[0].fieldFilters, isAdmin, user?.id])
+  const queryParams: TGetConsultantRecommendationParams | undefined = React.useMemo(
+    () => ({
+      consultantId: (isAdmin ? (queryStates[0].fieldFilters?.consultantId as string) : user?.id) as string
+    }),
+    [queryStates[0].fieldFilters, isAdmin, user?.id]
+  )
 
   const { data: bookingStaticResponse, isLoading: isBookingStaticLoading } = useQuery({
     queryKey: [getConsultantRecommendationPercentageApi.queryKey, queryParams],
-    queryFn: getConsultantRecommendationPercentageApi.fn,
+    queryFn: getConsultantRecommendationPercentageApi.fn
   })
 
   const bookingStaticData = bookingStaticResponse?.data
@@ -42,7 +45,10 @@ export default function IndexPage() {
                   <Skeleton className='w-full h-[300px] rounded-lg' />
                 </div>
               ) : (
-                <BrandRecommendCard data={bookingStaticData as TConsultantRecommendationData} queryStates={queryStates} />
+                <BrandRecommendCard
+                  data={bookingStaticData as TConsultantRecommendationData}
+                  queryStates={queryStates}
+                />
               )}
             </Shell>
           </div>

@@ -123,7 +123,9 @@ const Static = ({ data }: StaticProps) => {
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Total Quantity Sold</p>
-          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-violet))]'>{data.total.totalQuantity}</p>
+          <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-violet))]'>
+            {data.total.totalQuantity}
+          </p>
         </div>
       </div>
     </div>

@@ -1479,6 +1479,10 @@
     "answer": "Answer",
     "noAnswerProvided": "No answer provided",
     "answerImages": "Answer Images",
+    "submitBookingFormSuccess": "Booking form submitted successfully",
+    "enterYourAnswer": "Enter your answer",
+    "serviceBookingForm": "Service Booking Form",
+    "serviceBookingFormDescription": "Please fill out this form to complete your booking",
     "statusDescription": {
       "waitConfirm": "Your booking is waiting for confirmation from the service provider. You will be notified once it's confirmed.",
       "confirmed": "Your booking has been confirmed. The service provider is ready to deliver the service as scheduled.",

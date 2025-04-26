@@ -126,7 +126,8 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
       </div>
       <div className='space-y-2'>
         <p>
-          This chart displays daily booking price trends over the selected time period. Values are shown in Vietnamese Dong (VND).
+          This chart displays daily booking price trends over the selected time period. Values are shown in Vietnamese
+          Dong (VND).
         </p>
       </div>
     </div>
