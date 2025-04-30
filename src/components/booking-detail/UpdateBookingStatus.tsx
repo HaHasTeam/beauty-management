@@ -130,7 +130,7 @@ export default function UpdateBookingStatus({
       nextStatus:
         booking.consultantService.systemService.type === ServiceTypeEnum.PREMIUM
           ? BookingStatusEnum.COMPLETED_CONSULTING_CALL
-          : ''
+          : BookingStatusEnum.SENDED_RESULT_SHEET
     },
     [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: {
       borderColor: 'border-blue-300',
@@ -202,6 +202,7 @@ export default function UpdateBookingStatus({
   }
 
   const config = statusConfig[booking.status]
+
   if (!config) return null
 
   const IconComponent = config.icon || Siren
@@ -286,18 +287,19 @@ export default function UpdateBookingStatus({
             </>
           )}
 
-          {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
-            <Button
-              onClick={() => {
-                window.location.href = booking.meetUrl
-              }}
-              loading={isLoading}
-              className='bg-primary hover:bg-primary/80 flex gap-2'
-            >
-              {t('button.joinMeeting')}
-              <CircleChevronRight />
-            </Button>
-          )}
+          {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED &&
+            booking.consultantService.systemService.type == ServiceTypeEnum.PREMIUM && (
+              <Button
+                onClick={() => {
+                  window.location.href = booking.meetUrl
+                }}
+                loading={isLoading}
+                className='bg-primary hover:bg-primary/80 flex gap-2'
+              >
+                {t('button.joinMeeting')}
+                <CircleChevronRight />
+              </Button>
+            )}
 
           {/* description for this status for customer: is when if consultant not join, customer can send evidence and notes to report consultant or any problems.
          description for this status for consultant: after finish, consultant must submit evidence. if customer not join, they can include notes.
@@ -314,7 +316,17 @@ export default function UpdateBookingStatus({
                 <CircleChevronRight />
               </Button>
             )}
-
+          {booking.consultantService.systemService.type === ServiceTypeEnum.STANDARD &&
+            booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
+              <Button
+                onClick={() => setIsOpenConsultationResultDialog(true)}
+                loading={isLoading}
+                className={`${config.buttonBg} flex gap-2`}
+              >
+                {t('booking.status.sendResultSheet')}
+                <CircleChevronRight />
+              </Button>
+            )}
           {/* Customer actions */}
           {isCustomer && (
             <>
@@ -380,7 +392,15 @@ export default function UpdateBookingStatus({
           booking={booking}
         />
       )}
-
+      {isConsultant &&
+        booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED &&
+        booking.consultantService.systemService.type === ServiceTypeEnum.STANDARD && (
+          <ConsultationResultDialog
+            isOpen={isOpenConsultationResultDialog}
+            onClose={() => setIsOpenConsultationResultDialog(false)}
+            booking={booking}
+          />
+        )}
       {/* View Dialogs */}
       {booking.status === BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED && (
         <BookingFormAnswersDialog
