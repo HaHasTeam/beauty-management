@@ -9,8 +9,11 @@
     "loginOrRegister": "Login/Register",
     "shoppingCart": "Shopping Cart",
     "notification": "Notifications",
-    "registerBrand": "Become our brand"
+    "registerBrand": "Become our brand",
+    "allureBeauty": "Allure Beauty",
+    "logo": "Allure Logo"
   },
+
   "profile": {
     "myProfile": "My Profile",
     "profileDescription": "Manage your profile information to secure your account",
@@ -45,7 +48,25 @@
     "exclusiveBeautyOffersTitle": "Exclusive Beauty Offers",
     "preOderCardTitle": "Pre-orders",
     "groupBuyingDealsCardTitle": "Group-Buying Deals",
-    "recommendProductsTitle": "Recommend Products"
+    "recommendProductsTitle": "Recommend Products",
+    "badge": "Beauty Simplified",
+    "title": "Your Trusted Beauty Destination",
+    "description": "Discover authentic beauty products and personalized expert advice in one trusted platform.",
+    "login": "Login",
+    "register": "Register",
+    "heroImageAlt": "Premium beauty products collection",
+    "featuresTitle": "Why Choose Allure",
+    "featuresSubtitle": "We're transforming the online beauty shopping experience with trust and expertise",
+    "feature1Title": "Authentic Products",
+    "feature1Description": "Every product on our platform is verified and sourced directly from official brands, eliminating the risk of counterfeits.",
+    "feature2Title": "Expert Consultations",
+    "feature2Description": "Connect with certified beauty professionals for personalized advice tailored to your unique needs and preferences.",
+    "feature3Title": "Curated Selection",
+    "feature3Description": "We carefully select high-quality products, cutting through the noise to help you find what truly works.",
+    "problemTitle": "The Beauty Market Challenge",
+    "problemDescription": "The online beauty market is overwhelming with endless options, unreliable information, and the risk of fake products, making it difficult to find what truly works for you.",
+    "solutionTitle": "How Allure Helps",
+    "solutionDescription": "We provide a curated selection of genuine products and professional consultations, making it easier to find the right products, learn how to use them, and feel more confident in your beauty choices."
   },
   "productCard": {
     "currentPrice": "{{price, currency}}",
@@ -1533,6 +1554,8 @@
     "total": "Total",
     "created": "Booking Created",
     "system": "System",
+    "consultationResultInfo": "Consultation Result Information",
+
     "completeConsultingCallDescription": "Please provide details about the consulting call completion including any relevant media files and notes.",
     "updateBookingStatusSuccess": "Booking status updated successfully",
     "videosHint": "Upload videos related to the consulting call",

@@ -23,7 +23,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Routes, routesConfig } from '@/configs/routes'
 import { getBookingByIdApi } from '@/network/apis/booking/details'
 import { useStore } from '@/stores/store'
-import { BookingStatusEnum, RoleEnum } from '@/types/enum'
+import { BookingStatusEnum, RoleEnum, ServiceTypeEnum } from '@/types/enum'
 
 import BookingStatus from './BookingStatus'
 import CancelBookingDialog from './CancelBookingDialog'
@@ -178,47 +178,48 @@ const BookingDetail = () => {
                       </div>
                     }
                   />
-
-                  <BookingGeneral
-                    title={t('booking.appointmentDetails')}
-                    icon={<Calendar className='w-5 h-5' />}
-                    content={
-                      <div className='flex flex-col gap-2 text-base'>
-                        <div className='grid grid-cols-2 gap-1'>
-                          <p className='text-muted-foreground'>{t('booking.date')}:</p>
-                          <p className='font-medium'>
-                            {t('date.toLocaleDateTimeString', { val: new Date(bookingData?.data?.startTime) })}
-                          </p>
-                        </div>
-
-                        <div className='grid grid-cols-2 gap-1'>
-                          <p className='text-muted-foreground'>{t('booking.duration')}:</p>
-                          <p className='font-medium'>60 {t('booking.minutes')}</p>
-                        </div>
-
-                        {bookingData?.data?.notes && (
-                          <div className='grid grid-cols-1 gap-1 mt-2'>
-                            <p className='text-muted-foreground'>{t('booking.notes')}:</p>
-                            <p className='font-medium bg-muted/30 p-2 rounded-md'>{bookingData?.data?.notes}</p>
+                  {bookingData.data.consultantService.systemService.type == ServiceTypeEnum.PREMIUM && (
+                    <BookingGeneral
+                      title={t('booking.appointmentDetails')}
+                      icon={<Calendar className='w-5 h-5' />}
+                      content={
+                        <div className='flex flex-col gap-2 text-base'>
+                          <div className='grid grid-cols-2 gap-1'>
+                            <p className='text-muted-foreground'>{t('booking.date')}:</p>
+                            <p className='font-medium'>
+                              {t('date.toLocaleDateTimeString', { val: new Date(bookingData?.data?.startTime) })}
+                            </p>
                           </div>
-                        )}
 
-                        {isMeetingJoinable && (
-                          <div className='mt-3'>
-                            <a
-                              href={bookingData?.data?.meetUrl}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md inline-flex items-center gap-2 w-full justify-center'
-                            >
-                              <Calendar className='w-4 h-4' />
-                              {t('booking.joinMeeting')}
-                            </a>
+                          <div className='grid grid-cols-2 gap-1'>
+                            <p className='text-muted-foreground'>{t('booking.duration')}:</p>
+                            <p className='font-medium'>60 {t('booking.minutes')}</p>
                           </div>
-                        )}
-                      </div>
-                    }
-                  />
+
+                          {bookingData?.data?.notes && (
+                            <div className='grid grid-cols-1 gap-1 mt-2'>
+                              <p className='text-muted-foreground'>{t('booking.notes')}:</p>
+                              <p className='font-medium bg-muted/30 p-2 rounded-md'>{bookingData?.data?.notes}</p>
+                            </div>
+                          )}
+
+                          {isMeetingJoinable && (
+                            <div className='mt-3'>
+                              <a
+                                href={bookingData?.data?.meetUrl}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md inline-flex items-center gap-2 w-full justify-center'
+                              >
+                                <Calendar className='w-4 h-4' />
+                                {t('booking.joinMeeting')}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      }
+                    />
+                  )}
                 </div>
               </div>
 
