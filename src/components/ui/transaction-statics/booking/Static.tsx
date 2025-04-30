@@ -36,13 +36,14 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
       </div>
     )
   }
+  console.log('data.items', data.items)
 
   const chartData = data.items.map((item) => ({
     date: item.date,
-    bookedPrice: item.booked.totalPrice,
-    refundedPrice: item.refunded.totalPrice,
-    commissionFee: item.booked.commissionFee,
-    actualRevenue: item.booked.actualRevenue
+    bookedPrice: item.booked.totalPrice ?? 0,
+    refundedPrice: item.refunded.totalPrice ?? 0,
+    commissionFee: item.booked.commissionFee ?? 0,
+    actualRevenue: item.booked.actualRevenue ?? 0
   }))
 
   const descriptionNode = (

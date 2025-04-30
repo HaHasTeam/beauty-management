@@ -43,11 +43,11 @@ const Static = ({ data }: StaticProps) => {
 
   const chartData = data.items.map((item) => ({
     date: item.date,
-    revenue: item.totalRevenue,
-    platformDiscount: item.totalPlatformVoucherDiscount,
-    shopDiscount: item.totalShopVoucherDiscount,
-    actualRevenue: item.actualRevenue,
-    totalCommissionFee: item.totalCommissionFee
+    revenue: item.totalRevenue ?? 0,
+    platformDiscount: item.totalPlatformVoucherDiscount ?? 0,
+    shopDiscount: item.totalShopVoucherDiscount ?? 0,
+    actualRevenue: item.actualRevenue ?? 0,
+    totalCommissionFee: item.totalCommissionFee ?? 0
   }))
 
   // Create a React node for the description with cards and icons
