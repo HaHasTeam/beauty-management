@@ -1684,7 +1684,118 @@
     }
   },
   "backendError": {
-    "invalidEmail": "Email is invalid"
+    "invalidEmail": "Invalid email",
+    "firstNameRequired": "First name is required",
+    "firstNameMaxLength": "First name cannot exceed 100 characters",
+    "lastNameRequired": "Last name is required",
+    "lastNameMaxLength": "Last name cannot exceed 100 characters",
+    "usernameRequired": "Username is required and must be at least 3 characters long",
+    "usernameMaxLength": "Username cannot exceed 20 characters",
+    "invalidUsername": "User name should starting with a letter, 3-20 characters and can contain letters, numbers and underscores",
+    "invalidEmailAddress": "Invalid email address",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "avatarMinLength": "avatar must more than 1 character",
+    "invalidPhone": "Phone must be a string with 10 to 15 digits",
+    "invalidDob": "Date of birth must be a valid date (YYYY-MM-DD)",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Paassword is required",
+    "fullNameMaxLength": "String must contain at most 100 character(s)",
+    "phoneMaxLength": "Phone must contain at most 100 character(s)",
+    "districtMaxLength": "District must contain at most 100 character(s)",
+    "wardMaxLength": "Ward must contain at most 100 character(s)",
+    "provinceMaxLength": "Province must contain at most 255 character(s)",
+    "invalidType": "Invalid enum value. Expected AddressEnum",
+    "invalidStartTime": "Start time must be a valid date string",
+    "invalidEndTime": "End time must be a valid date string",
+    "totalPriceNonNegative": "Number must be greater than or equal to 0",
+    "accountNotFound": "Account not found",
+    "updatedByAccountNotFound": "Updated by account not found",
+    "emailAlreadyExists": "Email already exists!",
+    "usernameAlreadyExists": "Username already exists!",
+    "invalidRoleProvided": "Invalid role provided",
+    "certificateNotAllowed": "Certificate is only available for role CONSULTANT and KOL",
+    "consultantNotFound": "Consultant not found",
+    "brandNotFound": "Brand not found",
+    "exceededApprovedReportsLimit": "Account has been banned due to exceeding the approved reports limit",
+    "addressNotFound": "Address not found",
+    "atLeastOneDefaultAddress": "Should be at least one default address",
+    "emailNotVerified": "Email is not verified",
+    "invalidPassword": "Invalid password",
+    "loginMethodNotAllowed": "User must login by another way not using password",
+    "blogNotExisted": "Blog Not Existed!",
+    "blogTagAlreadyExisted": "Blog tag already Existed",
+    "bookingNotFound": "Booking not found",
+    "onlyReviewerCanNoteResult": "Only reviewer can note result",
+    "slotBooked": "Slot has been booked",
+    "brandIdRequired": "BrandId required",
+    "consultantServiceIdRequired": "ConsultantServiceId required",
+    "consultantServiceNotFound": "ConsultantService not found",
+    "slotRequired": "Slot is required",
+    "cannotCompleteBooking": "You cannot complete the booking because the report has not been completed yet.",
+    "cannotCancelBooking": "Can not cancelled booking in status: ",
+    "walletNotFound": "Dont have wallet",
+    "activeProductRequired": "Please select active product",
+    "productNotFound": "Product not found",
+    "onlyConsultantOrOperator": "Only apply for consultant or operator",
+    "overlapTimeSlot": "Overlap time slot",
+    "alreadyBookedSlot": "You have already booked a slot. Please wait for process",
+    "bookingCancelledSuccessfully": "Booking cancelled successfully",
+    "bookingStatusUpdatedSuccessfully": "Booking service status updated successfully",
+    "classificationNotFound": "Classification not found",
+    "invalidProduct": "Can not add invalid Product",
+    "quantityNotEnough": "Quantity is not enough",
+    "groupBuyingInvalid": "Group Buying invalid",
+    "livestreamInvalid": "Livestream invalid",
+    "cartItemNotFound": "Cart Item not found",
+    "invalidOrEmptyItemIds": "Invalid or empty itemIds array",
+    "noItemsFoundForIds": "No items found for the provided IDs",
+    "accountIdRequired": "Account ID is required",
+    "noItemsInCart": "No items found in the cart for the given account",
+    "categoryAlreadyExisted": "Category already Existed",
+    "parentCategoryNotFound": "Parent category not found",
+    "maxCategoryLevelExceeded": "A category cannot have more than 4 levels of subcategories",
+    "categoryNotFound": "Category not found.",
+    "newParentCategoryNotFound": "New parent category not found.",
+    "bookingFormNotFound": "Booking Form not found.",
+    "systemServiceNotFoundOrInactive": "System service not found or inactive.",
+    "invalidStatusUpdate": "Cannot update status.",
+    "activeServicesUsingFormNotFound": "No active services using this form found.",
+    "questionNotFound": "Question not found.",
+    "imageNotFound": "Image not found",
+    "consultationCriteriaNotFound": "Consultation Criteria not found",
+    "consultationCriteriaSectionNotFound": "Consultation Criteria Section not found",
+    "criteriaCreationFailed": "Failed to create Consultation Criteria.",
+    "criteriaUpdateFailed": "Failed to update Consultation Criteria.",
+    "criteriaSectionUpdateFailed": "Failed to update Consultation Criteria Section.",
+    "sectionNotFound": "Section not found",
+    "livestreamNotFound": "Livestream not found",
+    "invalidLivestreamStatus": "Invalid livestream status",
+    "classificationQuantityRequired": "Product classification must have at least one quantity.",
+    "skuRequired": "sku is required",
+    "skuAlreadyExists": "sku of classification already exists",
+    "invalidDatetime": "Invalid datetime string",
+    "invalidTimeRange": "Start time must be earlier than end time",
+    "overlappingPreOrderEvent": "The time range overlaps with an existing pre-order event",
+    "overlappingDiscountEvent": "The time range overlaps with an existing discount event",
+    "preOrderProductNotFound": "Pre-order Product not found",
+    "classificationTitleAlreadyExists": "title of classification already exists",
+    "invalidSortBy": "Invalid sortBy",
+    "invalidProductStatus": "Invalid product status",
+    "productDiscountNotFound": "ProductDiscount not found",
+    "classificationInvalid": "Classification invalid!",
+    "classificationQuantityInvalid": "Classification quantity must be greater than 0!",
+    "invalidClassificationQuantity": "Invalid classification quantity: Quantity should be smaller than the current stock",
+    "productStatusInvalid": "The Product is BANNED!",
+    "originalClassificationNotFound": "Original classification not found",
+    "invalidFilterOptions": "Invalid filter options",
+    "deleteQuestionFailed": "Failed to delete question",
+    "updateOrderIndexFailed": "Failed to update order index for questions",
+    "imageDeleteFailed": "Failed to delete image associated with the question",
+    "systemServiceNotFound": "System service not found.",
+    "serviceAlreadyExisted": "Service already Existed",
+    "activeServicesUsingCriteriaNotFound": "No active services using this criteria found.",
+    "imageUpdateFailed": "Failed to update image associated with the system service",
+    "invalidStatusValue": "Invalid status value"
   },
   "payment": {
     "methods": {
@@ -1905,6 +2016,117 @@
       "forgotPassword": "Enter your email to get a password reset link!",
       "updatePassword": "Choose a new password for your account!",
       "signup": ""
+    }
+  },
+  "branchCreation": {
+    "welcomeTitle": "Welcome to",
+    "brandName": "Allure",
+    "description": "Create, grow, and manage your brand on our powerful selling platform. Start your journey to success today!",
+    "createButton": "Create Your Brand"
+  },
+  "branchDetails": {
+    "step": "Step-{{stepIndex}}",
+    "generalInformation": "General Information",
+    "name": {
+      "label": "Name",
+      "placeholder": "Please enter your brand name"
+    },
+    "email": {
+      "label": "Email Brand",
+      "placeholder": "e.g. allure@gmail.com"
+    },
+    "address": {
+      "label": "Address",
+      "addNew": "Add New Address"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Description"
+    },
+    "phone": {
+      "label": "Phone"
+    },
+    "document": {
+      "label": "Document",
+      "uploadDescription": "You must upload at least 1 document for your license details. To help you, we've provided a template file. Please download it, fill in the necessary details, and upload it back:",
+      "downloadTemplate": "Download License Details Template"
+    },
+    "navigation": {
+      "back": "Back",
+      "next": "Next"
+    }
+  },
+  "fileUpload": {
+    "dragDrop": {
+      "dragActive": "Drop your file here",
+      "dragInactive": "Drag & drop your files here",
+      "clickToSelect": "or click to select files",
+      "fileRestrictions": "You can upload up to {{maxFiles}} files. Accepted file formats are {{formats}}. Each file must be under {{maxSize}}MB.",
+      "maxFilesReached": "You have reached the maximum number of files allowed"
+    },
+    "fileList": {
+      "filesSelected": "{{count}} file(s) selected"
+    },
+    "preview": {
+      "image": "Image Preview",
+      "file": "File Preview"
+    }
+  },
+  "imagesUploader": {
+    "step": "Step-{{stepIndex}}",
+    "title": "Images Uploader",
+    "logo": {
+      "label": "Logo",
+      "description": "Please choose your logo"
+    },
+    "businessTaxCode": {
+      "label": "Business Tax Code",
+      "placeholder": "Business Tax Code"
+    },
+    "establishmentDate": {
+      "label": "Establishment Date"
+    },
+    "businessRegistrationCode": {
+      "label": "Business Registration Code",
+      "placeholder": "Business Registration Code",
+      "description": "A number or code assigned to the business upon registration, serving as a formal identifier for the company."
+    },
+    "businessRegistrationAddress": {
+      "label": "Business Registration Address",
+      "placeholder": "Business Registration Address",
+      "description": "The official address of the business as stated during registration."
+    },
+    "navigation": {
+      "back": "Back",
+      "next": "Next"
+    }
+  },
+  "confirmation": {
+    "step": "Step-{{stepIndex}}",
+    "title": "Confirmation",
+    "reviewMessage": "Please review the information before submitting, you can go back to refill the form if there is any mistake.",
+    "card": {
+      "title": "Confirm Your Brand",
+      "status": {
+        "pending": "PENDING"
+      }
+    },
+    "fields": {
+      "name": "Brand Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "description": "Description",
+      "logo": "Logo",
+      "document": "Document"
+    },
+    "fileInfo": {
+      "files": "{{count}} file(s)"
+    },
+    "notAvailable": "N/A",
+    "navigation": {
+      "back": "Back",
+      "confirm": "Confirm"
     }
   }
 }
