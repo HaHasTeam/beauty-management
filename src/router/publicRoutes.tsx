@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router-dom'
 import Auth from '@/views/auth'
 import CallVideo from '@/views/call-video'
 import EnterCall from '@/views/enterCall'
+import Forbidden403Public from '@/views/forbidden-public'
 import Home from '@/views/home'
 import { ForwardLink } from '@/views/others'
 import RegisterBrand from '@/views/register-brand'
@@ -25,6 +26,10 @@ export const publicRoutes: RouteObject[] = [
   {
     path: '/enter',
     element: <EnterCall />
+  },
+  {
+    path: '/forbidden',
+    element: <Forbidden403Public />
   },
   {
     path: '/verify-email',

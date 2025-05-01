@@ -2052,5 +2052,27 @@
       "back": "Quay Lại",
       "confirm": "Xác Nhận"
     }
+  },
+  "forbidden": {
+    "public": {
+      "error": "Lỗi",
+      "accessDenied": "Truy Cập Bị Từ Chối",
+      "noPermission": "Bạn không có quyền truy cập vào tài nguyên được yêu cầu.",
+      "contactSupport": "Vui lòng liên hệ bộ phận hỗ trợ nếu bạn cho rằng đây là lỗi.",
+      "attemptedAccess": "Đã cố gắng truy cập:",
+      "goToHome": "Về Trang Chủ",
+      "contactSupportButton": "Liên Hệ Hỗ Trợ",
+      "copyright": "© {{year}} Công ty của bạn. Đã đăng ký Bản quyền."
+    },
+    "dashboard": {
+      "error": "Lỗi",
+      "accessDenied": "Truy Cập Bị Từ Chối",
+      "noPermission": "Bạn không có quyền truy cập vào trang này.",
+      "noPermissionGeneric": "Bạn không có quyền truy cập vào trang được yêu cầu.",
+      "contactAdmin": "Vui lòng liên hệ quản trị viên của bạn nếu bạn cho rằng đây là lỗi.",
+      "attemptedAccess": "Đã cố gắng truy cập:",
+      "backToDashboard": "Quay Lại Bảng Điều Khiển",
+      "needHelp": "Cần Trợ Giúp?"
+    }
   }
 }

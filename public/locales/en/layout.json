@@ -2128,5 +2128,27 @@
       "back": "Back",
       "confirm": "Confirm"
     }
+  },
+  "forbidden": {
+    "public": {
+      "error": "Error",
+      "accessDenied": "Access Denied",
+      "noPermission": "You don't have permission to access the requested resource.",
+      "contactSupport": "Please contact support if you believe this is an error.",
+      "attemptedAccess": "Attempted to access:",
+      "goToHome": "Go to Home",
+      "contactSupportButton": "Contact Support",
+      "copyright": "© {{year}} Your Company. All rights reserved."
+    },
+    "dashboard": {
+      "error": "Error",
+      "accessDenied": "Access Denied",
+      "noPermission": "You don't have permission to access this page.",
+      "noPermissionGeneric": "You don't have permission to access the requested page.",
+      "contactAdmin": "Please contact your administrator if you believe this is an error.",
+      "attemptedAccess": "Attempted to access:",
+      "backToDashboard": "Back to Dashboard",
+      "needHelp": "Need Help?"
+    }
   }
 }
