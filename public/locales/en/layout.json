@@ -1854,5 +1854,57 @@
   },
   "store": {
     "chat": "Chat"
+  },
+  "signUp": {
+    "title": "Create your account",
+    "subtitle": "Fill in the details below to get started",
+    "email": "Email",
+    "emailPlaceholder": "e.g. allure@gmail.com",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your full name",
+    "phone": "Phone Number",
+    "phoneDescription": "This is the phone number that will be displayed on your profile",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "••••••••",
+    "signUpButton": "Sign up",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "welcomeMessage": "Welcome!, {{email}}, check your email for verification",
+    "passwordsDoNotMatch": "Passwords do not match"
+  },
+  "signIn": {
+    "email": "Email",
+    "emailPlaceholder": "e.g. allure@gmail.com",
+    "password": "Password",
+    "passwordPlaceholder": "e.g. ********",
+    "signInButton": "Sign in",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "welcomeBack": "Welcome back!, {{email}}"
+  },
+  "authLayout": {
+    "backToWebsite": "Back to the website",
+    "portalName": "Allure Portal",
+    "testimonial": "\"Allure Portal is a powerful tool that allows us to manage our data, grant access to our clients and partners, and monitor the performance of our business in real-time. It's a game-changer for us.\"",
+    "testimonialAuthor": "- Allure team -"
+  },
+  "authUI": {
+    "titles": {
+      "signIn": "Sign In",
+      "emailSignIn": "Email Sign In",
+      "forgotPassword": "Forgot Password",
+      "updatePassword": "Update Password",
+      "signup": ""
+    },
+    "descriptions": {
+      "signIn": "Enter your email and password to sign in!",
+      "emailSignIn": "Enter your email to get a magic link!",
+      "forgotPassword": "Enter your email to get a password reset link!",
+      "updatePassword": "Choose a new password for your account!",
+      "signup": ""
+    }
   }
 }

@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import i18next from 'i18next'
 import { jwtDecode } from 'jwt-decode'
 import { useId, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -17,7 +18,7 @@ import { PhoneInputWithCountries } from '@/components/phone-input'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Routes, routesConfig } from '@/configs/routes'
-import { defaultRequiredRegex, emailRegex, phoneRegex, usernameRegex } from '@/constants/regex'
+import { defaultRequiredRegex, emailRegex, passwordRegexEasy, phoneRegex, usernameRegex } from '@/constants/regex'
 import { useAppProvider } from '@/contexts/AppProvider'
 import useHandleServerError from '@/hooks/useHandleServerError'
 // import useHandleServerError from '@/hooks/useHandleServerError'
@@ -28,32 +29,27 @@ import type { TInviteSignupDecoded } from '@/types/auth'
 import { UserRoleEnum } from '@/types/role'
 import { UserStatusEnum } from '@/types/user'
 
-import OauthSignIn from './OauthSignIn'
-
-// Define prop type with allowEmail boolean
-// type SignUpProps = {
-//   allowEmail: boolean
-// }
-
-const formSchema = z
-  .object({
-    email: z
-      .string()
-      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
-      .regex(emailRegex.pattern, emailRegex.message()),
-    password: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
-    username: z
-      .string()
-      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
-      .regex(usernameRegex.pattern, usernameRegex.message()),
-    phone: z.string().refine(phoneRegex.pattern, phoneRegex.message()).optional(),
-    passwordConfirm: z.string().min(8).max(20)
-    // acceptTerms: z.boolean()
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: 'Passwords do not match',
-    path: ['passwordConfirm']
-  })
+const getFormSchame = () => {
+  return z
+    .object({
+      email: z
+        .string()
+        .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+        .regex(emailRegex.pattern, emailRegex.message()),
+      password: z.string().regex(passwordRegexEasy.pattern, passwordRegexEasy.message()),
+      username: z
+        .string()
+        .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+        .regex(usernameRegex.pattern, usernameRegex.message()),
+      phone: z.string().refine(phoneRegex.pattern, phoneRegex.message()).optional(),
+      passwordConfirm: z.string().regex(passwordRegexEasy.pattern, passwordRegexEasy.message())
+      // acceptTerms: z.boolean()
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+      message: i18next.t('signUp.passwordsDoNotMatch'),
+      path: ['passwordConfirm']
+    })
+}
 export default function SignUp() {
   const { t } = useTranslation()
   const { rolesData } = useAppProvider()
@@ -61,7 +57,7 @@ export default function SignUp() {
   const { successToast } = useToast()
   const code = new URLSearchParams(window.location.search).get('code')
   const authenticate = useStore(useShallow((state) => state.setAuthState))
-
+  const formSchema = getFormSchame()
   const prefillData = useMemo(() => {
     if (code) {
       return jwtDecode<TInviteSignupDecoded>(code)
@@ -88,7 +84,7 @@ export default function SignUp() {
     mutationFn: createUserApi.fn,
     onSuccess: () => {
       successToast({
-        message: `Welcome!, ${form.getValues('email')}, check your email for verification`
+        message: t('signUp.welcomeMessage', { email: form.getValues('email') })
       })
     }
   })
@@ -148,8 +144,8 @@ export default function SignUp() {
   return (
     <div className='w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800'>
       <div className='px-8 pt-8 pb-4'>
-        <h2 className='text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white'>Create your account</h2>
-        <p className='text-center text-gray-500 dark:text-gray-400 mb-6'>Fill in the details below to get started</p>
+        <h2 className='text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white'>{t('signUp.title')}</h2>
+        <p className='text-center text-gray-500 dark:text-gray-400 mb-6'>{t('signUp.subtitle')}</p>
 
         <Form {...form}>
           <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='space-y-5' id={`form-${id}`}>
@@ -160,12 +156,12 @@ export default function SignUp() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required className='text-gray-700 dark:text-gray-300'>
-                      Email
+                      {t('signUp.email')}
                     </FormLabel>
                     <FormControl>
                       <Input
                         className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
-                        placeholder='e.g. allure@gmail.com'
+                        placeholder={t('signUp.emailPlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -180,12 +176,12 @@ export default function SignUp() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required className='text-gray-700 dark:text-gray-300'>
-                      Username
+                      {t('signUp.username')}
                     </FormLabel>
                     <FormControl>
                       <Input
                         className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
-                        placeholder='Enter your full name'
+                        placeholder={t('signUp.usernamePlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -202,12 +198,12 @@ export default function SignUp() {
                 name='phone'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='text-gray-700 dark:text-gray-300'>Phone Number</FormLabel>
+                    <FormLabel className='text-gray-700 dark:text-gray-300'>{t('signUp.phone')}</FormLabel>
                     <FormControl>
                       <PhoneInputWithCountries className='h-11 rounded-lg' {...field} />
                     </FormControl>
                     <FormDescription className='text-xs text-gray-500 dark:text-gray-400'>
-                      This is the phone number that will be displayed on your profile
+                      {t('signUp.phoneDescription')}
                     </FormDescription>
                     <FormMessage className='text-red-500' />
                   </FormItem>
@@ -220,12 +216,12 @@ export default function SignUp() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required className='text-gray-700 dark:text-gray-300'>
-                      Password
+                      {t('signUp.password')}
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
                         className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
-                        placeholder='••••••••'
+                        placeholder={t('signUp.passwordPlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -240,12 +236,12 @@ export default function SignUp() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required className='text-gray-700 dark:text-gray-300'>
-                      Confirm Password
+                      {t('signUp.confirmPassword')}
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
                         className='h-11 rounded-lg border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white'
-                        placeholder='••••••••'
+                        placeholder={t('signUp.confirmPasswordPlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -261,19 +257,18 @@ export default function SignUp() {
                 type='submit'
                 className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
               >
-                Sign up
+                {t('signUp.signUpButton')}
               </Button>
             </div>
           </form>
         </Form>
-        <OauthSignIn />
       </div>
 
       <div className='px-8 py-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600'>
         <p className='text-center text-gray-600 dark:text-gray-300'>
-          Already have an account?{' '}
-          <Link to='/auth/signin/password-signin' className='text-[#FFA07A] hover:underline font-medium'>
-            Sign in
+          {t('signUp.alreadyHaveAccount')}{' '}
+          <Link to='/auth/signin/password-signin' className='text-primary hover:underline font-medium'>
+            {t('signUp.signIn')}
           </Link>
         </p>
       </div>

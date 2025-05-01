@@ -1756,5 +1756,57 @@
   },
   "store": {
     "chat": "Trò chuyện"
+  },
+  "signUp": {
+    "title": "Tạo tài khoản của bạn",
+    "subtitle": "Điền thông tin bên dưới để bắt đầu",
+    "email": "Email",
+    "emailPlaceholder": "vd: allure@gmail.com",
+    "username": "Tên người dùng",
+    "usernamePlaceholder": "Nhập họ tên đầy đủ của bạn",
+    "phone": "Số điện thoại",
+    "phoneDescription": "Đây là số điện thoại sẽ được hiển thị trên hồ sơ của bạn",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "••••••••",
+    "signUpButton": "Đăng ký",
+    "alreadyHaveAccount": "Bạn đã có tài khoản?",
+    "signIn": "Đăng nhập",
+    "welcomeMessage": "Chào mừng!, {{email}}, kiểm tra email của bạn để xác minh",
+    "passwordsDoNotMatch": "Mật khẩu không khớp"
+  },
+  "signIn": {
+    "email": "Email",
+    "emailPlaceholder": "vd: allure@gmail.com",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "vd: ********",
+    "signInButton": "Đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "noAccount": "Chưa có tài khoản?",
+    "signUp": "Đăng ký",
+    "welcomeBack": "Chào mừng trở lại!, {{email}}"
+  },
+  "authLayout": {
+    "backToWebsite": "Quay lại trang web",
+    "portalName": "Cổng thông tin Allure",
+    "testimonial": "\"Cổng thông tin Allure là một công cụ mạnh mẽ cho phép chúng tôi quản lý dữ liệu, cấp quyền truy cập cho khách hàng và đối tác, đồng thời theo dõi hiệu suất kinh doanh của chúng tôi theo thời gian thực. Đây là một bước đột phá đối với chúng tôi.\"",
+    "testimonialAuthor": "- Đội ngũ Allure -"
+  },
+  "authUI": {
+    "titles": {
+      "signIn": "Đăng Nhập",
+      "emailSignIn": "Đăng Nhập Bằng Email",
+      "forgotPassword": "Quên Mật Khẩu",
+      "updatePassword": "Cập Nhật Mật Khẩu",
+      "signup": ""
+    },
+    "descriptions": {
+      "signIn": "Nhập email và mật khẩu của bạn để đăng nhập!",
+      "emailSignIn": "Nhập email của bạn để nhận liên kết ma thuật!",
+      "forgotPassword": "Nhập email của bạn để nhận liên kết đặt lại mật khẩu!",
+      "updatePassword": "Chọn mật khẩu mới cho tài khoản của bạn!",
+      "signup": ""
+    }
   }
 }
