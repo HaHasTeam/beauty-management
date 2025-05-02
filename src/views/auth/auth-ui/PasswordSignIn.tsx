@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useId } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useShallow } from 'zustand/react/shallow'
@@ -12,25 +13,25 @@ import { PasswordInput } from '@/components/password-input'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Routes, routesConfig } from '@/configs/routes'
-import { defaultRequiredRegex, emailRegex } from '@/constants/regex'
+import { defaultRequiredRegex, emailRegex, passwordRegexEasy } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { signInWithPasswordApi } from '@/network/apis/user'
 import { useStore } from '@/stores/store'
 
-// Define prop type with allowEmail boolean
-type PasswordSignInProps = {
-  allowEmail: boolean
+const getFormSchema = () => {
+  return z.object({
+    email: z
+      .string()
+      .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
+      .regex(emailRegex.pattern, emailRegex.message()),
+    password: z.string().regex(passwordRegexEasy.pattern, passwordRegexEasy.message())
+  })
 }
-const formSchema = z.object({
-  email: z
-    .string()
-    .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
-    .regex(emailRegex.pattern, emailRegex.message()),
-  password: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
-})
 
-export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
+export default function PasswordSignIn() {
+  const { t } = useTranslation()
+  const formSchema = getFormSchema()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,7 +71,7 @@ export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
     mutationFn: signInWithPasswordApi.fn,
     onSuccess: () => {
       successToast({
-        message: `Welcome back!, ${form.getValues('email')}`
+        message: t('signIn.welcomeBack', { email: form.getValues('email') })
       })
     }
   })
@@ -89,11 +90,11 @@ export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Email</FormLabel>
+                  <FormLabel required>{t('signIn.email')}</FormLabel>
                   <FormControl>
                     <Input
                       className='h-[50px] focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='e.g. allure@gmail.com'
+                      placeholder={t('signIn.emailPlaceholder')}
                       {...field}
                     />
                   </FormControl>
@@ -107,11 +108,11 @@ export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Password</FormLabel>
+                  <FormLabel required>{t('signIn.password')}</FormLabel>
                   <FormControl>
                     <PasswordInput
                       className='h-[50px] w-full focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder='e.g. ********'
+                      placeholder={t('signIn.passwordPlaceholder')}
                       {...field}
                     />
                   </FormControl>
@@ -119,33 +120,32 @@ export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
                 </FormItem>
               )}
             />
+
+            <div className='flex justify-end -mt-2'>
+              <Link to='/auth/signin/forgot_password' className='font-medium text-primary text-sm hover:underline'>
+                {t('signIn.forgotPassword')}
+              </Link>
+            </div>
           </div>
+
           <Button
             loading={isSignInWithPasswordLoading}
             type='submit'
             className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
           >
-            Sign in
+            {t('signIn.signInButton')}
           </Button>
         </form>
       </Form>
-      <p>
-        <Link to='/auth/signin/forgot_password' className='font-medium text-zinc-950 dark:text-white text-sm'>
-          Forgot your password?
-        </Link>
-      </p>
-      {allowEmail && (
-        <p>
-          <Link to='/auth/signin/email_signin' className='font-medium text-zinc-950 dark:text-white text-sm'>
-            Sign in via magic link
+
+      <div className='px-8 py-6 border-t border-gray-200 dark:border-gray-600'>
+        <p className='text-center text-gray-600 dark:text-gray-300'>
+          {t('signIn.noAccount')}{' '}
+          <Link to='/auth/signup' className='text-primary hover:underline font-medium'>
+            {t('signIn.signUp')}
           </Link>
         </p>
-      )}
-      <p>
-        <Link to='/auth/signup' className='font-medium text-zinc-950 dark:text-white text-sm'>
-          Don't have an account? Sign up
-        </Link>
-      </p>
+      </div>
     </div>
   )
 }

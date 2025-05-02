@@ -1588,7 +1588,140 @@
     }
   },
   "backendError": {
-    "invalidEmail": "Email không hợp lệ"
+    "firstNameRequired": "Tên phải ít nhất 1 ký tự",
+    "firstNameMaxLength": "Tên không được vượt quá 100 ký tự",
+    "lastNameRequired": "Họ phải ít nhất 1 ký tự",
+    "lastNameMaxLength": "Họ không được vượt quá 100 ký tự",
+    "usernameRequired": "Tên người dùng phải có ít nhất 3 ký tự",
+    "usernameMaxLength": "Tên người dùng không được vượt quá 20 ký tự",
+    "invalidUsername": "Tên người dùng phải bắt đầu bằng chữ cái, dài từ 3-20 ký tự và chỉ chứa chữ cái, số và dấu gạch dưới",
+    "invalidEmail": "Email không hợp lệ",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+    "avatarMinLength": "Ảnh đại diện phải có nhiều hơn 1 ký tự",
+    "invalidPhone": "Số điện thoại phải là chuỗi từ 10 đến 15 chữ số",
+    "invalidDob": "Ngày sinh phải là ngày hợp lệ (YYYY-MM-DD)",
+    "emailRequired": "Email là bắt buộc",
+    "passwordRequired": "Mật khẩu là bắt buộc",
+
+    "fullNameMaxLength": "Họ và tên không được vượt quá 100 ký tự",
+    "phoneMaxLength": "Số điện thoại không được vượt quá 100 ký tự",
+    "districtMaxLength": "Quận/Huyện không được vượt quá 100 ký tự",
+    "wardMaxLength": "Phường/Xã không được vượt quá 100 ký tự",
+    "provinceMaxLength": "Tỉnh/Thành phố không được vượt quá 255 ký tự",
+    "invalidType": "Loại địa chỉ không hợp lệ",
+
+    "invalidStartTime": "Thời gian bắt đầu phải là chuỗi ngày hợp lệ",
+    "invalidEndTime": "Thời gian kết thúc phải là chuỗi ngày hợp lệ",
+    "totalPriceNonNegative": "Tổng giá phải là số không âm",
+    "invalidPaymentMethod": "Phương thức thanh toán không hợp lệ",
+    "invalidBookingType": "Loại đặt lịch không hợp lệ",
+    "invalidStatus": "Trạng thái không hợp lệ",
+    "invalidResultNote": "Ghi chú kết quả không hợp lệ",
+
+    "accountNotFound": "Tài khoản không tồn tại",
+    "updatedByAccountNotFound": "Người cập nhật tài khoản không tồn tại",
+    "emailAlreadyExists": "Email đã tồn tại",
+    "usernameAlreadyExists": "Tên người dùng đã tồn tại",
+    "invalidRoleProvided": "Vai trò không hợp lệ",
+    "certificateNotAllowed": "Chứng chỉ chỉ được phép cho vai trò TƯ VẤN VIÊN và KOL",
+    "consultantNotFound": "Tư vấn viên không tồn tại",
+    "brandNotFound": "Thương hiệu không tồn tại",
+    "exceededApprovedReportsLimit": "Tài khoản đã bị cấm do vượt quá giới hạn báo cáo được phê duyệt",
+
+    "addressNotFound": "Địa chỉ không tồn tại",
+    "atLeastOneDefaultAddress": "Phải có ít nhất một địa chỉ mặc định",
+
+    "emailNotVerified": "Email chưa được xác minh",
+    "invalidPassword": "Mật khẩu không hợp lệ",
+    "loginMethodNotAllowed": "Người dùng phải đăng nhập bằng phương thức khác, không sử dụng mật khẩu",
+
+    "blogNotExisted": "Blog không tồn tại",
+    "blogTagAlreadyExisted": "Thẻ blog đã tồn tại",
+
+    "bookingNotFound": "Đặt lịch không tồn tại",
+    "onlyReviewerCanNoteResult": "Chỉ người đánh giá mới có thể ghi chú kết quả",
+    "slotBooked": "Slot đã được đặt",
+    "brandIdRequired": "Yêu cầu ID thương hiệu",
+    "consultantServiceIdRequired": "Yêu cầu ID dịch vụ tư vấn",
+    "consultantServiceNotFound": "Dịch vụ tư vấn không tồn tại",
+    "slotRequired": "Yêu cầu slot",
+    "cannotCompleteBooking": "Không thể hoàn thành đặt lịch vì báo cáo chưa được hoàn thành",
+    "cannotCancelBooking": "Không thể hủy đặt lịch ở trạng thái hiện tại",
+    "walletNotFound": "Không tìm thấy ví",
+    "activeProductRequired": "Vui lòng chọn sản phẩm đang hoạt động",
+    "productNotFound": "Không tìm thấy sản phẩm",
+    "onlyConsultantOrOperator": "Chỉ áp dụng cho tư vấn viên hoặc người vận hành",
+    "overlapTimeSlot": "Thời gian bị trùng lặp",
+    "alreadyBookedSlot": "Bạn đã đặt một slot. Vui lòng chờ xử lý",
+    "bookingCancelledSuccessfully": "Hủy đặt lịch thành công",
+    "bookingStatusUpdatedSuccessfully": "Cập nhật trạng thái đặt lịch thành công",
+
+    "classificationNotFound": "Phân loại sản phẩm không tồn tại",
+    "invalidProduct": "Không thể thêm sản phẩm không hợp lệ",
+    "quantityNotEnough": "Số lượng không đủ",
+    "groupBuyingInvalid": "Mua nhóm không hợp lệ",
+    "livestreamInvalid": "Livestream không hợp lệ",
+    "cartItemNotFound": "Không tìm thấy mục trong giỏ hàng",
+    "invalidOrEmptyItemIds": "Danh sách ID mục không hợp lệ hoặc trống",
+    "noItemsFoundForIds": "Không tìm thấy mục nào cho các ID được cung cấp",
+    "accountIdRequired": "Yêu cầu ID tài khoản",
+    "noItemsInCart": "Không tìm thấy mục nào trong giỏ hàng cho tài khoản đã cho",
+
+    "categoryAlreadyExisted": "Danh mục đã tồn tại",
+    "parentCategoryNotFound": "Không tìm thấy danh mục cha",
+    "maxCategoryLevelExceeded": "Một danh mục không thể có hơn 4 cấp danh mục con",
+    "categoryNotFound": "Không tìm thấy danh mục",
+    "newParentCategoryNotFound": "Không tìm thấy danh mục cha mới",
+
+    "bookingFormNotFound": "Biểu mẫu yêu cầu tư vấn dịch vụ không tồn tại",
+    "systemServiceNotFoundOrInactive": "Dịch vụ hệ thống không tồn tại hoặc không hoạt động",
+    "invalidStatusUpdate": "Không thể cập nhật trạng thái",
+    "activeServicesUsingFormNotFound": "Không tìm thấy dịch vụ đang hoạt động sử dụng biểu mẫu này",
+    "questionNotFound": "Câu hỏi không tồn tại",
+    "imageNotFound": "Hình ảnh không tồn tại",
+
+    "consultationCriteriaNotFound": "Tiêu chí tư vấn không tồn tại",
+    "consultationCriteriaSectionNotFound": "Phần tiêu chí tư vấn không tồn tại",
+    "criteriaCreationFailed": "Không thể tạo tiêu chí tư vấn",
+    "criteriaUpdateFailed": "Không thể cập nhật tiêu chí tư vấn",
+    "criteriaSectionUpdateFailed": "Không thể cập nhật phần tiêu chí tư vấn",
+
+    "sectionNotFound": "Phần tiêu chí tư vấn không tồn tại",
+    "livestreamNotFound": "Không tìm thấy livestream",
+    "invalidLivestreamStatus": "Trạng thái livestream không hợp lệ",
+
+    "classificationQuantityRequired": "Phân loại sản phẩm phải có ít nhất một số lượng",
+    "skuRequired": "SKU là bắt buộc",
+    "skuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
+    "invalidDatetime": "Chuỗi thời gian không hợp lệ",
+    "invalidTimeRange": "Thời gian bắt đầu phải sớm hơn thời gian kết thúc",
+    "overlappingPreOrderEvent": "Khoảng thời gian trùng với một sự kiện đặt trước hiện có",
+    "overlappingDiscountEvent": "Khoảng thời gian trùng với một sự kiện giảm giá hiện có",
+    "preOrderProductNotFound": "Không tìm thấy sản phẩm đặt trước",
+    "invalidFilterOptions": "Tùy chọn lọc không hợp lệ",
+
+    "classificationSkuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
+    "classificationTitleAlreadyExists": "Tiêu đề của phân loại sản phẩm đã tồn tại",
+    "invalidSortBy": "Tham số sắp xếp không hợp lệ",
+    "invalidProductStatus": "Trạng thái sản phẩm không hợp lệ",
+
+    "productDiscountNotFound": "Không tìm thấy giảm giá sản phẩm",
+    "classificationInvalid": "Phân loại sản phẩm không hợp lệ",
+    "classificationQuantityInvalid": "Số lượng phân loại phải lớn hơn 0",
+    "invalidClassificationQuantity": "Số lượng phân loại không hợp lệ: Số lượng phải nhỏ hơn hoặc bằng số lượng hiện tại",
+    "productStatusInvalid": "Trạng thái sản phẩm không hợp lệ",
+
+    "originalClassificationNotFound": "Không tìm thấy phân loại sản phẩm gốc",
+
+    "deleteQuestionFailed": "Không thể xóa câu hỏi",
+    "updateOrderIndexFailed": "Không thể cập nhật thứ tự câu hỏi",
+    "imageDeleteFailed": "Không thể xóa hình ảnh liên kết với câu hỏi",
+
+    "systemServiceNotFound": "Không tìm thấy dịch vụ hệ thống",
+    "serviceAlreadyExisted": "Dịch vụ đã tồn tại",
+    "activeServicesUsingCriteriaNotFound": "Không tìm thấy dịch vụ đang hoạt động sử dụng tiêu chí này",
+    "imageUpdateFailed": "Không thể cập nhật hình ảnh liên kết với dịch vụ hệ thống",
+    "invalidStatusValue": "Trạng thái không hợp lệ"
   },
   "payment": {
     "methods": {
@@ -1756,5 +1889,190 @@
   },
   "store": {
     "chat": "Trò chuyện"
+  },
+  "signUp": {
+    "title": "Tạo tài khoản của bạn",
+    "subtitle": "Điền thông tin bên dưới để bắt đầu",
+    "email": "Email",
+    "emailPlaceholder": "vd: allure@gmail.com",
+    "username": "Tên người dùng",
+    "usernamePlaceholder": "Nhập họ tên đầy đủ của bạn",
+    "phone": "Số điện thoại",
+    "phoneDescription": "Đây là số điện thoại sẽ được hiển thị trên hồ sơ của bạn",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "••••••••",
+    "signUpButton": "Đăng ký",
+    "alreadyHaveAccount": "Bạn đã có tài khoản?",
+    "signIn": "Đăng nhập",
+    "welcomeMessage": "Chào mừng!, {{email}}, kiểm tra email của bạn để xác minh",
+    "passwordsDoNotMatch": "Mật khẩu không khớp"
+  },
+  "signIn": {
+    "email": "Email",
+    "emailPlaceholder": "vd: allure@gmail.com",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "vd: ********",
+    "signInButton": "Đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "noAccount": "Chưa có tài khoản?",
+    "signUp": "Đăng ký",
+    "welcomeBack": "Chào mừng trở lại!, {{email}}"
+  },
+  "authLayout": {
+    "backToWebsite": "Quay lại trang web",
+    "portalName": "Cổng thông tin Allure",
+    "testimonial": "\"Cổng thông tin Allure là một công cụ mạnh mẽ cho phép chúng tôi quản lý dữ liệu, cấp quyền truy cập cho khách hàng và đối tác, đồng thời theo dõi hiệu suất kinh doanh của chúng tôi theo thời gian thực. Đây là một bước đột phá đối với chúng tôi.\"",
+    "testimonialAuthor": "- Đội ngũ Allure -"
+  },
+  "authUI": {
+    "titles": {
+      "signIn": "Đăng Nhập",
+      "emailSignIn": "Đăng Nhập Bằng Email",
+      "forgotPassword": "Quên Mật Khẩu",
+      "updatePassword": "Cập Nhật Mật Khẩu",
+      "signup": ""
+    },
+    "descriptions": {
+      "signIn": "Nhập email và mật khẩu của bạn để đăng nhập!",
+      "emailSignIn": "Nhập email của bạn để nhận liên kết ma thuật!",
+      "forgotPassword": "Nhập email của bạn để nhận liên kết đặt lại mật khẩu!",
+      "updatePassword": "Chọn mật khẩu mới cho tài khoản của bạn!",
+      "signup": ""
+    }
+  },
+  "branchCreation": {
+    "welcomeTitle": "Chào mừng đến với",
+    "brandName": "Allure",
+    "description": "Tạo, phát triển và quản lý thương hiệu của bạn trên nền tảng bán hàng mạnh mẽ của chúng tôi. Bắt đầu hành trình thành công của bạn ngay hôm nay!",
+    "createButton": "Tạo Thương Hiệu Của Bạn"
+  },
+  "branchDetails": {
+    "step": "Bước-{{stepIndex}}",
+    "generalInformation": "Thông Tin Chung",
+    "name": {
+      "label": "Tên",
+      "placeholder": "Vui lòng nhập tên thương hiệu của bạn"
+    },
+    "email": {
+      "label": "Email Thương Hiệu",
+      "placeholder": "vd: allure@gmail.com"
+    },
+    "address": {
+      "label": "Địa Chỉ",
+      "addNew": "Thêm Địa Chỉ Mới"
+    },
+    "description": {
+      "label": "Mô Tả",
+      "placeholder": "Mô tả"
+    },
+    "phone": {
+      "label": "Số Điện Thoại"
+    },
+    "document": {
+      "label": "Tài Liệu",
+      "uploadDescription": "Bạn phải tải lên ít nhất 1 tài liệu cho chi tiết giấy phép của bạn. Để giúp bạn, chúng tôi đã cung cấp một tệp mẫu. Vui lòng tải xuống, điền thông tin cần thiết và tải lên lại:",
+      "downloadTemplate": "Tải Xuống Mẫu Chi Tiết Giấy Phép"
+    },
+    "navigation": {
+      "back": "Quay Lại",
+      "next": "Tiếp Theo"
+    }
+  },
+  "fileUpload": {
+    "dragDrop": {
+      "dragActive": "Thả tệp của bạn vào đây",
+      "dragInactive": "Kéo & thả tệp của bạn vào đây",
+      "clickToSelect": "hoặc nhấp để chọn tệp",
+      "fileRestrictions": "Bạn có thể tải lên tối đa {{maxFiles}} tệp. Định dạng tệp được chấp nhận là {{formats}}. Mỗi tệp phải dưới {{maxSize}}MB.",
+      "maxFilesReached": "Bạn đã đạt đến số lượng tệp tối đa được phép"
+    },
+    "fileList": {
+      "filesSelected": "{{count}} tệp đã được chọn"
+    },
+    "preview": {
+      "image": "Xem trước hình ảnh",
+      "file": "Xem trước tệp"
+    }
+  },
+  "imagesUploader": {
+    "step": "Bước-{{stepIndex}}",
+    "title": "Tải Lên Hình Ảnh",
+    "logo": {
+      "label": "Logo",
+      "description": "Vui lòng chọn logo của bạn"
+    },
+    "businessTaxCode": {
+      "label": "Mã Số Thuế",
+      "placeholder": "Mã Số Thuế"
+    },
+    "establishmentDate": {
+      "label": "Ngày Thành Lập"
+    },
+    "businessRegistrationCode": {
+      "label": "Mã Đăng Ký Kinh Doanh",
+      "placeholder": "Mã Đăng Ký Kinh Doanh",
+      "description": "Số hoặc mã được cấp cho doanh nghiệp khi đăng ký, đóng vai trò là định danh chính thức cho công ty."
+    },
+    "businessRegistrationAddress": {
+      "label": "Địa Chỉ Đăng Ký Kinh Doanh",
+      "placeholder": "Địa Chỉ Đăng Ký Kinh Doanh",
+      "description": "Địa chỉ chính thức của doanh nghiệp như đã nêu trong quá trình đăng ký."
+    },
+    "navigation": {
+      "back": "Quay Lại",
+      "next": "Tiếp Theo"
+    }
+  },
+  "confirmation": {
+    "step": "Bước-{{stepIndex}}",
+    "title": "Xác Nhận",
+    "reviewMessage": "Vui lòng kiểm tra thông tin trước khi gửi, bạn có thể quay lại để điền lại biểu mẫu nếu có bất kỳ lỗi nào.",
+    "card": {
+      "title": "Xác Nhận Thương Hiệu Của Bạn",
+      "status": {
+        "pending": "ĐANG CHỜ XỬ LÝ"
+      }
+    },
+    "fields": {
+      "name": "Tên Thương Hiệu",
+      "email": "Email",
+      "phone": "Số Điện Thoại",
+      "address": "Địa Chỉ",
+      "description": "Mô Tả",
+      "logo": "Logo",
+      "document": "Tài Liệu"
+    },
+    "fileInfo": {
+      "files": "{{count}} tệp"
+    },
+    "notAvailable": "Không có",
+    "navigation": {
+      "back": "Quay Lại",
+      "confirm": "Xác Nhận"
+    }
+  },
+  "forbidden": {
+    "public": {
+      "error": "Lỗi",
+      "accessDenied": "Truy Cập Bị Từ Chối",
+      "noPermission": "Bạn không có quyền truy cập vào tài nguyên được yêu cầu.",
+      "contactSupport": "Vui lòng liên hệ bộ phận hỗ trợ nếu bạn cho rằng đây là lỗi.",
+      "attemptedAccess": "Đã cố gắng truy cập:",
+      "goToHome": "Về Trang Chủ",
+      "contactSupportButton": "Liên Hệ Hỗ Trợ",
+      "copyright": "© {{year}} Công ty của bạn. Đã đăng ký Bản quyền."
+    },
+    "dashboard": {
+      "error": "Lỗi",
+      "accessDenied": "Truy Cập Bị Từ Chối",
+      "noPermission": "Bạn không có quyền truy cập vào trang này.",
+      "noPermissionGeneric": "Bạn không có quyền truy cập vào trang được yêu cầu.",
+      "contactAdmin": "Vui lòng liên hệ quản trị viên của bạn nếu bạn cho rằng đây là lỗi.",
+      "attemptedAccess": "Đã cố gắng truy cập:",
+      "backToDashboard": "Quay Lại Bảng Điều Khiển",
+      "needHelp": "Cần Trợ Giúp?"
+    }
   }
 }

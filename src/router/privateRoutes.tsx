@@ -23,6 +23,7 @@ import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import FlashSaleDetailsById from '@/views/dashboard/flash-sale/[id]'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
+import Forbidden403 from '@/views/dashboard/forbidden'
 import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
@@ -327,6 +328,10 @@ export const privateRoutes: RouteObject[] = [
       {
         path: '*',
         element: <RedirectToMainDashboard />
+      },
+      {
+        path: 'forbidden',
+        element: <Forbidden403 />
       }
     ]
   }

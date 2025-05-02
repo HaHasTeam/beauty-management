@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { getCommuneMutation, getDistrictMutation, getProvinceMutation } from '@/network/apis/addressBrand'
-import { brandCreateSchema, CreateAddressBrandSchema } from '@/schemas'
+import { brandCreateSchema, getCreateAddressBrandSchema } from '@/schemas'
 import { convertToSlug } from '@/utils'
 import { parseAddress } from '@/utils/string'
 
@@ -38,6 +38,7 @@ interface AddAddressDialogProps {
 const AddAddressBrandDialog = ({ triggerComponent, getAddress, parentForm }: AddAddressDialogProps) => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+  const CreateAddressBrandSchema = getCreateAddressBrandSchema()
   const id = useId()
   // const [loading, setLoading] = useState(false)
   const [location, setLocation] = useState({
