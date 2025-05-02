@@ -116,7 +116,8 @@ export function ProductTable({ data, pageCount, queryStates }: ProductTableProps
         label: brand.name,
         value: brand.id
       })),
-      isCustomFilter: true
+      isCustomFilter: true,
+      isSingleChoice: true
     })
   }
 

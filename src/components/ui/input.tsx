@@ -178,7 +178,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           }
       if (value !== undefined) {
         if (value === '') {
-          onChange?.(value as unknown as React.ChangeEvent<HTMLInputElement>)
+          // onChange?.(value as unknown as React.ChangeEvent<HTMLInputElement>)
           setFormattedValue('')
         } else {
           const numberValue = type === 'percentage' ? Number(value) * 100 : Number(value)
