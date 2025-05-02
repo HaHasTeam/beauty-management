@@ -191,8 +191,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [value, maxVal])
 
     const symbolRef = React.useRef<HTMLDivElement>(null)
-  console.log(value)
-    console.log(formattedValue,"DSf")
     if (isFileInput) {
       return (
         <input

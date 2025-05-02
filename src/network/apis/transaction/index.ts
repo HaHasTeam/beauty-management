@@ -111,15 +111,21 @@ export const getDailyOrderStatistics = toQueryFetcher<TGetDailyOrderStatisticsPa
  * Get financial summary
  */
 export const getFinancialSummary = toQueryFetcher<
-  void,
+  { accountId: string },
   TServerResponse<{
-    totalRevenue: number
-    totalExpense: number
-    netIncome: number
+    totalAmountFromDeposit: number
+    totalAmountFromWithDrawal: number
+    balance: number
+    availableBalance: number
   }>
->('getFinancialSummary', async () => {
+>('getFinancialSummary', async (params) => {
+  if (!params) throw new Error('Params is required')
+  const { accountId } = params
   return privateRequest('/transactions/get-financial-summary', {
-    method: 'GET'
+    method: 'GET',
+    data: {
+      accountId
+    }
   })
 })
 

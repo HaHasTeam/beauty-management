@@ -9,7 +9,11 @@ import RevenueStatic from '@/components/ui/transaction-statics/revenue'
 import TransactionTableUI from './transaction-table-ui'
 import WithdrawalTableUI from './withdrawal-requests-table-ui'
 
-export default function TransactionManagementPage() {
+type Props = {
+  specifiedAccountId?: string
+}
+
+export default function TransactionManagementPage({ specifiedAccountId }: Props) {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
@@ -21,13 +25,14 @@ export default function TransactionManagementPage() {
   const handleTabChange = (value: string) => {
     setActiveTab(value)
 
+    if (specifiedAccountId) return
     // Clear all other query params by navigating to the current path with only the tab param
     navigate({ pathname: location.pathname, search: `?tab=${value}` })
   }
 
   return (
     <div className='flex flex-col gap-4'>
-      <RevenueStatic />
+      {!specifiedAccountId && <RevenueStatic />}
       <div className=''>
         <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
           <TabsList className='w-fit grid-cols-2 mb-6'>
@@ -43,14 +48,14 @@ export default function TransactionManagementPage() {
           <TabsContent value='transactions'>
             <h2 className='text-xl font-semibold mb-4'>{t('transaction.list')}</h2>
             {/* Transaction table will be implemented here */}
-            <TransactionTableUI />
+            <TransactionTableUI specifiedAccountId={specifiedAccountId} />
           </TabsContent>
           <TabsContent value='withdrawals'>
             <h2 className='text-xl font-semibold mb-4'>
               {t('wallet.withdrawalRequests.title', 'Withdrawal Requests')}
             </h2>
             {/* Withdrawal request table will be implemented here */}
-            <WithdrawalTableUI />
+            <WithdrawalTableUI specifiedAccountId={specifiedAccountId} />
           </TabsContent>
         </Tabs>
       </div>
