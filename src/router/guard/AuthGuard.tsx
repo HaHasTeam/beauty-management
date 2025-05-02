@@ -31,9 +31,7 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
   [UserRoleEnum.ADMIN]: [], // Admins can access all routes
   [UserRoleEnum.MANAGER]: [
     Routes.DASHBOARD_HOME,
-    Routes.BRAND,
-    Routes.ADD_BRAND,
-    Routes.UPDATE_BRAND,
+    Routes.ACCOUNTS_DIRECTORY,
     Routes.PRODUCT_LIST,
     Routes.CREATE_PRODUCT,
     Routes.UPDATE_PRODUCT,
@@ -42,19 +40,80 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.ORDER_DETAILS,
     Routes.PROFILE_SETTINGS,
     Routes.MY_BRAND_DASHBOARD,
-    Routes.TRANSACTION_MANAGEMENT
+    Routes.TRANSACTION_MANAGEMENT,
+    Routes.PRE_ORDER,
+    Routes.PRE_ORDER_DETAILS,
+    Routes.ADD_PRE_ORDER,
+    Routes.FLASH_SALE,
+    Routes.FLASH_SALE_DETAILS,
+    Routes.ADD_FLASH_SALE,
+    Routes.GROUP_PRODUCT,
+    Routes.GROUP_PRODUCT_DETAILS,
+    Routes.SCHEDULE_BOOKING,
+    Routes.VOUCHER,
+    Routes.UPDATE_VOUCHER,
+    Routes.ADD_VOUCHER,
+    Routes.REPORTS
   ],
   [UserRoleEnum.CONSULTANT]: [
     Routes.DASHBOARD_HOME,
     Routes.PROFILE_SETTINGS,
     Routes.CONSULTANT_SERVICE,
+    Routes.CONSULTANT_SERVICE_DETAILS,
     Routes.WORKING_TIME,
-    Routes.SCHEDULE_BOOKING
+    Routes.SCHEDULE_BOOKING,
+    Routes.BOOKINGS_AND_REQUESTS,
+    Routes.BOOKING_DETAILS,
+    Routes.BOOKING_DETAIL,
+    Routes.BOOKING_LIST
   ],
-  [UserRoleEnum.STAFF]: [Routes.DASHBOARD_HOME, Routes.PROFILE_SETTINGS],
+  [UserRoleEnum.STAFF]: [
+    Routes.DASHBOARD_HOME,
+    Routes.PRODUCT_LIST,
+    Routes.CREATE_PRODUCT,
+    Routes.UPDATE_PRODUCT,
+    Routes.PRODUCT_DETAILS,
+    Routes.ORDER_LIST,
+    Routes.ORDER_DETAILS,
+    Routes.PROFILE_SETTINGS,
+    Routes.PRE_ORDER,
+    Routes.PRE_ORDER_DETAILS,
+    Routes.ADD_PRE_ORDER,
+    Routes.FLASH_SALE,
+    Routes.FLASH_SALE_DETAILS,
+    Routes.ADD_FLASH_SALE,
+    Routes.GROUP_PRODUCT,
+    Routes.GROUP_PRODUCT_DETAILS,
+    Routes.SCHEDULE_BOOKING,
+    Routes.VOUCHER,
+    Routes.UPDATE_VOUCHER,
+    Routes.ADD_VOUCHER,
+    Routes.REPORTS
+  ],
   [UserRoleEnum.KOL]: [Routes.DASHBOARD_HOME, Routes.PROFILE_SETTINGS],
   [UserRoleEnum.CUSTOMER]: [], // Customers have no access to any dashboard routes
-  [UserRoleEnum.OPERATOR]: [Routes.DASHBOARD_HOME, Routes.ACCOUNTS_DIRECTORY, Routes.PROFILE_SETTINGS, Routes.REPORTS]
+  [UserRoleEnum.OPERATOR]: [
+    Routes.DASHBOARD_HOME,
+    Routes.ACCOUNTS_DIRECTORY,
+    Routes.PROFILE_SETTINGS,
+    Routes.REPORTS,
+    Routes.BRAND,
+    Routes.BOOKINGS_AND_REQUESTS,
+    Routes.BOOKING_DETAILS,
+    Routes.BOOKING_LIST,
+    Routes.BOOKING_DETAIL,
+    Routes.TRANSACTION_MANAGEMENT,
+    Routes.CATEGORY,
+    Routes.ADD_CATEGORY,
+    Routes.PRODUCT_LIST,
+    Routes.PRE_ORDER,
+    Routes.FLASH_SALE,
+    Routes.GROUP_PRODUCT,
+    Routes.SCHEDULE_BOOKING,
+    Routes.WORKING_TIME,
+    Routes.SYSTEM_SERVICE_LIST,
+    Routes.BLOG
+  ]
 }
 
 // AuthGuard is component that will be used to protect routes
