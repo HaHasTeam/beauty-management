@@ -15,8 +15,8 @@ const Forbidden403Public = () => {
   const statusCode = state?.statusCode || 403
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-50 px-4 py-12 md:py-20'>
-      <div className='mx-auto max-w-4xl'>
+    <div className='min-h-screen flex items-center bg-gradient-to-br from-amber-50 via-white to-amber-50 px-4 py-12 md:py-20'>
+      <div className='mx-auto max-w-5xl'>
         <div className='relative mb-8 flex flex-col items-center md:mb-12 md:flex-row md:items-start md:justify-between'>
           <div className='order-2 mt-8 text-center md:order-1 md:mt-0 md:max-w-md md:text-left'>
             <span className='inline-block rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800'>
@@ -50,7 +50,7 @@ const Forbidden403Public = () => {
 
         <div className='mt-8 flex flex-col gap-4 md:flex-row md:gap-6'>
           <Button asChild size='lg' className='bg-amber-500 text-white hover:bg-amber-600'>
-            <Link to='/' className='flex items-center justify-center gap-2'>
+            <Link to='/dashboard' className='flex items-center justify-center gap-2'>
               <Home size={18} />
               {t('forbidden.public.goToHome')}
             </Link>

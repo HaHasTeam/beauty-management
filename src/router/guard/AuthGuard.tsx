@@ -6,6 +6,7 @@ import { type FC, type PropsWithChildren, useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
+import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getUserProfileApi } from '@/network/apis/user'
 import { useStore } from '@/stores/store'
@@ -150,6 +151,14 @@ const AuthGuard: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [authData, setAuthState, useProfileData])
 
+  if (isLoading) {
+    return (
+      <>
+        {children}
+        <LoadingContentLayer />
+      </>
+    )
+  }
   // Debug query status
   debug('Profile query status', { isLoading, error: error?.message, hasData: !!useProfileData })
 
@@ -160,7 +169,7 @@ const AuthGuard: FC<PropsWithChildren> = ({ children }) => {
   }
 
   // Get current user role
-  const userRole = (useProfileData?.data?.role as unknown as UserRoleEnum) || UserRoleEnum.CUSTOMER
+  const userRole = useProfileData?.data?.role as unknown as UserRoleEnum
   debug('User role', useProfileData)
 
   // Skip permission check for the forbidden page itself

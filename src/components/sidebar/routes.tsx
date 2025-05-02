@@ -29,15 +29,7 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.DASHBOARD_HOME].path,
     icon: <HiOutlineHome className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false,
-    roles: [
-      UserRoleEnum.ADMIN,
-      UserRoleEnum.MANAGER,
-      UserRoleEnum.STAFF,
-      UserRoleEnum.CONSULTANT,
-      UserRoleEnum.CUSTOMER,
-      UserRoleEnum.KOL,
-      UserRoleEnum.OPERATOR
-    ]
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.MANAGER, UserRoleEnum.CONSULTANT, UserRoleEnum.OPERATOR]
   },
   {
     name: routesConfig[Routes.MY_BRAND_DASHBOARD].name,
@@ -58,7 +50,7 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.TRANSACTION_MANAGEMENT].path,
     icon: <Banknote className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false,
-    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER]
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR]
   },
   {
     name: routesConfig[Routes.BRAND].name,
@@ -71,7 +63,7 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.CONSULTANT_SERVICE].name,
     path: routesConfig[Routes.CONSULTANT_SERVICE].path,
     icon: <TbBrandAmigo className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
-    roles: [UserRoleEnum.CONSULTANT]
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.CONSULTANT]
   },
   {
     name: routesConfig[Routes.CATEGORY].name,
@@ -126,13 +118,7 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.SCHEDULE_BOOKING].path,
     icon: <CalendarClock className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false,
-    roles: [
-      UserRoleEnum.ADMIN,
-      UserRoleEnum.OPERATOR,
-      UserRoleEnum.MANAGER,
-      UserRoleEnum.STAFF,
-      UserRoleEnum.CONSULTANT
-    ]
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER, UserRoleEnum.CONSULTANT]
   },
   {
     name: routesConfig[Routes.WORKING_TIME].name,
@@ -158,7 +144,6 @@ export const routes: IRoute[] = [
       UserRoleEnum.MANAGER,
       UserRoleEnum.STAFF,
       UserRoleEnum.CONSULTANT,
-      UserRoleEnum.CUSTOMER,
       UserRoleEnum.KOL,
       UserRoleEnum.OPERATOR
     ]
@@ -176,7 +161,13 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.REPORTS].path,
     icon: <Flag className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: true,
-    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER, UserRoleEnum.STAFF]
+    roles: [
+      UserRoleEnum.ADMIN,
+      UserRoleEnum.OPERATOR,
+      UserRoleEnum.MANAGER,
+      UserRoleEnum.STAFF,
+      UserRoleEnum.CONSULTANT
+    ]
   },
   {
     name: routesConfig[Routes.BLOG].name,
