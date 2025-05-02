@@ -27,6 +27,9 @@ const Wallet = ({ specifiedAccountId }: Props) => {
     !isLoadingAccountDetails &&
     [RoleEnum.CUSTOMER, RoleEnum.CONSULTANT, RoleEnum.MANAGER].includes((accountDetails?.data?.role || '') as RoleEnum)
 
+  const showTransaction = [RoleEnum.CUSTOMER, RoleEnum.CONSULTANT, RoleEnum.MANAGER].includes(
+    (accountDetails?.data?.role || '') as RoleEnum
+  )
   return (
     <div className='flex flex-col gap-4'>
       {isLoadingAccountDetails ? (
@@ -42,7 +45,7 @@ const Wallet = ({ specifiedAccountId }: Props) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <TransactionManagementPage specifiedAccountId={specifiedAccountId} />
+          <TransactionManagementPage specifiedAccountId={specifiedAccountId} showTransaction={showTransaction} />
         </CardContent>
       </Card>
     </div>
