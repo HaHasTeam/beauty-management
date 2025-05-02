@@ -169,8 +169,8 @@ export const routesConfig: TRoutes = {
     getPath: (id) => `/dashboard/voucher/update/${id}`
   },
   [Routes.PRE_ORDER]: {
-    name: 'Pre-order Product',
-    title: 'Pre-order Product',
+    name: 'PreOrder Products',
+    title: 'PreOrder Products',
     description: 'Pre Order',
     path: '/dashboard/pre-order',
     getPath: () => '/dashboard/pre-order'
