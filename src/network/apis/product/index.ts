@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { IProduct, IResponseProduct, IServerCreateProduct, TProduct } from '@/types/product'
 import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
@@ -63,9 +65,10 @@ export const getProductFilterApi = toQueryFetcher<
   TGetProductFilterRequestParams,
   TServerResponse<{ total: string }, IResponseProduct[]>
 >('getProductFilterApi', async (params) => {
+  const cleanParams = _.omitBy(params, (value) => !value || (Array.isArray(value) && value.length === 0))
   return publicRequest(`/products/filter-product`, {
     method: 'GET',
-    params: params
+    params: cleanParams
   })
 })
 

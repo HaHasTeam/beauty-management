@@ -122,7 +122,7 @@ export const getFinancialSummary = toQueryFetcher<
   if (!params) throw new Error('Params is required')
   const { accountId } = params
   return privateRequest('/transactions/get-financial-summary', {
-    method: 'GET',
+    method: 'POST',
     data: {
       accountId
     }

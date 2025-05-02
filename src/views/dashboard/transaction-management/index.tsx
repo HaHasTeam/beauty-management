@@ -11,15 +11,18 @@ import WithdrawalTableUI from './withdrawal-requests-table-ui'
 
 type Props = {
   specifiedAccountId?: string
+  showTransaction?: boolean
 }
 
-export default function TransactionManagementPage({ specifiedAccountId }: Props) {
+export default function TransactionManagementPage({ specifiedAccountId, showTransaction = true }: Props) {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
 
   // Define the tab query state with nuqs
-  const [activeTab, setActiveTab] = useQueryState('tab', { defaultValue: 'transactions' })
+  const [activeTab, setActiveTab] = useQueryState('tab', {
+    defaultValue: showTransaction ? 'transactions' : 'withdrawals'
+  })
 
   // Handle tab change - clear other URL params
   const handleTabChange = (value: string) => {
@@ -36,10 +39,12 @@ export default function TransactionManagementPage({ specifiedAccountId }: Props)
       <div className=''>
         <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
           <TabsList className='w-fit grid-cols-2 mb-6'>
-            <TabsTrigger value='transactions' className='flex items-center gap-2'>
-              <Wallet className='h-4 w-4' />
-              <span>{t('transaction.tabs.all')}</span>
-            </TabsTrigger>
+            {showTransaction && (
+              <TabsTrigger value='transactions' className='flex items-center gap-2'>
+                <Wallet className='h-4 w-4' />
+                <span>{t('transaction.tabs.all')}</span>
+              </TabsTrigger>
+            )}
             <TabsTrigger value='withdrawals' className='flex items-center gap-2'>
               <Banknote className='h-4 w-4' />
               <span>{t('wallet.withdrawalRequests.title', 'Withdrawal Requests')}</span>
