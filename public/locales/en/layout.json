@@ -1065,6 +1065,7 @@
     "beingChoosing": "Currently selecting",
     "detailInformation": "Detailed Information",
     "pleaseChooseCategoryToViewInformation": "Please select a category to view details",
+    "pleaseChooseProductToViewInformation": "Please select a product to view details",
     "completed": "Completed",
     "pleaseSelect": "Please select",
     "noResults": "No results found",

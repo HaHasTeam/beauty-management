@@ -40,11 +40,12 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
 
   const chartData = data.items.map((item) => ({
     date: item.date,
-    bookedPrice: item?.booked?.totalPrice ?? 0,
-    refundedPrice: item?.refunded?.totalPrice ?? 0,
-    commissionFee: item?.booked?.commissionFee ?? 0,
-    actualRevenue: item?.booked?.actualRevenue ?? 0
+    bookedPrice: item.booked?.totalPrice || 0,
+    refundedPrice: item.cancelled?.totalPrice || 0,
+    commissionFee: item.booked?.commissionFee || 0,
+    actualRevenue: item.booked?.actualRevenue || 0
   }))
+  console.log(data,"DSAFFS")
 
   const descriptionNode = (
     <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 pt-2'>
@@ -55,7 +56,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Booked Count</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-orange))]'>
-            {data.total.booked.count}
+                {data.total.booked?.count||0}
           </p>
         </div>
       </div>
@@ -64,9 +65,9 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
           <CalendarX2 className='h-4 w-4 text-[hsl(var(--chart-violet))] ' />
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
-          <p className='text-sm font-medium text-muted-foreground truncate'>Refunded Count</p>
+          <p className='text-sm font-medium text-muted-foreground truncate'>Cancelled Count</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-violet))]'>
-            {data?.total?.refunded?.count ?? 0}
+            {data.total.cancelled?.count || 0}
           </p>
         </div>
       </div>
@@ -77,7 +78,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Actual Revenue</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-green))]'>
-            {formatCurrency(data.total.booked.actualRevenue, 'vi-VN')}
+                {formatCurrency(data.total.booked?.actualRevenue || 0       , 'vi-VN')}
           </p>
         </div>
       </div>
@@ -88,7 +89,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Booked Price</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-blue))]'>
-            {formatCurrency(data.total.booked.totalPrice, 'vi-VN')}
+            {formatCurrency(data.total.booked?.totalPrice || 0, 'vi-VN')}
           </p>
         </div>
       </div>
@@ -97,9 +98,9 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
           <Banknote className='h-4 w-4 text-[hsl(var(--chart-red))] ' />
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
-          <p className='text-sm font-medium text-muted-foreground truncate'>Refunded Price</p>
+          <p className='text-sm font-medium text-muted-foreground truncate'>   Cancelled Price</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-red))]'>
-            {formatCurrency(data.total?.refunded?.totalPrice ?? 0, 'vi-VN')}
+            {formatCurrency(data.total.cancelled?.totalPrice || 0, 'vi-VN')}
           </p>
         </div>
       </div>
@@ -110,7 +111,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Commission Fee</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-gray-4))]'>
-            {formatCurrency(data.total.booked.commissionFee, 'vi-VN')}
+            {formatCurrency(data.total.booked?.commissionFee || 0, 'vi-VN')}
           </p>
         </div>
       </div>

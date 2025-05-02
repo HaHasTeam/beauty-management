@@ -1,5 +1,4 @@
 import { Percent, TicketCheckIcon } from 'lucide-react'
-import { useMemo } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -89,27 +88,26 @@ function FinalStep() {
 }
 
 const VoucherThresholds = ({ form }: VoucherThresholdsProps) => {
-  const { fields, append, remove } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control: form.control,
     name: 'criterias'
   })
 
-  const steps = useMemo(() => {
-    return fields.map<StepItem>((_, index) => {
-      const type = form.watch(`criterias.${index}.voucher.discountType`)
-      const value = form.watch(`criterias.${index}.voucher.discountValue`)
-      const threshold = form.watch(`criterias.${index}.threshold`)
+  const criterias = form.watch('criterias')
+  const steps = criterias.map<StepItem>((_, index) => {
+    const type = form.watch(`criterias.${index}.voucher.discountType`)
+    const value = form.watch(`criterias.${index}.voucher.discountValue`)
+    const threshold = form.watch(`criterias.${index}.threshold`)
 
-      return {
-        label: `Stage ${index + 1}`,
-        icon: TicketCheckIcon,
-        description:
-          !!threshold && !!value
-            ? `Will discount ${type === DiscountTypeEnum.AMOUNT ? `${formatCurrency(value)}` : `${formatNumber(value * 100, '%')}`} if ${formatNumber(threshold, ' people')} buy this product together.`
-            : undefined
-      }
-    })
-  }, [fields, form])
+    return {
+      label: `Stage ${index + 1}`,
+      icon: TicketCheckIcon,
+      description:
+        !!threshold && !!value
+          ? `Will discount ${type === DiscountTypeEnum.AMOUNT ? `${formatCurrency(value)}` : `${formatNumber(value * 100, '%')}`} if ${formatNumber(threshold, ' people')} buy this product together.`
+          : undefined
+    }
+  })
 
   const addThreshold = async () => {
     const initialCode = generateMeaningfulCode('GROUP')

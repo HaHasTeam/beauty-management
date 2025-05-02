@@ -14,6 +14,7 @@ export type TFilterTransactionsParams = BaseParams<{
   endDate?: string
   minAmount?: number
   maxAmount?: number
+  accountId?: string
 }>
 
 export enum PAY_TYPE {
@@ -110,12 +111,12 @@ export type BookingStatDetail = {
 
 export type BookingStaticItem = {
   date: string
-  refunded: BookingStatDetail
+  cancelled: BookingStatDetail
   booked: BookingStatDetail
 }
 
 export type BookingStaticTotal = {
-  refunded: BookingStatDetail
+  cancelled: BookingStatDetail
   booked: BookingStatDetail
 }
 
