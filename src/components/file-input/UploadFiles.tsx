@@ -574,51 +574,55 @@ const UploadFiles = ({
   }
 
   // Thêm component hiển thị file extension badge
+  // eslint-disable-next-line
   const FileExtensionBadge = ({ fileName }: { fileName: string }) => {
-    const extension = fileName?.split('.').pop()?.toLowerCase() || ''
+    // eslint-disable-next-line
+    console.log(fileName, 'fileName')
+    // const extension = fileName?.split('.').pop()?.toLowerCase() || ''
 
-    let bgColor = 'bg-gray-200'
-    let textColor = 'text-gray-800'
+    // let bgColor = 'bg-gray-200'
+    // let textColor = 'text-gray-800'
 
-    switch (extension) {
-      case 'pdf':
-        bgColor = 'bg-red-100'
-        textColor = 'text-red-700'
-        break
-      case 'doc':
-      case 'docx':
-        bgColor = 'bg-blue-100'
-        textColor = 'text-blue-700'
-        break
-      case 'xls':
-      case 'xlsx':
-        bgColor = 'bg-green-100'
-        textColor = 'text-green-700'
-        break
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-        bgColor = 'bg-purple-100'
-        textColor = 'text-purple-700'
-        break
-      case 'mp4':
-      case 'mov':
-      case 'avi':
-        bgColor = 'bg-pink-100'
-        textColor = 'text-pink-700'
-        break
-    }
+    // switch (extension) {
+    //   case 'pdf':
+    //     bgColor = 'bg-red-100'
+    //     textColor = 'text-red-700'
+    //     break
+    //   case 'doc':
+    //   case 'docx':
+    //     bgColor = 'bg-blue-100'
+    //     textColor = 'text-blue-700'
+    //     break
+    //   case 'xls':
+    //   case 'xlsx':
+    //     bgColor = 'bg-green-100'
+    //     textColor = 'text-green-700'
+    //     break
+    //   case 'jpg':
+    //   case 'jpeg':
+    //   case 'png':
+    //     bgColor = 'bg-purple-100'
+    //     textColor = 'text-purple-700'
+    //     break
+    //   case 'mp4':
+    //   case 'mov':
+    //   case 'avi':
+    //     bgColor = 'bg-pink-100'
+    //     textColor = 'text-pink-700'
+    //     break
+    // }
 
-    if (extension === 'avatar') {
-      return null
-    }
-    return (
-      <span
-        className={`absolute top-1 left-1 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-sm ${bgColor} ${textColor}`}
-      >
-        {extension}
-      </span>
-    )
+    // if (extension === 'avatar') {
+    //   return null
+    // }
+    // return (
+    //   <span
+    //     className={`absolute top-1 left-1 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-sm ${bgColor} ${textColor}`}
+    //   >
+    //     {extension}
+    //   </span>
+    // )
+    return null
   }
 
   // Cập nhật FileDownloadButton để có giao diện đẹp hơn

@@ -42,7 +42,7 @@ export const payTransactionApi = toMutationFetcher<
 export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TServerResponseWithPaging<TTransaction[]>>(
   'filterTransactions',
   async (params) => {
-    const { page, limit, order, sortBy, ...filterParams } = params || {}
+    const { page, limit, order, sortBy, accountId, ...filterParams } = params || {}
     const dataPre: TFilterTransactionsParams = {}
     if (filterParams.startDate) {
       dataPre.startDate = filterParams.startDate
@@ -53,6 +53,10 @@ export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TSer
     if (filterParams.types?.length) {
       dataPre.types = filterParams.types
     }
+    if (accountId) {
+      dataPre.accountId = accountId
+    }
+
     return privateRequest('/transactions/filter', {
       method: 'POST',
       data: dataPre,

@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, CircleMinus, Crown } from 'lucide-react'
+import { CheckCircle2, CircleDashed, CircleMinus, Crown, X } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { FlashSaleStatusEnum, TFlashSale } from '@/types/flash-sale'
@@ -40,6 +40,14 @@ export function FlashSaleStatusCell({ flashSale }: FlashSaleStatusCellProps) {
         <Badge variant='outline' className='border-purple-200 bg-purple-50 text-purple-700 gap-1'>
           <Crown className='h-3.5 w-3.5' />
           <span className='whitespace-nowrap'>Sold Out</span>
+        </Badge>
+      )
+
+    case FlashSaleStatusEnum.CANCELLED:
+      return (
+        <Badge variant='outline' className='border-red-200 bg-red-50 text-red-700 gap-1'>
+          <X className='h-3.5 w-3.5' />
+          <span className='whitespace-nowrap'>Cancelled</span>
         </Badge>
       )
 

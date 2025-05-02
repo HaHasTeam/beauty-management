@@ -41,7 +41,7 @@ const FlexDatePicker = forwardRef<HTMLButtonElement, Props<any>>(
   ) => {
     const [isOpen, setIsOpen] = useState(false)
     const [date, setDate] = useState<Date | undefined>(field.value ? new Date(field.value as string) : undefined)
-    const [time, setTime] = useState<string>('21:00')
+    const [time, setTime] = useState<string>('00:00')
     const form = useForm()
     const handlePickDate = (selectedDate: Date) => {
       setDate(selectedDate)

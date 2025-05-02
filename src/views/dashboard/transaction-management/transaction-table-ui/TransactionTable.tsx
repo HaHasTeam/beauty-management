@@ -1,5 +1,6 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
 import { type Table } from '@tanstack/react-table'
 import * as React from 'react'
@@ -8,6 +9,9 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
+import { getAllUserApi } from '@/network/apis/user'
+import { useStore } from '@/stores/store'
+import { RoleEnum } from '@/types/enum'
 import type { DataTableFilterField, DataTableQueryState } from '@/types/table'
 import { TransactionTypeEnum, TTransaction } from '@/types/transaction'
 
@@ -38,30 +42,52 @@ export function TransactionTable({ data, pageCount, queryStates }: TransactionTa
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<CustomFilterFields>[] = [
-    {
-      id: 'type',
-      label: 'Type',
-      options: Object.keys(TransactionTypeEnum).map((type) => {
-        return {
-          label: toSentenceCase(type),
-          value: type
-        }
+
+  const { user } = useStore()
+  const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
+  const { data: accounts } = useQuery({
+    queryKey: [getAllUserApi.queryKey],
+    queryFn: getAllUserApi.fn
+  })
+  const userData = accounts?.data
+
+  const filterFields: DataTableFilterField<CustomFilterFields>[] = React.useMemo(() => {
+    const fields: DataTableFilterField<CustomFilterFields>[] = [
+      {
+        id: 'type',
+        label: 'Type',
+        options: Object.keys(TransactionTypeEnum).map((type) => {
+          return {
+            label: toSentenceCase(type),
+            value: type
+          }
+        })
+      },
+      {
+        id: 'startDate',
+        label: 'Start Date',
+        isDate: true,
+        isCustomFilter: true
+      },
+      {
+        id: 'endDate',
+        label: 'End Date',
+        isDate: true,
+        isCustomFilter: true
+      }
+    ]
+
+    if (isAdmin) {
+      fields.push({
+        id: 'accountId',
+        label: 'Account',
+        options: userData?.map((user) => ({ label: user.email, value: user.id })) || [],
+        isCustomFilter: true,
+        isSingleChoice: true
       })
-    },
-    {
-      id: 'startDate',
-      label: 'Start Date',
-      isDate: true,
-      isCustomFilter: true
-    },
-    {
-      id: 'endDate',
-      label: 'End Date',
-      isDate: true,
-      isCustomFilter: true
     }
-  ]
+    return fields
+  }, [isAdmin, userData])
 
   /**
    * Advanced filter fields for the data table.
