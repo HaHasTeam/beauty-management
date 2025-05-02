@@ -1,10 +1,11 @@
-import { Briefcase, Clock, LockKeyhole, User } from 'lucide-react'
+import { Briefcase, Clock, LockKeyhole, User, Wallet2 } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import ChangePassword from './ChangePassword'
 import ProfileDetails from './ProfileDetails'
+import Wallet from './wallet'
 import WorkingProfile from './WorkingProfile'
 import WorkingTimeTab from './WorkingTimeTab'
 
@@ -30,6 +31,10 @@ const ProfileSettings = () => {
                 <Clock className='h-4 w-4' />
                 Working Time
               </TabsTrigger>
+              <TabsTrigger value='wallet' className='flex items-center gap-2'>
+                <Wallet2 className='h-4 w-4' />
+                Transactions & Requests
+              </TabsTrigger>
               <TabsTrigger value='password' className='flex items-center gap-2'>
                 <LockKeyhole className='h-4 w-4' />
                 Change Password
@@ -50,6 +55,10 @@ const ProfileSettings = () => {
 
             <TabsContent value='workingtime' className='pt-6'>
               <WorkingTimeTab />
+            </TabsContent>
+
+            <TabsContent value='wallet' className='pt-6'>
+              <Wallet />
             </TabsContent>
           </Tabs>
         </div>

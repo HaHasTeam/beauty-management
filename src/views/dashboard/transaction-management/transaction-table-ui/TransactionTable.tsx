@@ -26,9 +26,10 @@ interface TransactionTableProps {
     DataTableQueryState<CustomFilterFields>,
     React.Dispatch<React.SetStateAction<DataTableQueryState<CustomFilterFields>>>
   ]
+  specifiedAccountId?: string
 }
 
-export function TransactionTable({ data, pageCount, queryStates }: TransactionTableProps) {
+export function TransactionTable({ data, pageCount, queryStates, specifiedAccountId }: TransactionTableProps) {
   const columns = React.useMemo(() => getColumns(), [])
 
   /**
@@ -77,7 +78,7 @@ export function TransactionTable({ data, pageCount, queryStates }: TransactionTa
       }
     ]
 
-    if (isAdmin) {
+    if (isAdmin && !specifiedAccountId) {
       fields.push({
         id: 'accountId',
         label: 'Account',
@@ -87,7 +88,7 @@ export function TransactionTable({ data, pageCount, queryStates }: TransactionTa
       })
     }
     return fields
-  }, [isAdmin, userData])
+  }, [isAdmin, userData, specifiedAccountId])
 
   /**
    * Advanced filter fields for the data table.
