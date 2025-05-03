@@ -348,7 +348,12 @@ const FlashSaleDetails = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel required>Flash Sale Product</FormLabel>
-                      <SelectProduct {...field} multiple={false} readOnly={!!itemId} />
+                      <SelectProduct
+                        {...field}
+                        multiple={false}
+                        readOnly={!!itemId}
+                        brandId={flashSaleData?.product.brand?.id || ''}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
