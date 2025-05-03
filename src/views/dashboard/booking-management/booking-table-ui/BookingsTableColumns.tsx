@@ -86,7 +86,7 @@ const ConsultantCell = ({ booking }: { booking: TBooking }) => {
   )
 }
 
-export function getColumns(): ColumnDef<TBooking>[] {
+export function getColumns({ mode }: { mode: 'full' | 'mini' }): ColumnDef<TBooking>[] {
   return [
     {
       accessorKey: 'account',
@@ -167,7 +167,7 @@ export function getColumns(): ColumnDef<TBooking>[] {
 
         return (
           <div className='flex justify-end'>
-            <DropdownMenu modal={false}>
+            <DropdownMenu modal={mode === 'mini'}>
               <DropdownMenuTrigger asChild>
                 <Button variant='ghost' className='h-8 w-8 p-0'>
                   <span className='sr-only'>Open menu</span>
