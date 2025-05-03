@@ -1,3 +1,4 @@
+import { TBrand } from './brand'
 import { TProduct } from './product'
 import { TMetaData } from './request'
 import { TVoucher } from './voucher'
@@ -11,6 +12,7 @@ export type TGroupProduct = TMetaData & {
   products: TProduct[]
   startTime?: string
   endTime?: string
+  brand?: TBrand
 }
 
 export enum GroupProductStatusEnum {

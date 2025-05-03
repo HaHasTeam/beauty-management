@@ -90,6 +90,8 @@ export type IOrderFilter = BaseParams<{
   types?: OrderEnum[]
   paymentMethods?: PaymentMethodEnum[]
   productIds?: string[]
+  eventId?: string
+  type?: OrderEnum
 }>
 
 export type IOrderFilterFilter = BaseParams<{

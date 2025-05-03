@@ -233,7 +233,7 @@ const GroupProductDetails = () => {
                     return (
                       <FormItem>
                         <FormLabel required>Products</FormLabel>
-                        <SelectProduct {...field} multiple />
+                        <SelectProduct {...field} multiple brandId={groupProduct?.data.brand?.id} />
                         <FormMessage />
                       </FormItem>
                     )

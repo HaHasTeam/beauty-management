@@ -13,6 +13,7 @@ import { TUser } from '@/types/user'
 import { TConsultantRecommendationData, TGetConsultantRecommendationParams } from '@/network/apis/user/type'
 import { Static } from './Static'
 import { TServerResponse } from '@/types/request'
+import { useQueryState } from 'nuqs'
 
 interface BrandRecommendCardProps {
   data: TConsultantRecommendationData
@@ -39,7 +40,7 @@ export function BrandRecommendCard({ queryStates, data }: BrandRecommendCardProp
 
   // consultantData should be inferred as TUser[] | undefined
   const consultants = consultantData ?? []
-
+  const [, setConsultantId] = useQueryState('consultantId')
   // Effect to set default consultantId
   React.useEffect(() => {
     if (isAdmin && consultants.length > 0 && queryStates) {
@@ -56,6 +57,7 @@ export function BrandRecommendCard({ queryStates, data }: BrandRecommendCardProp
               consultantId: firstConsultantId
             }
           }))
+          setConsultantId(firstConsultantId)
         }
       }
     }

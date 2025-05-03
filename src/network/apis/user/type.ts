@@ -67,7 +67,7 @@ export type TConsultantBrief = {
 }
 
 export type TBrandRecommendation = {
-  brandId: string
+  brand: Pick<TBrand, 'id' | 'name' | 'logo'>
   percentage: number
 }
 
@@ -108,7 +108,4 @@ export type TConsultantRecommendationData = {
   consultant: TConsultantBrief
   brandRecommendations: TBrandRecommendation[]
   totalProductSuggestions: number
-  productSuggestList: TProductSuggestion[]
-  monthlyData: TMonthlyBookingStat[]
-  serviceMonthlyData: TServiceMonthlyBookingStat[]
 }

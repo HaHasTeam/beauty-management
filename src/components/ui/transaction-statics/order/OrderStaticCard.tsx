@@ -25,9 +25,10 @@ interface OrderStaticCardProps {
     DataTableQueryState<TGetDailyOrderStatisticsParams>,
     React.Dispatch<React.SetStateAction<DataTableQueryState<TGetDailyOrderStatisticsParams>>>
   ]
+  mode?: 'full' | 'mini'
 }
 
-export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
+export function OrderStaticCard({ queryStates, data, mode = 'full' }: OrderStaticCardProps) {
   // Get currently selected date range and order type
   const [selectedOrderType, setSelectedOrderType] = React.useState<OrderEnum | null>(null)
 
@@ -99,6 +100,22 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
   const groupProducts = groupProductData?.data ?? []
 
   const filterFields: DataTableFilterField<TGetDailyOrderStatisticsParams>[] = React.useMemo(() => {
+    if (mode === 'mini') return [
+       {
+        id: 'startDate',
+        label: 'Start Date',
+        isCustomFilter: true,
+        isDate: true,
+        placeholder: 'Start Date'
+      },
+      {
+        id: 'endDate',
+        label: 'End Date',
+        isCustomFilter: true,
+        isDate: true,
+        placeholder: 'End Date'
+      },
+    ]
     const fields: DataTableFilterField<TGetDailyOrderStatisticsParams>[] = [
       {
         id: 'startDate',
@@ -257,10 +274,12 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data} />}>
-        <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
-          <div className='flex items-center justify-end px-4 py-2'>
-            <Select onValueChange={handleTimeRangeChange}>
+      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} />}>
+        { (
+          <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
+            {mode === 'full' && (
+            <div className='flex items-center justify-end px-4 py-2'>
+              <Select onValueChange={handleTimeRangeChange}>
               <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
                 <SelectValue placeholder='Select Time Range' />
               </SelectTrigger>
@@ -279,8 +298,10 @@ export function OrderStaticCard({ queryStates, data }: OrderStaticCardProps) {
                 </SelectItem>
               </SelectContent>
             </Select>
-          </div>
-        </DataTableToolbar>
+            </div>
+            )}
+          </DataTableToolbar>
+        )}
       </CardWithFacetFilters>
     </div>
   )
