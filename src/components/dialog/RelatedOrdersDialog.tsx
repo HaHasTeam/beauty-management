@@ -6,27 +6,29 @@ import * as React from 'react'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Shell } from '@/components/ui/shell'
-import { filterOrdersApi } from '@/network/apis/order'
+import { filterOrdersAndVoucherApi, filterOrdersApi } from '@/network/apis/order'
 import { OrderEnum, ShippingStatusEnum } from '@/types/enum'
 import { IOrder } from '@/types/order'
 import { DataTableQueryState } from '@/types/table'
 import { OrderTable } from '@/views/dashboard/order-management/order-table-ui/OrderTable' // Reusing the existing table
-
+import { OrderTable as OrderParentTable } from '@/views/dashboard/order-management/parent-order-table-ui/OrderTable'
+//
 interface RelatedOrdersDialogProps {
   type?: OrderEnum
   eventId?: string
   open: boolean
   onOpenChange: (open: boolean) => void
+  voucherId?: string
 }
 
-export function RelatedOrdersDialog({ type, eventId, open, onOpenChange }: RelatedOrdersDialogProps) {
+export function RelatedOrdersDialog({ type, eventId, open, onOpenChange, voucherId }: RelatedOrdersDialogProps) {
   const queryStates = React.useState<DataTableQueryState<IOrder, { search: string }>>(
     {} as DataTableQueryState<IOrder, { search: string }>
   )
 
   const { data: orderListData, isLoading: isOrderListLoading } = useQuery({
     queryKey: [
-      filterOrdersApi.queryKey,
+      !voucherId ? filterOrdersApi.queryKey : filterOrdersAndVoucherApi.queryKey,
       {
         page: queryStates[0].page,
         limit: queryStates[0].perPage,
@@ -37,10 +39,11 @@ export function RelatedOrdersDialog({ type, eventId, open, onOpenChange }: Relat
         productIds: (queryStates[0].fieldFilters?.orderDetails ?? []) as string[],
         search: queryStates[0].fieldFilters?.search as string,
         type,
-        eventId
+        eventId,
+        voucherId
       }
     ],
-    queryFn: filterOrdersApi.fn
+    queryFn: !voucherId ? filterOrdersApi.fn : filterOrdersAndVoucherApi.fn
   })
 
   return (
@@ -63,6 +66,22 @@ export function RelatedOrdersDialog({ type, eventId, open, onOpenChange }: Relat
                     filterableColumnCount={2}
                     cellWidths={['10rem', '40rem', '12rem', '12rem', '8rem', '8rem']}
                     shrinkZero
+                  />
+                ) : voucherId &&
+                  (
+                    orderListData?.data as {
+                      isParent?: boolean
+                    }
+                  ).isParent ? (
+                  <OrderParentTable
+                    data={orderListData?.data.items ?? []}
+                    pageCount={Math.ceil((orderListData?.data.total ?? 0) / (orderListData?.data.limit ?? 10))}
+                    queryStates={
+                      queryStates as unknown as [
+                        DataTableQueryState<IOrder>,
+                        React.Dispatch<React.SetStateAction<DataTableQueryState<IOrder>>>
+                      ]
+                    }
                   />
                 ) : (
                   <OrderTable

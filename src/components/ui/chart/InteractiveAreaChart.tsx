@@ -40,11 +40,6 @@ export function InteractiveAreaChart({
   const [activeDataKey, setActiveDataKey] = React.useState<string | null>(null)
   const configKeys = React.useMemo(() => Object.keys(config), [config])
 
-  // Debug - log props
-  React.useEffect(() => {
-    console.log('Chart config:', config)
-    console.log('Data sample:', data.slice(0, 2))
-  }, [config, data])
 
   // Custom legend that shows colored boxes
   const renderColorfulLegendText = (value: string, entry: any) => {
