@@ -1438,6 +1438,9 @@
     "pending": "Chờ xét duyệt"
   },
   "createBlog": {
+    "blog": "Bài viết",
+    "condition": "Chính sách",
+    "type": "Loại",
     "title": "Tiêu đề",
     "titlePlaceholder": "Nhập tiêu đề",
     "tag": "Đường dẫn",

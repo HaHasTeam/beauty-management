@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/useToast'
 import { createBlogApi } from '@/network/apis/blog'
 import { getFormBlogSchema } from '@/schemas/blog.schema'
 import { IServerCreateBlog } from '@/types/blog'
-import { BlogEnum } from '@/types/enum'
+import { BlogEnum, BlogTypeEnum } from '@/types/enum'
 import { modules } from '@/variables/textEditor'
 
 const CreateBlog = () => {
@@ -33,7 +33,8 @@ const CreateBlog = () => {
     title: '',
     content: '',
     status: BlogEnum.UN_PUBLISHED,
-    tag: ''
+    tag: '',
+    type: BlogTypeEnum.CONDITION
   }
 
   const form = useForm<z.infer<typeof FormBlogSchema>>({
@@ -79,7 +80,8 @@ const CreateBlog = () => {
         title: values.title,
         content: values.content,
         status: values.status,
-        tag: values.tag
+        tag: values.tag,
+        type: values.type
       }
 
       await createBlogFn(transformedData)
@@ -185,14 +187,47 @@ const CreateBlog = () => {
                           <SelectValue {...field} placeholder={t('createBlog.statusPlaceholder')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value={BlogEnum.PUBLISHED} key={BlogEnum.PUBLISHED}>
-                            {t('createBlog.published')}
-                          </SelectItem>
                           <SelectItem value={BlogEnum.UN_PUBLISHED} key={BlogEnum.UN_PUBLISHED}>
                             {t('createBlog.unPublished')}
                           </SelectItem>
+                          <SelectItem value={BlogEnum.PUBLISHED} key={BlogEnum.PUBLISHED}>
+                            {t('createBlog.published')}
+                          </SelectItem>
                           <SelectItem value={BlogEnum.INACTIVE} key={BlogEnum.INACTIVE}>
                             {t('createBlog.inactive')}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          {/* Types Field */}
+          <FormField
+            control={form.control}
+            name='type'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='flex w-full gap-2'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>{t('createBlog.type')}</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue {...field} placeholder={t('createBlog.statusPlaceholder')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={BlogTypeEnum.CONDITION} key={BlogTypeEnum.CONDITION}>
+                            {t('createBlog.condition')}
+                          </SelectItem>
+                          <SelectItem value={BlogTypeEnum.BLOG} key={BlogTypeEnum.BLOG}>
+                            {t('createBlog.blog')}
                           </SelectItem>
                         </SelectContent>
                       </Select>

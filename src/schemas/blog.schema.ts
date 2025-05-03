@@ -1,7 +1,7 @@
 import i18next from 'i18next'
 import { z } from 'zod'
 
-import { BlogEnum } from '@/types/enum'
+import { BlogEnum, BlogTypeEnum } from '@/types/enum'
 
 export const getFormBlogSchema = () => {
   return z.object({
@@ -14,7 +14,8 @@ export const getFormBlogSchema = () => {
     content: z.string().refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
       message: i18next.t('validation.required')
     }),
-    status: z.nativeEnum(BlogEnum)
+    status: z.nativeEnum(BlogEnum),
+    type: z.nativeEnum(BlogTypeEnum)
   })
 }
 

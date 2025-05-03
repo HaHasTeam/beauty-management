@@ -3,6 +3,7 @@ import i18next, { t } from 'i18next'
 import { Ellipsis, EyeIcon, Pen, SettingsIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
@@ -16,6 +17,7 @@ import {
 import { Routes, routesConfig } from '@/configs/routes'
 import { cn, formatDate } from '@/lib/utils'
 import { IBlogDetails } from '@/types/blog'
+import { BlogTypeEnum } from '@/types/enum'
 import { getDisplayString } from '@/utils/string'
 
 import { getStatusIcon } from './helper'
@@ -77,7 +79,19 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
       },
       size: 200
     },
-
+    {
+      id: 'type',
+      header: ({ column }) => <DataTableColumnHeader column={column} title={i18next.t('createBlog.type')} />,
+      cell: ({ row }) => {
+        const type = row.original.type ?? ''
+        return (
+          <Badge variant={type === BlogTypeEnum.BLOG ? 'default' : 'secondary'} className='shrink-0'>
+            {type === BlogTypeEnum.BLOG ? t('createBlog.blog') : t('createBlog.condition')}
+          </Badge>
+        )
+      },
+      size: 200
+    },
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title={t('createBlog.status')} />,

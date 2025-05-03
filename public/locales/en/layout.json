@@ -1523,6 +1523,9 @@
     "close": "Close"
   },
   "createBlog": {
+    "blog": "Blog",
+    "condition": "Condition",
+    "type": "Type",
     "title": "Title",
     "tag": "Slug",
     "tagPlaceholder": "Enter slug",

@@ -90,6 +90,10 @@ export enum PaymentMethod {
   WALLET = 'WALLET',
   BANK_TRANSFER = 'BANK_TRANSFER'
 }
+export enum BlogTypeEnum {
+  CONDITION = 'CONDITION',
+  BLOG = 'BLOG'
+}
 
 export enum ShippingStatusEnum {
   JOIN_GROUP_BUYING = 'JOIN_GROUP_BUYING',
