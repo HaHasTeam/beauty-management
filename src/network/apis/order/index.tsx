@@ -279,6 +279,10 @@ export const filterOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithP
     if (rest.productIds?.length) {
       body.productIds = rest.productIds
     }
+    if (rest.type && rest.eventId) {
+      body.type = rest.type
+      body.eventId = rest.eventId
+    }
 
     return privateRequest('/orders/filter', {
       method: 'POST',

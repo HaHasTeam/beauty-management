@@ -515,7 +515,12 @@ const PreOrderDetails = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel required>Product</FormLabel>
-                      <SelectProduct {...field} multiple={false} readOnly={!!itemId} />
+                      <SelectProduct
+                        {...field}
+                        multiple={false}
+                        readOnly={!!itemId}
+                        brandId={preProductData?.product.brand?.id || ''}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}

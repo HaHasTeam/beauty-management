@@ -25,6 +25,7 @@ type InteractiveAreaChartProps = {
   config: ChartConfig
   className?: string
   bottomLabel?: React.ReactNode
+  mode?: 'full' | 'mini'
 }
 
 export function InteractiveAreaChart({
@@ -33,7 +34,8 @@ export function InteractiveAreaChart({
   description,
   config,
   className,
-  bottomLabel
+  bottomLabel,
+  mode = 'full'
 }: InteractiveAreaChartProps) {
   const [activeDataKey, setActiveDataKey] = React.useState<string | null>(null)
   const configKeys = React.useMemo(() => Object.keys(config), [config])
@@ -200,22 +202,25 @@ export function InteractiveAreaChart({
                   />
                 )
               })}
-              <Legend
-                verticalAlign='bottom'
-                height={36}
-                iconType='circle'
-                iconSize={8}
-                wrapperStyle={{
-                  paddingTop: '10px',
-                  marginLeft: '-10px'
-                }}
-                formatter={renderColorfulLegendText}
-                // Update onClick to use the passed entry directly
-                onClick={(entry) => {
-                  const dataKey = entry.dataKey as string
-                  setActiveDataKey((prevState) => (prevState === dataKey ? null : dataKey))
-                }}
-              />
+
+              {mode === 'full' && (
+                <Legend
+                  verticalAlign='bottom'
+                  height={36}
+                  iconType='circle'
+                  iconSize={8}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    marginLeft: '-10px'
+                  }}
+                  formatter={renderColorfulLegendText}
+                  // Update onClick to use the passed entry directly
+                  onClick={(entry) => {
+                    const dataKey = entry.dataKey as string
+                    setActiveDataKey((prevState) => (prevState === dataKey ? null : dataKey))
+                  }}
+                />
+              )}
             </AreaChart>
           </ResponsiveContainer>
         </div>

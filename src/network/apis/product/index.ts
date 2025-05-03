@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 import { IProduct, IResponseProduct, IServerCreateProduct, TProduct } from '@/types/product'
-import { TServerResponse, TServerResponseWithPaging } from '@/types/request'
+import { BaseParams, TServerResponse, TServerResponseWithPaging } from '@/types/request'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
@@ -89,5 +89,26 @@ export const filterProductApi = toQueryFetcher<
   return publicRequest(`/products/filter-product`, {
     method: 'GET',
     params
+  })
+})
+
+// Define parameters for consultant suggested products
+type TGetConsultantSuggestedProductsParams = BaseParams<{
+  consultantId: string
+  brandId: string
+}>
+
+// API to get products suggested by a consultant for a specific brand
+export const getConsultantSuggestedProductsApi = toQueryFetcher<
+  TGetConsultantSuggestedProductsParams,
+  TServerResponseWithPaging<IResponseProduct[]> // Assuming paginated product response
+>('getConsultantSuggestedProductsApi', async (params) => {
+  // Ensure required params are present if necessary, or handle defaults
+  if (!params?.consultantId || !params?.brandId) {
+    throw new Error('Consultant ID and Brand ID are required')
+  }
+  return privateRequest('/accounts/consultant-suggested-products', {
+    method: 'GET',
+    params: params
   })
 })

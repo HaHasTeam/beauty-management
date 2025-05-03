@@ -1,3 +1,4 @@
+import { TBrand } from './brand'
 import { IClassification, TClassification } from './classification'
 import { IProduct, TProduct } from './product'
 import { TMetaData } from './request'
@@ -6,6 +7,7 @@ export type TPreOrder = TMetaData & {
   startTime: string
   endTime: string
   status: PreOrderStatusEnum
+  brand?: TBrand
   product: TProduct
   productClassifications: TClassification[]
 }
