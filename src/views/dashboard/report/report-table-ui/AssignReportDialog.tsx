@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
-import { InfoIcon } from 'lucide-react'
+import { XIcon } from 'lucide-react'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { BsPeople } from 'react-icons/bs'
@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -36,19 +37,11 @@ import { defaultRequiredRegex } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useToast } from '@/hooks/useToast'
-import { assignReport, filterReports, updateReportStatus } from '@/network/apis/report'
+import { assignReport, getFilteredReports, updateReportStatus } from '@/network/apis/report'
 import { useStore } from '@/stores/store'
 import { IReport, ReportStatusEnum } from '@/types/report'
 import { UserRoleEnum } from '@/types/role'
 import { UserStatusEnum } from '@/types/user'
-
-const REPORT_TYPE_MAP = {
-  ORDER: 'Order',
-  TRANSACTION: 'Transaction',
-  BOOKING: 'Booking',
-  SYSTEM_FEATURE: 'System Feature',
-  OTHER: 'Other'
-}
 
 interface AssignReportDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   Report: Row<IReport>['original'][]
@@ -113,7 +106,7 @@ export function AssignReportDialog({ Report, showTrigger = true, onSuccess, ...p
         assigneeId: userData?.id
       })
       queryClient.invalidateQueries({
-        queryKey: [filterReports.queryKey]
+        queryKey: [getFilteredReports.queryKey]
       })
       props.onOpenChange?.(false)
       onSuccess?.()
@@ -124,96 +117,13 @@ export function AssignReportDialog({ Report, showTrigger = true, onSuccess, ...p
     }
   }
 
-  // Define common content for Dialog and Drawer
-  const content = (
-    <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(onSubmit)} id={formId} className='flex flex-col w-full gap-4'>
-        {/* Display selected reports */}
-        <div className='py-4'>
-          <div className='flex flex-wrap gap-1 mb-4'>
-            {Report.map((report) => (
-              <Badge key={report.id} variant='outline' className='bg-slate-100'>
-                Report #{report.id.substring(0, 8)} ({REPORT_TYPE_MAP[report.type]})
-              </Badge>
-            ))}
-          </div>
-
-          {/* Informational Block */}
-          <div className='rounded-md bg-blue-50 p-4 mb-4'>
-            <div className='flex'>
-              <div className='flex-shrink-0'>
-                <InfoIcon className='h-5 w-5 text-blue-400' aria-hidden='true' />
-              </div>
-              <div className='ml-3'>
-                <h3 className='text-sm font-medium text-blue-800'>What happens next?</h3>
-                <div className='mt-2 text-sm text-blue-700'>
-                  <p>Assigning this report means:</p>
-                  <ul className='list-disc pl-5 space-y-1 mt-2'>
-                    <li>The selected team member will be notified and responsible for handling it.</li>
-                    <li>The report status will change to {ReportStatusEnum.IN_PROCESSING}.</li>
-                    <li>You can track the progress in the report list.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Assignee Selection */}
-          <FormField
-            control={form.control}
-            name='assigneeId'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>Team Members</FormLabel>
-                <FormControl>
-                  <SelectUser
-                    {...field}
-                    includeSelf
-                    placeholder='Select a member to assign'
-                    query={{
-                      role: UserRoleEnum.OPERATOR,
-                      status: UserStatusEnum.ACTIVE
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-      </form>
-    </Form>
-  )
-
-  // Define common footer for Dialog and Drawer
-  const footer = (
-    <>
-      <DialogClose asChild>
-        <Button variant='outline' disabled={form.formState.isSubmitting}>
-          Cancel
-        </Button>
-      </DialogClose>
-      <Button
-        variant='default'
-        loading={form.formState.isSubmitting}
-        form={formId}
-        type='submit'
-        disabled={form.formState.isSubmitting}
-      >
-        Assign now
-      </Button>
-    </>
-  )
-
   if (isDesktop) {
     return (
       <Dialog {...props}>
         {showTrigger ? (
           <DialogTrigger asChild>
-            {/* Updated Button Text */}
-            <Button variant='default' size='sm' className='gap-1'>
-              <BsPeople className='size-4' aria-hidden='true' />
-              <span>Assign Report{Report.length > 1 ? 's' : ''}</span>
+            <Button variant='destructive' size='sm' className='text-white'>
+              Action
             </Button>
           </DialogTrigger>
         ) : null}
@@ -224,13 +134,50 @@ export function AssignReportDialog({ Report, showTrigger = true, onSuccess, ...p
               Assign report to your team member
             </DialogTitle>
             <DialogDescription>
-              Assign the selected report{Report.length > 1 ? 's' : ''} to a team member who will take action.
+              Try to assign the selected report to your team member who have to take action on it.
             </DialogDescription>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full gap-4' id={formId}>
+                <FormField
+                  control={form.control}
+                  name='assigneeId'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Team Members</FormLabel>
+                      <FormControl>
+                        <SelectUser
+                          {...field}
+                          includeSelf
+                          placeholder='Select a member to assign'
+                          query={{
+                            role: UserRoleEnum.CONSULTANT,
+                            status: UserStatusEnum.ACTIVE
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
           </DialogHeader>
-          {/* Use common content */}
-          {content}
-          {/* Use common footer */}
-          <DialogFooter className='gap-2 sm:justify-end'>{footer}</DialogFooter>
+          <DialogFooter className='gap-2 sm:space-x-0 flex w-full'>
+            <DialogClose asChild className='flex-1'>
+              <Button variant='outline' disabled={form.formState.isSubmitting}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              className='flex-1'
+              loading={form.formState.isSubmitting}
+              form={formId}
+              type='submit'
+              disabled={form.formState.isSubmitting}
+            >
+              Assign now
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     )
@@ -240,27 +187,31 @@ export function AssignReportDialog({ Report, showTrigger = true, onSuccess, ...p
     <Drawer {...props}>
       {showTrigger ? (
         <DrawerTrigger asChild>
-          {/* Updated Button Text and Icon */}
-          <Button variant='default' size='sm' className='gap-1'>
-            <BsPeople className='size-4' aria-hidden='true' />
-            <span>Assign Report{Report.length > 1 ? 's' : ''}</span>
+          <Button variant='destructive' size='sm' className='text-white'>
+            <XIcon className='size-4' aria-hidden='true' />
+            Ban {Report.length} Selected {Report.length > 1 ? 'Users' : 'User'}
           </Button>
         </DrawerTrigger>
       ) : null}
       <DrawerContent>
-        <DrawerHeader className='text-left'>
-          <DrawerTitle className='flex items-center gap-2'>
-            <BsPeople className='size-6' aria-hidden='true' />
-            Assign report to your team member
-          </DrawerTitle>
+        <DrawerHeader>
+          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
-            Assign the selected report{Report.length > 1 ? 's' : ''} to a team member who will take action.
+            You are about to <b className='uppercase'>ban</b>{' '}
+            {Report.map((ConsultantService) => (
+              <Badge className='mr-1'>{ConsultantService.id}</Badge>
+            ))}
+            . After banning, the Report will be disabled. Please check the Report before banning.
           </DrawerDescription>
         </DrawerHeader>
-        {/* Use common content with padding */}
-        <div className='px-4'>{content}</div>
-        {/* Use common footer, adjusted for Drawer */}
-        <DrawerFooter className='pt-2 gap-2'>{footer}</DrawerFooter>
+        <DrawerFooter className='gap-2 sm:space-x-0'>
+          <DrawerClose asChild>
+            <Button variant='outline'>Cancel</Button>
+          </DrawerClose>
+          <Button aria-label='Ban Selected rows' className='text-white' variant='destructive'>
+            Ban User{Report.length > 1 ? 's' : ''}
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )

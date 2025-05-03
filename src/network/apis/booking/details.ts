@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
-import { BookingFormAnswerSchema, ConsultationResultWithImageSchema } from '@/schemas/booking.schema'
+import { BookingFormAnswerSchema, ConsultationResultSchema } from '@/schemas/booking.schema'
 import { IBooking } from '@/types/booking'
-import { TServerFile } from '@/types/file'
 import { TServerResponse } from '@/types/request'
 import { IStatusTracking } from '@/types/statusTracking'
 import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
@@ -29,15 +28,14 @@ interface UpdateBookingStatusParams {
   id: string
   status: string
   bookingFormAnswer?: z.infer<typeof BookingFormAnswerSchema>
-  consultationResult?: z.infer<typeof ConsultationResultWithImageSchema>
-  mediaFiles?: Omit<TServerFile, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'type'>[]
+  consultationResult?: z.infer<typeof ConsultationResultSchema>
+  mediaFiles?: string[]
   resultNote?: string
-  meetUrl?: string
 }
 
 export const updateBookingStatusApi = toMutationFetcher<UpdateBookingStatusParams, TServerResponse<IBooking>>(
   'updateBookingStatus',
-  async ({ id, status, bookingFormAnswer, consultationResult, mediaFiles, resultNote, meetUrl }) => {
+  async ({ id, status, bookingFormAnswer, consultationResult, mediaFiles, resultNote }) => {
     return privateRequest(`/bookings/update-booking-status/${id}`, {
       method: 'PUT',
       data: {
@@ -45,8 +43,7 @@ export const updateBookingStatusApi = toMutationFetcher<UpdateBookingStatusParam
         bookingFormAnswer: bookingFormAnswer ? bookingFormAnswer : undefined,
         consultationResult: consultationResult ? consultationResult : undefined,
         mediaFiles: mediaFiles ? mediaFiles : undefined,
-        resultNote: resultNote ? resultNote : undefined,
-        meetUrl: meetUrl ? meetUrl : undefined
+        resultNote: resultNote ? resultNote : undefined
       }
     })
   }

@@ -107,19 +107,19 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
         )
       }
     },
-    // {
-    //   accessorKey: 'dob',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Date Of Birth' />,
-    //   cell: ({ cell }) => (
-    //     <div>
-    //       {' '}
-    //       {formatDate(cell.getValue() as Date, {
-    //         month: '2-digit'
-    //       })}
-    //     </div>
-    //   ),
-    //   size: 200
-    // },
+    {
+      accessorKey: 'dob',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Date Of Birth' />,
+      cell: ({ cell }) => (
+        <div>
+          {' '}
+          {formatDate(cell.getValue() as Date, {
+            month: '2-digit'
+          })}
+        </div>
+      ),
+      size: 200
+    },
     {
       accessorKey: 'role',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Member Role' />,

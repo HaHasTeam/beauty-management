@@ -27,10 +27,9 @@ interface ProductTableProps {
     DataTableQueryState<IResponseProduct>,
     React.Dispatch<React.SetStateAction<DataTableQueryState<IResponseProduct>>>
   ]
-  isDialog?: boolean
 }
 
-export function ProductTable({ data, pageCount, queryStates, isDialog }: ProductTableProps) {
+export function ProductTable({ data, pageCount, queryStates }: ProductTableProps) {
   const { t } = useTranslation()
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<IResponseProduct> | null>(null)
   const columns = React.useMemo(() => getColumns({ setRowAction }), [])
@@ -62,71 +61,64 @@ export function ProductTable({ data, pageCount, queryStates, isDialog }: Product
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
 
-  const filterFields: DataTableFilterField<IResponseProduct>[] = React.useMemo(() => {
-    if (isDialog) {
-      return []
-    }
-    const fields: DataTableFilterField<IResponseProduct>[] = [
-      {
-        id: 'search',
-        label: 'Name',
-        placeholder: 'Search product...',
-        isCustomFilter: true
-      },
-      {
-        id: 'statuses',
-        label: 'Status',
-        options: Object.keys(ProductStatusEnum).map((status) => {
-          const value = ProductStatusEnum[status as keyof typeof ProductStatusEnum]
-          return {
-            label: t(`status.${value}`),
-            value: value as string,
-            icon: '●'
-          }
-        })
-      },
-      {
-        id: 'minPrice',
-        label: 'Min Price',
-        placeholder: 'Min price',
-        isCustomFilter: true,
-        isNumber: true
-      },
-      {
-        id: 'maxPrice',
-        label: 'Max Price',
-        placeholder: 'Max price',
-        isCustomFilter: true,
-        isNumber: true
-      },
-      {
-        id: 'categoryId',
-        label: 'Category',
-        placeholder: 'Select category',
-        options: categories?.map((category) => ({
-          label: category.name,
-          value: category.id
-        })),
-        isCustomFilter: true,
-        isSingleChoice: true
-      }
-    ]
-    if (isAdmin && brandData?.data) {
-      fields.push({
-        id: 'brandId',
-        label: 'Brand',
-        options: brands?.map((brand) => ({
-          label: brand.name,
-          value: brand.id
-        })),
-        isCustomFilter: true,
-        isSingleChoice: true
+  const filterFields: DataTableFilterField<IResponseProduct>[] = [
+    {
+      id: 'search',
+      label: 'Name',
+      placeholder: 'Search product...',
+      isCustomFilter: true
+    },
+    {
+      id: 'statuses',
+      label: 'Status',
+      options: Object.keys(ProductStatusEnum).map((status) => {
+        const value = ProductStatusEnum[status as keyof typeof ProductStatusEnum]
+        return {
+          label: t(`status.${value}`),
+          value: value as string,
+          icon: '●'
+        }
       })
+    },
+    {
+      id: 'minPrice',
+      label: 'Min Price',
+      placeholder: 'Min price',
+      isCustomFilter: true,
+      isNumber: true
+    },
+    {
+      id: 'maxPrice',
+      label: 'Max Price',
+      placeholder: 'Max price',
+      isCustomFilter: true,
+      isNumber: true
+    },
+    {
+      id: 'categoryId',
+      label: 'Category',
+      placeholder: 'Select category',
+      options: categories?.map((category) => ({
+        label: category.name,
+        value: category.id
+      })),
+      isCustomFilter: true,
+      isSingleChoice: true
     }
-    return fields
-  }, [isDialog, brandData?.data, categories, isAdmin, t, brands])
+  ]
 
   // Add brand filter for admin users
+  if (isAdmin && brandData?.data) {
+    filterFields.push({
+      id: 'brandId',
+      label: 'Brand',
+      options: brands?.map((brand) => ({
+        label: brand.name,
+        value: brand.id
+      })),
+      isCustomFilter: true
+    })
+  }
 
   /**
    * Advanced filter fields for the data table.

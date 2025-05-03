@@ -367,11 +367,10 @@ FileInput.displayName = 'FileInput'
 
 export const ProductFileUploaderItem = forwardRef<
   HTMLDivElement,
-  { index: number; readOnly?: boolean } & React.HTMLAttributes<HTMLDivElement>
->(({ className, index, children, readOnly = false, ...props }, ref) => {
+  { index: number } & React.HTMLAttributes<HTMLDivElement>
+>(({ className, index, children, ...props }, ref) => {
   const { removeFileFromSet, activeIndex, direction } = useFileUpload()
   const isSelected = index === activeIndex
-
   return (
     <div
       ref={ref}
@@ -381,19 +380,17 @@ export const ProductFileUploaderItem = forwardRef<
       <div className='absolute z-0 leading-none tracking-tight flex justify-center items-center gap-1.5 h-full w-full'>
         {children}
       </div>
-      {!readOnly && (
-        <button
-          type='button'
-          className={cn(
-            'absolute z-20 bg-black/40 hover:bg-black/30 p-1 rounded-sm',
-            direction === 'rtl' ? 'top-2 left-2' : 'top-2 right-2'
-          )}
-          onClick={() => removeFileFromSet(index)}
-        >
-          <span className='sr-only'>remove item {index}</span>
-          <RemoveIcon className='w-4 h-4 text-white hover:text-white/70 duration-200 ease-in-out' />
-        </button>
-      )}
+      <button
+        type='button'
+        className={cn(
+          'absolute z-20 bg-black/40 hover:bg-black/30 p-1 rounded-sm',
+          direction === 'rtl' ? 'top-2 left-2' : 'top-2 right-2'
+        )}
+        onClick={() => removeFileFromSet(index)}
+      >
+        <span className='sr-only'>remove item {index}</span>
+        <RemoveIcon className='w-4 h-4 text-white hover:text-white/70 duration-200 ease-in-out' />
+      </button>
     </div>
   )
 })

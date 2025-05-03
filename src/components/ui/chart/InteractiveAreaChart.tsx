@@ -25,7 +25,6 @@ type InteractiveAreaChartProps = {
   config: ChartConfig
   className?: string
   bottomLabel?: React.ReactNode
-  mode?: 'full' | 'mini'
 }
 
 export function InteractiveAreaChart({
@@ -34,12 +33,15 @@ export function InteractiveAreaChart({
   description,
   config,
   className,
-  bottomLabel,
-  mode = 'full'
+  bottomLabel
 }: InteractiveAreaChartProps) {
   const [activeDataKey, setActiveDataKey] = React.useState<string | null>(null)
-  const configKeys = React.useMemo(() => Object.keys(config), [config])
 
+  // Debug - log props
+  React.useEffect(() => {
+    console.log('Chart config:', config)
+    console.log('Data sample:', data.slice(0, 2))
+  }, [config, data])
 
   // Custom legend that shows colored boxes
   const renderColorfulLegendText = (value: string, entry: any) => {
@@ -76,14 +78,12 @@ export function InteractiveAreaChart({
           <p className='font-medium mb-2 text-foreground'>{formattedDate}</p>
           {payload.map((entry: any, index: number) => {
             const isActive = activeDataKey === entry.dataKey || activeDataKey === null
-            // Only show tooltip data for active or all series
-            if (!isActive && activeDataKey !== null) return null
+            if (!isActive) return null
 
             const dataKey = entry.dataKey
-            // Check if config exists for safety
-            if (!config[dataKey]) return null
-
             const colorVar = `--${config[dataKey].color}`
+
+            // Format based on the data key - all are currency values
             const formattedValue = formatCurrency(entry.value, 'vi-VN')
 
             return (
@@ -130,17 +130,39 @@ export function InteractiveAreaChart({
         <div className='aspect-auto h-[300px] w-full'>
           <ResponsiveContainer width='100%' height='100%'>
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 30 }}>
-              {/* Dynamic Gradient Definitions */}
               <defs>
-                {configKeys.map((key) => {
-                  const colorName = config[key]?.color || 'chart-1' // Fallback color
-                  return (
-                    <linearGradient key={`fill-${key}`} id={`fill-${key}`} x1='0' y1='0' x2='0' y2='1'>
-                      <stop offset='5%' stopColor={`hsl(var(--${colorName}))`} stopOpacity={0.8} />
-                      <stop offset='95%' stopColor={`hsl(var(--${colorName}))`} stopOpacity={0.1} />
-                    </linearGradient>
-                  )
-                })}
+                <linearGradient id='fillrevenue' x1='0' y1='0' x2='0' y2='1'>
+                  <stop offset='5%' stopColor={`hsl(var(--${config.revenue?.color || 'chart-1'}))`} stopOpacity={0.8} />
+                  <stop
+                    offset='95%'
+                    stopColor={`hsl(var(--${config.revenue?.color || 'chart-1'}))`}
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+                <linearGradient id='fillplatformDiscount' x1='0' y1='0' x2='0' y2='1'>
+                  <stop
+                    offset='5%'
+                    stopColor={`hsl(var(--${config.platformDiscount?.color || 'chart-green'}))`}
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset='95%'
+                    stopColor={`hsl(var(--${config.platformDiscount?.color || 'chart-green'}))`}
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+                <linearGradient id='fillshopDiscount' x1='0' y1='0' x2='0' y2='1'>
+                  <stop
+                    offset='5%'
+                    stopColor={`hsl(var(--${config.shopDiscount?.color || 'chart-yellow'}))`}
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset='95%'
+                    stopColor={`hsl(var(--${config.shopDiscount?.color || 'chart-yellow'}))`}
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
               </defs>
               <CartesianGrid vertical={false} stroke='hsl(var(--border))' strokeDasharray='3 3' strokeOpacity={0.4} />
               <XAxis
@@ -175,47 +197,63 @@ export function InteractiveAreaChart({
                   strokeOpacity: 0.5
                 }}
               />
-              {/* Dynamic Area Rendering */}
-              {configKeys.map((key) => {
-                const colorName = config[key]?.color || 'chart-1' // Fallback color
-                return (
-                  <Area
-                    key={key}
-                    dataKey={key}
-                    type='monotone'
-                    fill={`url(#fill-${key})`}
-                    stroke={`hsl(var(--${colorName}))`}
-                    strokeWidth={activeDataKey === key || activeDataKey === null ? 3 : 1.5}
-                    dot={false}
-                    activeDot={{
-                      r: 6,
-                      strokeWidth: 2,
-                      stroke: 'hsl(var(--background))',
-                      fill: `hsl(var(--${colorName}))`
-                    }}
-                    hide={activeDataKey !== null && activeDataKey !== key} // Hide inactive series
-                  />
-                )
-              })}
-           
-           {mode === 'full' && (
-            <Legend
+              <Area
+                dataKey='platformDiscount'
+                type='monotone'
+                fill='url(#fillplatformDiscount)'
+                stroke={`hsl(var(--${config.platformDiscount?.color || 'chart-green'}))`}
+                strokeWidth={activeDataKey === 'platformDiscount' || activeDataKey === null ? 3 : 1.5}
+                dot={false}
+                activeDot={{
+                  r: 6,
+                  strokeWidth: 2,
+                  stroke: 'hsl(var(--background))',
+                  fill: `hsl(var(--${config.platformDiscount?.color || 'chart-green'}))`
+                }}
+              />
+              <Area
+                dataKey='shopDiscount'
+                type='monotone'
+                fill='url(#fillshopDiscount)'
+                stroke={`hsl(var(--${config.shopDiscount?.color || 'chart-yellow'}))`}
+                strokeWidth={activeDataKey === 'shopDiscount' || activeDataKey === null ? 3 : 1.5}
+                dot={false}
+                activeDot={{
+                  r: 6,
+                  strokeWidth: 2,
+                  stroke: 'hsl(var(--background))',
+                  fill: `hsl(var(--${config.shopDiscount?.color || 'chart-yellow'}))`
+                }}
+              />
+              <Area
+                dataKey='revenue'
+                type='monotone'
+                fill='url(#fillrevenue)'
+                stroke={`hsl(var(--${config.revenue?.color || 'chart-1'}))`}
+                strokeWidth={activeDataKey === 'revenue' || activeDataKey === null ? 3 : 1.5}
+                dot={false}
+                activeDot={{
+                  r: 6,
+                  strokeWidth: 2,
+                  stroke: 'hsl(var(--background))',
+                  fill: `hsl(var(--${config.revenue?.color || 'chart-1'}))`
+                }}
+              />
+              <Legend
                 verticalAlign='bottom'
                 height={36}
                 iconType='circle'
                 iconSize={8}
-                                wrapperStyle={{
+                wrapperStyle={{
                   paddingTop: '10px',
                   marginLeft: '-10px'
                 }}
                 formatter={renderColorfulLegendText}
-                // Update onClick to use the passed entry directly
                 onClick={(entry) => {
                   const dataKey = entry.dataKey as string
                   setActiveDataKey((prevState) => (prevState === dataKey ? null : dataKey))
                 }}
               />
-            )}
             </AreaChart>
           </ResponsiveContainer>
         </div>

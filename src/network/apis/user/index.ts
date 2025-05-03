@@ -6,10 +6,8 @@ import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest, publicRequest } from '@/utils/request'
 
 import {
-  TConsultantRecommendationData,
   TCreateUserRequestParams,
   TGetAccountFilterRequestParams,
-  TGetConsultantRecommendationParams,
   TInviteCoWorkerRequestParams,
   TInviteMultipleCoWorkersRequestParams,
   TLoginUserRequestParams,
@@ -84,7 +82,7 @@ export const inviteMultipleCoWorkersApi = toMutationFetcher<
   return Promise.all(requests)
 })
 
-export const getAllUserApi = toQueryFetcher<void, TServerResponse<TUser[]>>('getAllUserApi', async () => {
+export const getAllUserApi = toQueryFetcher<void, TServerResponse<TUserResponse[]>>('getAllUserApi', async () => {
   return privateRequest('/accounts')
 })
 
@@ -161,19 +159,3 @@ export const getAccountDetailsByIdApi = toQueryFetcher<string, TServerResponse<T
     }
   }
 )
-
-/**
- * Get consultant recommendation percentage and related data
- */
-export const getConsultantRecommendationPercentageApi = toQueryFetcher<
-  TGetConsultantRecommendationParams,
-  TServerResponse<TConsultantRecommendationData>
->('getConsultantRecommendationPercentageApi', async (params) => {
-  if (!params || !params.consultantId) {
-    throw new Error('Consultant ID is required for getConsultantRecommendationPercentageApi')
-  }
-  return privateRequest(`/accounts/get-consultant-recommendation-percentage`, {
-    method: 'POST',
-    data: params
-  })
-})

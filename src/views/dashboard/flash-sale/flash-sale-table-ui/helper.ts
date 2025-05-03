@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, Crown, X } from 'lucide-react'
+import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, Crown } from 'lucide-react'
 
 import { FlashSaleStatusEnum } from '@/types/flash-sale'
 
@@ -21,12 +21,6 @@ export function getStatusIcon(status: FlashSaleStatusEnum) {
       iconColor: 'text-gray-500',
       textColor: 'text-gray-500',
       bgColor: 'bg-gray-100'
-    },
-    [FlashSaleStatusEnum.CANCELLED]: {
-      icon: X,
-      iconColor: 'text-red-500',
-      textColor: 'text-red-500',
-      bgColor: 'bg-red-100'
     },
     [FlashSaleStatusEnum.SOLD_OUT]: {
       icon: Crown,

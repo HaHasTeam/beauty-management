@@ -39,8 +39,11 @@ export type TFilterWithdrawalRequestsParams = BaseParams<{
   /** Filter by one or more status values */
   statuses?: WithdrawalStatusEnum[]
 
-  /** Filter by related account ID */
-  relatedAccountId?: string
+  /** Filter by account ID (who made the request) */
+  accountId?: string
+
+  /** Filter by processed by user ID */
+  processedById?: string
 
   /** Filter by requests after this date (ISO string) */
   startDate?: string

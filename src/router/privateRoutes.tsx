@@ -9,7 +9,6 @@ import BlogManagement from '@/views/dashboard/blog-management'
 import BlogDetails from '@/views/dashboard/blog-management/BlogDetails'
 import CreateBlog from '@/views/dashboard/blog-management/CreateBlog'
 import UpdateBlog from '@/views/dashboard/blog-management/UpdateBlog'
-import BookingManagement from '@/views/dashboard/booking-management'
 import Brands from '@/views/dashboard/brand-management'
 import BookingDetail from '@/views/dashboard/brand-management/booking-detail'
 import ViewBrandForm from '@/views/dashboard/brand-management/ViewBrandForm'
@@ -23,7 +22,6 @@ import CreateProduct from '@/views/dashboard/create-product'
 import FlashSale from '@/views/dashboard/flash-sale'
 import FlashSaleDetailsById from '@/views/dashboard/flash-sale/[id]'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
-import Forbidden403 from '@/views/dashboard/forbidden'
 import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
@@ -55,6 +53,8 @@ import VoucherDetailPage from '@/views/dashboard/voucher-management/VoucherDetai
 import WorkingTime from '@/views/dashboard/working-time'
 
 import AuthGuard from './guard/AuthGuard'
+// import Brands from '@/views/dashboard/brand-management'
+// import Brands from '@/views/dashboard/brand-management'\
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -72,10 +72,6 @@ export const privateRoutes: RouteObject[] = [
       {
         path: routesConfig[Routes.DASHBOARD_HOME].path.replace('/dashboard/', ''),
         element: <DashboardHome />
-      },
-      {
-        path: routesConfig[Routes.BOOKINGS_AND_REQUESTS].path.replace('/dashboard/', ''),
-        element: <BookingManagement />
       },
       {
         path: routesConfig[Routes.REQUESTS_QUEUE].path.replace('/dashboard/', ''),
@@ -328,10 +324,6 @@ export const privateRoutes: RouteObject[] = [
       {
         path: '*',
         element: <RedirectToMainDashboard />
-      },
-      {
-        path: 'forbidden',
-        element: <Forbidden403 />
       }
     ]
   }

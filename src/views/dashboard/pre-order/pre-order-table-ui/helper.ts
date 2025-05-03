@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, CircleX, X } from 'lucide-react'
+import { CheckCircle2, CircleDashed, CircleIcon, CircleMinus, CircleX } from 'lucide-react'
 
 import { PreOrderStatusEnum } from '@/types/pre-order'
 
@@ -9,12 +9,6 @@ export function getStatusIcon(status: PreOrderStatusEnum) {
       iconColor: 'text-green-500',
       textColor: 'text-green-500',
       bgColor: 'bg-green-100'
-    },
-    [PreOrderStatusEnum.CANCELLED]: {
-      icon: X,
-      iconColor: 'text-red-500',
-      textColor: 'text-red-500',
-      bgColor: 'bg-red-100'
     },
     [PreOrderStatusEnum.WAITING]: {
       icon: CircleDashed,

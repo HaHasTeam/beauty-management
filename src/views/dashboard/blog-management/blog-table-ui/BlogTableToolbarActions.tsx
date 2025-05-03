@@ -10,6 +10,8 @@ import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
 import { IBlogDetails } from '@/types/blog'
 
+import Modal from './Modal'
+
 interface BlogTableToolbarActionsProps {
   table: Table<IBlogDetails>
 }
@@ -46,6 +48,12 @@ export function BlogTableToolbarActions({ table }: BlogTableToolbarActionsProps)
           <DialogDescription>
             <div className='text-gray-600 text-sm'>Please fill in the form below to report a new issue.</div>
           </DialogDescription>
+          <Modal
+            Report={[]}
+            setOpen={(open: boolean) => {
+              setIsOpened(open)
+            }}
+          />
         </DialogContent>
       </Dialog>
 

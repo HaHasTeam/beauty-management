@@ -58,13 +58,8 @@ export enum Routes {
   UPDATE_BLOG = 'update-blog',
   BLOG_DETAILS = 'blog-details',
   MY_BRAND_DASHBOARD = 'my-brand',
-  LIVESTREAM = 'liveStream',
   TRANSACTION_MANAGEMENT = 'transaction-management',
-  BOOKINGS_AND_REQUESTS = 'bookings-and-requests',
-  BOOKING_DETAILS = 'booking-details',
-  ORIGINAL_ORDER_DETAILS = 'original-order-details',
-  FORBIDDEN = 'forbidden',
-  FORBIDDEN_PUBLIC = 'forbidden-public'
+  LIVESTREAM = 'liveStream'
 }
 
 export const routesConfig: TRoutes = {
@@ -169,8 +164,8 @@ export const routesConfig: TRoutes = {
     getPath: (id) => `/dashboard/voucher/update/${id}`
   },
   [Routes.PRE_ORDER]: {
-    name: 'PreOrder Products',
-    title: 'PreOrder Products',
+    name: 'Pre-order Product',
+    title: 'Pre-order Product',
     description: 'Pre Order',
     path: '/dashboard/pre-order',
     getPath: () => '/dashboard/pre-order'
@@ -237,6 +232,13 @@ export const routesConfig: TRoutes = {
     description: 'View and manage category details',
     path: '/dashboard/category/[id]',
     getPath: (params) => `/dashboard/category/${params.id}`
+  },
+  [Routes.BOOKING_LIST]: {
+    name: 'Bookings',
+    title: 'Bookings',
+    description: 'Manage bookings',
+    path: '/dashboard/bookings',
+    getPath: () => '/dashboard/bookings'
   },
   [Routes.BOOKING_DETAIL]: {
     name: 'Booking Details',
@@ -454,47 +456,5 @@ export const routesConfig: TRoutes = {
     description: 'Reports',
     path: '/dashboard/reports',
     getPath: () => '/dashboard/reports'
-  },
-  [Routes.BOOKINGS_AND_REQUESTS]: {
-    name: 'Bookings & Requests',
-    title: 'Bookings & Requests',
-    description: 'Manage bookings and requests',
-    path: '/dashboard/bookings',
-    getPath: () => '/dashboard/bookings'
-  },
-  [Routes.BOOKING_DETAILS]: {
-    name: 'Booking Details',
-    title: 'Booking Details',
-    description: 'Booking Details',
-    path: '/dashboard/bookings/:id',
-    getPath: (params) => `/dashboard/bookings/${params.id}`
-  },
-  [Routes.ORIGINAL_ORDER_DETAILS]: {
-    name: 'Original Order Details',
-    title: 'Original Order Details',
-    description: 'Original Order Details',
-    path: '/dashboard/orders/origin/:id',
-    getPath: (params) => `/dashboard/orders/origin/${params.id}`
-  },
-  [Routes.BOOKING_LIST]: {
-    name: 'Booking List',
-    title: 'Booking List',
-    description: 'Booking List',
-    path: '/dashboard/bookings',
-    getPath: () => '/dashboard/bookings'
-  },
-  [Routes.FORBIDDEN]: {
-    name: 'Access Denied',
-    title: 'Access Denied',
-    description: 'You do not have permission to access this page',
-    path: '/dashboard/forbidden',
-    getPath: () => '/dashboard/forbidden'
-  },
-  [Routes.FORBIDDEN_PUBLIC]: {
-    name: 'Access Denied',
-    title: 'Access Denied',
-    description: 'You do not have permission to access this resource',
-    path: '/forbidden',
-    getPath: () => '/forbidden'
   }
 }

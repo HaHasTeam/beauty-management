@@ -11,11 +11,7 @@ import { TWithdrawalRequest } from '@/types/withdrawal-request'
 
 import { WithdrawalRequestTable } from './WithdrawalRequestTable'
 
-type Props = {
-  specifiedAccountId?: string
-}
-
-export default function WithdrawalRequestsTableUI({ specifiedAccountId }: Props) {
+export default function WithdrawalRequestsTableUI() {
   const queryStates = useState<DataTableQueryState<TWithdrawalRequest>>({} as DataTableQueryState<TWithdrawalRequest>)
 
   const { data: withdrawalRequestsData, isLoading: isWithdrawalRequestsLoading } = useQuery({
@@ -28,8 +24,7 @@ export default function WithdrawalRequestsTableUI({ specifiedAccountId }: Props)
         order: queryStates[0].sort?.[0]?.desc ? 'DESC' : 'ASC',
         statuses: (queryStates[0].fieldFilters?.status ?? []) as string[],
         startDate: queryStates[0].fieldFilters?.startDate as string,
-        endDate: queryStates[0].fieldFilters?.endDate as string,
-        relatedAccountId: specifiedAccountId ?? (queryStates[0].fieldFilters?.relatedAccountId as string)
+        endDate: queryStates[0].fieldFilters?.endDate as string
       } as TFilterWithdrawalRequestsParams
     ],
     queryFn: filterWithdrawalRequests.fn,
@@ -51,7 +46,6 @@ export default function WithdrawalRequestsTableUI({ specifiedAccountId }: Props)
               />
             ) : (
               <WithdrawalRequestTable
-                specifiedAccountId={specifiedAccountId}
                 data={withdrawalRequestsData?.data?.items ?? []}
                 pageCount={
                   withdrawalRequestsData?.data?.total

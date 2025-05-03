@@ -82,7 +82,7 @@ export function GroupProductStrategyCell({ groupProduct }: GroupProductStrategyC
                         <span className='font-semibold bg-primary/10 px-2 py-1 rounded-md text-primary shadow-sm'>
                           {criteria.voucher.discountType === DiscountTypeEnum.AMOUNT
                             ? formatCurrency(criteria.voucher.discountValue)
-                            : formatNumber(criteria.voucher.discountValue * 100, '%')}{' '}
+                            : formatNumber(criteria.voucher.discountValue, '%')}{' '}
                           off
                         </span>
                         <div className='flex items-center gap-1 text-muted-foreground'>

@@ -133,7 +133,7 @@ export default function ProductListDialog({
         onOpenChange(isOpen)
       }}
     >
-      <DialogContent className='sm:max-w-[80%] max-h-[80vh] overflow-y-auto'>
+      <DialogContent className='sm:max-w-[800px] max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Chọn sản phẩm</DialogTitle>
           <DialogDescription>

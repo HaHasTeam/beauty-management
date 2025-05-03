@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router-dom'
 
 import { Routes, routesConfig } from '@/configs/routes'
@@ -7,7 +6,9 @@ import { Routes, routesConfig } from '@/configs/routes'
 import EmailSignIn from './auth-ui/EmailSignIn'
 import EmailVerification from './auth-ui/EmailVerification'
 import ForgotPassword from './auth-ui/ForgotPassword'
+import OauthSignIn from './auth-ui/OauthSignIn'
 import PasswordSignIn from './auth-ui/PasswordSignIn'
+import Separator from './auth-ui/Separator'
 import SignUp from './auth-ui/Signup'
 import UpdatePassword from './auth-ui/UpdatePassword'
 
@@ -29,7 +30,6 @@ const AuthPaths = [
 ]
 
 export default function AuthUI() {
-  const { t } = useTranslation()
   const viewProp = useLocation().pathname.split('/').pop()
 
   const props: Props = useMemo(() => {
@@ -56,30 +56,32 @@ export default function AuthUI() {
     return <EmailVerification />
   }
 
-  const getTitleKey = () => {
-    if (props.viewProp === 'signup') return 'signup'
-    if (props.viewProp === 'forgot-password') return 'forgotPassword'
-    if (props.viewProp === 'update-password') return 'updatePassword'
-    if (props.viewProp === 'email-signin') return 'emailSignIn'
-    return 'signIn'
-  }
-
-  const getDescriptionKey = () => {
-    if (props.viewProp === 'signup') return 'signup'
-    if (props.viewProp === 'forgot-password') return 'forgotPassword'
-    if (props.viewProp === 'update-password') return 'updatePassword'
-    if (props.viewProp === 'email-signin') return 'emailSignIn'
-    return 'signIn'
-  }
-
   return (
-    <div className='my-auto mb-auto flex flex-col md:max-w-full lg:max-w-[420px]'>
-      <p className='text-[32px] font-bold text-zinc-950 dark:text-white'>{t(`authUI.titles.${getTitleKey()}`)}</p>
+    <div className='my-auto mb-auto  flex flex-col md:max-w-full  lg:max-w-[420px]'>
+      <p className='text-[32px] font-bold text-zinc-950 dark:text-white'>
+        {props.viewProp === 'signup'
+          ? ''
+          : props.viewProp === 'forgot-password'
+            ? 'Forgot Password'
+            : props.viewProp === 'update-password'
+              ? 'Update Password'
+              : props.viewProp === 'email-signin'
+                ? 'Email Sign In'
+                : 'Sign In'}
+      </p>
       <p className='mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400'>
-        {t(`authUI.descriptions.${getDescriptionKey()}`)}
+        {props.viewProp === 'signup'
+          ? ''
+          : props.viewProp === 'forgot-password'
+            ? 'Enter your email to get a password reset link!'
+            : props.viewProp === 'update-password'
+              ? 'Choose a new password for your account!'
+              : props.viewProp === 'email-signin'
+                ? 'Enter your email to get a magic link!'
+                : 'Enter your email and password to sign in!'}
       </p>
 
-      {props.viewProp === 'password-signin' && <PasswordSignIn />}
+      {props.viewProp === 'password-signin' && <PasswordSignIn allowEmail={props.allowEmail} />}
       {props.viewProp === 'email-signin' && (
         <EmailSignIn allowPassword={props.allowPassword} disableButton={props.disableButton} />
       )}
@@ -88,6 +90,12 @@ export default function AuthUI() {
       )}
       {props.viewProp === 'update-password' && <UpdatePassword />}
       {props.viewProp === 'signup' && <SignUp />}
+      {props.viewProp !== 'update-password' && props.viewProp !== 'signup' && props.allowOauth && (
+        <>
+          <OauthSignIn />
+          <Separator />
+        </>
+      )}
     </div>
   )
 }

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Newspaper } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +11,6 @@ import Button from '@/components/button'
 import Empty from '@/components/empty/Empty'
 import FormLabel from '@/components/form-label'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -143,124 +141,114 @@ const UpdateBlog = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-1'>
-              <Newspaper />
-              Blog Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-4 w-full'>
-              {/* Title Field */}
-              <FormField
-                control={form.control}
-                name='title'
-                render={({ field }) => (
-                  <FormItem className='w-full'>
-                    <div className='flex w-full gap-2'>
-                      <div className='w-[15%]'>
-                        <FormLabel required>{t('updateBlog.title')}</FormLabel>
-                      </div>
-                      <div className='w-full space-y-1'>
-                        <FormControl>
-                          <Input placeholder={t('updateBlog.titlePlaceholder')} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              {/* Tag Field */}
-              <FormField
-                control={form.control}
-                name='tag'
-                render={({ field }) => (
-                  <FormItem className='w-full'>
-                    <div className='flex w-full gap-2'>
-                      <div className='w-[15%]'>
-                        <FormLabel required>{t('createBlog.tag')}</FormLabel>
-                      </div>
-                      <div className='w-full space-y-1'>
-                        <FormControl>
-                          <Input placeholder={t('createBlog.tagPlaceholder')} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
+        <div className='space-y-4 w-full'>
+          {/* Title Field */}
+          <FormField
+            control={form.control}
+            name='title'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='flex w-full gap-2'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>{t('updateBlog.title')}</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <Input placeholder={t('updateBlog.titlePlaceholder')} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
+          {/* Tag Field */}
+          <FormField
+            control={form.control}
+            name='tag'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='flex w-full gap-2'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>{t('createBlog.tag')}</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <Input placeholder={t('createBlog.tagPlaceholder')} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
 
-              {/* Content Field */}
-              <FormField
-                control={form.control}
-                name='content'
-                render={({ field }) => (
-                  <FormItem className='w-full'>
-                    <div className='flex w-full gap-2'>
-                      <div className='w-[15%]'>
-                        <FormLabel required>{t('updateBlog.content')}</FormLabel>
-                      </div>
-                      <div className='w-full space-y-1'>
-                        <FormControl>
-                          <ReactQuill
-                            modules={modules}
-                            placeholder={t('updateBlog.contentPlaceholder')}
-                            className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
-                            theme='snow'
-                            {...field}
-                            onChange={(content) => {
-                              field.onChange(content.trim())
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
+          {/* Content Field */}
+          <FormField
+            control={form.control}
+            name='content'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='flex w-full gap-2'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>{t('updateBlog.content')}</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <ReactQuill
+                        modules={modules}
+                        placeholder={t('updateBlog.contentPlaceholder')}
+                        className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
+                        theme='snow'
+                        {...field}
+                        onChange={(content) => {
+                          field.onChange(content.trim())
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
 
-              {/* Status Field */}
-              <FormField
-                control={form.control}
-                name='status'
-                render={({ field }) => (
-                  <FormItem className='w-full'>
-                    <div className='flex w-full gap-2'>
-                      <div className='w-[15%]'>
-                        <FormLabel required>{t('updateBlog.status')}</FormLabel>
-                      </div>
-                      <div className='w-full space-y-1'>
-                        <FormControl>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger>
-                              <SelectValue placeholder={t('updateBlog.statusPlaceholder')} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={BlogEnum.PUBLISHED} key={BlogEnum.PUBLISHED}>
-                                {t('updateBlog.published')}
-                              </SelectItem>
-                              <SelectItem value={BlogEnum.UN_PUBLISHED} key={BlogEnum.UN_PUBLISHED}>
-                                {t('updateBlog.unPublished')}
-                              </SelectItem>
-                              <SelectItem value={BlogEnum.INACTIVE} key={BlogEnum.INACTIVE}>
-                                {t('updateBlog.inactive')}
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </CardContent>
-        </Card>
+          {/* Status Field */}
+          <FormField
+            control={form.control}
+            name='status'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <div className='flex w-full gap-2'>
+                  <div className='w-[15%]'>
+                    <FormLabel required>{t('updateBlog.status')}</FormLabel>
+                  </div>
+                  <div className='w-full space-y-1'>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('updateBlog.statusPlaceholder')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={BlogEnum.PUBLISHED} key={BlogEnum.PUBLISHED}>
+                            {t('updateBlog.published')}
+                          </SelectItem>
+                          <SelectItem value={BlogEnum.UN_PUBLISHED} key={BlogEnum.UN_PUBLISHED}>
+                            {t('updateBlog.unPublished')}
+                          </SelectItem>
+                          <SelectItem value={BlogEnum.INACTIVE} key={BlogEnum.INACTIVE}>
+                            {t('updateBlog.inactive')}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
         {/* Submit Button */}
         <div className='flex justify-end gap-4'>
           <Button type='button' variant='outline' onClick={handleReset}>

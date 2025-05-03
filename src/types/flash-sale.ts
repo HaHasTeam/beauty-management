@@ -19,6 +19,5 @@ export enum FlashSaleStatusEnum {
   SOLD_OUT = 'SOLD_OUT',
   WAITING = 'WAITING',
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  CANCELLED = 'CANCELLED'
+  INACTIVE = 'INACTIVE'
 }

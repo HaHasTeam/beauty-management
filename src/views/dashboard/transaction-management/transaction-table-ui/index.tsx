@@ -12,11 +12,7 @@ import { TransactionTypeEnum } from '@/types/transaction'
 import { CustomFilterFields } from './helper'
 import { TransactionTable } from './TransactionTable'
 
-type Props = {
-  specifiedAccountId?: string
-}
-
-export default function IndexPage({ specifiedAccountId }: Props) {
+export default function IndexPage() {
   const queryStates = useState<DataTableQueryState<CustomFilterFields>>({} as DataTableQueryState<CustomFilterFields>)
 
   const { data: transactionListData, isLoading: isTransactionListLoading } = useQuery({
@@ -28,8 +24,7 @@ export default function IndexPage({ specifiedAccountId }: Props) {
         sortBy: queryStates[0].sort?.[0]?.id,
         startDate: (queryStates[0].fieldFilters?.startDate as string) ?? '',
         endDate: (queryStates[0].fieldFilters?.endDate as string) ?? '',
-        types: (queryStates[0].fieldFilters?.type as TransactionTypeEnum[]) ?? [],
-        accountId: specifiedAccountId ?? queryStates[0].fieldFilters?.accountId
+        types: (queryStates[0].fieldFilters?.type as TransactionTypeEnum[]) ?? []
       } as TFilterTransactionsParams
     ],
     queryFn: filterTransactions.fn
@@ -57,7 +52,6 @@ export default function IndexPage({ specifiedAccountId }: Props) {
                     : 0
                 }
                 queryStates={queryStates}
-                specifiedAccountId={specifiedAccountId}
               />
             )}
           </Shell>

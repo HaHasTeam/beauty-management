@@ -31,20 +31,14 @@ export const passwordRegex = {
   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
   message: () => i18next.t('validation.required')
 }
-export const passwordEasyRegex = () => {
-  return {
-    pattern: /^(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-    message: () => i18next.t('validation.required')
-  }
-}
+
 export const phoneRegex = {
   pattern: (value: string) => {
     return isValidPhoneNumber(value)
   },
-  message: () => i18next.t('validation.phoneValid')
+  message: () => i18next.t('validation.required')
 }
 
-export const passwordRegexEasy = passwordEasyRegex()
 export const defaultRequiredRegex = requiredRegex()
 export const longRequiredRegex = requiredRegex(1, 255)
 export const shortRequiredRegex = requiredRegex(1, 50)

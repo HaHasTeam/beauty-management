@@ -1,6 +1,3 @@
-import { TBrand } from '@/types/brand'
-import { RoleEnum } from '@/types/enum'
-import { TProduct } from '@/types/product'
 import { BaseParams } from '@/types/request'
 import { TRoleResponse } from '@/types/role'
 import { TUser, UserStatusEnum } from '@/types/user'
@@ -50,62 +47,4 @@ export type TGetAccountFilterRequestParams = BaseParams<TUser> & {
   role?: string
   statuses?: string
   search?: string
-}
-
-export type TGetConsultantRecommendationParams = {
-  consultantId: string
-}
-
-export type TConsultantBrief = {
-  name: string | null
-  email: string | null
-  introduceVideo: string | null
-  role: RoleEnum | string
-  brands: Partial<TBrand>[]
-  addresses: unknown[]
-  files: unknown[]
-}
-
-export type TBrandRecommendation = {
-  brand: Pick<TBrand, 'id' | 'name' | 'logo'>
-  percentage: number
-}
-
-export type TProductSuggestion = {
-  id: string
-  createdAt?: string
-  updatedAt?: string
-  title: string | null
-  price: number | null
-  quantity: number | null
-  color: string | null
-  size: string | null
-  other: string | null
-  sku: string | null
-  type: string | null
-  isAvailable: boolean | null
-  status: string | null
-  product?: Partial<TProduct> & {
-    brand?: Partial<TBrand>
-  }
-}
-
-export type TMonthlyBookingStat = {
-  month: string
-  totalBookings: string
-  totalRevenue: number
-}
-
-export type TServiceMonthlyBookingStat = {
-  serviceId: string
-  serviceName: string
-  month: string
-  totalBookings: string
-  totalRevenue: number
-}
-
-export type TConsultantRecommendationData = {
-  consultant: TConsultantBrief
-  brandRecommendations: TBrandRecommendation[]
-  totalProductSuggestions: number
 }

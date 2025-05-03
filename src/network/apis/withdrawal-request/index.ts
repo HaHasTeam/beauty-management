@@ -59,9 +59,6 @@ export const filterWithdrawalRequests = toQueryFetcher<
   if (filterParams.endDate) {
     data.endDate = filterParams.endDate
   }
-  if (filterParams.relatedAccountId) {
-    data.relatedAccountId = filterParams.relatedAccountId
-  }
   return privateRequest('/withdrawal-requests/filter', {
     method: 'POST',
     data,

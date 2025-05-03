@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import _ from 'lodash'
 import { SaveIcon, Siren, Zap } from 'lucide-react'
 import { useEffect, useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
@@ -80,23 +79,9 @@ const FlashSaleDetails = () => {
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const isStartDateDirty = form.formState.dirtyFields.startTime
-    const isEndDateDirty = form.formState.dirtyFields.endTime
-
-    const cleanedData = convertFormToFlashSale(values)
-
-    if (!isStartDateDirty) {
-      cleanedData.startTime = ''
-    }
-    if (!isEndDateDirty) {
-      cleanedData.endTime = ''
-    }
-
-    const omitEmpty = _.omitBy(cleanedData, (value) => value === '' || value === undefined || !value)
-
     try {
       if (itemId) {
-        await updateFlashSaleFn(omitEmpty as TUpdateFlashSaleRequestParams)
+        await updateFlashSaleFn(convertFormToFlashSale(values) as TUpdateFlashSaleRequestParams)
         queryClient.invalidateQueries({
           queryKey: [getFlashSaleByIdApi.queryKey, itemId as string]
         })
@@ -106,8 +91,12 @@ const FlashSaleDetails = () => {
       } else {
         // await triggerImageUploadRef.current?.trigger()
         // const newImages = form.watch('images')
-
-        await addFlashSaleFn(omitEmpty as TAddFlashSaleRequestParams)
+        await addFlashSaleFn(
+          convertFormToFlashSale({
+            ...values
+            // images: newImages
+          }) as TAddFlashSaleRequestParams
+        )
         navigate(routesConfig[Routes.FLASH_SALE].getPath())
       }
     } catch (error) {
@@ -179,7 +168,7 @@ const FlashSaleDetails = () => {
             </div>
             <AlertAction
               onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
+                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
               }}
               loading={isUpdatingFlashSale}
               variant={'default'}
@@ -203,15 +192,15 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            {/* <AlertAction
+            <AlertAction
               onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.WAITING)
+                handleChangeStatus(FlashSaleStatusEnum.ACTIVE)
               }}
               loading={isUpdatingFlashSale}
               variant={'success'}
             >
               {'Open event'}
-            </AlertAction> */}
+            </AlertAction>
           </Alert>
         )
       case FlashSaleStatusEnum.WAITING:
@@ -234,7 +223,7 @@ const FlashSaleDetails = () => {
             </div>
             <AlertAction
               onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
+                handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
               }}
               loading={isUpdatingFlashSale}
               variant={'default'}
@@ -261,7 +250,7 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            {/* <AlertAction
+            <AlertAction
               onClick={() => {
                 handleChangeStatus(FlashSaleStatusEnum.INACTIVE)
               }}
@@ -269,34 +258,7 @@ const FlashSaleDetails = () => {
               variant={'default'}
             >
               {'Reopen event'}
-            </AlertAction> */}
-          </Alert>
-        )
-      case FlashSaleStatusEnum.CANCELLED:
-        return (
-          <Alert variant={'destructive'}>
-            <div className='flex items-center gap-2'>
-              <Siren className='size-4' />
-              <div>
-                <AlertTitle className='flex items-center gap-2'>
-                  <span className='p-0.5 px-2 rounded-lg border border-red-300 bg-red-400 text-white'>Cancelled</span>
-                  <span className='font-bold uppercase text-xs'>status</span>
-                </AlertTitle>
-                <AlertDescription>
-                  This event has been cancelled and is no longer visible to your customers. Please make a new event to
-                  start selling again.
-                </AlertDescription>
-              </div>
-            </div>
-            {/* <AlertAction
-              onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.WAITING)
-              }}
-              loading={isUpdatingFlashSale}
-              variant={'success'}
-            >
-              {'Open event'}
-            </AlertAction> */}
+            </AlertAction>
           </Alert>
         )
       default:
@@ -306,8 +268,6 @@ const FlashSaleDetails = () => {
 
   const getFooter = () => {
     switch (flashSaleData?.status) {
-      case FlashSaleStatusEnum.CANCELLED:
-        return null
       default:
         return (
           <div className='flex items-center justify-end'>
@@ -348,12 +308,7 @@ const FlashSaleDetails = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel required>Flash Sale Product</FormLabel>
-                      <SelectProduct
-                        {...field}
-                        multiple={false}
-                        readOnly={!!itemId}
-                        brandId={flashSaleData?.product.brand?.id || ''}
-                      />
+                      <SelectProduct {...field} multiple={false} readOnly={!!itemId} />
                       <FormMessage />
                     </FormItem>
                   )}

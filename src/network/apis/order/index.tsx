@@ -55,15 +55,6 @@ export const getAllOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>
   })
 })
 
-export const getAllChildOrderListApi = toQueryFetcher<void, TServerResponse<IOrder[]>>(
-  'getAllChildOrderListApi',
-  async () => {
-    return privateRequest('/orders/get-children', {
-      method: 'GET'
-    })
-  }
-)
-
 export const filterOrdersParentApi = toQueryFetcher<IOrderFilterFilter, TServerResponseWithPagination<IOrder[]>>(
   'filterOrdersParentApi',
   async (filterData) => {
@@ -279,10 +270,6 @@ export const filterOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithP
     if (rest.productIds?.length) {
       body.productIds = rest.productIds
     }
-    if (rest.type && rest.eventId) {
-      body.type = rest.type
-      body.eventId = rest.eventId
-    }
 
     return privateRequest('/orders/filter', {
       method: 'POST',
@@ -296,80 +283,3 @@ export const filterOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithP
     })
   }
 )
-
-export const filterParentOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithPaging<IOrder[]>>(
-  'filterParentOrdersApi',
-  async (filterData) => {
-    const { page, limit, sortBy, order, ...rest } = filterData || {}
-
-    const body: IOrderFilter = {}
-    if (rest.search) {
-      body.search = rest.search
-    }
-    if (rest.statuses?.length) {
-      body.statuses = rest.statuses
-    }
-    if (rest.types?.length) {
-      body.types = rest.types
-    }
-    if (rest.paymentMethods?.length) {
-      body.paymentMethods = rest.paymentMethods
-    }
-    if (rest.productIds?.length) {
-      body.productIds = rest.productIds
-    }
-
-    return privateRequest('/orders/filter-parent', {
-      method: 'POST',
-      data: body,
-      params: {
-        page,
-        limit,
-        sortBy,
-        order
-      }
-    })
-  }
-)
-
-export const filterOrdersAndVoucherApi = toQueryFetcher<
-  IOrderFilter,
-  TServerResponseWithPaging<IOrder[], { isParent: boolean }>
->('filterOrdersAndVoucherApi', async (filterData) => {
-  const { page, limit, sortBy, order, ...rest } = filterData || {}
-
-  const body: IOrderFilter = {}
-  if (rest.search) {
-    body.search = rest.search
-  }
-  if (rest.statuses?.length) {
-    body.statuses = rest.statuses
-  }
-  if (rest.types?.length) {
-    body.types = rest.types
-  }
-  if (rest.paymentMethods?.length) {
-    body.paymentMethods = rest.paymentMethods
-  }
-  if (rest.productIds?.length) {
-    body.productIds = rest.productIds
-  }
-  if (rest.type && rest.eventId) {
-    body.type = rest.type
-    body.eventId = rest.eventId
-  }
-  if (rest.voucherId) {
-    body.voucherId = rest.voucherId
-  }
-
-  return privateRequest('/orders/filter', {
-    method: 'POST',
-    data: body,
-    params: {
-      page,
-      limit,
-      sortBy,
-      order
-    }
-  })
-})

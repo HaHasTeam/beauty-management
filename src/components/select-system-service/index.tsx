@@ -13,7 +13,7 @@ import AsyncSelect from '../ui/react-select/AsyncSelect'
 type Props = HTMLAttributes<HTMLSelectElement> & InputProps
 
 const getServiceItemDisplay = (service: ISystemService) => {
-  const imgUrl = service.images?.[0]?.fileUrl || ''
+  const imgUrl = service.images[0]?.fileUrl
   return (
     <div className='flex items-center gap-1'>
       <Avatar className='bg-transparent size-5'>
@@ -28,14 +28,7 @@ const getServiceItemDisplay = (service: ISystemService) => {
 }
 
 const SelectSystemService = forwardRef<HTMLSelectElement, Props>((props) => {
-  const {
-    placeholder = 'Select a kind of service',
-    className,
-    onChange,
-    value,
-    multiple = false,
-    readOnly = false
-  } = props
+  const { placeholder = 'Select a kind of service', className, onChange, value, multiple = false } = props
 
   const { data: systemServiceList, isFetching: isGettingSystemServiceList } = useQuery({
     queryKey: [getAllSystemServiceApi.queryKey],
@@ -99,7 +92,6 @@ const SelectSystemService = forwardRef<HTMLSelectElement, Props>((props) => {
       isLoading={isGettingSystemServiceList}
       isClearable
       isSearchable
-      isDisabled={readOnly}
       onChange={(options) => {
         if (multiple) {
           const optionValues = options as TOption[]

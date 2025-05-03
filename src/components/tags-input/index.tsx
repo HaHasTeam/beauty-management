@@ -196,7 +196,6 @@ export const TagsInput = React.forwardRef<HTMLDivElement, TagsInputProps>(
           case 'Enter':
             if (inputValue.trim() !== '') {
               e.preventDefault()
-              e.stopPropagation()
               onValueChangeHandler(inputValue)
               setInputValue('')
             }
@@ -212,7 +211,7 @@ export const TagsInput = React.forwardRef<HTMLDivElement, TagsInputProps>(
     }, [])
 
     const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value)
+      setInputValue(e.currentTarget.value)
     }, [])
 
     return (

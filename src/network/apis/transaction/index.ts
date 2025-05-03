@@ -6,13 +6,11 @@ import { toMutationFetcher, toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
 import {
-  BookingStatic,
   OrderStatic,
   PAY_TYPE,
   TFilterTransactionsParams,
   TGetBrandRevenueStatisticsParams,
   TGetBrandRevenueStatisticsResponse,
-  TGetDailyBookingStatisticsParams,
   TGetDailyOrderStatisticsParams
 } from './type'
 
@@ -42,7 +40,7 @@ export const payTransactionApi = toMutationFetcher<
 export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TServerResponseWithPaging<TTransaction[]>>(
   'filterTransactions',
   async (params) => {
-    const { page, limit, order, sortBy, accountId, ...filterParams } = params || {}
+    const { page, limit, order, sortBy, ...filterParams } = params || {}
     const dataPre: TFilterTransactionsParams = {}
     if (filterParams.startDate) {
       dataPre.startDate = filterParams.startDate
@@ -53,10 +51,6 @@ export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TSer
     if (filterParams.types?.length) {
       dataPre.types = filterParams.types
     }
-    if (accountId) {
-      dataPre.accountId = accountId
-    }
-
     return privateRequest('/transactions/filter', {
       method: 'POST',
       data: dataPre,
@@ -86,46 +80,40 @@ export const getTransactionStatistics = toQueryFetcher<
 /**
  * Get daily order statistics for a brand
  */
-export const getDailyOrderStatistics = toQueryFetcher<
-  TGetDailyOrderStatisticsParams,
-  TServerResponse<OrderStatic, undefined, { isParent: boolean }>
->('getDailyOrderStatistics', async (params) => {
-  if (!params) throw new Error('Params is required')
+export const getDailyOrderStatistics = toQueryFetcher<TGetDailyOrderStatisticsParams, TServerResponse<OrderStatic>>(
+  'getDailyOrderStatistics',
+  async (params) => {
+    if (!params) throw new Error('Params is required')
 
-  // Remove falsy values and empty arrays
-  const cleanedData = _.omitBy(params, (value) => {
-    if (value === undefined || value === null) return true
-    if (typeof value === 'string' && value === '') return true
-    if (typeof value === 'boolean' && value === false) return true
-    if (Array.isArray(value) && value.length === 0) return true
-    return false
-  })
+    // Remove falsy values and empty arrays
+    const cleanedData = _.omitBy(params, (value) => {
+      if (value === undefined || value === null) return true
+      if (typeof value === 'string' && value === '') return true
+      if (typeof value === 'boolean' && value === false) return true
+      if (Array.isArray(value) && value.length === 0) return true
+      return false
+    })
 
-  return privateRequest(`/transactions/get-daily-order-statistics`, {
-    method: 'POST',
-    data: cleanedData
-  })
-})
+    return privateRequest(`/transactions/get-daily-order-statistics`, {
+      method: 'POST',
+      data: cleanedData
+    })
+  }
+)
 
 /**
  * Get financial summary
  */
 export const getFinancialSummary = toQueryFetcher<
-  { accountId: string },
+  void,
   TServerResponse<{
-    totalAmountFromDeposit: number
-    totalAmountFromWithDrawal: number
-    balance: number
-    availableBalance: number
+    totalRevenue: number
+    totalExpense: number
+    netIncome: number
   }>
->('getFinancialSummary', async (params) => {
-  if (!params) throw new Error('Params is required')
-  const { accountId } = params
+>('getFinancialSummary', async () => {
   return privateRequest('/transactions/get-financial-summary', {
-    method: 'POST',
-    data: {
-      accountId
-    }
+    method: 'GET'
   })
 })
 
@@ -149,44 +137,3 @@ export const getBrandRevenueStatistics = toQueryFetcher<
     data: cleanedData
   })
 })
-
-/**
- * Get all transactions (assuming GET request)
- */
-export const getAllTransactions = toQueryFetcher<
-  void, // Assuming no specific parameters needed
-  TServerResponse<TTransaction[]> // Assuming a paginated response like filterTransactions
->(
-  'getAllTransactions', // Unique query key
-  async () => {
-    return privateRequest('/transactions', {
-      method: 'GET' // Assuming GET method
-    })
-  }
-)
-
-/**
- * Get daily booking statistics
- */
-export const getDailyBookingStatistics = toQueryFetcher<
-  TGetDailyBookingStatisticsParams, // Input parameter type
-  TServerResponse<BookingStatic> // Expected response type
->(
-  'getDailyBookingStatistics', // Unique query key
-  async (params) => {
-    // Remove falsy values and empty arrays before sending
-    const cleanedData = _.omitBy(params, (value) => {
-      if (value === undefined || value === null) return true
-      if (typeof value === 'string' && value === '') return true
-      // consultantId might be relevant even if false/0, keep those
-      // if (typeof value === 'boolean' && value === false) return true
-      if (Array.isArray(value) && value.length === 0) return true
-      return false
-    })
-
-    return privateRequest(`/transactions/get-daily-booking-statistics`, {
-      method: 'POST',
-      data: cleanedData
-    })
-  }
-)

@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { IconRight } from 'react-day-picker'
 import { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import FormLabel from '@/components/form-label'
@@ -22,14 +21,12 @@ type Props = {
   form: UseFormReturn<z.infer<typeof brandCreateSchema>>
 }
 function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
-  const { t } = useTranslation()
-
   return (
     <div className=''>
       <div className='flex w-full items-center gap-4'>
         <span className='flex flex-1 items-center justify-center text-center text-xl font-semibold'>
-          {t('imagesUploader.step', { stepIndex })}
-          <IconRight /> <h1 className='text-center text-2xl font-bold uppercase'>{t('imagesUploader.title')}</h1>
+          Step-{stepIndex}
+          <IconRight /> <h1 className='text-center text-2xl font-bold uppercase'>Images Uploader</h1>
         </span>
       </div>
       {/* content start */}
@@ -40,14 +37,15 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='logo'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('imagesUploader.logo.label')}</FormLabel>
+                <FormLabel>Logo</FormLabel>
                 <UploadFilePreview
                   field={field}
                   vertical
                   dropZoneConfigOptions={{ maxFiles: 1 }}
                   header={
                     <div>
-                      <div className='text-muted-foreground'>{t('imagesUploader.logo.description')}</div>
+                      {/* <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div> */}
+                      <div className='text-muted-foreground'>Please choose your logo</div>
                     </div>
                   }
                 />
@@ -61,10 +59,15 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='businessTaxCode'
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>{t('imagesUploader.businessTaxCode.label')}</FormLabel>
+                <FormLabel required>Business Tax Code</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('imagesUploader.businessTaxCode.placeholder')} {...field} />
+                  <Input
+                    // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                    placeholder='Business Tax Code'
+                    {...field}
+                  />
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}
@@ -75,7 +78,7 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
             render={({ field, formState }) => {
               return (
                 <FormItem className='flex flex-col space-y-0'>
-                  <FormLabel required>{t('imagesUploader.establishmentDate.label')}</FormLabel>
+                  <FormLabel required>Establishment Date</FormLabel>
                   <FlexDatePicker
                     onlyPastDates
                     field={field}
@@ -84,6 +87,7 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
                       ...form
                     }}
                   />
+
                   <FormMessage />
                 </FormItem>
               )
@@ -97,11 +101,14 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='businessRegistrationCode'
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>{t('imagesUploader.businessRegistrationCode.label')}</FormLabel>
+                <FormLabel required>Business Registration Code</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('imagesUploader.businessRegistrationCode.placeholder')} {...field} />
+                  <Input placeholder='Business Registration Code' {...field} />
                 </FormControl>
-                <FormDescription>{t('imagesUploader.businessRegistrationCode.description')}</FormDescription>
+                <FormDescription>
+                  A number or code assigned to the business upon registration, serving as a formal identifier for the
+                  company.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -111,11 +118,11 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='businessRegistrationAddress'
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>{t('imagesUploader.businessRegistrationAddress.label')}</FormLabel>
+                <FormLabel required>Business Registration Address</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('imagesUploader.businessRegistrationAddress.placeholder')} {...field} />
+                  <Input placeholder='Business Registration Address' {...field} />
                 </FormControl>
-                <FormDescription>{t('imagesUploader.businessRegistrationAddress.description')}</FormDescription>
+                <FormDescription>The official address of the business as stated during registration.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -134,17 +141,18 @@ function UplImagesUploader({ stepIndex, goBackfn, goNextFn, form }: Props) {
           }}
         >
           <ChevronLeft />
-          {t('imagesUploader.navigation.back')}
+          Back
         </Button>
         <Button
-          className='flex select-none items-center justify-center gap-2 px-4'
+          className=' flex select-none items-center justify-center gap-2 px-4'
           type='submit'
+          // disabled={!form.formState.isValid}
           onClick={() => {
             goNextFn()
           }}
         >
-          {t('imagesUploader.navigation.next')}
-          <ChevronRight className='-mr-1 h-6 w-6' />
+          <ChevronRight className=' -mr-1 h-6 w-6 ' />
+          Next
         </Button>
       </div>
     </div>

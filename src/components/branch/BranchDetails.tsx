@@ -63,9 +63,9 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
     <div className=''>
       <div className='flex w-full items-center gap-4 mb-10'>
         <span className='flex flex-1 items-center justify-center text-center text-xl font-semibold'>
-          {t('branchDetails.step', { stepIndex })}
+          Step-{stepIndex}
           <IconRight className='mr-1' />{' '}
-          <h1 className='text-center text-2xl font-bold uppercase'>{t('branchDetails.generalInformation')}</h1>
+          <h1 className='text-center text-2xl font-bold uppercase'>General Information</h1>
         </span>
       </div>
 
@@ -76,9 +76,13 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>{t('branchDetails.name.label')}</FormLabel>
+                <FormLabel required>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('branchDetails.name.placeholder')} {...field} />
+                  <Input
+                    // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                    placeholder='please enter your brand name'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -89,9 +93,13 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>{t('branchDetails.email.label')}</FormLabel>
+                <FormLabel required>Email Brand</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('branchDetails.email.placeholder')} {...field} />
+                  <Input
+                    // className='min-h-[50px] px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                    placeholder='e.g. allure@gmail.com'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +108,7 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
         </div>
 
         <div className='space-y-2'>
-          <FormLabel required>{t('branchDetails.address.label')}</FormLabel>
+          <FormLabel required>Address</FormLabel>
           <AddAddressBrandDialog parentForm={form} getAddress={handleAdress} triggerComponent={addressDisplay} />
         </div>
 
@@ -109,14 +117,16 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           name='description'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('branchDetails.description.label')}</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea
-                  rows={4}
-                  placeholder={t('branchDetails.description.placeholder')}
-                  className='resize-none'
-                  {...field}
-                />
+                <Textarea rows={4} placeholder='description' className='resize-none' {...field} />
+                {/* <Input
+                        className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                        placeholder='
+                 description
+                    '
+                        {...field}
+                      /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,9 +138,14 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           name='phone'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('branchDetails.phone.label')}</FormLabel>
+              <FormLabel>Phone</FormLabel>
               <FormControl>
                 <PhoneInputWithCountries {...field} isShowCountry={true} />
+                {/* <Input
+                  // className='min-h-[50px] w-full px-4 py-3 focus:outline-0 dark:placeholder:text-zinc-400'
+                  placeholder='Phone'
+                  {...field}
+                /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,16 +157,20 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           name='document'
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>{t('branchDetails.document.label')}</FormLabel>
+              <FormLabel required>Document</FormLabel>
               <UploadFilePreview
                 vertical
                 field={field}
                 dropZoneConfigOptions={{ maxFiles: 10 }}
                 header={
                   <div>
-                    <div className='text-muted-foreground'>{t('branchDetails.document.uploadDescription')}</div>
+                    {/* <div className='text-2xl font-bold text-foreground'>Upload Your File(s)</div> */}
+                    <div className='text-muted-foreground'>
+                      You must upload at least 1 document for your lisense details. To help you, we've provided a
+                      template file. Please download it, fill in the necessary details, and upload it back:
+                    </div>
                     <a href={templateFileUrl} download className='text-primary underline'>
-                      {t('branchDetails.document.downloadTemplate')}
+                      Download License Details Template
                     </a>
                   </div>
                 }
@@ -171,11 +190,11 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
           }}
         >
           <ChevronLeft />
-          {t('branchDetails.navigation.back')}
+          Back
         </Button>
         <Button
           type='button'
-          className='flex select-none items-center justify-center gap-2 px-4'
+          className=' flex select-none items-center justify-center gap-2 px-4'
           disabled={stepIndex === 0}
           onClick={async () => {
             const value = await form.trigger()
@@ -184,8 +203,8 @@ function BranchDetails({ stepIndex, goBackfn, goNextFn, form }: Props) {
             }
           }}
         >
-          {t('branchDetails.navigation.next')}
-          <ChevronRight className='-mr-1 h-6 w-6' />
+          <ChevronRight className=' -mr-1 h-6 w-6 ' />
+          Next
         </Button>
       </div>
     </div>

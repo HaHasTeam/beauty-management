@@ -11,12 +11,7 @@ import { DataTableQueryState } from '@/types/table'
 
 import { OrderTable } from './OrderTable'
 
-interface OrderTableUIProps {
-  type?: OrderEnum
-  eventId?: string
-}
-
-export default function IndexPage({ type, eventId }: OrderTableUIProps) {
+export default function IndexPage() {
   const queryStates = useState<DataTableQueryState<IOrder, { search: string }>>(
     {} as DataTableQueryState<IOrder, { search: string }>
   )
@@ -32,9 +27,7 @@ export default function IndexPage({ type, eventId }: OrderTableUIProps) {
         statuses: (queryStates[0].fieldFilters?.status ?? []) as ShippingStatusEnum[],
         types: (queryStates[0].fieldFilters?.type ?? []) as OrderEnum[],
         productIds: (queryStates[0].fieldFilters?.orderDetails ?? []) as string[],
-        search: queryStates[0].fieldFilters?.search as string,
-        type,
-        eventId
+        search: queryStates[0].fieldFilters?.search as string
       }
     ],
     queryFn: filterOrdersApi.fn
