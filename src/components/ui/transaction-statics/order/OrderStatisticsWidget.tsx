@@ -15,12 +15,14 @@ interface OrderStatisticsWidgetProps {
   eventId?: string
   className?: string
   header?: React.ReactNode
+  voucherId?:string
 }
 
 export function OrderStatisticsWidget({
   orderType,
   eventId,
   className,
+  voucherId,
   header
 }: OrderStatisticsWidgetProps) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
@@ -33,9 +35,9 @@ export function OrderStatisticsWidget({
             <Button
               variant='ghost'
               size='icon'
-              className='absolute top-2 right-2 z-10 h-7 w-7'
+              className='absolute top-2 right-2 h-7 w-7 z-'
               onClick={() => setIsDialogOpen(true)}
-              disabled={!orderType && !eventId}
+              disabled={!orderType && !eventId &&!voucherId}
             >
               <ListOrderedIcon className='h-4 w-4' />
               <span className='sr-only'>View Related Orders</span>
@@ -48,14 +50,14 @@ export function OrderStatisticsWidget({
       </TooltipProvider>
 
       <CardContent className='p-0 flex items-center justify-center min-h-[200px] w-full'>
-        <OrderStaticCard eventId={eventId} orderType={orderType} mode={"mini"} header={header} />
+        <OrderStaticCard eventId={eventId} orderType={orderType} mode={"mini"} header={header} voucherId={voucherId} />
       </CardContent>
-
       <RelatedOrdersDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         type={orderType}
         eventId={eventId}
+        voucherId={voucherId}
       />
     </div>
   )

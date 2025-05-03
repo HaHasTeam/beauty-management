@@ -86,26 +86,26 @@ export const getTransactionStatistics = toQueryFetcher<
 /**
  * Get daily order statistics for a brand
  */
-export const getDailyOrderStatistics = toQueryFetcher<TGetDailyOrderStatisticsParams, TServerResponse<OrderStatic>>(
-  'getDailyOrderStatistics',
-  async (params) => {
-    if (!params) throw new Error('Params is required')
+export const getDailyOrderStatistics = toQueryFetcher<
+  TGetDailyOrderStatisticsParams,
+  TServerResponse<OrderStatic, undefined, { isParent: boolean }>
+>('getDailyOrderStatistics', async (params) => {
+  if (!params) throw new Error('Params is required')
 
-    // Remove falsy values and empty arrays
-    const cleanedData = _.omitBy(params, (value) => {
-      if (value === undefined || value === null) return true
-      if (typeof value === 'string' && value === '') return true
-      if (typeof value === 'boolean' && value === false) return true
-      if (Array.isArray(value) && value.length === 0) return true
-      return false
-    })
+  // Remove falsy values and empty arrays
+  const cleanedData = _.omitBy(params, (value) => {
+    if (value === undefined || value === null) return true
+    if (typeof value === 'string' && value === '') return true
+    if (typeof value === 'boolean' && value === false) return true
+    if (Array.isArray(value) && value.length === 0) return true
+    return false
+  })
 
-    return privateRequest(`/transactions/get-daily-order-statistics`, {
-      method: 'POST',
-      data: cleanedData
-    })
-  }
-)
+  return privateRequest(`/transactions/get-daily-order-statistics`, {
+    method: 'POST',
+    data: cleanedData
+  })
+})
 
 /**
  * Get financial summary

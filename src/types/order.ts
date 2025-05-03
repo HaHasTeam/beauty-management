@@ -92,6 +92,7 @@ export type IOrderFilter = BaseParams<{
   productIds?: string[]
   eventId?: string
   type?: OrderEnum
+  voucherId?: string
 }>
 
 export type IOrderFilterFilter = BaseParams<{
