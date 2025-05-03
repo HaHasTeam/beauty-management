@@ -19,9 +19,10 @@ interface BookingStaticCardProps {
     DataTableQueryState<TGetDailyBookingStatisticsParams>,
     React.Dispatch<React.SetStateAction<DataTableQueryState<TGetDailyBookingStatisticsParams>>>
   ]
+  mode?: 'full' | 'mini'
 }
 
-export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps) {
+export function BookingStaticCard({ queryStates, data, mode = 'full' }: BookingStaticCardProps) {
   const { user } = useStore()
   const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
 
@@ -53,20 +54,22 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
       }
     ]
 
-    if (isAdmin && consultants.length > 0) {
-      fields.push({
-        id: 'consultantId',
-        label: 'Consultant',
-        options: consultants
-          .map((consultant) => ({
-            // Using ID as placeholder label - CORRECT THIS LATER
-            label: consultant.email,
-            value: consultant.id ?? ''
-          }))
-          .filter((opt) => opt.value),
-        isCustomFilter: true,
-        isSingleChoice: true
-      })
+    if (mode === 'full') { 
+      if (isAdmin && consultants.length > 0) {
+        fields.push({
+          id: 'consultantId',
+          label: 'Consultant',
+          options: consultants
+            .map((consultant) => ({
+              // Using ID as placeholder label - CORRECT THIS LATER
+              label: consultant.email,
+              value: consultant.id ?? ''
+            }))
+            .filter((opt) => opt.value),
+          isCustomFilter: true,
+          isSingleChoice: true
+        })
+      }
     }
 
     return fields
@@ -121,8 +124,9 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data} />}>
+      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} />}>
         <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
+          {mode === 'full' && (
           <div className='flex items-center justify-end px-4 py-2'>
             <Select onValueChange={handleTimeRangeChange}>
               <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
@@ -144,6 +148,7 @@ export function BookingStaticCard({ queryStates, data }: BookingStaticCardProps)
               </SelectContent>
             </Select>
           </div>
+          )}
         </DataTableToolbar>
       </CardWithFacetFilters>
     </div>

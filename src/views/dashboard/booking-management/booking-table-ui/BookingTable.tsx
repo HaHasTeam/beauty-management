@@ -23,13 +23,14 @@ interface BookingTableProps {
   data: TBooking[]
   pageCount: number
   queryStates?: [DataTableQueryState<TBooking>, React.Dispatch<React.SetStateAction<DataTableQueryState<TBooking>>>]
+  mode?: 'full' | 'mini'
 }
 
 // Service interface with minimum required field
 
-export default function BookingTable({ data, pageCount, queryStates }: BookingTableProps) {
+export default function BookingTable({ data, pageCount, queryStates, mode = 'full' }: BookingTableProps) {
   // Type casting the query function to make TypeScript happy
-  const columns = useMemo(() => getColumns(), [])
+  const columns = useMemo(() => getColumns({ mode }), [mode])
   const { data: serviceListData } = useQuery({
     queryKey: [getAllConsultantServiceApi.queryKey],
     queryFn: getAllConsultantServiceApi.fn
@@ -44,6 +45,38 @@ export default function BookingTable({ data, pageCount, queryStates }: BookingTa
 
   // Define filterFields before using it in columns
   const filterFields: DataTableFilterField<TBooking>[] = useMemo(() => {
+    if (mode === 'mini') {
+      return [
+        {
+          id: 'search',
+          label: 'Search',
+          placeholder: 'Search by id or name,... ',
+          isCustomFilter: true
+        },
+        {
+          id: 'status',
+          label: 'Status',
+          options: Object.keys(BookingStatusEnum).map((status) => {
+            const value = BookingStatusEnum[status as keyof typeof BookingStatusEnum]
+            return {
+              label: toSentenceCase(value),
+              value: value,
+              icon: getStatusIcon(value).icon
+            }
+          })
+        },
+        {
+          id: 'systemServiceType',
+          label: 'System Service Type',
+          options: Object.keys(ServiceTypeEnum).map((type) => ({
+            label: toSentenceCase(type),
+            value: type
+          })),
+          isCustomFilter: true,
+          isSingleChoice: true
+        }
+      ]
+    }
     return [
       {
         id: 'search',
@@ -97,7 +130,7 @@ export default function BookingTable({ data, pageCount, queryStates }: BookingTa
         isSingleChoice: true
       }
     ]
-  }, [serviceData, consultantAccountData])
+  }, [serviceData, consultantAccountData, mode])
 
   const { table } = useDataTable({
     queryStates,
