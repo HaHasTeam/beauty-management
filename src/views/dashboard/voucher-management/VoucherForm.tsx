@@ -55,7 +55,6 @@ function VoucherForm({
     mutationKey: [updateVoucherByIdApi.mutationKey, voucherData?.id],
     mutationFn: updateVoucherByIdApi.fn,
     onSuccess: () => {
-      navigate(routesConfig[Routes.VOUCHER].getPath())
       queryClient.invalidateQueries({ queryKey: [getVoucherByIdApi.queryKey, voucherData?.id] })
       successToast({ message: ' Update successfully.' })
     }
@@ -142,10 +141,7 @@ function VoucherForm({
                   <span className='p-0.5 px-2 rounded-lg border border-green-300 bg-green-400 text-white'>Active</span>
                   <span className='font-bold uppercase text-xs'>status</span>
                 </AlertTitle>
-                <AlertDescription>
-                  This flash sale is currently active and visible to your customers. If you want to make any changes,
-                  please inactivate it first.
-                </AlertDescription>
+                <AlertDescription>This voucher is currently active and visible to your customers.</AlertDescription>
               </div>
             </div>
             <AlertAction
@@ -170,7 +166,7 @@ function VoucherForm({
                   <span className='font-bold uppercase text-xs'>status</span>
                 </AlertTitle>
                 <AlertDescription>
-                  This flash sale is currently inactive and not visible to your customers.
+                  This voucher is currently inactive and not visible to your customers.
                 </AlertDescription>
               </div>
             </div>
