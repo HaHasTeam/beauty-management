@@ -22,7 +22,7 @@ const getServiceItemDisplay = (service: ISystemService) => {
           <Image className='size-4' />
         </AvatarFallback>
       </Avatar>
-      <span>{service.name}</span>
+      <span>{service?.name}</span>
     </div>
   )
 }
