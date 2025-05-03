@@ -48,12 +48,12 @@ export function ConsultantSuggestedProductsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[70%]'>
+      <DialogContent className='sm:max-w-[90%] max-h-[80%] overflow-auto'>
         <DialogHeader>
           <DialogTitle>Consultant Suggested Products</DialogTitle>
           <DialogDescription>Products suggested by the consultant for this brand.</DialogDescription>
         </DialogHeader>
-        <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden max-w-[70%] max-h-[70%] overflow-auto'>
+        <div>
           <div className='w-full flex items-center gap-4'>
             <Shell className='gap-2'>
               {isProductListLoading ? (

@@ -1,10 +1,8 @@
-'use client'
-
 import { InteractiveAreaChart } from '@/components/ui/chart/InteractiveAreaChart'
 import { OrderStatic } from '@/network/apis/transaction/type'
 import { formatCurrency } from '@/utils/number'
 import { Banknote, CreditCard, DollarSign, InfoIcon, ListOrdered, Percent, ShoppingCart, Tag } from 'lucide-react'
-import { ChartConfig } from '../../chart'
+import type { ChartConfig } from '../../chart'
 
 // Renamed props to avoid conflict
 type OrderStaticProps = {
@@ -14,7 +12,7 @@ type OrderStaticProps = {
 }
 
 const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
-  const fullChartConfig = {
+  const fullChartConfig:ChartConfig = {
     revenue: {
       label: 'Revenue',
       color: 'chart-1'
@@ -35,6 +33,7 @@ const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
       label: 'Commission Fee',
       color: 'chart-gray-4'
     }
+
   }
 
   const filteredChartConfig = (() => {
@@ -45,7 +44,7 @@ const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
     } else {
       return fullChartConfig
     }
-  })()
+  })() 
 
   if (!data?.items?.length || !data?.total) {
     return (
@@ -262,6 +261,7 @@ const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
       data={chartData}
       title=''
       description={mode === 'mini' ? miniDescriptionNode : fullDescriptionNode}
+      // @ts-expect-error - Ignore persistent type mismatch between general ChartConfig and InteractiveAreaChart's expected type
       config={filteredChartConfig as unknown as ChartConfig}
       bottomLabel={mode === 'full' && !showOnlyVoucher ? bottomLabelNode : undefined}
       mode={mode}

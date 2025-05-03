@@ -1,15 +1,13 @@
-'use client'
-
 import * as React from 'react'
 import { TConsultantRecommendationData } from '@/network/apis/user/type'
 
 import { Label, Pie, PieChart } from 'recharts'
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { ConsultantSuggestedProductsDialog } from '@/components/dialog/ConsultantSuggestedProductsDialog'
 import Empty from '@/components/empty/Empty'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 
 type Props = {
   data: TConsultantRecommendationData | null | undefined // Allow null/undefined
@@ -21,6 +19,20 @@ const calculateSuggestions = (percentage: number, total: number): number => {
   if (!total || total === 0 || !percentage) return 0
   return Math.round((percentage / 100) * total)
 }
+
+// Define a more extensive color palette using CSS variables
+const brandColors = [
+  'hsl(var(--chart-1))',
+  'hsl(var(--chart-2))',
+  'hsl(var(--chart-3))',
+  'hsl(var(--chart-4))',
+  'hsl(var(--chart-5))',
+  'hsl(var(--chart-blue))', // Adding more potential colors
+  'hsl(var(--chart-green))',
+  'hsl(var(--chart-yellow))',
+  'hsl(var(--chart-violet))',
+  'hsl(var(--chart-orange))'
+]
 
 export const Static = ({ data, consultantId }: Props) => {
   // State for Dialog
@@ -38,38 +50,37 @@ export const Static = ({ data, consultantId }: Props) => {
     return data?.totalProductSuggestions ?? 0
   }, [data?.totalProductSuggestions])
 
-  // Memoize chart data preparation with calculated counts
-  const chartData = React.useMemo(() => {
-    if (!data?.brandRecommendations || totalSuggestions === 0) return []
-
-    return data.brandRecommendations.map((rec) => ({
-      brandId: rec.brand.id, // Use brand ID for keying
-      brandName: rec.brand.name, // Store brand name for legend
-      suggestions: calculateSuggestions(rec.percentage, totalSuggestions),
-      fill: '' // Placeholder, will be determined by chartConfig
-    }))
-  }, [data?.brandRecommendations, totalSuggestions])
-
-  // Memoize chart config generation using brand ID and name
+  // Memoize chart config generation using brand ID and name and new colors
   const chartConfig = React.useMemo(() => {
     const config: ChartConfig = {
-      // Key for the data value
       suggestions: {
         label: 'Suggestions',
-        color: 'hsl(var(--chart-1))' // Add default/placeholder color to satisfy type
+        color: 'hsl(var(--muted))'
       }
     }
     if (data?.brandRecommendations) {
       data.brandRecommendations.forEach((rec, index) => {
-        // Use brand ID as the key in the config
-        config[rec.brand.id] = {
-          label: rec.brand.name, // Use actual brand name
-          color: `hsl(var(--chart-${(index % 5) + 1}))` // Cycle through chart colors
+        config[rec.brandId] = {
+          label: rec.brandName,
+          color: brandColors[index % brandColors.length]
         }
       })
     }
     return config
   }, [data?.brandRecommendations])
+
+  // Memoize chart data preparation - ensure FILL is included
+  const chartData = React.useMemo(() => {
+    if (!data?.brandRecommendations || totalSuggestions === 0) return []
+
+    return data.brandRecommendations.map((rec) => ({
+      brandId: rec.brandId, // Key for config lookup
+      brandName: rec.brandName, // Still useful maybe for label fallback or custom tooltips later
+      suggestions: calculateSuggestions(rec.percentage, totalSuggestions),
+      // Assign fill color directly based on config
+      fill: chartConfig[rec.brandId]?.color ?? 'hsl(var(--muted))'
+    }))
+  }, [data?.brandRecommendations, totalSuggestions, chartConfig])
 
   // Handle case where there's no data or total suggestions is zero
   if (!chartData || chartData.length === 0 || totalSuggestions === 0) {
@@ -82,34 +93,29 @@ export const Static = ({ data, consultantId }: Props) => {
       </div>
     )
   }
+  console.log(consultantId, selectedBrandId, 'DSAf')
 
   return (
     <Card className='flex flex-col'>
-      <CardHeader className='items-center pb-0'>
-        <CardTitle>Brand Recommendation Distribution</CardTitle> {/* Updated title */}
-        <CardDescription>
-          Based on {totalSuggestions} total suggestions
-          {data?.consultant?.name && ` by ${data.consultant.name}`}
-        </CardDescription>
-      </CardHeader>
       <CardContent className='flex-1 pb-0'>
-        <ChartContainer config={chartConfig} className='mx-auto aspect-square max-h-[250px]'>
+        <ChartContainer config={chartConfig} className='mx-auto aspect-square max-h-[300px]'>
           <PieChart>
-            <ChartTooltip>
-              <ChartTooltipContent />
+            <ChartTooltip content={
+              <ChartTooltipContent indicator="dot"/>
+            } >
             </ChartTooltip>
             <Pie
               data={chartData}
-              dataKey='suggestions' // Use the calculated count
-              nameKey='brandId' // Key to match in chartConfig (brand.id)
+              dataKey='suggestions'
+              nameKey="brandId" // *** IMPORTANT: Match key in chartConfig ***
               innerRadius={60}
               strokeWidth={5}
-              className='cursor-pointer' // Add cursor pointer to pie segments
+              className='cursor-pointer'
               onClick={(payload) => {
-                // payload contains the data item for the clicked segment
-                if (payload && payload.brandId) {
-                  handleBrandClick(payload.brandId)
-                }
+                 // Payload is the data item; brandId is directly on it
+                 if (payload && payload.brandId) {
+                   handleBrandClick(payload.brandId)
+                 }
               }}
             >
               <Label
@@ -134,7 +140,7 @@ export const Static = ({ data, consultantId }: Props) => {
       </CardContent>
       <CardFooter className='flex-col px-6 pt-4 mt-auto text-sm gap-y-3'>
         <div className='flex flex-wrap items-center justify-center w-full gap-x-4 gap-y-2'>
-          <TooltipProvider> {/* Wrap legend items in TooltipProvider */}
+          <TooltipProvider>
             {Object.entries(chartConfig)
               .filter(([key]) => key !== 'suggestions')
               .map(([brandId, configEntry]) => {
@@ -145,8 +151,8 @@ export const Static = ({ data, consultantId }: Props) => {
                   <Tooltip key={brandId}>
                     <TooltipTrigger asChild>
                       <div
-                        className='flex items-center gap-1.5 cursor-pointer' // Add cursor pointer
-                        onClick={() => handleBrandClick(brandId)} // Add onClick
+                        className='flex items-center gap-1.5 cursor-pointer'
+                        onClick={() => handleBrandClick(brandId)}
                       >
                         <span
                           className='w-2.5 h-2.5 shrink-0 rounded-full'
@@ -168,14 +174,15 @@ export const Static = ({ data, consultantId }: Props) => {
       </CardFooter>
 
       {/* Render the Dialog - Use the consultantId prop */}
-      {selectedBrandId && consultantId && ( // Check for consultantId prop
-        <ConsultantSuggestedProductsDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          consultantId={consultantId} // Pass consultantId prop
-          brandId={selectedBrandId}
-        />
-      )}
+      {selectedBrandId &&
+        consultantId && ( // Check for consultantId prop
+          <ConsultantSuggestedProductsDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            consultantId={consultantId} // Pass consultantId prop
+            brandId={selectedBrandId}
+          />
+        )}
     </Card>
   )
 }
