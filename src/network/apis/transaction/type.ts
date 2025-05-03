@@ -35,6 +35,7 @@ export type TGetDailyOrderStatisticsParams = {
   groupProductIds?: string[]
   preOrderProductIds?: string[]
   flashSaleIds?: string[]
+  voucherId?: string
 }
 
 export type OrderStaticItem = {

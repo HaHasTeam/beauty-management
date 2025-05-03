@@ -67,7 +67,7 @@ export default function BookingTable({ data, pageCount, queryStates }: BookingTa
         id: 'consultantServiceId',
         label: 'Consultant Service',
         options: serviceData?.map((service) => ({
-          label: service.systemService.name,
+          label: `[${service?.account?.username ?? service?.account?.email ?? 'N/A'}]${service.systemService.name}`,
           value: service.id
         })),
         isCustomFilter: true,

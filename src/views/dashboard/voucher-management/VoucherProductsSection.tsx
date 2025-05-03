@@ -1,16 +1,18 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { Box, Plus, Store } from 'lucide-react'
+import { Box, ListPlus, Store } from 'lucide-react'
 import { useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import type { z } from 'zod'
 
-import CardSection from '@/components/card-section'
 import ProductListDialog from '@/components/dialog/ProductListDialog'
+import FormLabel from '@/components/form-label'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormControl, FormField, FormItem } from '@/components/ui/form'
+import { Switch } from '@/components/ui/switch'
 import { getProductFilterApi } from '@/network/apis/product'
 import { getUserProfileApi } from '@/network/apis/user'
 import type { voucherCreateSchema } from '@/schemas'
@@ -34,28 +36,18 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
     select: (data) => data.data.items
   })
 
-  // This function is called when the user confirms product selection in the dialog
   const handleProductSelection = (productsId: string[]) => {
-    // Update the form with the confirmed selection
     form.setValue('selectedProducts', productsId)
   }
 
-  const handleTypeChange = (value: string) => {
-    const applyType = VoucherApplyTypeEnum.ALL == value ? VoucherApplyTypeEnum.ALL : VoucherApplyTypeEnum.SPECIFIC
-    form.setValue('applyType', applyType)
-
-    // Clear selected products when switching to ALL
-    if (value === VoucherApplyTypeEnum.ALL) {
-      form.setValue('selectedProducts', [])
-    }
-  }
-
   // Ensure selectedProducts is always an array
-  const selectedProductIds = form.getValues('selectedProducts') || []
+  const selectedProductIds = form.watch('selectedProducts') || []
 
   // Get the selected products data for display in the table
   const selectedProducts =
     productData?.filter((product: IResponseProduct) => selectedProductIds.includes(product.id || '')) || []
+
+  const applyType = form.watch('applyType')
 
   return (
     <>
@@ -67,45 +59,66 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
         form={form}
         isLoading={isLoading}
       />
-      <CardSection title={'Sản phẩm áp dụng'}>
-        <div className='space-y-4'>
-          <h3 className='text-lg font-medium'>3. Sản phẩm áp dụng</h3>
+      <Card>
+        <CardHeader>
+          <CardTitle className='flex items-center gap-2'>
+            <Box /> Sản phẩm áp dụng
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='space-y-4'>
+            <FormField
+              control={form.control}
+              name='applyType'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4 bg-muted/50'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base'>Áp dụng cho sản phẩm cụ thể?</FormLabel>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value === VoucherApplyTypeEnum.SPECIFIC}
+                      onCheckedChange={(checked) => {
+                        const newApplyType = checked ? VoucherApplyTypeEnum.SPECIFIC : VoucherApplyTypeEnum.ALL
+                        field.onChange(newApplyType)
+                        // Clear selected products when switching to ALL
+                        if (!checked) {
+                          form.setValue('selectedProducts', [])
+                        }
+                      }}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
-          <Tabs value={form.watch('applyType')} onValueChange={handleTypeChange} className='w-full'>
-            <TabsList className='grid w-full grid-cols-2'>
-              <TabsTrigger value='ALL' className='flex items-center justify-center'>
-                <Store className='h-4 w-4 mr-2' />
-                Tất cả sản phẩm
-              </TabsTrigger>
-              <TabsTrigger value='SPECIFIC' className='flex items-center justify-center'>
-                <Box className='h-4 w-4 mr-2' />
-                Sản phẩm cụ thể
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value='ALL' className='mt-4'>
+            {applyType === VoucherApplyTypeEnum.ALL && (
               <p className='text-sm text-muted-foreground'>
+                <Store className='h-4 w-4 mr-1.5 inline-block align-text-bottom' />
                 Voucher sẽ được áp dụng cho tất cả sản phẩm trong cửa hàng của bạn.
               </p>
-            </TabsContent>
-            <TabsContent value='SPECIFIC' className='mt-4'>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center space-x-2'>
-                  <Badge variant='secondary'>{selectedProductIds.length}</Badge>
-                  <span className='text-sm text-muted-foreground'>sản phẩm được chọn</span>
+            )}
+
+            {applyType === VoucherApplyTypeEnum.SPECIFIC && (
+              <div className='space-y-4'>
+                <div className='flex items-center justify-between bg-muted/30 rounded-lg p-2'>
+                  <div className='flex items-center space-x-2 p-2 bg-muted/90 rounded-lg'>
+                    <Badge variant='destructive'>{selectedProductIds.length}</Badge>
+                    <span className='text-sm text-muted-foreground'>sản phẩm được chọn</span>
+                  </div>
+                  <Button type='button' size='sm' className='flex items-center' onClick={() => setOpen(true)}>
+                    <ListPlus className='h-4 w-4 mr-1' />
+                    Thêm sản phẩm
+                  </Button>
                 </div>
-                <Button type='button' size='sm' className='flex items-center' onClick={() => setOpen(true)}>
-                  <Plus className='h-4 w-4 mr-1' />
-                  Chọn sản phẩm
-                </Button>
+                <div className=''>
+                  <ProductAppliesTable list={selectedProducts} isLoading={isLoading} form={form} isDialog={false} />
+                </div>
               </div>
-              <div className='py-8'>
-                {/* Only show products that have been confirmed via the dialog */}
-                <ProductAppliesTable list={selectedProducts} isLoading={isLoading} form={form} isDialog={false} />
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </CardSection>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </>
   )
 }

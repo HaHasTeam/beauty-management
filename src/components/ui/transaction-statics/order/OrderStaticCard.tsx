@@ -26,9 +26,10 @@ interface OrderStaticCardProps {
     React.Dispatch<React.SetStateAction<DataTableQueryState<TGetDailyOrderStatisticsParams>>>
   ]
   mode?: 'full' | 'mini'
+  showOnlyVoucher?: 'platform' | 'shop'
 }
 
-export function OrderStaticCard({ queryStates, data, mode = 'full' }: OrderStaticCardProps) {
+export function OrderStaticCard({ queryStates, data, mode = 'full', showOnlyVoucher }: OrderStaticCardProps) {
   // Get currently selected date range and order type
   const [selectedOrderType, setSelectedOrderType] = React.useState<OrderEnum | null>(null)
 
@@ -275,7 +276,7 @@ export function OrderStaticCard({ queryStates, data, mode = 'full' }: OrderStati
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} />}>
+      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} showOnlyVoucher={showOnlyVoucher} />}>
         {
           <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
             {mode === 'full' && (

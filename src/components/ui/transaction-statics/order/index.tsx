@@ -16,9 +16,10 @@ type Props = {
   eventId?: string
   mode?: 'full' | 'mini'
   header?: React.ReactNode
+  voucherId?: string
 }
 
-export default function IndexPage({ orderType, eventId, mode = 'full', header }: Props) {
+export default function IndexPage({ orderType, eventId, mode = 'full', header, voucherId }: Props) {
   const queryStates = useState<DataTableQueryState<TGetDailyOrderStatisticsParams>>(
     {} as DataTableQueryState<TGetDailyOrderStatisticsParams>
   )
@@ -43,7 +44,8 @@ export default function IndexPage({ orderType, eventId, mode = 'full', header }:
               ...(queryStates[0].fieldFilters?.groupProductIds || []),
               ...(queryStates[0].fieldFilters?.flashSaleIds || [])
             ],
-        groupProductIds: queryStates[0].fieldFilters?.groupProductIds as string[]
+        groupProductIds: queryStates[0].fieldFilters?.groupProductIds as string[],
+        voucherId
       }
     ],
     queryFn: getDailyOrderStatistics.fn,
@@ -62,7 +64,12 @@ export default function IndexPage({ orderType, eventId, mode = 'full', header }:
                   <Skeleton className='w-full h-[300px] rounded-lg' />
                 </div>
               ) : (
-                <OrderStaticCard data={userListData?.data as OrderStatic} queryStates={queryStates} mode={mode} />
+                <OrderStaticCard
+                  data={userListData?.data as OrderStatic}
+                  queryStates={queryStates}
+                  mode={mode}
+                  showOnlyVoucher={!!voucherId ? (userListData?.data.isParent ? 'platform' : 'shop') : undefined}
+                />
               )}
             </Shell>
           </div>

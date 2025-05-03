@@ -67,7 +67,9 @@ export type TConsultantBrief = {
 }
 
 export type TBrandRecommendation = {
-  brand: Pick<TBrand, 'id' | 'name' | 'logo'>
+  brandId: string
+  brandLogo: string
+  brandName: string
   percentage: number
 }
 
