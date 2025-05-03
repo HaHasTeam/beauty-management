@@ -473,6 +473,7 @@ function ScheduleMeeting() {
                                         'transition-colors justify-start h-auto py-3',
                                         field.value === slot.id ? 'bg-primary text-primary-foreground' : 'bg-background'
                                       )}
+                                      disabled={!slot.isAvailable}
                                       onClick={() => field.onChange(slot.id)}
                                     >
                                       <Clock className='mr-2 h-4 w-4 flex-shrink-0' />

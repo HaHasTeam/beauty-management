@@ -99,7 +99,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
     },
     {
       accessorKey: 'status',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+      header: () => <span>Status</span>,
       cell: ({ row }) => {
         const status = row.original.status
 
@@ -128,7 +128,7 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
     },
     {
       accessorKey: 'createdAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Created At' />,
+      header: () => <span>Created At</span>,
       cell: ({ cell }) => (
         <div>
           {formatDate(cell.getValue() as Date, {
@@ -157,14 +157,14 @@ export function getColumns({ setRowAction, isAdmin }: GetColumnsProps): ColumnDe
             label: 'Update',
             icon: Pen,
             link: routesConfig[Routes.UPDATE_BRAND].getPath(row.original.id),
-            showAlways: !isAdmin
+            showAlways: false
           },
           {
             label: 'Assign Operator',
             icon: UserPlus,
             action: () => setRowAction({ row: row, type: 'assign-operator' }),
             className: 'bg-blue-500 text-white hover:bg-blue-600',
-            showAlways: isAdmin
+            showAlways: isAdmin && !row.original.reviewer
           },
           {
             label: 'Ban',
