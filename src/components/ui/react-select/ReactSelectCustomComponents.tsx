@@ -38,7 +38,7 @@ export const MultiValueRemove = (props: MultiValueRemoveProps) => {
 export const Option = (props: OptionProps) => {
   const option = props.data as { label: string; display?: React.ReactNode }
 
-  console.log(); 
+  console.log()
   return (
     <components.Option {...props} className=''>
       <div className='flex items-center justify-between w-full mr-2 truncate'>

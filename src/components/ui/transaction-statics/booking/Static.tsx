@@ -45,7 +45,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
     commissionFee: item.booked?.commissionFee || 0,
     actualRevenue: item.booked?.actualRevenue || 0
   }))
-  console.log(data,"DSAFFS")
+  console.log(data, 'DSAFFS')
 
   const descriptionNode = (
     <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 pt-2'>
@@ -56,7 +56,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Booked Count</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-orange))]'>
-                {data.total.booked?.count||0}
+            {data.total.booked?.count || 0}
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
         <div className='min-w-0 flex-1 overflow-hidden'>
           <p className='text-sm font-medium text-muted-foreground truncate'>Actual Revenue</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-green))]'>
-                {formatCurrency(data.total.booked?.actualRevenue || 0       , 'vi-VN')}
+            {formatCurrency(data.total.booked?.actualRevenue || 0, 'vi-VN')}
           </p>
         </div>
       </div>
@@ -98,7 +98,7 @@ const BookingStaticChart = ({ data }: BookingStaticChartProps) => {
           <Banknote className='h-4 w-4 text-[hsl(var(--chart-red))] ' />
         </div>
         <div className='min-w-0 flex-1 overflow-hidden'>
-          <p className='text-sm font-medium text-muted-foreground truncate'>   Cancelled Price</p>
+          <p className='text-sm font-medium text-muted-foreground truncate'> Cancelled Price</p>
           <p className='text-lg md:text-xl font-bold truncate text-[hsl(var(--chart-red))]'>
             {formatCurrency(data.total.cancelled?.totalPrice || 0, 'vi-VN')}
           </p>

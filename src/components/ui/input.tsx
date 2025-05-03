@@ -172,10 +172,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [type, symbol])
 
     React.useEffect(() => {
-      
-        if (clearAllRef.current === true ) {
-            return
-          }
+      if (clearAllRef.current === true) {
+        return
+      }
       if (value !== undefined) {
         if (value === '') {
           // onChange?.(value as unknown as React.ChangeEvent<HTMLInputElement>)
