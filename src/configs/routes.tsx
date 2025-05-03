@@ -233,6 +233,13 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/category/[id]',
     getPath: (params) => `/dashboard/category/${params.id}`
   },
+  [Routes.BOOKING_LIST]: {
+    name: 'Bookings',
+    title: 'Bookings',
+    description: 'Manage bookings',
+    path: '/dashboard/bookings',
+    getPath: () => '/dashboard/bookings'
+  },
   [Routes.BOOKING_DETAIL]: {
     name: 'Booking Details',
     title: 'Booking Details',

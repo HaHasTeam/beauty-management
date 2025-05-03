@@ -1216,7 +1216,8 @@
     "reply": "Reply",
     "writeYourRep": "Viết phản hồi của bạn...",
     "yourReply": "Phản hồi của bạn",
-    "customerContent": "Nội dung"
+    "customerContent": "Nội dung",
+    "booking": "Lịch hẹn"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",
@@ -1422,7 +1423,8 @@
       "formSubmitted": "Biểu mẫu đặt dịch vụ của bạn đã được gửi thành công. Chúng tôi đang xem xét thông tin của bạn.",
       "resultSheetSent": "Bảng kết quả cho dịch vụ của bạn đã được gửi. Bạn có thể xem kết quả chi tiết ngay bây giờ.",
       "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn."
-    }
+    },
+    "service": "Dịch vụ"
   },
   "reason": {
     "rejectCancel": {

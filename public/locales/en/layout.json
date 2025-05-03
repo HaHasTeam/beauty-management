@@ -628,20 +628,6 @@
   "walletTerm": {
     "balance": "Balance & Transactions",
     "createWallet": "Create Your Own Wallet",
-    "withdraw": "Withdraw",
-    "withdrawalRequests": {
-      "title": "Withdrawal Requests List",
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "processing": "Processing",
-        "completed": "Completed",
-        "cancelled": "Cancelled"
-      },
-      "statusUpdateSuccess": "Withdrawal request status updated successfully",
-      "processedBy": "Processed by"
-    },
     "withdraw": {
       "amount": "Amount",
       "availableBalance": "Available balance",
@@ -654,6 +640,19 @@
       "successMessage": "Your withdrawal request has been successfully submitted and will be processed shortly. You can track the status in your withdrawal history.",
       "error": "Withdrawal Failed",
       "errorMessage": "We couldn't process your withdrawal request at this time. Please check your information and try again later."
+    },
+    "withdrawalRequests": {
+      "title": "Withdrawal Requests List",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "statusUpdateSuccess": "Withdrawal request status updated successfully",
+      "processedBy": "Processed by"
     },
     "bankAccounts": {
       "title": "Bank Accounts",
@@ -1266,7 +1265,8 @@
     "reply": "Reply",
     "writeYourRep": "Write your reply...",
     "yourReply": "Your reply",
-    "customerContent": "Content"
+    "customerContent": "Content",
+    "booking": "Booking"
   },
   "media": {
     "previewImage": "Preview Image/Video",
@@ -1472,7 +1472,8 @@
       "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
       "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
       "refunded": "The payment for this booking has been refunded to your original payment method."
-    }
+    },
+    "service": "Service"
   },
   "reason": {
     "rejectCancel": {

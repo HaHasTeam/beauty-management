@@ -2,6 +2,7 @@ import { IBranch2 } from './Branch'
 import { TBrand } from './brand'
 import { IConsultantService, IConsultantServiceDetailServer } from './consultant-service'
 import { BookingStatusEnum, BookingTypeEnum, PaymentMethod } from './enum'
+import { IResponseFeedback } from './feedback'
 import { PaymentMethodEnum } from './payment'
 import { TMetaData } from './request'
 import { ISlot, TSlot } from './slot'
@@ -46,6 +47,7 @@ export type IBooking = TMetaData & {
   record: string
   type: BookingTypeEnum
   status: BookingStatusEnum
+  feedback: IResponseFeedback
   voucher: TVoucher
   slot: ISlot
   account: TUser

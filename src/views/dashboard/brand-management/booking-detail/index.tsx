@@ -12,6 +12,7 @@ import BookingStatusTrackingDetail from '@/components/booking-detail/BookingStat
 import BookingSummary from '@/components/booking-detail/BookingSummary'
 import UpdateBookingStatus from '@/components/booking-detail/UpdateBookingStatus'
 import Empty from '@/components/empty/Empty'
+import { ViewFeedbackDialog } from '@/components/feedback/ViewFeedbackDialog'
 import ImageWithFallback from '@/components/image/ImageWithFallback'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -33,6 +34,7 @@ const BookingDetail = () => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [openCancelBookingDialog, setOpenCancelBookingDialog] = useState<boolean>(false)
+  const [openViewFeedbackDialog, setOpenViewFeedbackDialog] = useState<boolean>(false)
   const [isTrigger, setIsTrigger] = useState<boolean>(false)
   // const { successToast } = useToast()
   // const handleServerError = useHandleServerError()
@@ -58,6 +60,8 @@ const BookingDetail = () => {
   const canCancel =
     bookingData?.data?.status === BookingStatusEnum.TO_PAY ||
     bookingData?.data?.status === BookingStatusEnum.WAIT_FOR_CONFIRMATION
+
+  const canViewFeedback = bookingData && bookingData.data && bookingData.data.feedback !== null
 
   const isMeetingJoinable =
     bookingData?.data?.status === BookingStatusEnum.BOOKING_CONFIRMED && bookingData?.data?.meetUrl
@@ -348,6 +352,11 @@ const BookingDetail = () => {
                     {t('booking.joinMeeting')}
                   </a>
                 )}
+                {canViewFeedback && (
+                  <Button className='w-full' onClick={() => setOpenViewFeedbackDialog(true)}>
+                    {t('order.viewFeedback')}
+                  </Button>
+                )}
               </div>
             </div>
           </>
@@ -366,13 +375,26 @@ const BookingDetail = () => {
 
         {/* Cancel Booking Dialog */}
         {!isFetching && bookingData?.data && (
-          <CancelBookingDialog
-            open={openCancelBookingDialog}
-            setOpen={setOpenCancelBookingDialog}
-            onOpenChange={setOpenCancelBookingDialog}
-            setIsTrigger={setIsTrigger}
-            bookingId={bookingData?.data?.id ?? ''}
-          />
+          <>
+            <CancelBookingDialog
+              open={openCancelBookingDialog}
+              setOpen={setOpenCancelBookingDialog}
+              onOpenChange={setOpenCancelBookingDialog}
+              setIsTrigger={setIsTrigger}
+              bookingId={bookingData?.data?.id ?? ''}
+            />
+            <ViewFeedbackDialog
+              systemServiceName={bookingData?.data?.consultantService?.systemService?.name}
+              systemServiceType={bookingData?.data?.consultantService?.systemService?.type}
+              isOpen={openViewFeedbackDialog}
+              onClose={() => setOpenViewFeedbackDialog(false)}
+              feedback={bookingData?.data?.feedback}
+              brand={null}
+              accountAvatar={bookingData?.data?.account?.avatar || ''}
+              accountName={bookingData?.data?.account?.username}
+              bookingId={bookingId}
+            />
+          </>
         )}
       </div>
     </div>
