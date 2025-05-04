@@ -40,6 +40,10 @@
     "fileFormat": "Format: .JPEG, .PNG"
   },
   "home": {
+     "ctaTitle":"Let's build something amazing together!",
+    "ctaDescription":"You're ready to start a new project? Contact us now!",
+    "ctaButton":"Contact",
+    "heroCTA": "Get Started",
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
     "premiumConsultantTitle": "Premium Consultation",
@@ -54,7 +58,8 @@
     "description": "Discover authentic beauty products and personalized expert advice in one trusted platform.",
     "login": "Login",
     "register": "Register",
-    "heroImageAlt": "Premium beauty products collection",
+    "heroTitle": "Allure accompany with you",
+    "heroSubtitle": "Allure is a comprehensive system for beauty product sales and makeup consultation services.",
     "featuresTitle": "Why Choose Allure",
     "featuresSubtitle": "We're transforming the online beauty shopping experience with trust and expertise",
     "feature1Title": "Authentic Products",
@@ -66,7 +71,29 @@
     "problemTitle": "The Beauty Market Challenge",
     "problemDescription": "The online beauty market is overwhelming with endless options, unreliable information, and the risk of fake products, making it difficult to find what truly works for you.",
     "solutionTitle": "How Allure Helps",
-    "solutionDescription": "We provide a curated selection of genuine products and professional consultations, making it easier to find the right products, learn how to use them, and feel more confident in your beauty choices."
+    "solutionDescription": "We provide a curated selection of genuine products and professional consultations, making it easier to find the right products, learn how to use them, and feel more confident in your beauty choices.",
+    "testimonial2Role": "Product Manager",
+    "testimonial2Quote": "The UI is clean and the features are exactly what we needed.",
+    "heroSubtitle2": "Allure is a comprehensive system for beauty product sales and makeup consultation services.",
+    "heroImageAlt": "Booking Statistics Overview",
+    "heroOrderStaticsAlt": "Order Statistics Snippet",
+    "featureFlashSaleTitle": "Flash Sales",
+    "featureFlashSaleDesc": "Easily create and manage timed promotions.",
+    "featureFlashSaleAlt": "Flash Sale Management Interface",
+    "featureGroupSaleTitle": "Group Buying",
+    "featureGroupSaleDesc": "Organize group purchase offers.",
+    "featureGroupSaleAlt": "Group Sale Offer Display",
+    "featureVoucherTitle": "Voucher System",
+    "featureVoucherDesc": "Generate and track discount vouchers.",
+    "featureVoucherAlt": "Voucher Creation Tool",
+    "processTitle": "Our Process",
+    "process1Title": "Register and Verify Account",
+    "process1Desc": "Complete registration and verify your email.",
+    "process2Title": "Fill in Information & Terms",
+    "process2Desc": "Provide necessary information and agree to the terms.",
+    "process3Title": "Schedule Appointment with Staff",
+    "process3Desc": "Book a suitable appointment with support staff.",
+    "process4Title": "Become an Allure Member",    "process4Desc": "Start experiencing Allure's exclusive services."
   },
   "productCard": {
     "currentPrice": "{{price, currency}}",
@@ -1564,7 +1591,7 @@
     "resultNotePlaceholder": "Enter your notes here...",
     "status": {
       "TO_PAY": "To Pay",
-      "WAIT_FOR_CONFIRMATION": "Waiting for Confirmation",
+      "WAIT_FOR_CONFIRMATION": "Waiting For Confirmation",
       "BOOKING_CONFIRMED": "Booking Confirmed",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled",
@@ -2009,14 +2036,21 @@
       "emailSignIn": "Email Sign In",
       "forgotPassword": "Forgot Password",
       "updatePassword": "Update Password",
-      "signup": ""
+      "signup": "Sign Up",
+      "emailVerification": "Verify Your Email"
     },
     "descriptions": {
       "signIn": "Enter your email and password to sign in!",
       "emailSignIn": "Enter your email to get a magic link!",
       "forgotPassword": "Enter your email to get a password reset link!",
       "updatePassword": "Choose a new password for your account!",
-      "signup": ""
+      "signup": "Fill in the details below to get started",
+      "emailVerification": "Check your email & click the link to activate your account."
+    },
+    "buttons": {
+      "resendEmail": "Resend Email",
+      "enterNewEmail": "Enter New Email",
+      "contactSupport": "Contact Support"
     }
   },
   "branchCreation": {
@@ -2139,7 +2173,7 @@
       "attemptedAccess": "Attempted to access:",
       "goToHome": "Go to Home",
       "contactSupportButton": "Contact Support",
-      "copyright": "© {{year}} Your Company. All rights reserved."
+      "copyright": " 2023 Your Company. All rights reserved."
     },
     "dashboard": {
       "error": "Error",
