@@ -69,7 +69,9 @@ const CreateBlog = () => {
   const handleReset = () => {
     form.reset()
     form.reset({
-      content: '<p><br></p>'
+      content: '<p><br></p>',
+      status: BlogEnum.UN_PUBLISHED,
+      type: BlogTypeEnum.CONDITION
     })
     // setResetSignal((prev) => !prev)
   }
@@ -182,7 +184,11 @@ const CreateBlog = () => {
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        defaultValue={defaultBlogValues.status}
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue {...field} placeholder={t('createBlog.statusPlaceholder')} />
                         </SelectTrigger>
@@ -218,7 +224,7 @@ const CreateBlog = () => {
                   </div>
                   <div className='w-full space-y-1'>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select defaultValue={defaultBlogValues.type} onValueChange={field.onChange} value={field.value}>
                         <SelectTrigger>
                           <SelectValue {...field} placeholder={t('createBlog.statusPlaceholder')} />
                         </SelectTrigger>

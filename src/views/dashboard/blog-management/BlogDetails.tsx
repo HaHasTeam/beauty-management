@@ -7,7 +7,7 @@ import { Link, useParams } from 'react-router-dom'
 import BlogState from '@/components/blog-state'
 import Empty from '@/components/empty/Empty'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
-import { Routes, routesConfig } from '@/configs/routes'
+import { externalLinks, Routes, routesConfig } from '@/configs/routes'
 import { getBlogApi } from '@/network/apis/blog'
 
 const BlogDetails = () => {
@@ -40,9 +40,7 @@ const BlogDetails = () => {
       <div className='container mx-auto py-3 flex flex-col gap-2'>
         <div className='flex justify-between items-center gap-2'>
           <div className='flex gap-1 items-center'>
-            <h2 className='md:text-2xl sm:text-sm text-xs font-bold text-justify text-primary'>
-              {blogData.data.title}
-            </h2>
+            <h2 className='md:text-xl sm:text-sm text-xs font-bold text-justify text-primary'>{blogData.data.title}</h2>
             <BlogState state={blogData.data.status} />
           </div>
           <div className='flex gap-2 items-center'>
@@ -62,10 +60,15 @@ const BlogDetails = () => {
             </Link>
           </div>
         </div>
-        <p className='text-blue-500 underline italic text-sm flex flex-wrap line-clamp-1 overflow-ellipsis'>
-          {blogData.data?.tag}
-        </p>
-        <p>{blogData.data?.author?.username && `${t('createBlog.author')}: ${blogData.data?.author?.username}`}</p>
+        <div className='flex items-center justify-between gap-4'>
+          <Link
+            to={externalLinks + '/' + Routes.BLOG}
+            className='text-blue-500 underline italic flex flex-wrap line-clamp-1 overflow-ellipsis'
+          >
+            {blogData.data?.tag}
+          </Link>
+          <p>{blogData.data?.author?.username && `${t('createBlog.author')}: ${blogData.data?.author?.username}`}</p>
+        </div>
         <div className='text-sm text-muted-foreground flex justify-between items-center'>
           <p>
             {t('blogDetails.createdAt')}: {t('date.toLocaleDateTimeString', { val: new Date(blogData.data.createdAt) })}
