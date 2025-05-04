@@ -417,7 +417,7 @@ export default function ClassificationConfigFlex({
 
   useEffect(() => {
     // Extract product classifications
-    const newCombinations = form?.getValues('productClassifications') ?? []
+    const newCombinations = form?.getValues('productClassifications').filter((item) => item.title !== undefined) ?? []
     const classificationsOptions = regenerateUpdatedOptions(newCombinations)
     const newClassificationCount = classificationsOptions?.length
 
