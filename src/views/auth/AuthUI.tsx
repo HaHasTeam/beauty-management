@@ -29,7 +29,7 @@ const AuthPaths = [
 ]
 
 export default function AuthUI() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('layout')
   const viewProp = useLocation().pathname.split('/').pop()
 
   const props: Props = useMemo(() => {
@@ -52,33 +52,55 @@ export default function AuthUI() {
   if (!viewProp || !AuthPaths.includes(viewProp)) {
     return <Navigate to={routesConfig[Routes.AUTH_LOGIN].getPath()} replace />
   }
-  if (viewProp == 'email-verification') {
-    return <EmailVerification />
-  }
 
   const getTitleKey = () => {
-    if (props.viewProp === 'signup') return 'signup'
-    if (props.viewProp === 'forgot-password') return 'forgotPassword'
-    if (props.viewProp === 'update-password') return 'updatePassword'
-    if (props.viewProp === 'email-signin') return 'emailSignIn'
-    return 'signIn'
+    switch (props.viewProp) {
+      case 'signin':
+        return 'signIn'
+      case 'password-signin':
+        return 'signIn'
+      case 'email-signin':
+        return 'emailSignIn'
+      case 'forgot-password':
+        return 'forgotPassword'
+      case 'update-password':
+        return 'updatePassword'
+      case 'signup':
+        return 'signup'
+      case 'email-verification':
+        return 'emailVerification'
+      default:
+        return 'signIn'
+    }
   }
 
   const getDescriptionKey = () => {
-    if (props.viewProp === 'signup') return 'signup'
-    if (props.viewProp === 'forgot-password') return 'forgotPassword'
-    if (props.viewProp === 'update-password') return 'updatePassword'
-    if (props.viewProp === 'email-signin') return 'emailSignIn'
-    return 'signIn'
+    switch (props.viewProp) {
+      case 'signin':
+        return 'signIn'
+      case 'password-signin':
+        return 'signIn'
+      case 'email-signin':
+        return 'emailSignIn'
+      case 'forgot-password':
+        return 'forgotPassword'
+      case 'update-password':
+        return 'updatePassword'
+      case 'signup':
+        return 'signup'
+      case 'email-verification':
+        return 'emailVerification'
+      default:
+        return 'signIn'
+    }
   }
 
   return (
-    <div className='my-auto mb-auto flex flex-col md:max-w-full lg:max-w-[420px]'>
+    <div className='flex flex-col md:max-w-full'>
       <p className='text-[32px] font-bold text-zinc-950 dark:text-white'>{t(`authUI.titles.${getTitleKey()}`)}</p>
       <p className='mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400'>
         {t(`authUI.descriptions.${getDescriptionKey()}`)}
       </p>
-
       {props.viewProp === 'password-signin' && <PasswordSignIn />}
       {props.viewProp === 'email-signin' && (
         <EmailSignIn allowPassword={props.allowPassword} disableButton={props.disableButton} />
@@ -88,6 +110,7 @@ export default function AuthUI() {
       )}
       {props.viewProp === 'update-password' && <UpdatePassword />}
       {props.viewProp === 'signup' && <SignUp />}
+      {props.viewProp === 'email-verification' && <EmailVerification />}
     </div>
   )
 }

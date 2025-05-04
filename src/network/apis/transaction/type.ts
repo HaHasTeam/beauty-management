@@ -101,6 +101,7 @@ export type TGetDailyBookingStatisticsParams = {
   startDate?: string
   endDate?: string
   consultantId?: string
+  consultantServiceId?: string
 }
 
 export type BookingStatDetail = {

@@ -84,7 +84,7 @@ export default function PasswordSignIn() {
     <div>
       <Form {...form}>
         <form noValidate onSubmit={form.handleSubmit(onSubmit)} className='w-full grid gap-4 mb-8' id={`form-${id}`}>
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col space-y-4'>
             <FormField
               control={form.control}
               name='email'
@@ -92,17 +92,12 @@ export default function PasswordSignIn() {
                 <FormItem>
                   <FormLabel required>{t('signIn.email')}</FormLabel>
                   <FormControl>
-                    <Input
-                      className='h-[50px] focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder={t('signIn.emailPlaceholder')}
-                      {...field}
-                    />
+                    <Input placeholder={t('signIn.emailPlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name='password'
@@ -110,17 +105,12 @@ export default function PasswordSignIn() {
                 <FormItem>
                   <FormLabel required>{t('signIn.password')}</FormLabel>
                   <FormControl>
-                    <PasswordInput
-                      className='h-[50px] w-full focus:outline-0 dark:placeholder:text-zinc-400'
-                      placeholder={t('signIn.passwordPlaceholder')}
-                      {...field}
-                    />
+                    <PasswordInput placeholder={t('signIn.passwordPlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <div className='flex justify-end -mt-2'>
               <Link to='/auth/signin/forgot_password' className='font-medium text-primary text-sm hover:underline'>
                 {t('signIn.forgotPassword')}
@@ -128,17 +118,13 @@ export default function PasswordSignIn() {
             </div>
           </div>
 
-          <Button
-            loading={isSignInWithPasswordLoading}
-            type='submit'
-            className='mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium'
-          >
+          <Button loading={isSignInWithPasswordLoading} type='submit' className='w-full'>
             {t('signIn.signInButton')}
           </Button>
         </form>
       </Form>
 
-      <div className='px-8 py-6 border-t border-gray-200 dark:border-gray-600'>
+      <div className='px-8 pt-2 border-t border-gray-200 dark:border-gray-600'>
         <p className='text-center text-gray-600 dark:text-gray-300'>
           {t('signIn.noAccount')}{' '}
           <Link to='/auth/signup' className='text-primary hover:underline font-medium'>

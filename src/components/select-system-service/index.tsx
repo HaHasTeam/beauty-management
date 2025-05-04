@@ -13,7 +13,7 @@ import AsyncSelect from '../ui/react-select/AsyncSelect'
 type Props = HTMLAttributes<HTMLSelectElement> & InputProps
 
 const getServiceItemDisplay = (service: ISystemService) => {
-  const imgUrl = service.images?.[0]?.fileUrl || ''
+  const imgUrl = service?.images?.[0]?.fileUrl || ''
   return (
     <div className='flex items-center gap-1'>
       <Avatar className='bg-transparent size-5'>
@@ -22,7 +22,7 @@ const getServiceItemDisplay = (service: ISystemService) => {
           <Image className='size-4' />
         </AvatarFallback>
       </Avatar>
-      <span>{service.name}</span>
+      <span>{service?.name}</span>
     </div>
   )
 }

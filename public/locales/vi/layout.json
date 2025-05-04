@@ -39,6 +39,12 @@
     "fileFormat": "Định dạng: .JPEG, .PNG"
   },
   "home": {
+    "ctaTitle": "Hợp tác cùng chúng tôi",
+    "ctaDescription": "Bạn sẵn lòng bắt đầu dự án mới? Liên hệ với chúng tôi ngay!",
+    "ctaButton": "Liên hệ",
+    "heroCTA": "Bắt đầu ngay",
+    "heroTitle": "Allure đồng hành cùng bạn",
+    "heroSubtitle": "Allure là hệ thống toàn diện cho việc bán sản phẩm làm đẹp và dịch vụ tư vấn trang điểm.",
     "consultantTitle": "Tư vấn sắc đẹp",
     "standardConsultantTitle": "Tư vấn tiêu chuẩn",
     "premiumConsultantTitle": "Tư vấn cao cấp",
@@ -53,7 +59,8 @@
     "description": "Khám phá các sản phẩm làm đẹp chính hãng và tư vấn cá nhân hóa từ chuyên gia trong một nền tảng đáng tin cậy.",
     "login": "Đăng nhập",
     "register": "Đăng ký",
-    "heroImageAlt": "Bộ sưu tập sản phẩm làm đẹp cao cấp",
+    "heroImageAlt": "Tổng quan Thống kê Đặt chỗ",
+    "heroOrderStaticsAlt": "Đoạn trích Thống kê Đơn hàng",
     "featuresTitle": "Tại Sao Chọn Allure",
     "featuresSubtitle": "Chúng tôi đang chuyển đổi trải nghiệm mua sắm làm đẹp trực tuyến với sự tin cậy và chuyên môn",
     "feature1Title": "Sản Phẩm Chính Hãng",
@@ -65,7 +72,28 @@
     "problemTitle": "Thách Thức Của Thị Trường Làm Đẹp",
     "problemDescription": "Thị trường làm đẹp trực tuyến đầy áp lực với vô số lựa chọn, thông tin không đáng tin cậy và nguy cơ sản phẩm giả, khiến việc tìm ra sản phẩm phù hợp trở nên khó khăn.",
     "solutionTitle": "Cách Allure Giúp Đỡ",
-    "solutionDescription": "Chúng tôi cung cấp một bộ sưu tập tinh tế các sản phẩm chính hãng và tư vấn chuyên nghiệp, giúp bạn dễ dàng tìm ra sản phẩm phù hợp, học cách sử dụng chúng và cảm thấy tự tin hơn trong các lựa chọn làm đẹp của mình."
+    "solutionDescription": "Chúng tôi cung cấp một bộ sưu tập tinh tế các sản phẩm chính hãng và tư vấn chuyên nghiệp, giúp bạn dễ dàng tìm ra sản phẩm phù hợp, học cách sử dụng chúng và cảm thấy tự tin hơn trong các lựa chọn làm đẹp của mình.",
+    "testimonial2Role": "Quản lý sản phẩm",
+    "testimonial2Quote": "Giao diện người dùng sạch sẽ và các tính năng chính xác là những gì chúng tôi cần.",
+    "heroSubtitle2": "Allure là hệ thống toàn diện cho việc bán sản phẩm làm đẹp và dịch vụ tư vấn trang điểm.",
+    "featureFlashSaleTitle": "Flash Sales",
+    "featureFlashSaleDesc": "Dễ dàng tạo và quản lý các chương trình khuyến mãi có thời hạn.",
+    "featureFlashSaleAlt": "Giao diện Quản lý Flash Sale",
+    "featureGroupSaleTitle": "Mua Chung",
+    "featureGroupSaleDesc": "Tổ chức các ưu đãi mua hàng theo nhóm.",
+    "featureGroupSaleAlt": "Hiển thị Ưu đãi Mua Chung",
+    "featureVoucherTitle": "Hệ Thống Voucher",
+    "featureVoucherDesc": "Tạo và theo dõi các phiếu giảm giá.",
+    "featureVoucherAlt": "Công cụ Tạo Voucher",
+    "processTitle": "Quy Trình Của Chúng Tôi",
+    "process1Title": "Đăng kí và xác thực tài khoản",
+    "process1Desc": "Hoàn tất đăng ký và xác thực email của bạn.",
+    "process2Title": "Điền đẩy đủ các thông tin về các điều khoản",
+    "process2Desc": "Cung cấp thông tin cần thiết và đồng ý với điều khoản.",
+    "process3Title": "Lên lịch hẹn với nhân viên hệ thống",
+    "process3Desc": "Đặt lịch hẹn phù hợp với nhân viên hỗ trợ.",
+    "process4Title": "Trở thành thành viên của Allure",
+    "process4Desc": "Bắt đầu trải nghiệm các dịch vụ độc quyền của Allure."
   },
   "productCard": {
     "currentPrice": "{{price, currency}}",
@@ -745,9 +773,9 @@
       "delivered": "Đơn hàng đã được giao thành công đến tay khách hàng.",
       "completed": "Khách hàng đã xác nhận nhận hàng, giao dịch hoàn tất.",
       "cancelled": "Đơn hàng đã bị hủy và sẽ không được xử lý hoặc giao hàng.",
-      "returning": "Khách hàng đã yêu cầu trả hàng, và đơn hàng đang chờ được lấy. Thương hiệu cần cử shipper đến lấy đơn hàng từ khách và thực hiện cập nhật trạng thái trong vòng {{count}} ngày; nếu không, hệ thống sẽ tự động cập nhật trạng thái thành \"Đã nhận\". Nếu thương hiệu nhấp vào nút \"Chưa nhận được\", thời gian sẽ được gia hạn. Nếu có vấn đề, thương hiệu có thể gửi khiếu nại.",
+      "returning": "Khách hàng đã yêu cầu trả hàng, và đơn hàng đang chờ được lấy. Thương hiệu cần cử shipper đến lấy đơn hàng từ khách và thực hiện cập nhật trạng thái trong vòng {{count}} ngày; nếu không, hệ thống sẽ tự động cập nhật trạng thái thành \"Đã nhận\". Nếu thương hiệu nhấp vào nút \"Chưa nhận được\", thời gian sẽ được gia hạn. Nếu có vấn đề, thương hiệu có thể gửi khiếu nại.",
       "refunded": "Khoản tiền hoàn trả đã được xử lý và gửi lại cho khách hàng.",
-      "brandReceived": "Đơn hàng trả lại đã được thương hiệu nhận thành công và đang chờ xem xét thêm. Nếu thương hiệu gửi khiếu nại, đội ngũ hỗ trợ sẽ xem xét và giải quyết vấn đề. Nếu thương hiệu không gửi khiếu nại, xu sẽ được hoàn vào ví của khách hàng trong vòng {{count}} ngày kể từ ngày nhận hàng trả. Sau thời gian này, thương hiệu sẽ không thể khiếu nại nữa.",
+      "brandReceived": "Đơn hàng trả lại đã được thương hiệu nhận thành công và đang chờ xem xét thêm. Nếu thương hiệu gửi khiếu nại, đội ngũ hỗ trợ sẽ xem xét và giải quyết vấn đề. Nếu thương hiệu không gửi khiếu nại, xu sẽ được hoàn vào ví của khách hàng trong vòng {{count}} ngày kể từ ngày nhận hàng trả. Sau thời gian này, thương hiệu sẽ không thể khiếu nại nữa.",
       "returnFailed": "Quá trình trả hàng không thành công do các vấn đề như gửi sai kiện hàng, sản phẩm bị hư hỏng khi trả lại hoặc không đáp ứng điều kiện hoàn trả."
     },
     "cancelRequestPendingBrandTitle": "Yêu Cầu Hủy Đơn Hàng",
@@ -1073,11 +1101,11 @@
       "INACTIVE": "Sản phẩm hiện không hoạt động và không hiển thị với khách hàng.",
       "PRE_ORDER": "Sản phẩm chưa được phát hành nhưng có thể đặt trước.",
       "OFFICIAL": "Sản phẩm được xác nhận chính thức từ thương hiệu hoặc nhà sản xuất và được kiểm duyệt bởi kiểm duyệt viên của nền tảng.",
-      "OUT_OF_STOCK": "Sản phẩm tạm thời hết hàng do không còn tồn kho.",
+      "OUT_OF_STOCK": "Sản phẩm tạm thõi hết hàng do không còn tồn kho.",
       "SOLD_OUT": "Sản phẩm đã hết hàng do không còn trong kho. Hãy bổ sung ngay để khách hàng có thể tiếp tục mua sắm!",
       "ALMOST_OUT": "Sản phẩm sắp hết, hãy nhanh tay bổ sung!",
       "BANNED": "Sản phẩm này đã bị gỡ khỏi nền tảng do vi phạm chính sách hoặc quy định. Hiện tại, khách hàng không thể mua hoặc nhìn thấy sản phẩm này. Quản trị viên hoặc người vận hành có thể dỡ bỏ lệnh cấm, sau đó sản phẩm sẽ chuyển sang trạng thái ẩn.",
-      "FLASH_SALE": "Sản phẩm này đang tham gia chương trình Flash Sale có thời hạn, mang đến ưu đãi độc quyền để thúc đẩy doanh số. Thương hiệu cần đảm bảo nguồn hàng ổn định và giá cả cạnh tranh, trong khi nền tảng sẽ giám sát hiệu suất và đảm bảo các quy định được tuân thủ trong suốt chương trình.",
+      "FLASH_SALE": "Sản phẩm này đang tham gia chương trình Flash Sale có thời hạn, mang đến ưu đãi độc quyền để thúc đẩy doanh số. Thương hiệu cần đảm bảo nguồn hàng ổn định và giá cả cạnh tranh, trong khi nền tảng sẽ giám sát hiệu suất và đảm bảo các quy định được tuân thủ trong suốt chương trình.",
       "UN_PUBLISHED": " Sản phẩm này hiện đang ẩn và không hiển thị với khách hàng. Thương hiệu nên kiểm tra các yêu cầu cần thiết để có thể đăng lại nếu cần."
     },
     "brandInformation": "Thông Tin Thương Hiệu",
@@ -1328,7 +1356,7 @@
     "complaintTrackView": {
       "title": "Chi Tiết Khiếu Nại",
       "description": "Dưới đây là thông tin chi tiết về quá trình xem xét khiếu nại.",
-      "cus": "Chi Tiết Khiếu Nại Của Thương Hiệu",
+      "cus": "Chi Tiết Khiếu Nại Của Thương Hiệu",
       "admin": "Quyết Định Của Admin Đối Với Khiếu Nại Của Thương Hiệu",
       "brand": "Quyết Định Của Quản Trị Viên Đối Với Khiếu Nại Của Thương Hiệu",
       "cancel": "Hủy",
@@ -1341,7 +1369,7 @@
       "insufficientJustification": "Lý do khiếu nại do thương hiệu cung cấp không hợp lệ.",
       "policyCompliance": "Khiếu nại vi phạm chính sách của nền tảng.",
       "validReturnRequest": "Yêu cầu trả hàng của khách hàng là hợp lệ, do đó khiếu nại không có cơ sở.",
-      "delayedSubmission": "Khiếu nại được gửi sau thời gian cho phép.",
+      "delayedSubmission": "Khiếu nại được gửi sau thời gian cho phép.",
       "other": "Lý do khác"
     },
     "returnRequestApprovedView": "Yêu cầu trả hàng của bạn đã được chấp thuận. Nhấn nút \"Xem\" để xem lại chi tiết quá trình xử lý.",
@@ -1388,7 +1416,7 @@
       "fakeOrDifferentProduct": "Sản phẩm trả lại là hàng giả hoặc khác với sản phẩm đã mua",
       "damagedPackaging": "Bao bì sản phẩm bị hư hỏng quá mức cho phép",
       "returnAbuse": "Khách hàng có lịch sử trả hàng quá mức hoặc gian lận",
-      "expiredReturn": "Sản phẩm trả lại sau thời gian cho phép",
+      "expiredReturn": "Sản phẩm trả lại sau thời gian cho phép",
       "other": "Khác"
     },
     "rejectReturnOrderDialog": {
@@ -1481,12 +1509,13 @@
     "completeConsultationDescription": "Vui lòng điền đánh giá của bạn cho từng phần và đề xuất sản phẩm cho khách hàng dựa trên buổi tư vấn.",
     "customerResponses": "Phản hồi của khách hàng",
     "yourEvaluation": "Đánh giá của bạn",
-    "enterYourEvaluation": "Nhập đánh giá của bạn tại đây...",
+    "enterEvaluation": "Nhập đánh giá của bạn tại đây...",
+    "uploadImages": "Tải lên hình ảnh",
     "imagesHint": "Tải lên tối đa 3 hình ảnh để hỗ trợ đánh giá của bạn",
     "submitConsultationResultSuccess": "Kết quả tư vấn đã được gửi thành công!",
     "detail": "Chi tiết đặt lịch",
     "statusLabel": "Trạng thái",
-    "timeline": "Dòng thời gian",
+    "timeline": "Dòng thời gian",
     "consultantInfo": "Thông tin tư vấn viên",
     "chatWithConsultant": "Trò chuyện với tư vấn viên",
     "viewProfile": "Xem hồ sơ",
@@ -1697,10 +1726,10 @@
     "classificationQuantityRequired": "Phân loại sản phẩm phải có ít nhất một số lượng",
     "skuRequired": "SKU là bắt buộc",
     "skuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
-    "invalidDatetime": "Chuỗi thời gian không hợp lệ",
-    "invalidTimeRange": "Thời gian bắt đầu phải sớm hơn thời gian kết thúc",
-    "overlappingPreOrderEvent": "Khoảng thời gian trùng với một sự kiện đặt trước hiện có",
-    "overlappingDiscountEvent": "Khoảng thời gian trùng với một sự kiện giảm giá hiện có",
+    "invalidDatetime": "Chuỗi thời gian không hợp lệ",
+    "invalidTimeRange": "Thời gian bắt đầu phải sớm hơn thời gian kết thúc",
+    "overlappingPreOrderEvent": "Khoảng thời gian trùng với một sự kiện đặt trước hiện có",
+    "overlappingDiscountEvent": "Khoảng thời gian trùng với một sự kiện giảm giá hiện có",
     "preOrderProductNotFound": "Không tìm thấy sản phẩm đặt trước",
     "invalidFilterOptions": "Tùy chọn lọc không hợp lệ",
 
@@ -1927,7 +1956,7 @@
   "authLayout": {
     "backToWebsite": "Quay lại trang web",
     "portalName": "Cổng thông tin Allure",
-    "testimonial": "\"Cổng thông tin Allure là một công cụ mạnh mẽ cho phép chúng tôi quản lý dữ liệu, cấp quyền truy cập cho khách hàng và đối tác, đồng thời theo dõi hiệu suất kinh doanh của chúng tôi theo thời gian thực. Đây là một bước đột phá đối với chúng tôi.\"",
+    "testimonial": "\"Cổng thông tin Allure là một công cụ mạnh mẽ cho phép chúng tôi quản lý dữ liệu, cấp quyền truy cập cho khách hàng và đối tác, đồng thời theo dõi hiệu suất kinh doanh của chúng tôi theo thời gian thực. Đây là một bước đột phá đối với chúng tôi.\"",
     "testimonialAuthor": "- Đội ngũ Allure -"
   },
   "authUI": {
@@ -1936,14 +1965,21 @@
       "emailSignIn": "Đăng Nhập Bằng Email",
       "forgotPassword": "Quên Mật Khẩu",
       "updatePassword": "Cập Nhật Mật Khẩu",
-      "signup": ""
+      "signup": "Đăng ký",
+      "emailVerification": "Xác Minh Email Của Bạn"
     },
     "descriptions": {
       "signIn": "Nhập email và mật khẩu của bạn để đăng nhập!",
-      "emailSignIn": "Nhập email của bạn để nhận liên kết ma thuật!",
+      "emailSignIn": "Nhập email của bạn để nhận liên kết đăng nhập!",
       "forgotPassword": "Nhập email của bạn để nhận liên kết đặt lại mật khẩu!",
       "updatePassword": "Chọn mật khẩu mới cho tài khoản của bạn!",
-      "signup": ""
+      "signup": "Điền thông tin bên dưới để bắt đầu",
+      "emailVerification": "Kiểm tra email của bạn và nhấp vào liên kết để kích hoạt tài khoản của bạn."
+    },
+    "buttons": {
+      "resendEmail": "Gửi Lại Email",
+      "enterNewEmail": "Nhập Email Mới",
+      "contactSupport": "Liên Hệ Hỗ Trợ"
     }
   },
   "branchCreation": {
@@ -1989,7 +2025,7 @@
       "dragActive": "Thả tệp của bạn vào đây",
       "dragInactive": "Kéo & thả tệp của bạn vào đây",
       "clickToSelect": "hoặc nhấp để chọn tệp",
-      "fileRestrictions": "Bạn có thể tải lên tối đa {{maxFiles}} tệp. Định dạng tệp được chấp nhận là {{formats}}. Mỗi tệp phải dưới {{maxSize}}MB.",
+      "fileRestrictions": "Bạn có thể tải lên tối đa {{maxFiles}} tệp. Định dạng tệp được chấp nhận là {{formats}}. Mỗi tệp phải dưới {{maxSize}}MB.",
       "maxFilesReached": "Bạn đã đạt đến số lượng tệp tối đa được phép"
     },
     "fileList": {
@@ -2066,7 +2102,7 @@
       "attemptedAccess": "Đã cố gắng truy cập:",
       "goToHome": "Về Trang Chủ",
       "contactSupportButton": "Liên Hệ Hỗ Trợ",
-      "copyright": "© {{year}} Công ty của bạn. Đã đăng ký Bản quyền."
+      "copyright": " 2023 Công ty của bạn. Đã đăng ký Bản quyền."
     },
     "dashboard": {
       "error": "Lỗi",
