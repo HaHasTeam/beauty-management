@@ -6,10 +6,13 @@ function CallVideo() {
   const { roomId } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-  // const zpRef = useRef<string | null>(null)
+  const zpRef = useRef<ZegoUIKitPrebuilt | null>(null)
   const videoContainerRef = useRef(null)
   const [joined, setJoined] = useState(false)
   const [callType, setCallType] = useState('') // State to store the call type
+
+  // Store the previous path from location state or fallback to '/'
+  const previousPath = '/dashboard/home'
 
   // Initialize ZegoUIKit and join room on component mount
   const myMeeting = (type: string) => {
@@ -25,7 +28,7 @@ function CallVideo() {
     )
 
     const zp = ZegoUIKitPrebuilt.create(kitToken)
-    // zpRef.current = zp
+    zpRef.current = zp
 
     zp.joinRoom({
       container: videoContainerRef.current,
@@ -49,16 +52,19 @@ function CallVideo() {
         setJoined(true)
       },
       onLeaveRoom: () => {
-        navigate('/')
+        // Navigate to previous path instead of root
+        navigate(previousPath)
       }
     })
   }
+
   // Handle exit from the room
   const handleExit = () => {
-    // if (zpRef.current) {
-    //   zpRef.current.destroy()
-    // }
-    navigate('/')
+    if (zpRef.current) {
+      zpRef.current.destroy()
+    }
+    // Navigate to previous path instead of root
+    navigate(previousPath)
   }
 
   // On component mount, extract call type from location and initialize meeting
@@ -77,9 +83,9 @@ function CallVideo() {
 
     // Cleanup function for component unmount
     return () => {
-      // if (zpRef.current) {
-      //   zpRef.current.destroy()
-      // }
+      if (zpRef.current) {
+        zpRef.current.destroy()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callType, roomId, navigate])

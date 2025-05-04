@@ -208,7 +208,7 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
   const handleSelectProducts = (products: ExtendedResponseProduct[]) => {
     // Create a new map to store extended product classification data
     const newProductClassificationsMap = new Map<string, ExtendedProductClassification>()
-    const formProductClassifications: { productClassificationId: string; name: string }[] = []
+    const formProductClassifications: { productClassificationId: string; name: string; productId: string }[] = []
 
     // Process each product
     products.forEach((product) => {
@@ -224,6 +224,7 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
         if (classificationId) {
           formProductClassifications.push({
             productClassificationId: classificationId,
+            productId: product.id || '',
             name: product.name || ''
           })
 
@@ -243,6 +244,7 @@ const ConsultationResultDialog = ({ booking, isOpen, onClose }: CompleteConsulti
         if (productId) {
           formProductClassifications.push({
             productClassificationId: productId,
+            productId: productId,
             name: product.name || ''
           })
 

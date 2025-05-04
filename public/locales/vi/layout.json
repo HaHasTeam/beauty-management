@@ -1517,6 +1517,9 @@
       "BOOKING_CONFIRMED": "Đã xác nhận",
       "COMPLETED": "Hoàn thành",
       "CANCELLED": "Đã hủy",
+      "Cancelled": "Đã hủy",
+      "COMPLETED_CONSULTING_CALL": "Đã hoàn thành cuộc gọi tư vấn",
+
       "SENDED_RESULT_SHEET": "Đã gửi kết quả",
       "toPay": "Chờ thanh toán",
       "formSubmitted": "Đã gửi biểu mẫu",
@@ -2074,6 +2077,72 @@
       "attemptedAccess": "Đã cố gắng truy cập:",
       "backToDashboard": "Quay Lại Bảng Điều Khiển",
       "needHelp": "Cần Trợ Giúp?"
+    }
+  },
+
+  "scheduleMeeting": {
+    "pageTitle": "Lên lịch cuộc họp đăng ký",
+    "pageDescription": "Lên lịch cuộc họp với người vận hành hệ thống để hoàn tất quá trình đăng ký thương hiệu của bạn.",
+
+    "alertTitle": "Quy trình đăng ký",
+    "alertDescription": "Cuộc họp này là bước bắt buộc để xác minh thông tin thương hiệu của bạn và hoàn tất quy trình đăng ký. Người vận hành hệ thống sẽ xem xét đơn đăng ký của bạn và trả lời bất kỳ câu hỏi nào bạn có thể có.",
+
+    "reviewerInfo": {
+      "title": "Thông tin người xét duyệt",
+      "role": "Đại diện nền tảng",
+      "about": "Người xét duyệt sẽ xác minh thông tin thương hiệu của bạn, giải thích các tính năng của nền tảng và giúp bạn hoàn tất quy trình đăng ký."
+    },
+
+    "brandInfo": {
+      "title": "Thông tin thương hiệu của bạn",
+      "role": "Đại diện thương hiệu",
+      "username": "Không có sẵn",
+      "email": "Không có email",
+      "descriptionTitle": "Mô tả thương hiệu",
+      "statusTitle": "Trạng thái đăng ký"
+    },
+
+    "scheduleForm": {
+      "title": "Lên lịch cuộc họp đăng ký của bạn",
+      "description": "Vui lòng chọn ngày và giờ cho cuộc họp của bạn với người vận hành hệ thống để hoàn tất quá trình đăng ký thương hiệu.",
+
+      "step1": {
+        "title": "Chọn ngày họp",
+        "label": "Ngày có sẵn",
+        "tooltip": "Chọn ngày cho cuộc họp đăng ký của bạn. Chỉ những ngày có sẵn mới có thể chọn được.",
+        "placeholder": "Chọn một ngày",
+        "description": "Các cuộc họp đăng ký có sẵn vào các ngày trong tuần trong 30 ngày tới."
+      },
+
+      "step2": {
+        "title": "Chọn khung giờ",
+        "label": "Thời gian có sẵn cho {{date}}",
+        "tooltip": "Chọn khung giờ phù hợp nhất với lịch trình của bạn.",
+        "noSlots": "Không có khung giờ nào cho ngày này.",
+        "selectAnother": "Vui lòng chọn ngày khác để xem thời gian có sẵn."
+      },
+
+      "step3": {
+        "title": "Thông tin bổ sung",
+        "label": "Ghi chú cho người vận hành hệ thống (Tùy chọn)",
+        "tooltip": "Thêm bất kỳ câu hỏi hoặc thông tin nào bạn muốn thảo luận trong cuộc họp đăng ký.",
+        "placeholder": "Thêm bất kỳ câu hỏi nào về quy trình đăng ký, yêu cầu cụ thể hoặc chủ đề bạn muốn thảo luận trong cuộc họp",
+        "description": "Thông tin này sẽ giúp người vận hành hệ thống chuẩn bị cho cuộc họp đăng ký của bạn."
+      }
+    },
+
+    "buttons": {
+      "cancel": "Hủy",
+      "confirm": "Xác nhận cuộc họp",
+      "scheduling": "Đang lên lịch..."
+    },
+
+    "messages": {
+      "success": "Cuộc họp đăng ký của bạn đã được lên lịch thành công!",
+      "noSlotSelected": "Lỗi không có khung giờ nào được chọn",
+      "failedSchedule": "Không thể lên lịch cuộc họp. Vui lòng thử lại.",
+      "failedDescription": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn.",
+      "failedLoadSlots": "Không thể tải các khung giờ có sẵn"
     }
   }
 }

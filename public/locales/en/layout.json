@@ -2151,5 +2151,70 @@
       "backToDashboard": "Back to Dashboard",
       "needHelp": "Need Help?"
     }
+  },
+  "scheduleMeeting": {
+    "pageTitle": "Schedule Registration Meeting",
+    "pageDescription": "Schedule a meeting with a system operator to complete your brand registration process.",
+
+    "alertTitle": "Registration Process",
+    "alertDescription": "This meeting is a required step to verify your brand information and complete the registration process. The system operator will review your application and answer any questions you may have.",
+
+    "reviewerInfo": {
+      "title": "Reviewer Information",
+      "role": "Platform Representative",
+      "about": "The reviewer will verify your brand information, explain the platform features, and help you complete the registration process."
+    },
+
+    "brandInfo": {
+      "title": "Your Brand Information",
+      "role": "Brand Representative",
+      "username": "Not available",
+      "email": "No email available",
+      "descriptionTitle": "Brand Description",
+      "statusTitle": "Registration Status"
+    },
+
+    "scheduleForm": {
+      "title": "Schedule Your Registration Meeting",
+      "description": "Please select a date and time for your meeting with the system operator to complete your brand registration.",
+
+      "step1": {
+        "title": "Select Meeting Date",
+        "label": "Available Dates",
+        "tooltip": "Choose a date for your registration meeting. Only available dates are selectable.",
+        "placeholder": "Select a date",
+        "description": "Registration meetings are available on weekdays for the next 30 days."
+      },
+
+      "step2": {
+        "title": "Select Time Slot",
+        "label": "Available Times for {{date}}",
+        "tooltip": "Choose a time slot that works best for your schedule.",
+        "noSlots": "No available slots for this date.",
+        "selectAnother": "Please select another date to see available times."
+      },
+
+      "step3": {
+        "title": "Additional Information",
+        "label": "Notes for the System Operator (Optional)",
+        "tooltip": "Add any questions or information you'd like to discuss during the registration meeting.",
+        "placeholder": "Add any questions about the registration process, specific requirements, or topics you'd like to discuss during the meeting",
+        "description": "This information will help the system operator prepare for your registration meeting."
+      }
+    },
+
+    "buttons": {
+      "cancel": "Cancel",
+      "confirm": "Confirm Meeting",
+      "scheduling": "Scheduling..."
+    },
+
+    "messages": {
+      "success": "Your registration meeting has been scheduled successfully!",
+      "noSlotSelected": "Error there is no slot selected",
+      "failedSchedule": "Failed to schedule meeting. Please try again.",
+      "failedDescription": "There was an error processing your request.",
+      "failedLoadSlots": "Failed to load available slots"
+    }
   }
 }
