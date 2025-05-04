@@ -151,6 +151,7 @@ const PreOrderDetails = () => {
           // Track IDs of classifications in form values
           const formClassificationIds = new Set(
             values.productClassifications
+              ?.filter((item) => item.title !== undefined)
               ?.map((classification) => classification.id)
               .filter((id): id is string => id !== undefined)
           )
@@ -198,9 +199,11 @@ const PreOrderDetails = () => {
 
         let transformedData = {
           ...values,
-          productClassifications: processedClassifications.map((classification) => ({
-            ...classification
-          }))
+          productClassifications: processedClassifications
+            .map((classification) => ({
+              ...classification
+            }))
+            .filter((item) => item.title !== undefined)
         }
         const isStartTimeDirty = form.formState.dirtyFields.startTime
         const isEndTimeDirty = form.formState.dirtyFields.endTime
