@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useContext } from 'react'
+import { PropsWithChildren, useContext } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { HiX } from 'react-icons/hi'
 import { HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
@@ -8,20 +8,20 @@ import { useShallow } from 'zustand/react/shallow'
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import logo from '@/assets/images/logo.png'
 import { renderThumb, renderTrack, renderView } from '@/components/scrollbar/Scrollbar'
+import Links from '@/components/sidebar/components/Links'
+import SidebarCard from '@/components/sidebar/components/SidebarCard'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Routes, routesConfig } from '@/configs/routes'
 import { OpenContext } from '@/contexts/layout'
 import { useToast } from '@/hooks/useToast'
 import { useStore } from '@/stores/store'
 import { UserRoleEnum } from '@/types/role'
-import type { IRoute } from '@/types/types'
+import { IRoute } from '@/types/types'
 
 import RoleTag from '../account/RoleTag'
 import ImageWithFallback from '../image/ImageWithFallback'
-import { SidebarLinks } from './components/Links'
-import SidebarDocs from './components/SidebarCard'
+import { Button } from '../ui/button'
 
 export interface SidebarProps extends PropsWithChildren {
   routes: IRoute[]
@@ -41,19 +41,6 @@ function Sidebar(props: SidebarProps) {
       }
     })
   )
-
-  // Get the user's role
-  const userRole = userProfile?.role as UserRoleEnum
-
-  // Filter routes based on user role
-  const filteredRoutes = routes.filter((route) => {
-    // If no roles are specified, show to everyone
-    if (!route.roles) return true
-
-    // Otherwise, check if the user's role is in the allowed roles
-    return route.roles.includes(userRole)
-  })
-
   const handleLogout = () => {
     resetAuth()
     successToast({
@@ -62,7 +49,7 @@ function Sidebar(props: SidebarProps) {
     })
     router(routesConfig[Routes.AUTH_LOGIN].getPath())
   }
-
+  // SIDEBAR
   return (
     <div
       className={`lg:!z-99 fixed !z-[99] min-h-full w-[300px] transition-all md:!z-[99] xl:!z-0 ${
@@ -88,12 +75,8 @@ function Sidebar(props: SidebarProps) {
               </span>
               <div className={`mt-8 flex items-center justify-center gap-1`}>
                 <div className='me-2 flex h-[40px] w-[40px] items-center justify-center rounded-md bg-primary text-white dark:bg-accent dark:text-zinc-950'>
-                  <ImageWithFallback
-                    src={logo || '/placeholder.svg'}
-                    alt={'logo'}
-                    fallback={fallBackImage}
-                    className=''
-                  />
+                  {/* <HiBolt className='h-5 w-5' /> */}
+                  <ImageWithFallback src={logo} alt={'logo'} fallback={fallBackImage} className='' />
                 </div>
                 <h5 className='text-xl font-bold leading-5 text-primary dark:text-white'>Allure Portal</h5>
               </div>
@@ -105,14 +88,13 @@ function Sidebar(props: SidebarProps) {
               <div className='mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10' />
               {/* Nav item */}
               <ul>
-                {/* Pass the filtered routes instead of all routes */}
-                <SidebarLinks routes={filteredRoutes} />
+                <Links routes={routes} />
               </ul>
             </div>
             {/* Free Horizon Card    */}
             <div className='mb-9 mt-7'>
               <div className='flex justify-center'>
-                <SidebarDocs />
+                <SidebarCard />
               </div>
 
               {/* Sidebar profile info */}
@@ -127,7 +109,7 @@ function Sidebar(props: SidebarProps) {
                 </a>
                 <a href='/dashboard/profile-settings'>
                   <p className='ml-2 mr-3 flex items-center text-sm font-semibold leading-none text-zinc-950 dark:text-white'>
-                    {userProfile?.username || 'Allure'}
+                    {'Allure'}
                   </p>
                 </a>
                 <Button
@@ -151,5 +133,7 @@ function Sidebar(props: SidebarProps) {
     </div>
   )
 }
+
+// PROPS
 
 export default Sidebar

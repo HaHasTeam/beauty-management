@@ -10,10 +10,6 @@ export const minifyString = (str?: string): string => {
   if (!str) return ''
   return '#' + str.replace(/-/g, '').toUpperCase().slice(0, 10)
 }
-export const minifyStringId = (str?: string): string => {
-  if (!str) return ''
-  return '#' + str.replace(/-/g, '').toUpperCase().slice(0, 10)
-}
 
 type Address = {
   detailAddress: string

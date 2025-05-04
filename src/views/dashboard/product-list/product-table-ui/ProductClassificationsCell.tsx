@@ -36,7 +36,7 @@ export function ProductClassificationsCell({ product }: ProductClassificationsCe
             </div>
             <div className='flex flex-col'>
               <div className='text-xs font-medium text-muted-foreground'>
-                <span className='font-bold'>{classifications.length}</span> Classifications with{' '}
+                <span className='font-bold'>{classifications.length}</span> Class with{' '}
                 <span className='font-bold'>{formatNumber(totalQuantity)}</span> units
               </div>
             </div>

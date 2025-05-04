@@ -13,7 +13,7 @@ export default function SidebarDocs() {
         width='54'
         height='30'
         className='w-[54px]'
-        src={SidebarImage || '/placeholder.svg'}
+        src={SidebarImage}
         alt=''
       />
       <div className='mb-3 flex w-full flex-col pt-4'>
@@ -22,7 +22,7 @@ export default function SidebarDocs() {
           Explore Allure Portal and see what you can do with it. Get started with the free version.
         </p>
       </div>{' '}
-      <a target='_blank' href='#' rel='noreferrer'>
+      <a target='_blank' href='#'>
         <Button className='mt-auto flex h-full w-[200px] items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium'>
           Learn More
         </Button>

@@ -14,7 +14,6 @@ export type TFilterTransactionsParams = BaseParams<{
   endDate?: string
   minAmount?: number
   maxAmount?: number
-  accountId?: string
 }>
 
 export enum PAY_TYPE {
@@ -35,33 +34,23 @@ export type TGetDailyOrderStatisticsParams = {
   groupProductIds?: string[]
   preOrderProductIds?: string[]
   flashSaleIds?: string[]
-  voucherId?: string
-}
-
-export type OrderStaticItem = {
-  date: string
-  totalRevenue: number
-  totalPlatformVoucherDiscount: number
-  totalShopVoucherDiscount: number
-  actualRevenue: number
-  totalCommissionFee: number
-}
-
-export type OrderStaticTotal = {
-  totalRevenue: number
-  totalPlatformVoucherDiscount: number
-  totalShopVoucherDiscount: number
-  totalQuantity: number
-  orderCount: number
-  actualRevenue: number
-  totalCommissionFee: number
 }
 
 export type OrderStatic = {
-  total: OrderStaticTotal
-  items: OrderStaticItem[]
+  total: {
+    totalRevenue: number
+    totalQuantity: number
+    totalPlatformVoucherDiscount: number
+    totalShopVoucherDiscount: number
+  }
+  items: {
+    date: string
+    totalRevenue: number
+    totalQuantity: number
+    totalPlatformVoucherDiscount: number
+    totalShopVoucherDiscount: number
+  }[]
 }
-
 export enum StatisticsTimeEnum {
   ALL_TIME = 'ALL_TIME',
   SPECIFIC_TIME = 'SPECIFIC_TIME'
@@ -94,35 +83,4 @@ export type TGetBrandRevenueStatisticsResponse = {
     count: number
     sumTotalPrice: number
   }
-}
-
-// types for get-daily-booking-statistics
-export type TGetDailyBookingStatisticsParams = {
-  startDate?: string
-  endDate?: string
-  consultantId?: string
-  consultantServiceId?: string
-}
-
-export type BookingStatDetail = {
-  count: number
-  totalPrice: number
-  commissionFee: number // Assuming this exists based on response shape
-  actualRevenue: number // Assuming this exists based on response shape
-}
-
-export type BookingStaticItem = {
-  date: string
-  cancelled: BookingStatDetail
-  booked: BookingStatDetail
-}
-
-export type BookingStaticTotal = {
-  cancelled: BookingStatDetail
-  booked: BookingStatDetail
-}
-
-export type BookingStatic = {
-  total: BookingStaticTotal
-  items: BookingStaticItem[]
 }

@@ -58,13 +58,8 @@ export enum Routes {
   UPDATE_BLOG = 'update-blog',
   BLOG_DETAILS = 'blog-details',
   MY_BRAND_DASHBOARD = 'my-brand',
-  LIVESTREAM = 'liveStream',
   TRANSACTION_MANAGEMENT = 'transaction-management',
-  BOOKINGS_AND_REQUESTS = 'bookings-and-requests',
-  BOOKING_DETAILS = 'booking-details',
-  ORIGINAL_ORDER_DETAILS = 'original-order-details',
-  FORBIDDEN = 'forbidden',
-  FORBIDDEN_PUBLIC = 'forbidden-public'
+  LIVESTREAM = 'liveStream'
 }
 
 export const routesConfig: TRoutes = {
@@ -169,8 +164,8 @@ export const routesConfig: TRoutes = {
     getPath: (id) => `/dashboard/voucher/update/${id}`
   },
   [Routes.PRE_ORDER]: {
-    name: 'PreOrder Products',
-    title: 'PreOrder Products',
+    name: 'Pre-order Product',
+    title: 'Pre-order Product',
     description: 'Pre Order',
     path: '/dashboard/pre-order',
     getPath: () => '/dashboard/pre-order'
@@ -237,6 +232,13 @@ export const routesConfig: TRoutes = {
     description: 'View and manage category details',
     path: '/dashboard/category/[id]',
     getPath: (params) => `/dashboard/category/${params.id}`
+  },
+  [Routes.BOOKING_LIST]: {
+    name: 'Bookings',
+    title: 'Bookings',
+    description: 'Manage bookings',
+    path: '/dashboard/bookings',
+    getPath: () => '/dashboard/bookings'
   },
   [Routes.BOOKING_DETAIL]: {
     name: 'Booking Details',
@@ -454,47 +456,27 @@ export const routesConfig: TRoutes = {
     description: 'Reports',
     path: '/dashboard/reports',
     getPath: () => '/dashboard/reports'
-  },
-  [Routes.BOOKINGS_AND_REQUESTS]: {
-    name: 'Bookings & Requests',
-    title: 'Bookings & Requests',
-    description: 'Manage bookings and requests',
-    path: '/dashboard/bookings',
-    getPath: () => '/dashboard/bookings'
-  },
-  [Routes.BOOKING_DETAILS]: {
-    name: 'Booking Details',
-    title: 'Booking Details',
-    description: 'Booking Details',
-    path: '/dashboard/bookings/:id',
-    getPath: (params) => `/dashboard/bookings/${params.id}`
-  },
-  [Routes.ORIGINAL_ORDER_DETAILS]: {
-    name: 'Original Order Details',
-    title: 'Original Order Details',
-    description: 'Original Order Details',
-    path: '/dashboard/orders/origin/:id',
-    getPath: (params) => `/dashboard/orders/origin/${params.id}`
-  },
-  [Routes.BOOKING_LIST]: {
-    name: 'Booking List',
-    title: 'Booking List',
-    description: 'Booking List',
-    path: '/dashboard/bookings',
-    getPath: () => '/dashboard/bookings'
-  },
-  [Routes.FORBIDDEN]: {
-    name: 'Access Denied',
-    title: 'Access Denied',
-    description: 'You do not have permission to access this page',
-    path: '/dashboard/forbidden',
-    getPath: () => '/dashboard/forbidden'
-  },
-  [Routes.FORBIDDEN_PUBLIC]: {
-    name: 'Access Denied',
-    title: 'Access Denied',
-    description: 'You do not have permission to access this resource',
-    path: '/forbidden',
-    getPath: () => '/forbidden'
   }
+}
+
+export const externalLinks = import.meta.env.VITE_API_CUSTOMER_URL || ''
+
+export const blogSlugEnum = {
+  privacyPolicy: 'chinh-sach-quyen-rieng-tu',
+  termsAndConditions: 'dieu-khoan-va-dieu-kien-su-dung-dich-vu',
+  returnCondition: 'chinh-sach-tra-hang-hoan-tien',
+  kolAndLivestreamPrivacy: 'chinh-sach-livestream-kol',
+  platformPrivacy: 'chinh-sach-cua-nen-tang',
+  consultantPolicy: 'chinh-sach-danh-cho-chuyen-gia-tu-van',
+  brandPolicy: 'chinh-sach-danh-cho-thuong-hieu',
+  voucherPolicy: 'chinh-sach-ma-giam-gia',
+  groupBuyingPolicy: 'chinh-sach-mua-chung',
+  preOrderPolicy: 'chinh-sach-dat-truoc',
+  flashSalePolicy: 'chinh-sach-flash-sale',
+  cashFlowWithdrawalPolicy: 'chinh-sach-dong-tien-rut-tien',
+  whyBuyAuthenticBeautyProducts: 'tai-sao-nen-mua-my-pham-chinh-hang-tren-allure',
+  beginnerSkincareGuide: 'skincare-routine-co-ban-cho-nguoi-moi-bat-dau-don-gian-nhung-hieu-qua',
+  commonMistakesBuyingCosmeticsOnline: 'nhung-loi-thuong-gap-khi-mua-my-pham-online',
+  dealHuntingTips: 'cach-san-deal-hieu-qua-tren-allure',
+  beautyReason: 'nhung-ly-do-tai-sao-allure-la-lua-chon-toi-uu-cho-nhung-nguoi-yeu-thich-lam-dep'
 }

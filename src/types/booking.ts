@@ -2,6 +2,7 @@ import { IBranch2 } from './Branch'
 import { TBrand } from './brand'
 import { IConsultantService, IConsultantServiceDetailServer } from './consultant-service'
 import { BookingStatusEnum, BookingTypeEnum, PaymentMethod } from './enum'
+import { IResponseFeedback } from './feedback'
 import { PaymentMethodEnum } from './payment'
 import { TMetaData } from './request'
 import { ISlot, TSlot } from './slot'
@@ -20,7 +21,7 @@ export type TBooking = TMetaData & {
   record: string
   type: BookingTypeEnum
   status: BookingStatusEnum
-  consultantService: IConsultantService
+  consultantService: null
   brand?: IBranch2
   account?: TUser
   slot: TSlot
@@ -41,22 +42,22 @@ export type IBooking = TMetaData & {
   endTime: string
   voucherDiscount: number
   paymentMethod: PaymentMethodEnum
-  notes: string | null
+  notes: string
   meetUrl: string
-  record: string | null
+  record: string
   type: BookingTypeEnum
   status: BookingStatusEnum
-  voucher: TVoucher | null
+  feedback: IResponseFeedback
+  voucher: TVoucher
   slot: ISlot
   account: TUser
   brand: TBrand
-  assigneeToInterview: TUser | null
-  resultNote: string | null
+  assigneeToInterview: TUser
+  resultNote: string
   consultantService: IConsultantService
   statusTrackings: IStatusTracking[]
   report: Report
   bookingFormAnswer: IBookingFormAnswer
-  consultationResult: IConsultationResult | null
 }
 export type IBookingServer = TMetaData & {
   totalPrice: number

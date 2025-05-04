@@ -23,7 +23,6 @@ import { Checkbox } from '../ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
 import { Form, FormDescription, FormField, FormItem, FormMessage } from '../ui/form'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { ScrollArea } from '../ui/scroll-area'
 import { Textarea } from '../ui/textarea'
 
 interface ServiceBookingFormDialogProps {
@@ -58,6 +57,7 @@ const ServiceBookingFormDialog: React.FC<ServiceBookingFormDialogProps> = ({ isO
     images: q.images || []
   }))
 
+  // Prepare default values based on form structure
   const defaultFormValues: z.infer<typeof SubmitBookingFormAnswerSchema> = {
     formId: bookingForm.id ?? '',
     form: bookingForm.questions.map((q) => ({
@@ -288,80 +288,79 @@ const ServiceBookingFormDialog: React.FC<ServiceBookingFormDialogProps> = ({ isO
           <DialogTitle className='text-primary'>{t('booking.serviceBookingForm')}</DialogTitle>
           <DialogDescription className='text-justify'>{t('booking.serviceBookingFormDescription')}</DialogDescription>
         </DialogHeader>
-        <ScrollArea className='max-h-[80vh]'>
-          <Form {...form}>
-            <form noValidate onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6' id={`form-${id}`}>
-              {typedQuestions.map((question, index) => (
-                <div key={index} className='space-y-4'>
-                  {renderQuestionField(question, index)}
-                  <hr className='my-4' />
-                  <div className='mt-4'>
-                    <FormField
-                      control={form.control}
-                      name={`answers.${index}.images`}
-                      render={({ field }) => (
-                        <FormItem className='w-full'>
-                          <div className='w-full flex flex-col gap-2'>
-                            <div className='w-full space-y-1'>
-                              <FormLabel className='text-primary'>{t('feedback.uploadImages')}</FormLabel>
-                              <FormDescription>{t('booking.imagesHint')}</FormDescription>
-                            </div>
-                            <div className='w-full space-y-1'>
-                              <UploadMediaFiles
-                                field={field}
-                                vertical={false}
-                                isAcceptImage={true}
-                                isAcceptVideo={false}
-                                maxImages={MAX_IMAGES}
-                                maxVideos={0}
-                                dropZoneConfigOptions={{
-                                  maxFiles: MAX_IMAGES,
-                                  maxSize: MAX_SIZE
-                                }}
-                                renderFileItemUI={(file) => (
-                                  <div
-                                    key={file.name}
-                                    className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'
-                                  >
-                                    <ImageWithFallback
-                                      src={URL.createObjectURL(file)}
-                                      alt={file.name}
-                                      fallback={fallBackImage}
-                                      className='object-contain w-full h-full rounded-lg'
-                                      onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
-                                    />
-                                  </div>
-                                )}
-                                renderInputUI={(_isDragActive, files, maxFiles) => (
-                                  <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
-                                    <ImageIcon className='w-8 h-8 text-primary' />
-                                    <p className='text-xs text-muted-foreground'>
-                                      {files.length}/{maxFiles} {t('media.imagesFile')}
-                                    </p>
-                                  </div>
-                                )}
-                              />
-                              <FormMessage />
-                            </div>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-              ))}
 
-              <div className='flex justify-end space-x-2'>
-                <Button variant='outline' type='button' onClick={setOpen}>
-                  {t('button.cancel')}
-                </Button>
-                <Button type='submit' loading={isLoading}>
-                  {t('button.submit')}
-                </Button>
+        <Form {...form}>
+          <form noValidate onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6' id={`form-${id}`}>
+            {typedQuestions.map((question, index) => (
+              <div key={index} className='space-y-4'>
+                {renderQuestionField(question, index)}
+                <hr className='my-4' />
+                <div className='mt-4'>
+                  <FormField
+                    control={form.control}
+                    name={`answers.${index}.images`}
+                    render={({ field }) => (
+                      <FormItem className='w-full'>
+                        <div className='w-full flex flex-col gap-2'>
+                          <div className='w-full space-y-1'>
+                            <FormLabel className='text-primary'>{t('feedback.uploadImages')}</FormLabel>
+                            <FormDescription>{t('booking.imagesHint')}</FormDescription>
+                          </div>
+                          <div className='w-full space-y-1'>
+                            <UploadMediaFiles
+                              field={field}
+                              vertical={false}
+                              isAcceptImage={true}
+                              isAcceptVideo={false}
+                              maxImages={MAX_IMAGES}
+                              maxVideos={0}
+                              dropZoneConfigOptions={{
+                                maxFiles: MAX_IMAGES,
+                                maxSize: MAX_SIZE
+                              }}
+                              renderFileItemUI={(file) => (
+                                <div
+                                  key={file.name}
+                                  className='hover:border-primary w-32 h-32 rounded-lg border border-gay-300 p-0 relative'
+                                >
+                                  <ImageWithFallback
+                                    src={URL.createObjectURL(file)}
+                                    alt={file.name}
+                                    fallback={fallBackImage}
+                                    className='object-contain w-full h-full rounded-lg'
+                                    onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
+                                  />
+                                </div>
+                              )}
+                              renderInputUI={(_isDragActive, files, maxFiles) => (
+                                <div className='w-32 h-32 hover:bg-primary/15 p-4 rounded-lg border flex flex-col gap-2 items-center justify-center text-center border-dashed border-primary transition-all duration-500'>
+                                  <ImageIcon className='w-8 h-8 text-primary' />
+                                  <p className='text-xs text-muted-foreground'>
+                                    {files.length}/{maxFiles} {t('media.imagesFile')}
+                                  </p>
+                                </div>
+                              )}
+                            />
+                            <FormMessage />
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-            </form>
-          </Form>
-        </ScrollArea>
+            ))}
+
+            <div className='flex justify-end space-x-2'>
+              <Button variant='outline' type='button' onClick={setOpen}>
+                {t('button.cancel')}
+              </Button>
+              <Button type='submit' loading={isLoading}>
+                {t('button.submit')}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

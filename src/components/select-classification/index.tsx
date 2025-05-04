@@ -38,11 +38,10 @@ type Props = Omit<HTMLAttributes<HTMLSelectElement>, 'value'> &
 const getItemDisplay = (classification: TClassificationItem, fallbackUrl?: string, productName?: string) => {
   const imgUrl = classification?.images?.[0]?.fileUrl || fallbackUrl
   const name = classification.title !== 'Default' ? classification.title : productName
-
   return (
-    <div className='flex items-center gap-1' key={classification.id}>
+    <div className='flex items-center gap-1'>
       <Avatar className='bg-transparent size-5'>
-        <AvatarImage src={imgUrl} key={classification.id} />
+        <AvatarImage src={imgUrl} />
         <AvatarFallback className='bg-transparent'>
           <Image className='size-4' />
         </AvatarFallback>
@@ -130,7 +129,7 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
       const formValue: TClassificationItem = {
         title: classification.title || '',
         price: typeof classification.price === 'number' ? classification.price : 0,
-        type: classification.type as ProductClassificationTypeEnum,
+        type: ProductClassificationTypeEnum.CUSTOM,
         // Cast the images array to TFile[] - we know the API returns compatible data
         images: classification.images.map((image) => ({
           ...image,
@@ -271,7 +270,7 @@ const SelectClassification = forwardRef<HTMLSelectElement, Props>((props) => {
         const formValue: TClassificationItem = {
           title: classification.title,
           price: classification.price,
-          type: classification.type as ProductClassificationTypeEnum,
+          type: ProductClassificationTypeEnum.CUSTOM,
           images: classification.images.map((image) => ({
             ...image,
             name: image.name ?? image.fileUrl ?? '',

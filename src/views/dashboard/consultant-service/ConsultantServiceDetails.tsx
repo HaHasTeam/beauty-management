@@ -44,7 +44,6 @@ import { cn } from '@/lib/utils'
 import {
   addConsultantServiceApi,
   getConsultantServiceByIdApi,
-  getConsultantServiceFilterApi,
   updateConsultantServiceByIdApi
 } from '@/network/apis/consultant-service'
 import {
@@ -147,9 +146,6 @@ const ConsultantServiceDetails = () => {
         })
       } else {
         await addConsultantServiceFn(parsedValues as unknown as AddConsultantServiceRequestParams)
-        queryClient.invalidateQueries({
-          queryKey: [getConsultantServiceFilterApi.queryKey]
-        })
       }
       handleBackToConsultantService()
     } catch (error) {
@@ -203,6 +199,7 @@ const ConsultantServiceDetails = () => {
     try {
       await updateConsultantServiceFn({
         id: consultantServiceId,
+        ...form.getValues(),
         status
       } as UpdateConsultantServiceByIdRequestParams)
       queryClient.invalidateQueries({
@@ -296,6 +293,8 @@ const ConsultantServiceDetails = () => {
 
   const getFooter = () => {
     switch (service?.status) {
+      case ConsultantServiceStatusEnum.ACTIVE:
+      case ConsultantServiceStatusEnum.BANNED:
       default:
         return (
           <div className='flex items-center justify-end'>
@@ -357,7 +356,7 @@ const ConsultantServiceDetails = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel required>Kind Of Service</FormLabel>
-                        <SelectSystemService {...field} readOnly={!!consultantServiceId} />
+                        <SelectSystemService {...field} />
                         <FormMessage />
                       </FormItem>
                     )}

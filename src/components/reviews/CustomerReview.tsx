@@ -4,11 +4,12 @@ import { useShallow } from 'zustand/react/shallow'
 import { useStore } from '@/stores/store'
 import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
-import { RoleEnum } from '@/types/enum'
+import { RoleEnum, ServiceTypeEnum } from '@/types/enum'
 import { TServerFile } from '@/types/file'
 
 import ViewMediaSection from '../media/ViewMediaSection'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { Ratings } from '../ui/rating'
 
@@ -16,13 +17,15 @@ interface CustomerReviewProps {
   authorName: string
   authorAvatar: string
   updatedAt: string
-  classification: IClassification | null
-  numberOfItem: number
+  classification?: IClassification | null
+  numberOfItem?: number
   description: string
   mediaFiles: TServerFile[]
   rating: number
   onReplyClick: () => void
   brand: IBrand | null
+  systemServiceName?: string
+  systemServiceType?: ServiceTypeEnum | null
 }
 const CustomerReview = ({
   authorName,
@@ -34,7 +37,9 @@ const CustomerReview = ({
   description,
   mediaFiles,
   onReplyClick,
-  brand
+  brand,
+  systemServiceName,
+  systemServiceType
 }: CustomerReviewProps) => {
   const { t } = useTranslation()
   const { user } = useStore(
@@ -71,10 +76,28 @@ const CustomerReview = ({
             </span>
           </div>
         )}
-        <div className='border-l border-gray-200 px-2'>
-          <span>{t('createProduct.quantity')}: </span>
-          <span className='text-primary font-medium'>{numberOfItem}</span>
-        </div>
+        {numberOfItem && (
+          <div className='border-l border-gray-200 px-2'>
+            <span>{t('createProduct.quantity')}: </span>
+            <span className='text-primary font-medium'>{numberOfItem}</span>
+          </div>
+        )}
+
+        {/* Service */}
+        {systemServiceName && (
+          <div>
+            <span>{t('booking.service')}: </span>
+            <span className='text-primary font-medium'>{systemServiceName}</span>
+          </div>
+        )}
+        {systemServiceType && (
+          <Badge
+            variant={systemServiceType === 'PREMIUM' ? 'default' : 'secondary'}
+            className={systemServiceType === 'PREMIUM' ? 'bg-primary/90 text-sm' : 'text-sm'}
+          >
+            {systemServiceType}
+          </Badge>
+        )}
       </div>
       <div>
         <p>{description}</p>

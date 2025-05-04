@@ -1,21 +1,17 @@
 import { type Table } from '@tanstack/react-table'
-import { Download, ListPlusIcon } from 'lucide-react'
-import { useState } from 'react'
+import { Download } from 'lucide-react'
 
 import Button from '@/components/button'
 import { exportTableToCSV } from '@/lib/export'
 import { IReport } from '@/types/report'
 
 import { BanReportDialog } from './BanReportDialog'
-import { CreateReportDialog } from './CreateReportDialog'
 
 interface ReportTableToolbarActionsProps {
   table: Table<IReport>
 }
 
 export function ReportTableToolbarActions({ table }: ReportTableToolbarActionsProps) {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-
   return (
     <div className='flex items-center gap-2'>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -25,21 +21,13 @@ export function ReportTableToolbarActions({ table }: ReportTableToolbarActionsPr
         />
       ) : null}
 
-      <Button size={'sm'} onClick={() => setIsCreateDialogOpen(true)}>
-        <ListPlusIcon className='mr-2 h-4 w-4' />
-        Add Report
-      </Button>
-
-      <CreateReportDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
+      {/* Use the CreateReportDialog with its built-in trigger button */}
+      {/* <CreateReportDialog
+        showTrigger={true}
         onSuccess={() => {
-          // Reset row selection and potentially trigger a data refetch
           table.resetRowSelection()
-          // If using React Query and you have a query client method to refetch data
-          // queryClient.invalidateQueries(['reports'])
         }}
-      />
+      /> */}
 
       <Button
         variant='outline'

@@ -136,7 +136,7 @@ export function DataTableToolbar<TData>({
                   key={String(column.id)}
                   placeholder={column.placeholder}
                   value={(getColumnOrCustom(String(column.id)).getFilterValue() as string) ?? ''}
-                  onChange={(value) => getColumnOrCustom(String(column.id)).setFilterValue(value)}
+                  onChange={(event) => getColumnOrCustom(String(column.id)).setFilterValue(event.target.value)}
                   className='h-8 w-40 lg:w-64'
                 />
               )

@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Package, Users } from 'lucide-react'
+import { ChevronDown, ChevronUp, Image, Package, Users } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -73,7 +73,7 @@ export function VoucherApplyProductsCell({ voucher }: VoucherApplyProductsCellPr
                   {product.images && product.images.length > 0 ? (
                     <img src={product.images[0].fileUrl} alt={product.name} className='h-full w-full object-cover' />
                   ) : (
-                    <Package className='h-4 w-4 text-muted-foreground' />
+                    <Image className='h-4 w-4 text-muted-foreground' />
                   )}
                 </div>
                 <div className='flex-1 min-w-0'>

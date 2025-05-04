@@ -6,14 +6,13 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Image, SettingsIcon, Trash } from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import ImageWithFallback from '@/components/image/ImageWithFallback'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { IProductTable } from '@/types/product'
-import { formatNumber } from '@/utils/number'
 
-// const fallBackImage = '/product-placeholder.webp' // No longer needed
+const fallBackImage = '/product-placeholder.webp'
 
 // Update the IProductTable interface to match the actual data structure
 
@@ -59,38 +58,38 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
       enableHiding: false,
       size: 1
     },
+    // Update the cell rendering for the product image to handle IImage[] correctly
     {
       id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
       cell: ({ row }) => {
         const displayName = row.original.name
-        const productImage = row.original.images?.[0]?.fileUrl || ''
+        // Handle the case where images might be an array or undefined
+        const productImage =
+          row.original.images && row.original.images.length > 0 ? row.original.images[0].fileUrl || '' : ''
 
         return (
-          <div className='flex items-center gap-2 py-2'>
-            <div className='w-8 h-8 flex-shrink-0'>
-              <Avatar className='rounded-lg w-full h-full'>
-                <AvatarImage src={productImage} alt={displayName} className='bg-transparent object-cover' />
-                <AvatarFallback className='bg-transparent rounded-lg'>
-                  <Image size={24} />
-                </AvatarFallback>
-              </Avatar>
+          <div className='flex items-center gap-2'>
+            <div className='w-8 h-8 rounded bg-muted flex items-center justify-center'>
+              <Image className='w-4 h-4 text-muted-foreground' />
+              <ImageWithFallback fallback={fallBackImage} src={productImage || '/placeholder.svg'} alt={displayName} />
             </div>
-            <span className='max-w-[90%] truncate font-medium'>{displayName}</span>
+            <span>{displayName}</span>
           </div>
         )
-      },
-      size: 550
+      }
     },
     {
       accessorKey: 'quantity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Quantity' />,
-      cell: ({ cell }) => (
-        <div className='text-start font-semibold py-2'>{formatNumber(cell.row.original.quantity)}</div>
-      ),
+      cell: ({ cell }) => <div>{cell.row.original.quantity}</div>,
       size: 10,
       enableSorting: false,
       enableHiding: false
+    },
+    {
+      accessorKey: 'createdAt',
+      id: 'createdAt'
     },
     {
       id: 'actions',
@@ -98,14 +97,14 @@ export function getColumns({ onDelete, handleProductSelect }: GetColumnsProps): 
       cell: function Cell({ row }) {
         const productId = row.original.id || ''
         return (
-          <div className='flex items-center'>
+          <div className=''>
             <Button
               type='button'
               variant='ghost'
               className='flex size-8 p-0 hover:text-primary'
               onClick={() => onDelete(productId)}
             >
-              <Trash className='size-6 border rounded-full p-1 bg-destructive/80 text-white' aria-hidden='true' />
+              <Trash className='size-4' aria-hidden='true' />
             </Button>
           </div>
         )

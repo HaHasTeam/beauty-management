@@ -9,11 +9,8 @@
     "loginOrRegister": "Login/Register",
     "shoppingCart": "Shopping Cart",
     "notification": "Notifications",
-    "registerBrand": "Become our brand",
-    "allureBeauty": "Allure Beauty",
-    "logo": "Allure Logo"
+    "registerBrand": "Become our brand"
   },
-
   "profile": {
     "myProfile": "My Profile",
     "profileDescription": "Manage your profile information to secure your account",
@@ -48,25 +45,7 @@
     "exclusiveBeautyOffersTitle": "Exclusive Beauty Offers",
     "preOderCardTitle": "Pre-orders",
     "groupBuyingDealsCardTitle": "Group-Buying Deals",
-    "recommendProductsTitle": "Recommend Products",
-    "badge": "Beauty Simplified",
-    "title": "Your Trusted Beauty Destination",
-    "description": "Discover authentic beauty products and personalized expert advice in one trusted platform.",
-    "login": "Login",
-    "register": "Register",
-    "heroImageAlt": "Premium beauty products collection",
-    "featuresTitle": "Why Choose Allure",
-    "featuresSubtitle": "We're transforming the online beauty shopping experience with trust and expertise",
-    "feature1Title": "Authentic Products",
-    "feature1Description": "Every product on our platform is verified and sourced directly from official brands, eliminating the risk of counterfeits.",
-    "feature2Title": "Expert Consultations",
-    "feature2Description": "Connect with certified beauty professionals for personalized advice tailored to your unique needs and preferences.",
-    "feature3Title": "Curated Selection",
-    "feature3Description": "We carefully select high-quality products, cutting through the noise to help you find what truly works.",
-    "problemTitle": "The Beauty Market Challenge",
-    "problemDescription": "The online beauty market is overwhelming with endless options, unreliable information, and the risk of fake products, making it difficult to find what truly works for you.",
-    "solutionTitle": "How Allure Helps",
-    "solutionDescription": "We provide a curated selection of genuine products and professional consultations, making it easier to find the right products, learn how to use them, and feel more confident in your beauty choices."
+    "recommendProductsTitle": "Recommend Products"
   },
   "productCard": {
     "currentPrice": "{{price, currency}}",
@@ -146,8 +125,7 @@
     "export": "Export",
     "update": "Update",
     "viewDetails": "View details",
-    "upload": "Upload",
-    "joinMeeting": "Join Meeting"
+    "upload": "Upload"
   },
   "noData": "No matching data found",
   "sell": {
@@ -230,11 +208,6 @@
       "title": "No messages",
       "description": "You have no active chats",
       "button": "Start a new chat"
-    },
-    "bookingDetail": {
-      "title": "Booking Not Found",
-      "description": "The booking you're looking for doesn't exist or you don't have permission to view it.",
-      "button": "View My Bookings"
     },
     "creditCard": {
       "title": "No credit cards",
@@ -655,20 +628,6 @@
   "walletTerm": {
     "balance": "Balance & Transactions",
     "createWallet": "Create Your Own Wallet",
-    "withdraw": "Withdraw",
-    "withdrawalRequests": {
-      "title": "Withdrawal Requests List",
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "processing": "Processing",
-        "completed": "Completed",
-        "cancelled": "Cancelled"
-      },
-      "statusUpdateSuccess": "Withdrawal request status updated successfully",
-      "processedBy": "Processed by"
-    },
     "withdraw": {
       "amount": "Amount",
       "availableBalance": "Available balance",
@@ -681,6 +640,19 @@
       "successMessage": "Your withdrawal request has been successfully submitted and will be processed shortly. You can track the status in your withdrawal history.",
       "error": "Withdrawal Failed",
       "errorMessage": "We couldn't process your withdrawal request at this time. Please check your information and try again later."
+    },
+    "withdrawalRequests": {
+      "title": "Withdrawal Requests List",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "statusUpdateSuccess": "Withdrawal request status updated successfully",
+      "processedBy": "Processed by"
     },
     "bankAccounts": {
       "title": "Bank Accounts",
@@ -1065,7 +1037,6 @@
     "beingChoosing": "Currently selecting",
     "detailInformation": "Detailed Information",
     "pleaseChooseCategoryToViewInformation": "Please select a category to view details",
-    "pleaseChooseProductToViewInformation": "Please select a product to view details",
     "completed": "Completed",
     "pleaseSelect": "Please select",
     "noResults": "No results found",
@@ -1278,7 +1249,6 @@
       "RETURNING": "Provide evidence of the return process.",
       "REFUNDED": "Upload proof of return completion and refund."
     },
-
     "videosHint": {
       "TO_SHIP": "A 360° view of the package to confirm it's properly sealed.",
       "SHIPPING": "Record handover moment or a short clip of the sealed package before shipping.",
@@ -1295,7 +1265,8 @@
     "reply": "Reply",
     "writeYourRep": "Write your reply...",
     "yourReply": "Your reply",
-    "customerContent": "Content"
+    "customerContent": "Content",
+    "booking": "Booking"
   },
   "media": {
     "previewImage": "Preview Image/Video",
@@ -1304,10 +1275,7 @@
     "imagesFile": "images",
     "videos": "Videos",
     "videosFile": "videos",
-    "imagesVideos": "Images/Videos",
-    "videoFile": "videos",
-    "uploadHint": "Click or drag files to upload",
-    "maxFileSize": "Maximum file size: {{size}}MB"
+    "imagesVideos": "Images/Videos"
   },
   "orderEvidence": {
     "description": {
@@ -1495,16 +1463,6 @@
     "resultSheetSent": "Result Sheet Sent",
     "viewResults": "View Results",
     "refunded": "Refunded",
-    "bookingFormAnswers": "Booking Form Answers",
-    "noBookingFormAnswers": "No booking form answers available",
-    "questionImages": "Question Images",
-    "answer": "Answer",
-    "noAnswerProvided": "No answer provided",
-    "answerImages": "Answer Images",
-    "submitBookingFormSuccess": "Booking form submitted successfully",
-    "enterYourAnswer": "Enter your answer",
-    "serviceBookingForm": "Service Booking Form",
-    "serviceBookingFormDescription": "Please fill out this form to complete your booking",
     "statusDescription": {
       "waitConfirm": "Your booking is waiting for confirmation from the service provider. You will be notified once it's confirmed.",
       "confirmed": "Your booking has been confirmed. The service provider is ready to deliver the service as scheduled.",
@@ -1513,75 +1471,9 @@
       "toPay": "Payment is required to proceed with this booking. Please complete the payment to continue.",
       "formSubmitted": "Your service booking form has been submitted successfully. We are reviewing your information.",
       "resultSheetSent": "The result sheet for your service has been sent. You can view the detailed results now.",
-      "refunded": "The payment for this booking has been refunded to your original payment method.",
-      "waitForConfirmation": "Your booking is waiting for confirmation from the consultant.",
-      "bookingConfirmed": "Your booking has been confirmed. Please submit the booking form to proceed.",
-      "serviceBookingFormSubmitted": "Your booking form has been submitted. Please join the consulting call at the scheduled time.",
-      "completedConsultingCall": "The consulting call has been completed. Waiting for the result sheet.",
-      "sendedResultSheet": "The result sheet has been sent. Please review and mark as completed."
+      "refunded": "The payment for this booking has been refunded to your original payment method."
     },
-    "suggestedProducts": "Suggested Products",
-    "searchForProducts": "Search for products",
-    "filterByClassification": "Filter by classification",
-    "selectProducts": "Select Products",
-    "completeConsultation": "Complete Consultation",
-    "completeConsultationDescription": "Please fill in your evaluation for each section and suggest products for the customer based on your consultation.",
-    "customerResponses": "Customer Responses",
-    "yourEvaluation": "Your Evaluation",
-    "enterYourEvaluation": "Enter your evaluation here...",
-    "imagesHint": "Upload up to 3 images to support your evaluation",
-    "submitConsultationResultSuccess": "Consultation result submitted successfully!",
-    "detail": "Booking Detail",
-    "statusLabel": "Status",
-    "timeline": "Timeline",
-    "consultantInfo": "Consultant Information",
-    "chatWithConsultant": "Chat with Consultant",
-    "viewProfile": "View Profile",
-    "appointmentDetails": "Appointment Details",
-    "date": "Date",
-    "duration": "Duration",
-    "minutes": "minutes",
-    "notes": "Notes",
-    "joinMeeting": "Join Meeting",
-    "customerInfo": "Customer Information",
-    "serviceDetails": "Service Details",
-    "cancelBooking": "Cancel Booking",
-    "totalPayment": "Total payment",
-    "serviceFee": "Service Fee",
-    "paymentMethod": "Payment Method",
-    "paymentSummary": "Payment Summary",
-    "subtotal": "Subtotal",
-    "discount": "Discount",
-    "total": "Total",
-    "created": "Booking Created",
-    "system": "System",
-    "consultationResultInfo": "Consultation Result Information",
-
-    "completeConsultingCallDescription": "Please provide details about the consulting call completion including any relevant media files and notes.",
-    "updateBookingStatusSuccess": "Booking status updated successfully",
-    "videosHint": "Upload videos related to the consulting call",
-    "resultNoteDescription": "Add any additional notes or observations from the consulting call",
-    "resultNotePlaceholder": "Enter your notes here...",
-    "status": {
-      "TO_PAY": "To Pay",
-      "WAIT_FOR_CONFIRMATION": "Waiting for Confirmation",
-      "BOOKING_CONFIRMED": "Booking Confirmed",
-      "COMPLETED": "Completed",
-      "CANCELLED": "Cancelled",
-      "SENDED_RESULT_SHEET": "Result Sheet Sent",
-      "toPay": "To Pay",
-      "waitForConfirmation": "Wait for Confirmation",
-      "confirmBooking": "Confirm Booking",
-      "bookingConfirmed": "Booking Confirmed",
-      "submitBookingForm": "Submit Booking Form",
-      "bookingFormSubmitted": "Booking Form Submitted",
-      "formSubmitted": "Form Submitted",
-      "completed": "Completed",
-      "completeConsultingCall": "Complete Consulting Call",
-      "completedConsultingCall": "Completed Consulting Call",
-      "sendResultSheet": "Send Result Sheet",
-      "sendedResultSheet": "Result Sheet Sent"
-    }
+    "service": "Service"
   },
   "reason": {
     "rejectCancel": {
@@ -1627,19 +1519,13 @@
   },
   "common": {
     "cancel": "Cancel",
-    "confirm": "Confirm",
-    "save": "Save",
     "delete": "Delete",
-    "edit": "Edit",
-    "submit": "Submit",
-
-    "add": "Add",
-    "remove": "Remove",
-    "search": "Search",
-    "filter": "Filter",
-    "loading": "Loading..."
+    "close": "Close"
   },
   "createBlog": {
+    "blog": "Blog",
+    "condition": "Condition",
+    "type": "Type",
     "title": "Title",
     "tag": "Slug",
     "tagPlaceholder": "Enter slug",
@@ -1685,118 +1571,7 @@
     }
   },
   "backendError": {
-    "invalidEmail": "Invalid email",
-    "firstNameRequired": "First name is required",
-    "firstNameMaxLength": "First name cannot exceed 100 characters",
-    "lastNameRequired": "Last name is required",
-    "lastNameMaxLength": "Last name cannot exceed 100 characters",
-    "usernameRequired": "Username is required and must be at least 3 characters long",
-    "usernameMaxLength": "Username cannot exceed 20 characters",
-    "invalidUsername": "User name should starting with a letter, 3-20 characters and can contain letters, numbers and underscores",
-    "invalidEmailAddress": "Invalid email address",
-    "passwordMinLength": "Password must be at least 8 characters long",
-    "avatarMinLength": "avatar must more than 1 character",
-    "invalidPhone": "Phone must be a string with 10 to 15 digits",
-    "invalidDob": "Date of birth must be a valid date (YYYY-MM-DD)",
-    "emailRequired": "Email is required",
-    "passwordRequired": "Paassword is required",
-    "fullNameMaxLength": "String must contain at most 100 character(s)",
-    "phoneMaxLength": "Phone must contain at most 100 character(s)",
-    "districtMaxLength": "District must contain at most 100 character(s)",
-    "wardMaxLength": "Ward must contain at most 100 character(s)",
-    "provinceMaxLength": "Province must contain at most 255 character(s)",
-    "invalidType": "Invalid enum value. Expected AddressEnum",
-    "invalidStartTime": "Start time must be a valid date string",
-    "invalidEndTime": "End time must be a valid date string",
-    "totalPriceNonNegative": "Number must be greater than or equal to 0",
-    "accountNotFound": "Account not found",
-    "updatedByAccountNotFound": "Updated by account not found",
-    "emailAlreadyExists": "Email already exists!",
-    "usernameAlreadyExists": "Username already exists!",
-    "invalidRoleProvided": "Invalid role provided",
-    "certificateNotAllowed": "Certificate is only available for role CONSULTANT and KOL",
-    "consultantNotFound": "Consultant not found",
-    "brandNotFound": "Brand not found",
-    "exceededApprovedReportsLimit": "Account has been banned due to exceeding the approved reports limit",
-    "addressNotFound": "Address not found",
-    "atLeastOneDefaultAddress": "Should be at least one default address",
-    "emailNotVerified": "Email is not verified",
-    "invalidPassword": "Invalid password",
-    "loginMethodNotAllowed": "User must login by another way not using password",
-    "blogNotExisted": "Blog Not Existed!",
-    "blogTagAlreadyExisted": "Blog tag already Existed",
-    "bookingNotFound": "Booking not found",
-    "onlyReviewerCanNoteResult": "Only reviewer can note result",
-    "slotBooked": "Slot has been booked",
-    "brandIdRequired": "BrandId required",
-    "consultantServiceIdRequired": "ConsultantServiceId required",
-    "consultantServiceNotFound": "ConsultantService not found",
-    "slotRequired": "Slot is required",
-    "cannotCompleteBooking": "You cannot complete the booking because the report has not been completed yet.",
-    "cannotCancelBooking": "Can not cancelled booking in status: ",
-    "walletNotFound": "Dont have wallet",
-    "activeProductRequired": "Please select active product",
-    "productNotFound": "Product not found",
-    "onlyConsultantOrOperator": "Only apply for consultant or operator",
-    "overlapTimeSlot": "Overlap time slot",
-    "alreadyBookedSlot": "You have already booked a slot. Please wait for process",
-    "bookingCancelledSuccessfully": "Booking cancelled successfully",
-    "bookingStatusUpdatedSuccessfully": "Booking service status updated successfully",
-    "classificationNotFound": "Classification not found",
-    "invalidProduct": "Can not add invalid Product",
-    "quantityNotEnough": "Quantity is not enough",
-    "groupBuyingInvalid": "Group Buying invalid",
-    "livestreamInvalid": "Livestream invalid",
-    "cartItemNotFound": "Cart Item not found",
-    "invalidOrEmptyItemIds": "Invalid or empty itemIds array",
-    "noItemsFoundForIds": "No items found for the provided IDs",
-    "accountIdRequired": "Account ID is required",
-    "noItemsInCart": "No items found in the cart for the given account",
-    "categoryAlreadyExisted": "Category already Existed",
-    "parentCategoryNotFound": "Parent category not found",
-    "maxCategoryLevelExceeded": "A category cannot have more than 4 levels of subcategories",
-    "categoryNotFound": "Category not found.",
-    "newParentCategoryNotFound": "New parent category not found.",
-    "bookingFormNotFound": "Booking Form not found.",
-    "systemServiceNotFoundOrInactive": "System service not found or inactive.",
-    "invalidStatusUpdate": "Cannot update status.",
-    "activeServicesUsingFormNotFound": "No active services using this form found.",
-    "questionNotFound": "Question not found.",
-    "imageNotFound": "Image not found",
-    "consultationCriteriaNotFound": "Consultation Criteria not found",
-    "consultationCriteriaSectionNotFound": "Consultation Criteria Section not found",
-    "criteriaCreationFailed": "Failed to create Consultation Criteria.",
-    "criteriaUpdateFailed": "Failed to update Consultation Criteria.",
-    "criteriaSectionUpdateFailed": "Failed to update Consultation Criteria Section.",
-    "sectionNotFound": "Section not found",
-    "livestreamNotFound": "Livestream not found",
-    "invalidLivestreamStatus": "Invalid livestream status",
-    "classificationQuantityRequired": "Product classification must have at least one quantity.",
-    "skuRequired": "sku is required",
-    "skuAlreadyExists": "sku of classification already exists",
-    "invalidDatetime": "Invalid datetime string",
-    "invalidTimeRange": "Start time must be earlier than end time",
-    "overlappingPreOrderEvent": "The time range overlaps with an existing pre-order event",
-    "overlappingDiscountEvent": "The time range overlaps with an existing discount event",
-    "preOrderProductNotFound": "Pre-order Product not found",
-    "classificationTitleAlreadyExists": "title of classification already exists",
-    "invalidSortBy": "Invalid sortBy",
-    "invalidProductStatus": "Invalid product status",
-    "productDiscountNotFound": "ProductDiscount not found",
-    "classificationInvalid": "Classification invalid!",
-    "classificationQuantityInvalid": "Classification quantity must be greater than 0!",
-    "invalidClassificationQuantity": "Invalid classification quantity: Quantity should be smaller than the current stock",
-    "productStatusInvalid": "The Product is BANNED!",
-    "originalClassificationNotFound": "Original classification not found",
-    "invalidFilterOptions": "Invalid filter options",
-    "deleteQuestionFailed": "Failed to delete question",
-    "updateOrderIndexFailed": "Failed to update order index for questions",
-    "imageDeleteFailed": "Failed to delete image associated with the question",
-    "systemServiceNotFound": "System service not found.",
-    "serviceAlreadyExisted": "Service already Existed",
-    "activeServicesUsingCriteriaNotFound": "No active services using this criteria found.",
-    "imageUpdateFailed": "Failed to update image associated with the system service",
-    "invalidStatusValue": "Invalid status value"
+    "invalidEmail": "Email is invalid"
   },
   "payment": {
     "methods": {
@@ -1811,14 +1586,6 @@
       "stripe": "Stripe",
       "visa_card": "Visa/Mastercard",
       "none": "None"
-    },
-    "method": {
-      "CASH": "Cash",
-      "CREDIT_CARD": "Credit Card",
-      "BANK_TRANSFER": "Bank Transfer",
-      "PAYPAL": "PayPal",
-      "STRIPE": "Stripe",
-      "OTHER": "Other"
     },
     "notifyPayment": "This order has not been paid. Waiting for the customer to complete the payment of {{total}} via {{method}} within {{val}}.",
     "changePaymentMethod": "Change payment method",
@@ -1930,226 +1697,5 @@
   "blog": {
     "title": "Blogs",
     "createdAt": "Created At"
-  },
-
-  "product": {
-    "selectProducts": "Select Products",
-    "selectVariation": "Select Product Variation",
-    "searchProducts": "Search products...",
-    "filterByClassification": "Filter by classification",
-    "noProductsFound": "No products found. Try a different search term.",
-    "searchToAddProducts": "Search for products to add",
-    "scrollToLoadMore": "Scroll to load more",
-    "productsSelected": "{{count}} products selected",
-    "inStock": "in stock",
-    "outOfStock": "out of stock",
-    "default": "Default",
-    "noImage": "No image",
-    "price": "Price",
-    "quantity": "Quantity",
-    "addToSelection": "Add to selection",
-    "removeFromSelection": "Remove from selection"
-  },
-  "consultation": {
-    "completeTitle": "Complete Consultation",
-    "completeDescription": "Please fill in your evaluation for each section and suggest products for the customer based on your consultation.",
-    "customerResponses": "Customer Responses",
-    "yourEvaluation": "Your Evaluation",
-    "enterEvaluation": "Enter your evaluation here...",
-    "uploadImages": "Upload Images",
-    "imagesHint": "Upload up to 3 images to support your evaluation",
-    "suggestedProducts": "Suggested Products",
-    "searchProducts": "Search for products",
-    "selectProducts": "Select Products",
-    "submitSuccess": "Consultation result submitted successfully!",
-    "productsSelected": "{{count}} products selected"
-  },
-  "store": {
-    "chat": "Chat"
-  },
-  "signUp": {
-    "title": "Create your account",
-    "subtitle": "Fill in the details below to get started",
-    "email": "Email",
-    "emailPlaceholder": "e.g. allure@gmail.com",
-    "username": "Username",
-    "usernamePlaceholder": "Enter your full name",
-    "phone": "Phone Number",
-    "phoneDescription": "This is the phone number that will be displayed on your profile",
-    "password": "Password",
-    "passwordPlaceholder": "••••••••",
-    "confirmPassword": "Confirm Password",
-    "confirmPasswordPlaceholder": "••••••••",
-    "signUpButton": "Sign up",
-    "alreadyHaveAccount": "Already have an account?",
-    "signIn": "Sign in",
-    "welcomeMessage": "Welcome!, {{email}}, check your email for verification",
-    "passwordsDoNotMatch": "Passwords do not match"
-  },
-  "signIn": {
-    "email": "Email",
-    "emailPlaceholder": "e.g. allure@gmail.com",
-    "password": "Password",
-    "passwordPlaceholder": "e.g. ********",
-    "signInButton": "Sign in",
-    "forgotPassword": "Forgot your password?",
-    "noAccount": "Don't have an account?",
-    "signUp": "Sign up",
-    "welcomeBack": "Welcome back!, {{email}}"
-  },
-  "authLayout": {
-    "backToWebsite": "Back to the website",
-    "portalName": "Allure Portal",
-    "testimonial": "\"Allure Portal is a powerful tool that allows us to manage our data, grant access to our clients and partners, and monitor the performance of our business in real-time. It's a game-changer for us.\"",
-    "testimonialAuthor": "- Allure team -"
-  },
-  "authUI": {
-    "titles": {
-      "signIn": "Sign In",
-      "emailSignIn": "Email Sign In",
-      "forgotPassword": "Forgot Password",
-      "updatePassword": "Update Password",
-      "signup": ""
-    },
-    "descriptions": {
-      "signIn": "Enter your email and password to sign in!",
-      "emailSignIn": "Enter your email to get a magic link!",
-      "forgotPassword": "Enter your email to get a password reset link!",
-      "updatePassword": "Choose a new password for your account!",
-      "signup": ""
-    }
-  },
-  "branchCreation": {
-    "welcomeTitle": "Welcome to",
-    "brandName": "Allure",
-    "description": "Create, grow, and manage your brand on our powerful selling platform. Start your journey to success today!",
-    "createButton": "Create Your Brand"
-  },
-  "branchDetails": {
-    "step": "Step-{{stepIndex}}",
-    "generalInformation": "General Information",
-    "name": {
-      "label": "Name",
-      "placeholder": "Please enter your brand name"
-    },
-    "email": {
-      "label": "Email Brand",
-      "placeholder": "e.g. allure@gmail.com"
-    },
-    "address": {
-      "label": "Address",
-      "addNew": "Add New Address"
-    },
-    "description": {
-      "label": "Description",
-      "placeholder": "Description"
-    },
-    "phone": {
-      "label": "Phone"
-    },
-    "document": {
-      "label": "Document",
-      "uploadDescription": "You must upload at least 1 document for your license details. To help you, we've provided a template file. Please download it, fill in the necessary details, and upload it back:",
-      "downloadTemplate": "Download License Details Template"
-    },
-    "navigation": {
-      "back": "Back",
-      "next": "Next"
-    }
-  },
-  "fileUpload": {
-    "dragDrop": {
-      "dragActive": "Drop your file here",
-      "dragInactive": "Drag & drop your files here",
-      "clickToSelect": "or click to select files",
-      "fileRestrictions": "You can upload up to {{maxFiles}} files. Accepted file formats are {{formats}}. Each file must be under {{maxSize}}MB.",
-      "maxFilesReached": "You have reached the maximum number of files allowed"
-    },
-    "fileList": {
-      "filesSelected": "{{count}} file(s) selected"
-    },
-    "preview": {
-      "image": "Image Preview",
-      "file": "File Preview"
-    }
-  },
-  "imagesUploader": {
-    "step": "Step-{{stepIndex}}",
-    "title": "Images Uploader",
-    "logo": {
-      "label": "Logo",
-      "description": "Please choose your logo"
-    },
-    "businessTaxCode": {
-      "label": "Business Tax Code",
-      "placeholder": "Business Tax Code"
-    },
-    "establishmentDate": {
-      "label": "Establishment Date"
-    },
-    "businessRegistrationCode": {
-      "label": "Business Registration Code",
-      "placeholder": "Business Registration Code",
-      "description": "A number or code assigned to the business upon registration, serving as a formal identifier for the company."
-    },
-    "businessRegistrationAddress": {
-      "label": "Business Registration Address",
-      "placeholder": "Business Registration Address",
-      "description": "The official address of the business as stated during registration."
-    },
-    "navigation": {
-      "back": "Back",
-      "next": "Next"
-    }
-  },
-  "confirmation": {
-    "step": "Step-{{stepIndex}}",
-    "title": "Confirmation",
-    "reviewMessage": "Please review the information before submitting, you can go back to refill the form if there is any mistake.",
-    "card": {
-      "title": "Confirm Your Brand",
-      "status": {
-        "pending": "PENDING"
-      }
-    },
-    "fields": {
-      "name": "Brand Name",
-      "email": "Email",
-      "phone": "Phone",
-      "address": "Address",
-      "description": "Description",
-      "logo": "Logo",
-      "document": "Document"
-    },
-    "fileInfo": {
-      "files": "{{count}} file(s)"
-    },
-    "notAvailable": "N/A",
-    "navigation": {
-      "back": "Back",
-      "confirm": "Confirm"
-    }
-  },
-  "forbidden": {
-    "public": {
-      "error": "Error",
-      "accessDenied": "Access Denied",
-      "noPermission": "You don't have permission to access the requested resource.",
-      "contactSupport": "Please contact support if you believe this is an error.",
-      "attemptedAccess": "Attempted to access:",
-      "goToHome": "Go to Home",
-      "contactSupportButton": "Contact Support",
-      "copyright": "© {{year}} Your Company. All rights reserved."
-    },
-    "dashboard": {
-      "error": "Error",
-      "accessDenied": "Access Denied",
-      "noPermission": "You don't have permission to access this page.",
-      "noPermissionGeneric": "You don't have permission to access the requested page.",
-      "contactAdmin": "Please contact your administrator if you believe this is an error.",
-      "attemptedAccess": "Attempted to access:",
-      "backToDashboard": "Back to Dashboard",
-      "needHelp": "Need Help?"
-    }
   }
 }

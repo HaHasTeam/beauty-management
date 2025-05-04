@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
-import { CheckSquare, InfoIcon } from 'lucide-react'
+import { XIcon } from 'lucide-react'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
+import { BsPeople } from 'react-icons/bs'
 import { z } from 'zod'
 
 import Button from '@/components/button'
@@ -21,6 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -35,17 +37,8 @@ import { defaultRequiredRegex } from '@/constants/regex'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useToast } from '@/hooks/useToast'
-import { filterReports, getFilteredReports, updateReportNote, updateReportStatus } from '@/network/apis/report'
+import { getFilteredReports, updateReportNote, updateReportStatus } from '@/network/apis/report'
 import { IReport, ReportStatusEnum } from '@/types/report'
-
-// Map for display purposes
-const REPORT_TYPE_MAP = {
-  ORDER: 'Order',
-  TRANSACTION: 'Transaction',
-  BOOKING: 'Booking',
-  SYSTEM_FEATURE: 'System Feature',
-  OTHER: 'Other'
-}
 
 interface ResolveReportDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   Report: Row<IReport>['original'][]
@@ -63,6 +56,7 @@ const formSchema = z.object({
 })
 
 export function ResolveReportDialog({ Report, showTrigger = true, onSuccess, ...props }: ResolveReportDialogProps) {
+  const queryClient = useQueryClient()
   const formId = React.useId()
   const { successToast } = useToast()
 
@@ -79,13 +73,7 @@ export function ResolveReportDialog({ Report, showTrigger = true, onSuccess, ...
   React.useEffect(() => {
     const report = Report?.[0]
     if (report) {
-      // Ensure status is set only if it exists and is valid for resolution
-      if (report.status && [ReportStatusEnum.CANCELLED, ReportStatusEnum.APPROVED].includes(report.status)) {
-        form.setValue('status', report.status)
-      } else {
-        // Optionally set a default or leave blank if current status is not a final one
-        form.setValue('status', '')
-      }
+      form.setValue('status', report.status)
       form.setValue('resultNote', report.resultNote ?? '')
     }
   }, [Report, form])
@@ -95,15 +83,9 @@ export function ResolveReportDialog({ Report, showTrigger = true, onSuccess, ...
     mutationFn: updateReportStatus.fn
   })
 
-  const queryClient = useQueryClient()
   const { mutateAsync: updateNoteFn } = useMutation({
     mutationKey: [updateReportNote.mutationKey],
-    mutationFn: updateReportNote.fn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [filterReports.queryKey]
-      })
-    }
+    mutationFn: updateReportNote.fn
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -131,128 +113,86 @@ export function ResolveReportDialog({ Report, showTrigger = true, onSuccess, ...
     }
   }
 
-  // Define common content for Dialog and Drawer
-  const content = (
-    <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(onSubmit)} id={formId} className='flex flex-col w-full gap-4'>
-        <div className='py-4'>
-          {/* Display selected reports */}
-          <div className='flex flex-wrap gap-1 mb-4'>
-            {Report.map((report) => (
-              <Badge key={report.id} variant='outline' className='bg-slate-100'>
-                Report #{report.id.substring(0, 8)} ({REPORT_TYPE_MAP[report.type] || 'N/A'})
-              </Badge>
-            ))}
-          </div>
-
-          {/* Informational Block */}
-          <div className='rounded-md bg-blue-50 p-4 mb-4'>
-            <div className='flex'>
-              <div className='flex-shrink-0'>
-                <InfoIcon className='h-5 w-5 text-blue-400' aria-hidden='true' />
-              </div>
-              <div className='ml-3'>
-                <h3 className='text-sm font-medium text-blue-800'>Resolving this report</h3>
-                <div className='mt-2 text-sm text-blue-700'>
-                  <p>Please review the details carefully and provide a resolution status and note:</p>
-                  <ul className='list-disc pl-5 space-y-1 mt-2'>
-                    <li>Select the final status (e.g., Approved, Rejected).</li>
-                    <li>Provide a clear note explaining the resolution.</li>
-                    <li>This action is final and will update the report record.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Form Fields */}
-          <FormField
-            control={form.control}
-            name='status'
-            render={({ field }) => (
-              <FormItem className='mb-4'>
-                <FormLabel required>Result Status</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Select a result status' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {[ReportStatusEnum.APPROVED, ReportStatusEnum.REJECTED].map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status.replace(/_/g, ' ')}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='resultNote'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>Result Note</FormLabel>
-                <FormControl>
-                  <Textarea placeholder='Write your result note here...' className='resize-none' rows={6} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-      </form>
-    </Form>
-  )
-
-  // Define common footer for Dialog and Drawer
-  const footer = (
-    <>
-      <DialogClose asChild>
-        <Button variant='outline' disabled={form.formState.isSubmitting}>
-          Cancel
-        </Button>
-      </DialogClose>
-      <Button
-        variant='default' // Changed variant
-        loading={form.formState.isSubmitting}
-        form={formId}
-        type='submit'
-        disabled={form.formState.isSubmitting}
-      >
-        Resolve Report
-      </Button>
-    </>
-  )
-
   if (isDesktop) {
     return (
       <Dialog {...props}>
         {showTrigger ? (
           <DialogTrigger asChild>
-            {/* Updated Trigger Button */}
-            <Button variant='default' size='sm' className='gap-1'>
-              <CheckSquare className='size-4' aria-hidden='true' />
-              <span>Resolve Report{Report.length > 1 ? 's' : ''}</span>
+            <Button variant='destructive' size='sm' className='text-white'>
+              Action
             </Button>
           </DialogTrigger>
         ) : null}
         <DialogContent className='sm:max-w-2xl'>
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
-              {/* Updated Icon */}
-              <CheckSquare className='size-6' aria-hidden='true' />
+              <BsPeople className='size-6' aria-hidden='true' />
               Resolve Report
             </DialogTitle>
             <DialogDescription>Consider the report and resolve it carefully.</DialogDescription>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full gap-4' id={formId}>
+                <FormField
+                  control={form.control}
+                  name='status'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Result Status</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder='Select a result status' />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {[ReportStatusEnum.CANCELLED, ReportStatusEnum.APPROVED].map((status) => (
+                            <SelectItem key={status} value={ReportStatusEnum[status as keyof typeof ReportStatusEnum]}>
+                              {status.replace(/_/g, ' ')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='resultNote'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Result Note</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder='Write your result note here'
+                          className='resize-none'
+                          rows={6}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
           </DialogHeader>
-          {/* Use common content */}
-          {content}
-          {/* Use common footer */}
-          <DialogFooter className='gap-2 sm:justify-end'>{footer}</DialogFooter>
+          <DialogFooter className='gap-2 sm:space-x-0 flex w-full'>
+            <DialogClose asChild className='flex-1'>
+              <Button variant='outline' disabled={form.formState.isSubmitting}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              className='flex-1'
+              loading={form.formState.isSubmitting}
+              form={formId}
+              type='submit'
+              disabled={form.formState.isSubmitting}
+            >
+              Resolve Report
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     )
@@ -262,26 +202,31 @@ export function ResolveReportDialog({ Report, showTrigger = true, onSuccess, ...
     <Drawer {...props}>
       {showTrigger ? (
         <DrawerTrigger asChild>
-          {/* Updated Trigger Button */}
-          <Button variant='default' size='sm' className='gap-1'>
-            <CheckSquare className='size-4' aria-hidden='true' />
-            <span>Resolve Report{Report.length > 1 ? 's' : ''}</span>
+          <Button variant='destructive' size='sm' className='text-white'>
+            <XIcon className='size-4' aria-hidden='true' />
+            Ban {Report.length} Selected {Report.length > 1 ? 'Users' : 'User'}
           </Button>
         </DrawerTrigger>
       ) : null}
       <DrawerContent>
-        <DrawerHeader className='text-left'>
-          <DrawerTitle className='flex items-center gap-2'>
-            {/* Updated Icon */}
-            <CheckSquare className='size-6' aria-hidden='true' />
-            Resolve Report
-          </DrawerTitle>
-          <DrawerDescription>Consider the report and resolve it carefully.</DrawerDescription>
+        <DrawerHeader>
+          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+          <DrawerDescription>
+            You are about to <b className='uppercase'>ban</b>{' '}
+            {Report.map((ConsultantService) => (
+              <Badge className='mr-1'>{ConsultantService.id}</Badge>
+            ))}
+            . After banning, the Report will be disabled. Please check the Report before banning.
+          </DrawerDescription>
         </DrawerHeader>
-        {/* Use common content with padding */}
-        <div className='px-4'>{content}</div>
-        {/* Use common footer */}
-        <DrawerFooter className='pt-2 gap-2'>{footer}</DrawerFooter>
+        <DrawerFooter className='gap-2 sm:space-x-0'>
+          <DrawerClose asChild>
+            <Button variant='outline'>Cancel</Button>
+          </DrawerClose>
+          <Button aria-label='Ban Selected rows' className='text-white' variant='destructive'>
+            Ban User{Report.length > 1 ? 's' : ''}
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )

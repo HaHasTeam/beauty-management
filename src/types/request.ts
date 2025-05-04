@@ -4,14 +4,14 @@ type Paging = {
   total: number
 }
 
-export type TServerResponse<T, TItems = undefined, TExtends = undefined> = {
+export type TServerResponse<T, TItems = undefined> = {
   message: string
-  data: T & (TExtends extends undefined ? object : TExtends) & (TItems extends undefined ? object : { items: TItems })
+  data: T & (TItems extends undefined ? object : { items: TItems })
 }
 
-export type TServerResponseWithPaging<TItems = undefined, TExtends = object> = {
+export type TServerResponseWithPaging<TItems = undefined> = {
   message: string
-  data: (TItems extends undefined ? object : { items: TItems }) & Paging & TExtends
+  data: (TItems extends undefined ? object : { items: TItems }) & Paging
 }
 
 export type TPaginationResponse<T> = {

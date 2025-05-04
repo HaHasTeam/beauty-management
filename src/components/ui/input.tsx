@@ -33,7 +33,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isNumberInput = numberableTypes.includes(type)
     const inputType = isNumberInput ? 'text' : type
     const isFileInput = type === 'file'
-    const clearAllRef = React.useRef(false)
 
     const formatCurrency = (amount?: number): string => {
       if (amount === undefined || isNaN(amount)) return ''
@@ -54,7 +53,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         // Handle empty input
         if (!inputString) {
           setFormattedValue('')
-          clearAllRef.current = true
           if (onChange) onChange(undefined as unknown as React.ChangeEvent<HTMLInputElement>)
           return
         }
@@ -92,7 +90,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         if (isEmpty) {
           setFormattedValue('')
-          clearAllRef.current = true
           if (onChange) onChange(undefined as unknown as React.ChangeEvent<HTMLInputElement>)
           return
         }
@@ -101,7 +98,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         if (isZero) {
           setFormattedValue('0')
-
           if (onChange) onChange(0 as unknown as React.ChangeEvent<HTMLInputElement>)
           return
         }
@@ -114,7 +110,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           case 'percentage': {
             if (inputValue === undefined) {
               setFormattedValue('')
-              clearAllRef.current = true
               if (onChange) onChange(undefined as unknown as React.ChangeEvent<HTMLInputElement>)
               return
             }
@@ -172,13 +167,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [type, symbol])
 
     React.useEffect(() => {
-      
-        if (clearAllRef.current === true ) {
-            return
-          }
       if (value !== undefined) {
         if (value === '') {
-          // onChange?.(value as unknown as React.ChangeEvent<HTMLInputElement>)
           setFormattedValue('')
         } else {
           const numberValue = type === 'percentage' ? Number(value) * 100 : Number(value)
@@ -191,6 +181,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [value, maxVal])
 
     const symbolRef = React.useRef<HTMLDivElement>(null)
+
     if (isFileInput) {
       return (
         <input

@@ -153,13 +153,3 @@ export const CreateAddressBrandSchema = z.object({
   province: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
   fullAddress: z.string().optional()
 })
-
-export const getCreateAddressBrandSchema = () => {
-  return z.object({
-    detailAddress: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
-    ward: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
-    district: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
-    province: z.string().regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message()),
-    fullAddress: z.string().optional()
-  })
-}

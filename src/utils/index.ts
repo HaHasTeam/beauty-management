@@ -36,9 +36,11 @@ export function generateMeaningfulCode(purpose: string = '', length: number = 6)
 
   // Use provided purpose or pick a random one
   let prefix = purpose.toUpperCase()
-  if (!prefix) {
+  if (!prefix || !(prefix in prefixes)) {
     const prefixKeys = Object.keys(prefixes) as Array<keyof typeof prefixes>
     prefix = prefixes[prefixKeys[Math.floor(Math.random() * prefixKeys.length)]]
+  } else {
+    prefix = prefixes[prefix as keyof typeof prefixes]
   }
 
   // Generate random alphanumeric string for the code

@@ -33,7 +33,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { filterBrandsApi, getBrandByIdApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
+import { filterBrandsApi, updateStatusBrandByIdApi } from '@/network/apis/brand'
 import { reasonSchema, reasonSchemaRequire } from '@/schemas'
 import { BrandStatusEnum, type TBrand } from '@/types/brand'
 
@@ -116,8 +116,6 @@ export function UpdateStatusBrandDialog({
     // Wait for all updates to complete
     await Promise.all(updatePromises)
     await queryClient.invalidateQueries({ queryKey: [filterBrandsApi.queryKey] })
-    await queryClient.invalidateQueries({ queryKey: [getBrandByIdApi.queryKey] })
-
     form.reset()
     // await queryClient.invalidateQueries({ queryKey: ['getAllBrands', 'updateStatusBrandById'] })
     props.onOpenChange?.(false)

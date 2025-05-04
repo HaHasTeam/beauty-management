@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Calendar, History, SquareUserRound, User } from 'lucide-react'
+import { Calendar, History, MessageSquare, SquareUserRound, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
@@ -12,6 +12,7 @@ import BookingStatusTrackingDetail from '@/components/booking-detail/BookingStat
 import BookingSummary from '@/components/booking-detail/BookingSummary'
 import UpdateBookingStatus from '@/components/booking-detail/UpdateBookingStatus'
 import Empty from '@/components/empty/Empty'
+import { ViewFeedbackDialog } from '@/components/feedback/ViewFeedbackDialog'
 import ImageWithFallback from '@/components/image/ImageWithFallback'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -23,17 +24,17 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Routes, routesConfig } from '@/configs/routes'
 import { getBookingByIdApi } from '@/network/apis/booking/details'
 import { useStore } from '@/stores/store'
-import { BookingStatusEnum, RoleEnum, ServiceTypeEnum } from '@/types/enum'
+import { BookingStatusEnum, RoleEnum } from '@/types/enum'
 
 import BookingStatus from './BookingStatus'
 import CancelBookingDialog from './CancelBookingDialog'
 
 const BookingDetail = () => {
-  const { id: bookingId } = useParams()
-
+  const { bookingId } = useParams()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [openCancelBookingDialog, setOpenCancelBookingDialog] = useState<boolean>(false)
+  const [openViewFeedbackDialog, setOpenViewFeedbackDialog] = useState<boolean>(false)
   const [isTrigger, setIsTrigger] = useState<boolean>(false)
   // const { successToast } = useToast()
   // const handleServerError = useHandleServerError()
@@ -59,6 +60,8 @@ const BookingDetail = () => {
   const canCancel =
     bookingData?.data?.status === BookingStatusEnum.TO_PAY ||
     bookingData?.data?.status === BookingStatusEnum.WAIT_FOR_CONFIRMATION
+
+  const canViewFeedback = bookingData && bookingData.data && bookingData.data.feedback !== null
 
   const isMeetingJoinable =
     bookingData?.data?.status === BookingStatusEnum.BOOKING_CONFIRMED && bookingData?.data?.meetUrl
@@ -120,10 +123,7 @@ const BookingDetail = () => {
                     icon={<History className='w-5 h-5' />}
                     content={
                       bookingData?.data?.statusTrackings ? (
-                        <BookingStatusTrackingDetail
-                          statusTrackingData={bookingData?.data?.statusTrackings}
-                          booking={bookingData?.data}
-                        />
+                        <BookingStatusTrackingDetail statusTrackingData={bookingData?.data?.statusTrackings} />
                       ) : (
                         <p></p>
                       )
@@ -162,7 +162,7 @@ const BookingDetail = () => {
                           </div>
                         </div>
 
-                        {/* <div className='mt-2 flex gap-3'>
+                        <div className='mt-2 flex gap-3'>
                           <Button className='flex items-center gap-1 bg-primary hover:bg-primary/90' variant='default'>
                             <MessageSquare className='w-4 h-4' />
                             <span>{t('booking.chatWithConsultant')}</span>
@@ -174,52 +174,51 @@ const BookingDetail = () => {
                             <User className='w-4 h-4 mr-1' />
                             {t('booking.viewProfile')}
                           </Link>
-                        </div> */}
+                        </div>
                       </div>
                     }
                   />
-                  {bookingData.data.consultantService.systemService.type == ServiceTypeEnum.PREMIUM && (
-                    <BookingGeneral
-                      title={t('booking.appointmentDetails')}
-                      icon={<Calendar className='w-5 h-5' />}
-                      content={
-                        <div className='flex flex-col gap-2 text-base'>
-                          <div className='grid grid-cols-2 gap-1'>
-                            <p className='text-muted-foreground'>{t('booking.date')}:</p>
-                            <p className='font-medium'>
-                              {t('date.toLocaleDateTimeString', { val: new Date(bookingData?.data?.startTime) })}
-                            </p>
-                          </div>
 
-                          <div className='grid grid-cols-2 gap-1'>
-                            <p className='text-muted-foreground'>{t('booking.duration')}:</p>
-                            <p className='font-medium'>60 {t('booking.minutes')}</p>
-                          </div>
-
-                          {bookingData?.data?.notes && (
-                            <div className='grid grid-cols-1 gap-1 mt-2'>
-                              <p className='text-muted-foreground'>{t('booking.notes')}:</p>
-                              <p className='font-medium bg-muted/30 p-2 rounded-md'>{bookingData?.data?.notes}</p>
-                            </div>
-                          )}
-
-                          {isMeetingJoinable && (
-                            <div className='mt-3'>
-                              <a
-                                href={bookingData?.data?.meetUrl}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md inline-flex items-center gap-2 w-full justify-center'
-                              >
-                                <Calendar className='w-4 h-4' />
-                                {t('booking.joinMeeting')}
-                              </a>
-                            </div>
-                          )}
+                  <BookingGeneral
+                    title={t('booking.appointmentDetails')}
+                    icon={<Calendar className='w-5 h-5' />}
+                    content={
+                      <div className='flex flex-col gap-2 text-base'>
+                        <div className='grid grid-cols-2 gap-1'>
+                          <p className='text-muted-foreground'>{t('booking.date')}:</p>
+                          <p className='font-medium'>
+                            {t('date.toLocaleDateTimeString', { val: new Date(bookingData?.data?.startTime) })}
+                          </p>
                         </div>
-                      }
-                    />
-                  )}
+
+                        <div className='grid grid-cols-2 gap-1'>
+                          <p className='text-muted-foreground'>{t('booking.duration')}:</p>
+                          <p className='font-medium'>60 {t('booking.minutes')}</p>
+                        </div>
+
+                        {bookingData?.data?.notes && (
+                          <div className='grid grid-cols-1 gap-1 mt-2'>
+                            <p className='text-muted-foreground'>{t('booking.notes')}:</p>
+                            <p className='font-medium bg-muted/30 p-2 rounded-md'>{bookingData?.data?.notes}</p>
+                          </div>
+                        )}
+
+                        {isMeetingJoinable && (
+                          <div className='mt-3'>
+                            <a
+                              href={bookingData?.data?.meetUrl}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md inline-flex items-center gap-2 w-full justify-center'
+                            >
+                              <Calendar className='w-4 h-4' />
+                              {t('booking.joinMeeting')}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    }
+                  />
                 </div>
               </div>
 
@@ -252,7 +251,7 @@ const BookingDetail = () => {
                       </div>
                     </div>
 
-                    {/* <div className='flex gap-3'>
+                    <div className='flex gap-3'>
                       <Button className='flex items-center gap-1 bg-primary hover:bg-primary/90' variant='default'>
                         <MessageSquare className='w-4 h-4' />
                         <span>{t('store.chat')}</span>
@@ -264,7 +263,7 @@ const BookingDetail = () => {
                         <User className='w-4 h-4 mr-1' />
                         {t('booking.viewProfile')}
                       </Link>
-                    </div> */}
+                    </div>
                   </div>
                 }
               />
@@ -353,6 +352,11 @@ const BookingDetail = () => {
                     {t('booking.joinMeeting')}
                   </a>
                 )}
+                {canViewFeedback && (
+                  <Button className='w-full' onClick={() => setOpenViewFeedbackDialog(true)}>
+                    {t('order.viewFeedback')}
+                  </Button>
+                )}
               </div>
             </div>
           </>
@@ -371,13 +375,26 @@ const BookingDetail = () => {
 
         {/* Cancel Booking Dialog */}
         {!isFetching && bookingData?.data && (
-          <CancelBookingDialog
-            open={openCancelBookingDialog}
-            setOpen={setOpenCancelBookingDialog}
-            onOpenChange={setOpenCancelBookingDialog}
-            setIsTrigger={setIsTrigger}
-            bookingId={bookingData?.data?.id ?? ''}
-          />
+          <>
+            <CancelBookingDialog
+              open={openCancelBookingDialog}
+              setOpen={setOpenCancelBookingDialog}
+              onOpenChange={setOpenCancelBookingDialog}
+              setIsTrigger={setIsTrigger}
+              bookingId={bookingData?.data?.id ?? ''}
+            />
+            <ViewFeedbackDialog
+              systemServiceName={bookingData?.data?.consultantService?.systemService?.name}
+              systemServiceType={bookingData?.data?.consultantService?.systemService?.type}
+              isOpen={openViewFeedbackDialog}
+              onClose={() => setOpenViewFeedbackDialog(false)}
+              feedback={bookingData?.data?.feedback}
+              brand={null}
+              accountAvatar={bookingData?.data?.account?.avatar || ''}
+              accountName={bookingData?.data?.account?.username}
+              bookingId={bookingId}
+            />
+          </>
         )}
       </div>
     </div>

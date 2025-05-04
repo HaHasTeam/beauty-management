@@ -9,9 +9,7 @@
     "loginOrRegister": "Đăng nhập/Đăng ký",
     "shoppingCart": "Giỏ hàng",
     "notification": "Thông báo",
-    "registerBrand": "Đăng ký thương hiệu",
-    "allureBeauty": "Allure Beauty",
-    "logo": "Logo Allure"
+    "registerBrand": "Đăng ký thương hiệu"
   },
   "profile": {
     "myProfile": "Hồ Sơ Của Tôi",
@@ -47,25 +45,7 @@
     "exclusiveBeautyOffersTitle": "Ưu đãi sắc đẹp độc quyền",
     "preOderCardTitle": "Đơn đặt trước",
     "groupBuyingDealsCardTitle": "Ưu đãi mua chung",
-    "recommendProductsTitle": "Gợi ý sản phẩm",
-    "badge": "Làm Đẹp Đơn Giản",
-    "title": "Điểm Đến Làm Đẹp Đáng Tin Cậy",
-    "description": "Khám phá các sản phẩm làm đẹp chính hãng và tư vấn cá nhân hóa từ chuyên gia trong một nền tảng đáng tin cậy.",
-    "login": "Đăng nhập",
-    "register": "Đăng ký",
-    "heroImageAlt": "Bộ sưu tập sản phẩm làm đẹp cao cấp",
-    "featuresTitle": "Tại Sao Chọn Allure",
-    "featuresSubtitle": "Chúng tôi đang chuyển đổi trải nghiệm mua sắm làm đẹp trực tuyến với sự tin cậy và chuyên môn",
-    "feature1Title": "Sản Phẩm Chính Hãng",
-    "feature1Description": "Mọi sản phẩm trên nền tảng của chúng tôi đều được xác minh và nhập trực tiếp từ các thương hiệu chính thức, loại bỏ nguy cơ hàng giả.",
-    "feature2Title": "Tư Vấn Chuyên Gia",
-    "feature2Description": "Kết nối với các chuyên gia làm đẹp được chứng nhận để nhận tư vấn cá nhân hóa phù hợp với nhu cầu và sở thích độc đáo của bạn.",
-    "feature3Title": "Lựa Chọn Tinh Tế",
-    "feature3Description": "Chúng tôi lựa chọn cẩn thận các sản phẩm chất lượng cao, giúp bạn tìm ra những gì thực sự hiệu quả.",
-    "problemTitle": "Thách Thức Của Thị Trường Làm Đẹp",
-    "problemDescription": "Thị trường làm đẹp trực tuyến đầy áp lực với vô số lựa chọn, thông tin không đáng tin cậy và nguy cơ sản phẩm giả, khiến việc tìm ra sản phẩm phù hợp trở nên khó khăn.",
-    "solutionTitle": "Cách Allure Giúp Đỡ",
-    "solutionDescription": "Chúng tôi cung cấp một bộ sưu tập tinh tế các sản phẩm chính hãng và tư vấn chuyên nghiệp, giúp bạn dễ dàng tìm ra sản phẩm phù hợp, học cách sử dụng chúng và cảm thấy tự tin hơn trong các lựa chọn làm đẹp của mình."
+    "recommendProductsTitle": "Gợi ý sản phẩm"
   },
   "productCard": {
     "currentPrice": "{{price, currency}}",
@@ -145,8 +125,7 @@
     "export": "Xuất",
     "update": "Cập nhật",
     "viewDetails": "Xem chi tiết",
-    "upload": "Tải lên",
-    "joinMeeting": "Tham gia cuộc họp"
+    "upload": "Tải lên"
   },
   "noData": "Không tìm thấy dữ liệu phù hợp",
   "sell": {
@@ -337,11 +316,6 @@
       "title": "Không tìm thấy đánh giá",
       "description": "Đánh giá này có thể đã bị xóa hoặc không tồn tại.",
       "button": "Quay lại"
-    },
-    "bookingDetail": {
-      "title": "Không tìm thấy đặt lịch",
-      "description": "Đặt lịch bạn đang tìm kiếm không tồn tại hoặc bạn không có quyền xem nó.",
-      "button": "Xem đặt lịch của tôi"
     }
   },
   "productDetail": {
@@ -475,7 +449,6 @@
     "totalCost": "Tổng tiền hàng",
     "totalDiscount": "Tổng giảm giá từ voucher",
     "totalPayment": "Tổng tiền thanh toán",
-
     "discountDetails": "Chi tiết khuyến mãi",
     "productLeft": "Còn {{count}} sản phẩm",
     "updateClassificationSuccess": "Thay đổi phân loại sản phẩm thành công!",
@@ -1015,7 +988,6 @@
     "beingChoosing": "Đang chọn",
     "detailInformation": "Thông Tin Chi Tiết",
     "pleaseChooseCategoryToViewInformation": "Vui lòng chọn danh mục để xem thông tin chi tiết",
-    "pleaseChooseProductToViewInformation": "Vui lòng chọn sản phẩm để xem thông tin chi tiết",
     "completed": "Hoàn thành",
     "pleaseSelect": "Vui lòng chọn",
     "noResults": "Không có kết quả",
@@ -1244,7 +1216,8 @@
     "reply": "Reply",
     "writeYourRep": "Viết phản hồi của bạn...",
     "yourReply": "Phản hồi của bạn",
-    "customerContent": "Nội dung"
+    "customerContent": "Nội dung",
+    "booking": "Lịch hẹn"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",
@@ -1253,11 +1226,7 @@
     "imagesFile": "hình ảnh",
     "videos": "Videos",
     "videosFile": "video",
-    "imagesVideos": "Hình ảnh/Video",
-
-    "videoFile": "video",
-    "uploadHint": "Nhấp hoặc kéo tệp để tải lên",
-    "maxFileSize": "Kích thước tệp tối đa: {{size}}MB"
+    "imagesVideos": "Hình ảnh/Video"
   },
   "orderEvidence": {
     "description": {
@@ -1445,18 +1414,6 @@
     "resultSheetSent": "Đã gửi bảng kết quả",
     "viewResults": "Xem kết quả",
     "refunded": "Đã hoàn tiền",
-    "totalPayment": "Tổng tiền thanh toán",
-    "serviceFee": "Phí dịch vụ",
-    "bookingFormAnswers": "Câu Trả Lời Biểu Mẫu Đặt Lịch",
-    "noBookingFormAnswers": "Không có câu trả lời biểu mẫu yêu cầu tư vấn dịch vụ",
-    "questionImages": "Hình Ảnh Câu Hỏi",
-    "answer": "Câu Trả Lời",
-    "noAnswerProvided": "Không có câu trả lời nào được cung cấp",
-    "answerImages": "Hình Ảnh Câu Trả Lời",
-    "submitBookingFormSuccess": "Gửi biểu mẫu yêu cầu tư vấn dịch vụ thành công",
-    "enterYourAnswer": "Nhập câu trả lời của bạn",
-    "serviceBookingForm": "Biểu mẫu đặt dịch vụ",
-    "serviceBookingFormDescription": "Vui lòng điền vào biểu mẫu này để hoàn tất đặt lịch của bạn",
     "statusDescription": {
       "waitConfirm": "Đặt chỗ của bạn đang chờ xác nhận từ nhà cung cấp dịch vụ. Bạn sẽ được thông báo khi nó được xác nhận.",
       "confirmed": "Đặt chỗ của bạn đã được xác nhận. Nhà cung cấp dịch vụ đã sẵn sàng cung cấp dịch vụ theo lịch trình.",
@@ -1465,72 +1422,9 @@
       "toPay": "Cần thanh toán để tiếp tục với đặt chỗ này. Vui lòng hoàn tất thanh toán để tiếp tục.",
       "formSubmitted": "Biểu mẫu đặt dịch vụ của bạn đã được gửi thành công. Chúng tôi đang xem xét thông tin của bạn.",
       "resultSheetSent": "Bảng kết quả cho dịch vụ của bạn đã được gửi. Bạn có thể xem kết quả chi tiết ngay bây giờ.",
-      "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn.",
-      "waitForConfirmation": "Đặt lịch của bạn đang chờ xác nhận từ nhà tư vấn.",
-      "bookingConfirmed": "Đặt lịch của bạn đã được xác nhận. Vui lòng gửi biểu mẫu yêu cầu tư vấn dịch vụ để tiếp tục.",
-      "serviceBookingFormSubmitted": "Biểu mẫu yêu cầu tư vấn dịch vụ của bạn đã được gửi. Vui lòng tham gia cuộc gọi tư vấn theo lịch đã hẹn.",
-      "completedConsultingCall": "Cuộc gọi tư vấn đã hoàn thành. Đang chờ bảng kết quả.",
-      "sendedResultSheet": "Bảng kết quả đã được gửi. Vui lòng xem xét và đánh dấu là đã hoàn thành."
+      "refunded": "Khoản thanh toán cho đặt chỗ này đã được hoàn trả vào phương thức thanh toán ban đầu của bạn."
     },
-    "suggestedProducts": "Sản phẩm đề xuất",
-    "completeConsultingCallDescription": "Vui lòng cung cấp chi tiết về việc hoàn thành cuộc gọi tư vấn bao gồm các tệp phương tiện và ghi chú liên quan.",
-    "searchForProducts": "Tìm kiếm sản phẩm",
-    "filterByClassification": "Lọc theo phân loại",
-    "selectProducts": "Chọn sản phẩm",
-    "completeConsultation": "Hoàn thành tư vấn",
-    "completeConsultationDescription": "Vui lòng điền đánh giá của bạn cho từng phần và đề xuất sản phẩm cho khách hàng dựa trên buổi tư vấn.",
-    "customerResponses": "Phản hồi của khách hàng",
-    "yourEvaluation": "Đánh giá của bạn",
-    "enterYourEvaluation": "Nhập đánh giá của bạn tại đây...",
-    "imagesHint": "Tải lên tối đa 3 hình ảnh để hỗ trợ đánh giá của bạn",
-    "submitConsultationResultSuccess": "Kết quả tư vấn đã được gửi thành công!",
-    "detail": "Chi tiết đặt lịch",
-    "statusLabel": "Trạng thái",
-    "timeline": "Dòng thời gian",
-    "consultantInfo": "Thông tin tư vấn viên",
-    "chatWithConsultant": "Trò chuyện với tư vấn viên",
-    "viewProfile": "Xem hồ sơ",
-    "appointmentDetails": "Chi tiết cuộc hẹn",
-    "date": "Ngày",
-    "duration": "Thời lượng",
-    "minutes": "phút",
-    "notes": "Ghi chú",
-    "joinMeeting": "Tham gia cuộc họp",
-    "customerInfo": "Thông tin khách hàng",
-    "serviceDetails": "Chi tiết dịch vụ",
-    "cancelBooking": "Hủy đặt lịch",
-    "paymentMethod": "Phương thức thanh toán",
-    "paymentSummary": "Tổng kết thanh toán",
-    "subtotal": "Tạm tính",
-    "created": "Đã tạo đặt lịch",
-    "system": "Hệ thống",
-    "discount": "Giảm giá",
-    "total": "Tổng cộng",
-    "updateBookingStatusSuccess": "Cập nhật trạng thái đặt lịch thành công",
-    "videosHint": "Tải lên video liên quan đến cuộc gọi tư vấn",
-    "consultationResultInfo": "Thông Tin Kết Quả Tư Vấn",
-    "resultNoteDescription": "Thêm bất kỳ ghi chú hoặc quan sát nào từ cuộc gọi tư vấn",
-    "resultNotePlaceholder": "Nhập ghi chú của bạn tại đây...",
-    "status": {
-      "TO_PAY": "Chờ thanh toán",
-      "WAIT_FOR_CONFIRMATION": "Chờ xác nhận",
-      "BOOKING_CONFIRMED": "Đã xác nhận",
-      "COMPLETED": "Hoàn thành",
-      "CANCELLED": "Đã hủy",
-      "SENDED_RESULT_SHEET": "Đã gửi kết quả",
-      "toPay": "Chờ thanh toán",
-      "formSubmitted": "Đã gửi biểu mẫu",
-      "waitForConfirmation": "Chờ xác nhận",
-      "confirmBooking": "Xác nhận đặt lịch",
-      "bookingConfirmed": "Đã xác nhận đặt lịch",
-      "completed": "Đã hoàn thành",
-      "submitBookingForm": "Gửi biểu mẫu yêu cầu tư vấn dịch vụ",
-      "bookingFormSubmitted": "Đã gửi biểu mẫu yêu cầu tư vấn dịch vụ",
-      "completeConsultingCall": "Hoàn thành cuộc gọi tư vấn",
-      "completedConsultingCall": "Đã hoàn thành cuộc gọi tư vấn",
-      "sendResultSheet": "Gửi bảng kết quả",
-      "sendedResultSheet": "Đã gửi bảng kết quả"
-    }
+    "service": "Dịch vụ"
   },
   "reason": {
     "rejectCancel": {
@@ -1544,6 +1438,9 @@
     "pending": "Chờ xét duyệt"
   },
   "createBlog": {
+    "blog": "Bài viết",
+    "condition": "Chính sách",
+    "type": "Loại",
     "title": "Tiêu đề",
     "titlePlaceholder": "Nhập tiêu đề",
     "tag": "Đường dẫn",
@@ -1589,140 +1486,7 @@
     }
   },
   "backendError": {
-    "firstNameRequired": "Tên phải ít nhất 1 ký tự",
-    "firstNameMaxLength": "Tên không được vượt quá 100 ký tự",
-    "lastNameRequired": "Họ phải ít nhất 1 ký tự",
-    "lastNameMaxLength": "Họ không được vượt quá 100 ký tự",
-    "usernameRequired": "Tên người dùng phải có ít nhất 3 ký tự",
-    "usernameMaxLength": "Tên người dùng không được vượt quá 20 ký tự",
-    "invalidUsername": "Tên người dùng phải bắt đầu bằng chữ cái, dài từ 3-20 ký tự và chỉ chứa chữ cái, số và dấu gạch dưới",
-    "invalidEmail": "Email không hợp lệ",
-    "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
-    "avatarMinLength": "Ảnh đại diện phải có nhiều hơn 1 ký tự",
-    "invalidPhone": "Số điện thoại phải là chuỗi từ 10 đến 15 chữ số",
-    "invalidDob": "Ngày sinh phải là ngày hợp lệ (YYYY-MM-DD)",
-    "emailRequired": "Email là bắt buộc",
-    "passwordRequired": "Mật khẩu là bắt buộc",
-
-    "fullNameMaxLength": "Họ và tên không được vượt quá 100 ký tự",
-    "phoneMaxLength": "Số điện thoại không được vượt quá 100 ký tự",
-    "districtMaxLength": "Quận/Huyện không được vượt quá 100 ký tự",
-    "wardMaxLength": "Phường/Xã không được vượt quá 100 ký tự",
-    "provinceMaxLength": "Tỉnh/Thành phố không được vượt quá 255 ký tự",
-    "invalidType": "Loại địa chỉ không hợp lệ",
-
-    "invalidStartTime": "Thời gian bắt đầu phải là chuỗi ngày hợp lệ",
-    "invalidEndTime": "Thời gian kết thúc phải là chuỗi ngày hợp lệ",
-    "totalPriceNonNegative": "Tổng giá phải là số không âm",
-    "invalidPaymentMethod": "Phương thức thanh toán không hợp lệ",
-    "invalidBookingType": "Loại đặt lịch không hợp lệ",
-    "invalidStatus": "Trạng thái không hợp lệ",
-    "invalidResultNote": "Ghi chú kết quả không hợp lệ",
-
-    "accountNotFound": "Tài khoản không tồn tại",
-    "updatedByAccountNotFound": "Người cập nhật tài khoản không tồn tại",
-    "emailAlreadyExists": "Email đã tồn tại",
-    "usernameAlreadyExists": "Tên người dùng đã tồn tại",
-    "invalidRoleProvided": "Vai trò không hợp lệ",
-    "certificateNotAllowed": "Chứng chỉ chỉ được phép cho vai trò TƯ VẤN VIÊN và KOL",
-    "consultantNotFound": "Tư vấn viên không tồn tại",
-    "brandNotFound": "Thương hiệu không tồn tại",
-    "exceededApprovedReportsLimit": "Tài khoản đã bị cấm do vượt quá giới hạn báo cáo được phê duyệt",
-
-    "addressNotFound": "Địa chỉ không tồn tại",
-    "atLeastOneDefaultAddress": "Phải có ít nhất một địa chỉ mặc định",
-
-    "emailNotVerified": "Email chưa được xác minh",
-    "invalidPassword": "Mật khẩu không hợp lệ",
-    "loginMethodNotAllowed": "Người dùng phải đăng nhập bằng phương thức khác, không sử dụng mật khẩu",
-
-    "blogNotExisted": "Blog không tồn tại",
-    "blogTagAlreadyExisted": "Thẻ blog đã tồn tại",
-
-    "bookingNotFound": "Đặt lịch không tồn tại",
-    "onlyReviewerCanNoteResult": "Chỉ người đánh giá mới có thể ghi chú kết quả",
-    "slotBooked": "Slot đã được đặt",
-    "brandIdRequired": "Yêu cầu ID thương hiệu",
-    "consultantServiceIdRequired": "Yêu cầu ID dịch vụ tư vấn",
-    "consultantServiceNotFound": "Dịch vụ tư vấn không tồn tại",
-    "slotRequired": "Yêu cầu slot",
-    "cannotCompleteBooking": "Không thể hoàn thành đặt lịch vì báo cáo chưa được hoàn thành",
-    "cannotCancelBooking": "Không thể hủy đặt lịch ở trạng thái hiện tại",
-    "walletNotFound": "Không tìm thấy ví",
-    "activeProductRequired": "Vui lòng chọn sản phẩm đang hoạt động",
-    "productNotFound": "Không tìm thấy sản phẩm",
-    "onlyConsultantOrOperator": "Chỉ áp dụng cho tư vấn viên hoặc người vận hành",
-    "overlapTimeSlot": "Thời gian bị trùng lặp",
-    "alreadyBookedSlot": "Bạn đã đặt một slot. Vui lòng chờ xử lý",
-    "bookingCancelledSuccessfully": "Hủy đặt lịch thành công",
-    "bookingStatusUpdatedSuccessfully": "Cập nhật trạng thái đặt lịch thành công",
-
-    "classificationNotFound": "Phân loại sản phẩm không tồn tại",
-    "invalidProduct": "Không thể thêm sản phẩm không hợp lệ",
-    "quantityNotEnough": "Số lượng không đủ",
-    "groupBuyingInvalid": "Mua nhóm không hợp lệ",
-    "livestreamInvalid": "Livestream không hợp lệ",
-    "cartItemNotFound": "Không tìm thấy mục trong giỏ hàng",
-    "invalidOrEmptyItemIds": "Danh sách ID mục không hợp lệ hoặc trống",
-    "noItemsFoundForIds": "Không tìm thấy mục nào cho các ID được cung cấp",
-    "accountIdRequired": "Yêu cầu ID tài khoản",
-    "noItemsInCart": "Không tìm thấy mục nào trong giỏ hàng cho tài khoản đã cho",
-
-    "categoryAlreadyExisted": "Danh mục đã tồn tại",
-    "parentCategoryNotFound": "Không tìm thấy danh mục cha",
-    "maxCategoryLevelExceeded": "Một danh mục không thể có hơn 4 cấp danh mục con",
-    "categoryNotFound": "Không tìm thấy danh mục",
-    "newParentCategoryNotFound": "Không tìm thấy danh mục cha mới",
-
-    "bookingFormNotFound": "Biểu mẫu yêu cầu tư vấn dịch vụ không tồn tại",
-    "systemServiceNotFoundOrInactive": "Dịch vụ hệ thống không tồn tại hoặc không hoạt động",
-    "invalidStatusUpdate": "Không thể cập nhật trạng thái",
-    "activeServicesUsingFormNotFound": "Không tìm thấy dịch vụ đang hoạt động sử dụng biểu mẫu này",
-    "questionNotFound": "Câu hỏi không tồn tại",
-    "imageNotFound": "Hình ảnh không tồn tại",
-
-    "consultationCriteriaNotFound": "Tiêu chí tư vấn không tồn tại",
-    "consultationCriteriaSectionNotFound": "Phần tiêu chí tư vấn không tồn tại",
-    "criteriaCreationFailed": "Không thể tạo tiêu chí tư vấn",
-    "criteriaUpdateFailed": "Không thể cập nhật tiêu chí tư vấn",
-    "criteriaSectionUpdateFailed": "Không thể cập nhật phần tiêu chí tư vấn",
-
-    "sectionNotFound": "Phần tiêu chí tư vấn không tồn tại",
-    "livestreamNotFound": "Không tìm thấy livestream",
-    "invalidLivestreamStatus": "Trạng thái livestream không hợp lệ",
-
-    "classificationQuantityRequired": "Phân loại sản phẩm phải có ít nhất một số lượng",
-    "skuRequired": "SKU là bắt buộc",
-    "skuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
-    "invalidDatetime": "Chuỗi thời gian không hợp lệ",
-    "invalidTimeRange": "Thời gian bắt đầu phải sớm hơn thời gian kết thúc",
-    "overlappingPreOrderEvent": "Khoảng thời gian trùng với một sự kiện đặt trước hiện có",
-    "overlappingDiscountEvent": "Khoảng thời gian trùng với một sự kiện giảm giá hiện có",
-    "preOrderProductNotFound": "Không tìm thấy sản phẩm đặt trước",
-    "invalidFilterOptions": "Tùy chọn lọc không hợp lệ",
-
-    "classificationSkuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
-    "classificationTitleAlreadyExists": "Tiêu đề của phân loại sản phẩm đã tồn tại",
-    "invalidSortBy": "Tham số sắp xếp không hợp lệ",
-    "invalidProductStatus": "Trạng thái sản phẩm không hợp lệ",
-
-    "productDiscountNotFound": "Không tìm thấy giảm giá sản phẩm",
-    "classificationInvalid": "Phân loại sản phẩm không hợp lệ",
-    "classificationQuantityInvalid": "Số lượng phân loại phải lớn hơn 0",
-    "invalidClassificationQuantity": "Số lượng phân loại không hợp lệ: Số lượng phải nhỏ hơn hoặc bằng số lượng hiện tại",
-    "productStatusInvalid": "Trạng thái sản phẩm không hợp lệ",
-
-    "originalClassificationNotFound": "Không tìm thấy phân loại sản phẩm gốc",
-
-    "deleteQuestionFailed": "Không thể xóa câu hỏi",
-    "updateOrderIndexFailed": "Không thể cập nhật thứ tự câu hỏi",
-    "imageDeleteFailed": "Không thể xóa hình ảnh liên kết với câu hỏi",
-
-    "systemServiceNotFound": "Không tìm thấy dịch vụ hệ thống",
-    "serviceAlreadyExisted": "Dịch vụ đã tồn tại",
-    "activeServicesUsingCriteriaNotFound": "Không tìm thấy dịch vụ đang hoạt động sử dụng tiêu chí này",
-    "imageUpdateFailed": "Không thể cập nhật hình ảnh liên kết với dịch vụ hệ thống",
-    "invalidStatusValue": "Trạng thái không hợp lệ"
+    "invalidEmail": "Email không hợp lệ"
   },
   "payment": {
     "methods": {
@@ -1737,14 +1501,6 @@
       "stripe": "Stripe",
       "visa_card": "Visa/Mastercard",
       "none": "Không có"
-    },
-    "method": {
-      "CASH": "Tiền mặt",
-      "CREDIT_CARD": "Thẻ tín dụng",
-      "BANK_TRANSFER": "Chuyển khoản ngân hàng",
-      "PAYPAL": "PayPal",
-      "STRIPE": "Stripe",
-      "OTHER": "Khác"
     },
     "notifyPayment": "Đơn hàng này chưa được thanh toán. Đang chờ khách hàng hoàn tất thanh toán số tiền {{total}} bằng {{method}} trong {{val}}.",
     "changePaymentMethod": "Đổi phương thức thanh toán",
@@ -1763,7 +1519,17 @@
     "refunded": "Đã hoàn tiền",
     "cancelled": "Đã hủy"
   },
-
+  "common": {
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "ok": "OK",
+    "confirm": "Xác Nhận",
+    "create": "Tạo Mới",
+    "update": "Cập Nhật",
+    "delete": "Xóa",
+    "search": "Tìm kiếm",
+    "continue": "Tiếp tục"
+  },
   "report": {
     "title": "Báo cáo",
     "searchPlaceholder": "Tìm kiếm báo cáo...",
@@ -1835,245 +1601,5 @@
   },
   "currency": {
     "vnd": "Đồng Việt Nam"
-  },
-  "common": {
-    "cancel": "Hủy",
-
-    "save": "Lưu",
-
-    "edit": "Sửa",
-    "add": "Thêm",
-    "remove": "Xóa bỏ",
-
-    "filter": "Lọc",
-    "loading": "Đang tải...",
-    "submit": "Gửi",
-    "ok": "OK",
-    "confirm": "Xác Nhận",
-    "create": "Tạo Mới",
-    "update": "Cập Nhật",
-    "delete": "Xóa",
-    "search": "Tìm kiếm",
-    "continue": "Tiếp tục"
-  },
-  "product": {
-    "selectProducts": "Chọn sản phẩm",
-    "selectVariation": "Chọn biến thể sản phẩm",
-    "searchProducts": "Tìm kiếm sản phẩm...",
-    "filterByClassification": "Lọc theo phân loại",
-    "noProductsFound": "Không tìm thấy sản phẩm. Hãy thử từ khóa khác.",
-    "searchToAddProducts": "Tìm kiếm sản phẩm để thêm",
-    "scrollToLoadMore": "Cuộn để tải thêm",
-    "productsSelected": "Đã chọn {{count}} sản phẩm",
-    "inStock": "còn hàng",
-    "outOfStock": "hết hàng",
-    "default": "Mặc định",
-    "noImage": "Không có ảnh",
-    "price": "Giá",
-    "quantity": "Số lượng",
-    "addToSelection": "Thêm vào lựa chọn",
-    "removeFromSelection": "Xóa khỏi lựa chọn"
-  },
-  "consultation": {
-    "completeTitle": "Hoàn thành tư vấn",
-    "completeDescription": "Vui lòng điền đánh giá của bạn cho từng phần và đề xuất sản phẩm cho khách hàng dựa trên buổi tư vấn.",
-    "customerResponses": "Phản hồi của khách hàng",
-    "yourEvaluation": "Đánh giá của bạn",
-    "enterEvaluation": "Nhập đánh giá của bạn tại đây...",
-    "uploadImages": "Tải lên hình ảnh",
-    "imagesHint": "Tải lên tối đa 3 hình ảnh để hỗ trợ đánh giá của bạn",
-    "suggestedProducts": "Sản phẩm đề xuất",
-    "searchProducts": "Tìm kiếm sản phẩm",
-    "selectProducts": "Chọn sản phẩm",
-    "submitSuccess": "Kết quả tư vấn đã được gửi thành công!",
-    "productsSelected": "Đã chọn {{count}} sản phẩm"
-  },
-  "store": {
-    "chat": "Trò chuyện"
-  },
-  "signUp": {
-    "title": "Tạo tài khoản của bạn",
-    "subtitle": "Điền thông tin bên dưới để bắt đầu",
-    "email": "Email",
-    "emailPlaceholder": "vd: allure@gmail.com",
-    "username": "Tên người dùng",
-    "usernamePlaceholder": "Nhập họ tên đầy đủ của bạn",
-    "phone": "Số điện thoại",
-    "phoneDescription": "Đây là số điện thoại sẽ được hiển thị trên hồ sơ của bạn",
-    "password": "Mật khẩu",
-    "passwordPlaceholder": "••••••••",
-    "confirmPassword": "Xác nhận mật khẩu",
-    "confirmPasswordPlaceholder": "••••••••",
-    "signUpButton": "Đăng ký",
-    "alreadyHaveAccount": "Bạn đã có tài khoản?",
-    "signIn": "Đăng nhập",
-    "welcomeMessage": "Chào mừng!, {{email}}, kiểm tra email của bạn để xác minh",
-    "passwordsDoNotMatch": "Mật khẩu không khớp"
-  },
-  "signIn": {
-    "email": "Email",
-    "emailPlaceholder": "vd: allure@gmail.com",
-    "password": "Mật khẩu",
-    "passwordPlaceholder": "vd: ********",
-    "signInButton": "Đăng nhập",
-    "forgotPassword": "Quên mật khẩu?",
-    "noAccount": "Chưa có tài khoản?",
-    "signUp": "Đăng ký",
-    "welcomeBack": "Chào mừng trở lại!, {{email}}"
-  },
-  "authLayout": {
-    "backToWebsite": "Quay lại trang web",
-    "portalName": "Cổng thông tin Allure",
-    "testimonial": "\"Cổng thông tin Allure là một công cụ mạnh mẽ cho phép chúng tôi quản lý dữ liệu, cấp quyền truy cập cho khách hàng và đối tác, đồng thời theo dõi hiệu suất kinh doanh của chúng tôi theo thời gian thực. Đây là một bước đột phá đối với chúng tôi.\"",
-    "testimonialAuthor": "- Đội ngũ Allure -"
-  },
-  "authUI": {
-    "titles": {
-      "signIn": "Đăng Nhập",
-      "emailSignIn": "Đăng Nhập Bằng Email",
-      "forgotPassword": "Quên Mật Khẩu",
-      "updatePassword": "Cập Nhật Mật Khẩu",
-      "signup": ""
-    },
-    "descriptions": {
-      "signIn": "Nhập email và mật khẩu của bạn để đăng nhập!",
-      "emailSignIn": "Nhập email của bạn để nhận liên kết ma thuật!",
-      "forgotPassword": "Nhập email của bạn để nhận liên kết đặt lại mật khẩu!",
-      "updatePassword": "Chọn mật khẩu mới cho tài khoản của bạn!",
-      "signup": ""
-    }
-  },
-  "branchCreation": {
-    "welcomeTitle": "Chào mừng đến với",
-    "brandName": "Allure",
-    "description": "Tạo, phát triển và quản lý thương hiệu của bạn trên nền tảng bán hàng mạnh mẽ của chúng tôi. Bắt đầu hành trình thành công của bạn ngay hôm nay!",
-    "createButton": "Tạo Thương Hiệu Của Bạn"
-  },
-  "branchDetails": {
-    "step": "Bước-{{stepIndex}}",
-    "generalInformation": "Thông Tin Chung",
-    "name": {
-      "label": "Tên",
-      "placeholder": "Vui lòng nhập tên thương hiệu của bạn"
-    },
-    "email": {
-      "label": "Email Thương Hiệu",
-      "placeholder": "vd: allure@gmail.com"
-    },
-    "address": {
-      "label": "Địa Chỉ",
-      "addNew": "Thêm Địa Chỉ Mới"
-    },
-    "description": {
-      "label": "Mô Tả",
-      "placeholder": "Mô tả"
-    },
-    "phone": {
-      "label": "Số Điện Thoại"
-    },
-    "document": {
-      "label": "Tài Liệu",
-      "uploadDescription": "Bạn phải tải lên ít nhất 1 tài liệu cho chi tiết giấy phép của bạn. Để giúp bạn, chúng tôi đã cung cấp một tệp mẫu. Vui lòng tải xuống, điền thông tin cần thiết và tải lên lại:",
-      "downloadTemplate": "Tải Xuống Mẫu Chi Tiết Giấy Phép"
-    },
-    "navigation": {
-      "back": "Quay Lại",
-      "next": "Tiếp Theo"
-    }
-  },
-  "fileUpload": {
-    "dragDrop": {
-      "dragActive": "Thả tệp của bạn vào đây",
-      "dragInactive": "Kéo & thả tệp của bạn vào đây",
-      "clickToSelect": "hoặc nhấp để chọn tệp",
-      "fileRestrictions": "Bạn có thể tải lên tối đa {{maxFiles}} tệp. Định dạng tệp được chấp nhận là {{formats}}. Mỗi tệp phải dưới {{maxSize}}MB.",
-      "maxFilesReached": "Bạn đã đạt đến số lượng tệp tối đa được phép"
-    },
-    "fileList": {
-      "filesSelected": "{{count}} tệp đã được chọn"
-    },
-    "preview": {
-      "image": "Xem trước hình ảnh",
-      "file": "Xem trước tệp"
-    }
-  },
-  "imagesUploader": {
-    "step": "Bước-{{stepIndex}}",
-    "title": "Tải Lên Hình Ảnh",
-    "logo": {
-      "label": "Logo",
-      "description": "Vui lòng chọn logo của bạn"
-    },
-    "businessTaxCode": {
-      "label": "Mã Số Thuế",
-      "placeholder": "Mã Số Thuế"
-    },
-    "establishmentDate": {
-      "label": "Ngày Thành Lập"
-    },
-    "businessRegistrationCode": {
-      "label": "Mã Đăng Ký Kinh Doanh",
-      "placeholder": "Mã Đăng Ký Kinh Doanh",
-      "description": "Số hoặc mã được cấp cho doanh nghiệp khi đăng ký, đóng vai trò là định danh chính thức cho công ty."
-    },
-    "businessRegistrationAddress": {
-      "label": "Địa Chỉ Đăng Ký Kinh Doanh",
-      "placeholder": "Địa Chỉ Đăng Ký Kinh Doanh",
-      "description": "Địa chỉ chính thức của doanh nghiệp như đã nêu trong quá trình đăng ký."
-    },
-    "navigation": {
-      "back": "Quay Lại",
-      "next": "Tiếp Theo"
-    }
-  },
-  "confirmation": {
-    "step": "Bước-{{stepIndex}}",
-    "title": "Xác Nhận",
-    "reviewMessage": "Vui lòng kiểm tra thông tin trước khi gửi, bạn có thể quay lại để điền lại biểu mẫu nếu có bất kỳ lỗi nào.",
-    "card": {
-      "title": "Xác Nhận Thương Hiệu Của Bạn",
-      "status": {
-        "pending": "ĐANG CHỜ XỬ LÝ"
-      }
-    },
-    "fields": {
-      "name": "Tên Thương Hiệu",
-      "email": "Email",
-      "phone": "Số Điện Thoại",
-      "address": "Địa Chỉ",
-      "description": "Mô Tả",
-      "logo": "Logo",
-      "document": "Tài Liệu"
-    },
-    "fileInfo": {
-      "files": "{{count}} tệp"
-    },
-    "notAvailable": "Không có",
-    "navigation": {
-      "back": "Quay Lại",
-      "confirm": "Xác Nhận"
-    }
-  },
-  "forbidden": {
-    "public": {
-      "error": "Lỗi",
-      "accessDenied": "Truy Cập Bị Từ Chối",
-      "noPermission": "Bạn không có quyền truy cập vào tài nguyên được yêu cầu.",
-      "contactSupport": "Vui lòng liên hệ bộ phận hỗ trợ nếu bạn cho rằng đây là lỗi.",
-      "attemptedAccess": "Đã cố gắng truy cập:",
-      "goToHome": "Về Trang Chủ",
-      "contactSupportButton": "Liên Hệ Hỗ Trợ",
-      "copyright": "© {{year}} Công ty của bạn. Đã đăng ký Bản quyền."
-    },
-    "dashboard": {
-      "error": "Lỗi",
-      "accessDenied": "Truy Cập Bị Từ Chối",
-      "noPermission": "Bạn không có quyền truy cập vào trang này.",
-      "noPermissionGeneric": "Bạn không có quyền truy cập vào trang được yêu cầu.",
-      "contactAdmin": "Vui lòng liên hệ quản trị viên của bạn nếu bạn cho rằng đây là lỗi.",
-      "attemptedAccess": "Đã cố gắng truy cập:",
-      "backToDashboard": "Quay Lại Bảng Điều Khiển",
-      "needHelp": "Cần Trợ Giúp?"
-    }
   }
 }

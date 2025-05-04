@@ -143,13 +143,7 @@ export const convertFormToGroupProduct = (
       : undefined,
     startTime: form.startTimeOption.hasStartTime ? form.startTimeOption.startTime : undefined,
     endTime: form.endTimeOption.hasEndTime ? form.endTimeOption.endTime : undefined,
-    criterias: form.criterias.map((criteria) => ({
-      ...criteria,
-      voucher: {
-        ...criteria.voucher,
-        description: criteria.voucher.description ?? ''
-      }
-    }))
+    criterias: form.criterias
   }
 
   return groupProduct
@@ -180,7 +174,7 @@ export const convertGroupProductToForm = (groupProduct: TGroupProduct): GroupPro
         name: criteria.voucher.name,
         applyType: criteria.voucher.applyType,
         discountValue: criteria.voucher.discountValue,
-        description: criteria.voucher.description ?? '',
+        description: criteria.voucher.description,
         discountType: criteria.voucher.discountType,
         visibility: criteria.voucher.visibility,
         code: criteria.voucher.code

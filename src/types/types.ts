@@ -1,7 +1,5 @@
 import { ComponentType } from 'react'
 
-import { UserRoleEnum } from './role'
-
 export type Provider =
   | 'apple'
   | 'azure'
@@ -45,7 +43,6 @@ export interface IRoute {
   items?: IRoute[]
   rightElement?: boolean
   invisible?: boolean
-  roles?: UserRoleEnum[]
 }
 
 export interface IStepper {

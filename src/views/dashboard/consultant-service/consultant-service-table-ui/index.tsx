@@ -1,25 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
-// import { useShallow } from 'zustand/react/shallow'
 import { Card } from '@/components/ui/card'
 import { DataTableSkeleton } from '@/components/ui/data-table/data-table-skeleton'
 import { Shell } from '@/components/ui/shell'
 import { getConsultantServiceFilterApi } from '@/network/apis/consultant-service'
-// import { useStore } from '@/stores/store'
+import { useStore } from '@/stores/store'
 import { IConsultantService } from '@/types/consultant-service'
 import { DataTableQueryState } from '@/types/table'
 
 import { ConsultantServiceTable } from './ConsultantServiceTable'
 
 export default function IndexPage() {
-  // const { userData } = useStore(
-  //   useShallow((state) => {
-  //     return {
-  //       userData: state.user
-  //     }
-  //   })
-  // )
+  const { userData } = useStore(
+    useShallow((state) => {
+      return {
+        userData: state.user
+      }
+    })
+  )
 
   const queryStates = useState<DataTableQueryState<IConsultantService>>({} as DataTableQueryState<IConsultantService>)
 
@@ -36,8 +36,8 @@ export default function IndexPage() {
         systemService: queryStates[0].fieldFilters?.systemService as string
       }
     ],
-    queryFn: getConsultantServiceFilterApi.fn
-    // enabled: !!userData?.brands?.length
+    queryFn: getConsultantServiceFilterApi.fn,
+    enabled: !!userData?.brands?.length
   })
 
   return (

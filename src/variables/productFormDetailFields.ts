@@ -3,10 +3,10 @@ import { z } from 'zod'
 
 import { IOption } from '@/types/option'
 
-export const skuRegex = /^[a-zA-Z0-9-_]{6,8}$/
-export const fileArray = z.array(z.instanceof(File))
-
 export const getFormProductSchema = () => {
+  const skuRegex = /^[a-zA-Z0-9-_]{6,8}$/
+  const fileArray = z.array(z.instanceof(File))
+
   return z
     .object({
       // basic information

@@ -2,7 +2,6 @@ import { FilesIcon, Upload } from 'lucide-react'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 
 import fallBackImage from '@/assets/images/fallBackImage.jpg'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -29,7 +28,6 @@ const UploadFilePreview = <T extends FieldValues>({
   renderFileItemUI,
   vertical = true
 }: UploadFileModalProps<T>) => {
-  const { t } = useTranslation()
   const [files, setFiles] = useState<File[]>([])
   const handleServerError = useHandleServerError()
 
@@ -153,16 +151,11 @@ const UploadFilePreview = <T extends FieldValues>({
       })
     }
   }
-
-  const formats = Object.values(dropZoneConfig.accept).flat().join(', ')
-  const maxSize = dropZoneConfig.maxSize / (1024 * 1024)
-
-  const message = t('fileUpload.dragDrop.fileRestrictions', {
-    maxFiles: dropZoneConfig.maxFiles,
-    formats: formats,
-    maxSize: maxSize
-  })
-
+  const message = `You can upload up to ${dropZoneConfig.maxFiles} files. Accepted file formats are ${Object.values(
+    dropZoneConfig.accept
+  )
+    .flat()
+    .join(', ')}. Each file must be under ${dropZoneConfig.maxSize / (1024 * 1024)}MB.`
   return (
     <>
       {header}
@@ -180,15 +173,17 @@ const UploadFilePreview = <T extends FieldValues>({
               <div className='overflow-hidden hover:bg-primary/15 flex flex-col items-center justify-center text-center w-full border border-dashed rounded-xl   border-primary py-4 text-primary transition-all duration-500'>
                 <Upload className='w-12 h-12 mb-4 text-muted-foreground' />
                 {isDragActive ? (
-                  <p className='text-lg font-medium text-foreground'>{t('fileUpload.dragDrop.dragActive')}</p>
+                  <p className='text-lg font-medium text-foreground'>Drop your file here</p>
                 ) : (
                   <>
-                    <p className='text-lg font-medium text-primary'>{t('fileUpload.dragDrop.dragInactive')}</p>
-                    <p className='mt-2 text-sm text-muted-foreground'>{t('fileUpload.dragDrop.clickToSelect')}</p>
+                    <p className='text-lg font-medium text-primary'>Drag & drop your files here</p>
+                    <p className='mt-2 text-sm text-muted-foreground'>or click to select files</p>
                     {files && files.length < dropZoneConfig.maxFiles ? (
-                      <span className='mt-2 text-sm text-primary px-8'>{message}</span>
+                      <span className='mt-2 text-sm text-primary px-8'>{message} </span>
                     ) : (
-                      <span className='mt-2 text-sm text-primary px-8'>{t('fileUpload.dragDrop.maxFilesReached')}</span>
+                      <span className='mt-2 text-sm text-primary px-8'>
+                        {`You have reached the maximum number of files allowed`}
+                      </span>
                     )}
                   </>
                 )}
@@ -199,7 +194,7 @@ const UploadFilePreview = <T extends FieldValues>({
             {files && files.length > 0 && (
               <div className=''>
                 {/* <p className='text-sm font-medium text-muted-foreground flex justify-center gap-2 items-center pb-2'>
-                  <TbWorldUpload /> <span>{t('fileUpload.fileList.filesSelected', { count: files.length })}</span>
+                  <TbWorldUpload /> <span>{files.length} file(s) selected</span>
                 </p> */}
 
                 {vertical ? (
@@ -231,7 +226,7 @@ const UploadFilePreview = <T extends FieldValues>({
                                     {file.type.includes('image') ? (
                                       <ImageWithFallback
                                         fallback={fallBackImage}
-                                        src={URL.createObjectURL(file) || '/placeholder.svg'}
+                                        src={URL.createObjectURL(file)}
                                         alt={file.name}
                                         className='size-12 object-cover rounded-lg border-2'
                                         onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
@@ -251,6 +246,7 @@ const UploadFilePreview = <T extends FieldValues>({
                     </div>
                   </ScrollArea>
                 ) : (
+                  // <ScrollArea className='h-[120px] w-full rounded-md shadow-2xl py-2 border-t-4 border-primary'>
                   <div className='flex gap-2 '>
                     {files.map((file, index) => (
                       <FileUploaderItem
@@ -278,7 +274,7 @@ const UploadFilePreview = <T extends FieldValues>({
                                   {file?.type?.includes('image') ? (
                                     <ImageWithFallback
                                       fallback={fallBackImage}
-                                      src={URL.createObjectURL(file) || '/placeholder.svg'}
+                                      src={URL.createObjectURL(file)}
                                       alt={file.name}
                                       className='size-12 object-cover rounded-lg border-2'
                                       onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
@@ -296,6 +292,7 @@ const UploadFilePreview = <T extends FieldValues>({
                       </FileUploaderItem>
                     ))}
                   </div>
+                  //</ScrollArea>
                 )}
               </div>
             )}
