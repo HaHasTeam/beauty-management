@@ -1,123 +1,147 @@
-import { ArrowUpRight, Shield, Sparkles, UserCheck } from 'lucide-react'
+import { ArrowRight } from 'lucide-react' // Example icons
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import BeautyProducs from '@/assets/images/beauty-products.jpg'
-import fallBackImage from '@/assets/images/fallBackImage.jpg'
-import MockImage from '@/assets/SidebarBadge.png'
-import ImageWithFallback from '@/components/image/ImageWithFallback'
-import { Button } from '@/components/ui/button'
-import { Routes, routesConfig } from '@/configs/routes'
+// Import Home Assets
+import bookingStaticsImage from '@/assets/home/booking-statics.png'
+import flashSaleImage from '@/assets/home/flash-sale.png'
+import groupSaleImage from '@/assets/home/group-sale.png'
+import orderStaticsImage from '@/assets/home/order-statics.png'
+import voucherImage from '@/assets/home/voucher.png'
+// Assuming Shadcn Avatar
+import { Button } from '@/components/ui/button' // Assuming Shadcn Button
+// Assuming Shadcn Card
 
-function Home() {
+const Home = () => {
+  const { t } = useTranslation('layout') // Assuming 'layout' namespace
+
+  const processSteps = [
+    { step: '01', titleKey: 'home.process1Title', descriptionKey: 'home.process1Desc' }, // Title: Đăng kí và xác thực tài khoản
+    { step: '02', titleKey: 'home.process2Title', descriptionKey: 'home.process2Desc' }, // Title: Điền đẩy đủ các thông tin về các điều khoản
+    { step: '03', titleKey: 'home.process3Title', descriptionKey: 'home.process3Desc' }, // Title: Lên lịch hẹn với nhân viên hệ thống
+    { step: '04', titleKey: 'home.process4Title', descriptionKey: 'home.process4Desc' } // Title: Trở thành thành viên của Allure
+  ]
   const navigate = useNavigate()
-  const { t } = useTranslation()
-
+  const handleGetStarted = () => {
+    navigate('/auth')
+  }
   return (
-    <div className='min-h-screen bg-gradient-to-b from-primary/5 to-primary/10'>
-      <header className='border-b bg-primary/90 text-white px-4 py-3 shadow-md sticky top-0 z-10'>
-        <div className='container mx-auto flex items-center justify-between'>
-          <div className='flex items-center gap-2'>
-            <ImageWithFallback
-              fallback={fallBackImage}
-              src={MockImage || '/placeholder.svg'}
-              alt={t('header.logo')}
-              width={32}
-              height={32}
-              className='h-8 w-8 object-contain rounded-full shadow-sm transition-transform hover:scale-110'
+    <div className='flex flex-col min-h-screen'>
+      {/* Hero Section - Enhanced Background & Padding */}
+      <section className='bg-gradient-to-br from-primary/5 via-primary/15 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10 py-24 md:py-10 h-screen'>
+        <div className='container mx-auto px-4 text-center'>
+          <h1 className='text-4xl md:text-6xl font-bold mb-4 leading-tight'>
+            {t('home.heroTitle', 'Building Digital Experiences')}
+          </h1>
+          <p className='text-lg md:text-xl text-muted-foreground mb-4 max-w-5xl mx-auto'>
+            {t('home.heroSubtitle', 'We help businesses transform with cutting-edge technology and design.')}
+          </p>
+          {/* Added Allure description */}
+
+          <Button
+            onClick={handleGetStarted}
+            className='mt-4 px-8 py-3 text-lg font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-300'
+          >
+            {t('home.heroCTA', 'Get Started')} <ArrowRight className='ml-2 h-5 w-5' />
+          </Button>
+          {/* Container for layered images */}
+          <div className='mt-8 mx-auto w-full max-w-5xl relative'>
+            {/* Main Hero Image */}
+            <img
+              src={bookingStaticsImage}
+              alt={t('home.heroImageAlt', 'Booking Statistics Overview')}
+              className='w-full rounded-lg shadow-2xl ring-1 ring-black/5'
             />
-            <span className='text-lg font-semibold'>{t('header.allureBeauty')}</span>
+            {/* Overlapping Image */}
+            <img
+              src={orderStaticsImage}
+              alt={t('home.heroOrderStaticsAlt', 'Order Statistics Snippet')}
+              className='absolute -bottom-12 -right-12 w-1/2 rounded-lg shadow-xl ring-1 ring-black/10 border border-border/10 transform transition-transform hover:scale-105'
+            />
           </div>
         </div>
-      </header>
-
-      <section className='py-16 md:py-24 lg:py-32'>
+      </section>
+      {/* New Features Section - Subtle Border & Image Shadow */}
+      <section className='py-20 md:py-28 border-t border-border/5'>
         <div className='container mx-auto px-4'>
-          <div className='grid items-center gap-8 lg:grid-cols-2'>
-            <div className='flex flex-col items-center text-center lg:items-start lg:text-left order-2 lg:order-1'>
-              <div className='inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4'>
-                {t('home.badge')}
-              </div>
-              <h1 className='my-6 text-pretty text-4xl font-bold lg:text-6xl  text-primary'>{t('home.title')}</h1>
-              <p className='mb-8 max-w-xl text-muted-foreground lg:text-xl'>{t('home.description')}</p>
-              <div className='flex w-full flex-col justify-center gap-3 sm:flex-row lg:justify-start'>
-                <Button
-                  type='button'
-                  className='w-full sm:w-auto text-base font-medium px-6 py-6 transition-all hover:shadow-lg hover:translate-y-[-2px]'
-                  onClick={() => {
-                    navigate(routesConfig[Routes.AUTH_LOGIN].path)
-                  }}
-                >
-                  {t('home.login')}
-                </Button>
-                <Button
-                  type='button'
-                  variant='outline'
-                  className='w-full sm:w-auto text-base font-medium px-6 py-6 transition-all hover:shadow-lg hover:translate-y-[-2px]'
-                  onClick={() => {
-                    navigate(routesConfig[Routes.AUTH_SIGN_UP].path)
-                  }}
-                >
-                  {t('home.register')}
-                  <ArrowUpRight className='ml-2 size-4' />
-                </Button>
-              </div>
-            </div>
-            <div className='relative order-1 lg:order-2'>
-              <div className='absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary to-primary-foreground opacity-30 blur-xl'></div>
-              <ImageWithFallback
-                fallback={fallBackImage}
-                src={BeautyProducs}
-                alt={t('home.heroImageAlt')}
-                className='w-full rounded-xl shadow-2xl object-cover aspect-video relative z-10 transition-all hover:scale-[1.02] duration-300'
+          <h2 className='text-3xl font-bold text-center mb-16'>{t('home.featuresTitle', 'Powerful Features')}</h2>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-10'>
+            {/* Feature 1: Flash Sale */}
+            <div className='text-center'>
+              <img
+                src={flashSaleImage}
+                alt={t('home.featureFlashSaleAlt', 'Flash Sale Management')}
+                className='rounded-lg shadow-xl mb-6 w-full h-auto aspect-[16/10] object-cover ring-1 ring-black/5 border border-border/10 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300'
               />
+              <h3 className='text-xl font-semibold mb-2'>{t('home.featureFlashSaleTitle', 'Flash Sales')}</h3>
+              <p className='text-muted-foreground'>
+                {t('home.featureFlashSaleDesc', 'Easily create and manage timed promotions.')}
+              </p>
+            </div>
+
+            {/* Feature 2: Group Sale */}
+            <div className='text-center'>
+              <img
+                src={groupSaleImage}
+                alt={t('home.featureGroupSaleAlt', 'Group Sale Management')}
+                className='rounded-lg shadow-xl mb-6 w-full h-auto aspect-[16/10] object-cover ring-1 ring-black/5 border border-border/10 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300'
+              />
+              <h3 className='text-xl font-semibold mb-2'>{t('home.featureGroupSaleTitle', 'Group Buying')}</h3>
+              <p className='text-muted-foreground'>
+                {t('home.featureGroupSaleDesc', 'Organize group purchase offers.')}
+              </p>
+            </div>
+
+            {/* Feature 3: Vouchers */}
+            <div className='text-center'>
+              <img
+                src={voucherImage}
+                alt={t('home.featureVoucherAlt', 'Voucher Management')}
+                className='rounded-lg shadow-xl mb-6 w-full h-auto aspect-[16/10] object-cover ring-1 ring-black/5 border border-border/10 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300'
+              />
+              <h3 className='text-xl font-semibold mb-2'>{t('home.featureVoucherTitle', 'Voucher System')}</h3>
+              <p className='text-muted-foreground'>
+                {t('home.featureVoucherDesc', 'Generate and track discount vouchers.')}
+              </p>
             </div>
           </div>
         </div>
       </section>
-
-      <section className='py-16 bg-white'>
+      {/* Process Section - Richer Muted Background */}
+      <section className='py-20 md:py-28 bg-muted/50 dark:bg-muted/30'>
         <div className='container mx-auto px-4'>
-          <div className='text-center mb-12'>
-            <h2 className='text-3xl font-bold mb-4'>{t('home.featuresTitle')}</h2>
-            <p className='text-muted-foreground max-w-2xl mx-auto'>{t('home.featuresSubtitle')}</p>
-          </div>
-          <div className='grid md:grid-cols-3 gap-8'>
-            <div className='bg-primary/5 p-6 rounded-xl hover:shadow-lg transition-all'>
-              <div className='w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4'>
-                <Shield className='text-primary' />
+          <h2 className='text-3xl font-bold text-center mb-16'>{t('home.processTitle', 'Our Process')}</h2>
+          <div className='relative grid grid-cols-1 md:grid-cols-4 gap-8'>
+            {/* Optional: Add connecting lines/elements for process visualization */}
+            {/* <div className='absolute top-1/2 left-0 right-0 h-px bg-border -translate-y-1/2 hidden md:block'></div> */}
+            {processSteps.map((step, index) => (
+              <div
+                key={index}
+                className='relative flex flex-col items-center text-center md:items-start md:text-left p-4 z-10'
+              >
+                {/* <div className='absolute top-1/2 left-1/2 w-3 h-3 bg-primary rounded-full -translate-x-1/2 -translate-y-1/2 border-2 border-background hidden md:block'></div> */}
+                <div className='text-5xl font-bold text-primary/50 dark:text-primary/40 mb-3'>{step.step}</div>
+                <h3 className='text-xl font-semibold mb-2'>{t(step.titleKey, `Step ${index + 1} Title`)}</h3>
+                <p className='text-muted-foreground'>{t(step.descriptionKey, `Step ${index + 1} Description`)}</p>
               </div>
-              <h3 className='text-xl font-semibold mb-2'>{t('home.feature1Title')}</h3>
-              <p className='text-muted-foreground'>{t('home.feature1Description')}</p>
-            </div>
-            <div className='bg-primary/5 p-6 rounded-xl hover:shadow-lg transition-all'>
-              <div className='w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4'>
-                <UserCheck className='text-primary' />
-              </div>
-              <h3 className='text-xl font-semibold mb-2'>{t('home.feature2Title')}</h3>
-              <p className='text-muted-foreground'>{t('home.feature2Description')}</p>
-            </div>
-            <div className='bg-primary/5 p-6 rounded-xl hover:shadow-lg transition-all'>
-              <div className='w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4'>
-                <Sparkles className='text-primary' />
-              </div>
-              <h3 className='text-xl font-semibold mb-2'>{t('home.feature3Title')}</h3>
-              <p className='text-muted-foreground'>{t('home.feature3Description')}</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
-
-      <section className='py-16 bg-primary/5'>
-        <div className='container mx-auto px-4'>
-          <div className='max-w-3xl mx-auto text-center'>
-            <h2 className='text-3xl font-bold mb-6'>{t('home.problemTitle')}</h2>
-            <p className='text-lg mb-8'>{t('home.problemDescription')}</p>
-            <div className='p-6 bg-white rounded-xl shadow-md'>
-              <h3 className='text-xl font-semibold mb-4'>{t('home.solutionTitle')}</h3>
-              <p className='text-muted-foreground'>{t('home.solutionDescription')}</p>
-            </div>
-          </div>
+      {/* CTA Section - Subtle Gradient Overlay */}
+      <section className='relative py-20 md:py-28 bg-primary text-primary-foreground overflow-hidden'>
+        <div
+          aria-hidden='true'
+          className='absolute inset-0 bg-gradient-radial from-primary-foreground/10 to-transparent opacity-50'
+        ></div>
+        <div className='relative container mx-auto px-4 text-center z-10'>
+          <h2 className='text-3xl font-bold mb-4'>{t('home.ctaTitle', "Let's Build Something Amazing Together")}</h2>
+          <p className='text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto'>
+            {t('home.ctaDescription', 'Ready to start your next project? Contact us today!')}
+          </p>
+          <Button variant='secondary' size='lg'>
+            {t('home.ctaButton', 'Contact Us')}
+          </Button>
         </div>
       </section>
     </div>
