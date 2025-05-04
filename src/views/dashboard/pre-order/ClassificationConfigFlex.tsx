@@ -16,6 +16,7 @@ import { Input, InputNormal } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
+import { CustomFile } from '@/types/file'
 import { ProductClassificationTypeEnum } from '@/types/product'
 import { IClassificationOption, ICombination, SalesInformationProps } from '@/types/productForm'
 import { regenerateUpdatedOptions } from '@/utils/product-form/saleInformationForm'
@@ -747,7 +748,13 @@ export default function ClassificationConfigFlex({
                                                               dropZoneConfigOptions={{
                                                                 maxFiles: MAX_PRODUCT_CLASSIFICATION_IMAGES
                                                               }}
-                                                              renderFileItemUI={(file) => {
+                                                              renderFileItemUI={(file: CustomFile) => {
+                                                                let imageSrc = ''
+                                                                try {
+                                                                  imageSrc = file.fileUrl || URL.createObjectURL(file)
+                                                                } catch {
+                                                                  imageSrc = ''
+                                                                }
                                                                 return (
                                                                   <div
                                                                     key={file?.name}
@@ -755,12 +762,10 @@ export default function ClassificationConfigFlex({
                                                                   >
                                                                     <ImageWithFallback
                                                                       fallback={fallBackImage}
-                                                                      src={URL?.createObjectURL(file)}
+                                                                      src={imageSrc}
                                                                       alt={file?.name}
                                                                       className='object-contain w-full h-full rounded-lg'
-                                                                      onLoad={() =>
-                                                                        URL?.revokeObjectURL(URL?.createObjectURL(file))
-                                                                      }
+                                                                      onLoad={() => URL?.revokeObjectURL(imageSrc)}
                                                                     />
                                                                   </div>
                                                                 )
