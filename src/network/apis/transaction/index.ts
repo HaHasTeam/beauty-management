@@ -7,13 +7,15 @@ import { privateRequest } from '@/utils/request'
 
 import {
   BookingStatic,
+  DailySystemStatistics,
   OrderStatic,
   PAY_TYPE,
   TFilterTransactionsParams,
   TGetBrandRevenueStatisticsParams,
   TGetBrandRevenueStatisticsResponse,
   TGetDailyBookingStatisticsParams,
-  TGetDailyOrderStatisticsParams
+  TGetDailyOrderStatisticsParams,
+  TGetDailySystemStatisticsParams
 } from './type'
 
 /**
@@ -190,3 +192,26 @@ export const getDailyBookingStatistics = toQueryFetcher<
     })
   }
 )
+
+/**
+ * Get daily system statistics
+ */
+export const getDailySystemStatistics = toQueryFetcher<
+  TGetDailySystemStatisticsParams,
+  TServerResponse<DailySystemStatistics>
+>('getDailySystemStatistics', async (params) => {
+  if (!params) throw new Error('Params is required')
+
+  // Remove falsy values and empty arrays
+  const cleanedData = _.omitBy(params, (value) => {
+    if (value === undefined || value === null) return true
+    if (typeof value === 'string' && value === '') return true
+    if (Array.isArray(value) && value.length === 0) return true
+    return false
+  })
+
+  return privateRequest(`/transactions/get-daily-system-statistics`, {
+    method: 'POST',
+    data: cleanedData
+  })
+})

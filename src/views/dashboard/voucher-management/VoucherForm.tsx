@@ -210,7 +210,7 @@ function VoucherForm({
                 name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Tên chương trình giảm giá</FormLabel>
+                    <FormLabel required>Name of voucher program</FormLabel>
                     <FormControl>
                       <Input placeholder='eg. Allure Voucher' {...field} />
                     </FormControl>
@@ -223,7 +223,7 @@ function VoucherForm({
               <FormItem>
                 <div className='flex justify-between items-center'>
                   <FormLabel required className='mb-0'>
-                    Mã Giảm giá & Hiển thị
+                    Voucher code & Visibility
                   </FormLabel>
                   <button
                     type='button'
@@ -277,7 +277,7 @@ function VoucherForm({
                           htmlFor={`visibility-checkbox-${id}`}
                           className='mb-0 whitespace-nowrap cursor-pointer'
                         >
-                          Hiển thị công khai
+                          Public
                         </FormLabel>
                       </div>
                     )}
@@ -297,7 +297,7 @@ function VoucherForm({
                 render={({ field, formState }) => {
                   return (
                     <FormItem className='flex flex-col'>
-                      <FormLabel required>Thời gian bắt đầu</FormLabel>
+                      <FormLabel required>Start time</FormLabel>
                       <FlexDatePicker
                         showTime
                         onlyFutureDates
@@ -318,7 +318,7 @@ function VoucherForm({
                 render={({ field, formState }) => {
                   return (
                     <FormItem className='flex flex-col'>
-                      <FormLabel required>Thời gian kết thúc</FormLabel>
+                      <FormLabel required>End time</FormLabel>
                       <FlexDatePicker
                         showTime
                         onlyFutureDates
@@ -351,7 +351,7 @@ function VoucherForm({
                   name='discountValue' // Outer field controls the value
                   render={({ field: discountValueField }) => (
                     <FormItem className='flex-1'>
-                      <FormLabel required>Giá trị giảm giá</FormLabel>
+                      <FormLabel required>Discount value</FormLabel>
                       {/* Inner field controls the type and resets value on change */}
                       <FormField
                         control={form.control}
@@ -426,7 +426,7 @@ function VoucherForm({
                       name='maxDiscount'
                       render={({ field }) => (
                         <FormItem className='flex-1'>
-                          <FormLabel>Giá trị giảm giá tối đa</FormLabel>
+                          <FormLabel>Max discount</FormLabel>
                           <FormControl>
                             <Input type='currency' placeholder='eg. 100,000' {...field} />
                           </FormControl>
@@ -440,7 +440,7 @@ function VoucherForm({
                     name='amount'
                     render={({ field }) => (
                       <FormItem className='flex-1'>
-                        <FormLabel>Giới hạn số lượng</FormLabel>
+                        <FormLabel>Limit quantity</FormLabel>
                         <FormControl>
                           <Input type='number' {...field} placeholder='eg. 100' symbol='mã' />
                         </FormControl>
@@ -460,7 +460,7 @@ function VoucherForm({
                     <FormItem className={cn('flex flex-col', field.value !== 'limited' && 'col-span-1 sm:col-span-2')}>
                       {' '}
                       {/* Span full if off */}
-                      <FormLabel>Giới hạn giá trị tối thiểu?</FormLabel>
+                      <FormLabel>Limit minimum order value?</FormLabel>
                       <FormControl>
                         {/* Replace RadioGroup with Switch */}
                         <Switch
@@ -488,7 +488,7 @@ function VoucherForm({
                     name='minOrderValue'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel required>Giá trị tối thiểu</FormLabel>
+                        <FormLabel required>Minimum order value</FormLabel>
                         <FormControl>
                           <Input {...field} type='currency' placeholder='eg. 100,000' />
                         </FormControl>
@@ -506,9 +506,9 @@ function VoucherForm({
                 name='description'
                 render={({ field }) => (
                   <FormItem className='col-span-1 sm:col-span-2'>
-                    <FormLabel>Mô tả chương trình</FormLabel>
+                    <FormLabel>Description Of Voucher</FormLabel>
                     <FormControl>
-                      <Textarea rows={3} placeholder='eg. Giảm giá 10% cho tất cả sản phẩm' {...field} />
+                      <Textarea rows={3} placeholder='eg. Discount 10% for all products in the store' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

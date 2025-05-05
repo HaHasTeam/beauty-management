@@ -78,6 +78,7 @@ export function ConsultantSuggestedProductsDialog({
                       React.Dispatch<React.SetStateAction<DataTableQueryState<IResponseProduct>>>
                     ]
                   }
+                  showCount
                   isDialog={true}
                 />
               )}

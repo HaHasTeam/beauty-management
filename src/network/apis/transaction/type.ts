@@ -126,3 +126,28 @@ export type BookingStatic = {
   total: BookingStaticTotal
   items: BookingStaticItem[]
 }
+
+export type TGetDailySystemStatisticsParams = {
+  startDate?: string
+  endDate?: string
+}
+
+export type DailySystemStatisticsItem = {
+  date: string
+  totalRevenue: number
+  totalCommissionFee: number
+  actualRevenue: number
+  totalPlatformVoucherDiscount: number
+}
+
+export type DailySystemStatisticsTotal = {
+  totalRevenue: number
+  totalCommissionFee: number
+  actualRevenue: number
+  totalPlatformVoucherDiscount: number
+}
+
+export type DailySystemStatistics = {
+  total: DailySystemStatisticsTotal
+  items: DailySystemStatisticsItem[]
+}
