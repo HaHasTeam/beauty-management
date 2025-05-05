@@ -22,7 +22,7 @@ import { getReplyFeedbackSchema } from '@/schemas/feedback.schema'
 import { useStore } from '@/stores/store'
 import { IBrand } from '@/types/brand'
 import { IClassification } from '@/types/classification'
-import { RoleEnum } from '@/types/enum'
+import { RoleEnum, ServiceTypeEnum } from '@/types/enum'
 import { IResponseFeedback } from '@/types/feedback'
 
 import Button from '../button'
@@ -34,12 +34,15 @@ interface ViewFeedbackDialogProps {
   isOpen: boolean
   onClose: () => void
   feedback: IResponseFeedback
-  productQuantity: number
-  productClassification: IClassification | null
+  productQuantity?: number
+  productClassification?: IClassification | null
   brand: IBrand | null
   accountAvatar: string
   accountName: string
-  orderDetailId: string
+  orderDetailId?: string
+  bookingId?: string
+  systemServiceType?: ServiceTypeEnum | null
+  systemServiceName?: string
 }
 
 export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
@@ -51,7 +54,10 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
   accountAvatar,
   accountName,
   orderDetailId,
-  brand
+  bookingId,
+  brand,
+  systemServiceName,
+  systemServiceType
 }) => {
   const { t } = useTranslation()
   const [showRep, setShowRep] = useState(false)
@@ -120,28 +126,49 @@ export const ViewFeedbackDialog: React.FC<ViewFeedbackDialogProps> = ({
               <DialogDescription></DialogDescription>
             </DialogHeader>
             {/* Feedback ID */}
-            {(user?.role === RoleEnum.ADMIN ||
-              user?.role === RoleEnum.OPERATOR ||
-              user?.role === RoleEnum.MANAGER ||
-              user?.role === RoleEnum.STAFF) && (
-              <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
-                <div>
-                  <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8).toUpperCase()}
-                </div>
-                {orderDetailId && (
+            {orderDetailId &&
+              (user?.role === RoleEnum.ADMIN ||
+                user?.role === RoleEnum.OPERATOR ||
+                user?.role === RoleEnum.MANAGER ||
+                user?.role === RoleEnum.STAFF) && (
+                <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
                   <div>
-                    <span className='font-medium'> {t('feedback.order')}:</span>{' '}
-                    {orderDetailId.substring(0, 8).toUpperCase()}
+                    <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8).toUpperCase()}
                   </div>
-                )}
-              </div>
-            )}
+                  {orderDetailId && (
+                    <div>
+                      <span className='font-medium'> {t('feedback.order')}:</span>{' '}
+                      {orderDetailId.substring(0, 8).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              )}
+
+            {/* Service */}
+            {bookingId &&
+              (user?.role === RoleEnum.ADMIN ||
+                user?.role === RoleEnum.OPERATOR ||
+                user?.role === RoleEnum.CONSULTANT) && (
+                <div className='flex items-center justify-between text-sm text-gray-500 mr-2'>
+                  <div>
+                    <span className='font-medium'>{t('feedback.ID')}:</span> {feedback.id.substring(0, 8).toUpperCase()}
+                  </div>
+                  {bookingId && (
+                    <div>
+                      <span className='font-medium'> {t('feedback.booking')}:</span>{' '}
+                      {bookingId.substring(0, 8).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              )}
             <div className='space-y-2'>
               <CustomerReview
                 authorName={accountName}
                 authorAvatar={accountAvatar}
                 updatedAt={feedback.updatedAt}
                 classification={productClassification}
+                systemServiceName={systemServiceName}
+                systemServiceType={systemServiceType}
                 numberOfItem={productQuantity}
                 description={feedback.content}
                 mediaFiles={feedback.mediaFiles}

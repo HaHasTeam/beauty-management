@@ -13,7 +13,6 @@
     "allureBeauty": "Allure Beauty",
     "logo": "Allure Logo"
   },
-
   "profile": {
     "myProfile": "My Profile",
     "profileDescription": "Manage your profile information to secure your account",
@@ -683,20 +682,6 @@
   "walletTerm": {
     "balance": "Balance & Transactions",
     "createWallet": "Create Your Own Wallet",
-    "withdraw": "Withdraw",
-    "withdrawalRequests": {
-      "title": "Withdrawal Requests List",
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "processing": "Processing",
-        "completed": "Completed",
-        "cancelled": "Cancelled"
-      },
-      "statusUpdateSuccess": "Withdrawal request status updated successfully",
-      "processedBy": "Processed by"
-    },
     "withdraw": {
       "amount": "Amount",
       "availableBalance": "Available balance",
@@ -709,6 +694,19 @@
       "successMessage": "Your withdrawal request has been successfully submitted and will be processed shortly. You can track the status in your withdrawal history.",
       "error": "Withdrawal Failed",
       "errorMessage": "We couldn't process your withdrawal request at this time. Please check your information and try again later."
+    },
+    "withdrawalRequests": {
+      "title": "Withdrawal Requests List",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "statusUpdateSuccess": "Withdrawal request status updated successfully",
+      "processedBy": "Processed by"
     },
     "bankAccounts": {
       "title": "Bank Accounts",
@@ -1306,7 +1304,6 @@
       "RETURNING": "Provide evidence of the return process.",
       "REFUNDED": "Upload proof of return completion and refund."
     },
-
     "videosHint": {
       "TO_SHIP": "A 360° view of the package to confirm it's properly sealed.",
       "SHIPPING": "Record handover moment or a short clip of the sealed package before shipping.",
@@ -1323,7 +1320,8 @@
     "reply": "Reply",
     "writeYourRep": "Write your reply...",
     "yourReply": "Your reply",
-    "customerContent": "Content"
+    "customerContent": "Content",
+    "booking": "Booking"
   },
   "media": {
     "previewImage": "Preview Image/Video",
@@ -1546,7 +1544,8 @@
       "bookingConfirmed": "Your booking has been confirmed. Please submit the booking form to proceed.",
       "serviceBookingFormSubmitted": "Your booking form has been submitted. Please join the consulting call at the scheduled time.",
       "completedConsultingCall": "The consulting call has been completed. Waiting for the result sheet.",
-      "sendedResultSheet": "The result sheet has been sent. Please review and mark as completed."
+      "sendedResultSheet": "The result sheet has been sent. Please review and mark as completed.",
+      "service": "Service"
     },
     "suggestedProducts": "Suggested Products",
     "searchForProducts": "Search for products",
@@ -1584,7 +1583,6 @@
     "created": "Booking Created",
     "system": "System",
     "consultationResultInfo": "Consultation Result Information",
-
     "completeConsultingCallDescription": "Please provide details about the consulting call completion including any relevant media files and notes.",
     "updateBookingStatusSuccess": "Booking status updated successfully",
     "videosHint": "Upload videos related to the consulting call",
@@ -1609,7 +1607,8 @@
       "completedConsultingCall": "Completed Consulting Call",
       "sendResultSheet": "Send Result Sheet",
       "sendedResultSheet": "Result Sheet Sent"
-    }
+    },
+    "service": "Service"
   },
   "reason": {
     "rejectCancel": {
@@ -1660,7 +1659,6 @@
     "delete": "Delete",
     "edit": "Edit",
     "submit": "Submit",
-
     "add": "Add",
     "remove": "Remove",
     "search": "Search",
@@ -1959,7 +1957,6 @@
     "title": "Blogs",
     "createdAt": "Created At"
   },
-
   "product": {
     "selectProducts": "Select Products",
     "selectVariation": "Select Product Variation",
@@ -2190,16 +2187,13 @@
   "scheduleMeeting": {
     "pageTitle": "Schedule Registration Meeting",
     "pageDescription": "Schedule a meeting with a system operator to complete your brand registration process.",
-
     "alertTitle": "Registration Process",
     "alertDescription": "This meeting is a required step to verify your brand information and complete the registration process. The system operator will review your application and answer any questions you may have.",
-
     "reviewerInfo": {
       "title": "Reviewer Information",
       "role": "Platform Representative",
       "about": "The reviewer will verify your brand information, explain the platform features, and help you complete the registration process."
     },
-
     "brandInfo": {
       "title": "Your Brand Information",
       "role": "Brand Representative",
@@ -2208,11 +2202,9 @@
       "descriptionTitle": "Brand Description",
       "statusTitle": "Registration Status"
     },
-
     "scheduleForm": {
       "title": "Schedule Your Registration Meeting",
       "description": "Please select a date and time for your meeting with the system operator to complete your brand registration.",
-
       "step1": {
         "title": "Select Meeting Date",
         "label": "Available Dates",
@@ -2220,7 +2212,6 @@
         "placeholder": "Select a date",
         "description": "Registration meetings are available on weekdays for the next 30 days."
       },
-
       "step2": {
         "title": "Select Time Slot",
         "label": "Available Times for {{date}}",
@@ -2228,7 +2219,6 @@
         "noSlots": "No available slots for this date.",
         "selectAnother": "Please select another date to see available times."
       },
-
       "step3": {
         "title": "Additional Information",
         "label": "Notes for the System Operator (Optional)",
@@ -2237,13 +2227,11 @@
         "description": "This information will help the system operator prepare for your registration meeting."
       }
     },
-
     "buttons": {
       "cancel": "Cancel",
       "confirm": "Confirm Meeting",
       "scheduling": "Scheduling..."
     },
-
     "messages": {
       "success": "Your registration meeting has been scheduled successfully!",
       "noSlotSelected": "Error there is no slot selected",

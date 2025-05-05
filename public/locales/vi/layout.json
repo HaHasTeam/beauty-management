@@ -1272,7 +1272,8 @@
     "reply": "Reply",
     "writeYourRep": "Viết phản hồi của bạn...",
     "yourReply": "Phản hồi của bạn",
-    "customerContent": "Nội dung"
+    "customerContent": "Nội dung",
+    "booking": "Lịch hẹn"
   },
   "media": {
     "previewImage": "Xem trước hình ảnh/video",
@@ -1460,6 +1461,7 @@
     "returnRequestApprovedMessageBrand": "Yêu cầu trả hàng đã được chấp thuận. Khách hàng sẽ gửi trả đơn hàng trong vòng {{count}} ngày. Sau khi khách hàng cập nhật trạng thái \"Đang trả hàng\", vui lòng sắp xếp shipper đến lấy đơn từ khách hàng."
   },
   "booking": {
+    "service": "Dịch vụ",
     "waitConfirm": "Đang chờ xác nhận",
     "confirmBooking": "Xác nhận đặt chỗ",
     "confirmed": "Đã xác nhận đặt chỗ",
