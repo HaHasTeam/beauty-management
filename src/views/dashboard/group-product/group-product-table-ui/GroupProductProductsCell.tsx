@@ -2,15 +2,14 @@ import { ChevronDown, ChevronUp, Image, Package } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { TGroupProduct } from '@/types/group-product'
+import type { TProduct } from '@/types/product'
 
 interface GroupProductProductsCellProps {
-  groupProduct: TGroupProduct
+  products: TProduct[] | null | undefined
 }
 
-export function GroupProductProductsCell({ groupProduct }: GroupProductProductsCellProps) {
+export function GroupProductProductsCell({ products }: GroupProductProductsCellProps) {
   const [expanded, setExpanded] = useState(false)
-  const { products } = groupProduct
 
   // If no products, show a placeholder
   if (!products?.length) {

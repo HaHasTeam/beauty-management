@@ -32,7 +32,7 @@ export function getColumns(): ColumnDef<TGroupProduct>[] {
       accessorKey: 'products',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Products' />,
       cell: ({ row }) => {
-        return <GroupProductProductsCell groupProduct={row.original} />
+        return <GroupProductProductsCell products={row.original.products} />
       },
       enableHiding: false,
       size: 220

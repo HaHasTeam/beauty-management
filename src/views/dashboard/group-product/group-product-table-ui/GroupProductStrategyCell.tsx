@@ -8,9 +8,10 @@ import { formatCurrency, formatNumber } from '@/utils/number'
 
 interface GroupProductStrategyCellProps {
   groupProduct: TGroupProduct
+  preFix?: React.ReactNode
 }
 
-export function GroupProductStrategyCell({ groupProduct }: GroupProductStrategyCellProps) {
+export function GroupProductStrategyCell({ groupProduct, preFix }: GroupProductStrategyCellProps) {
   const [expanded, setExpanded] = useState(false)
   const { criterias } = groupProduct
 
@@ -31,13 +32,16 @@ export function GroupProductStrategyCell({ groupProduct }: GroupProductStrategyC
     <div className='w-full bg-card rounded-md'>
       <div className='p-1.5'>
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-3'>
-            <div className='flex-shrink-0 flex items-center justify-center w-6 h-6 bg-primary/10 text-primary rounded-md'>
-              <TicketCheck className='h-4 w-4' />
-            </div>
-            <div className='flex flex-col'>
-              <div className='text-xs font-medium text-muted-foreground'>
-                <span className='font-bold'>{criterias.length}</span> Discount Tiers
+          <div className='flex items-center gap-2'>
+            {preFix}
+            <div className='flex items-center gap-3'>
+              <div className='flex-shrink-0 flex items-center justify-center w-6 h-6 bg-primary/10 text-primary rounded-md'>
+                <TicketCheck className='h-4 w-4' />
+              </div>
+              <div className='flex flex-col'>
+                <div className='text-xs font-medium text-muted-foreground'>
+                  <span className='font-bold'>{criterias.length}</span> Discount Tiers
+                </div>
               </div>
             </div>
           </div>

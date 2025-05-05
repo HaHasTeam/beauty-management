@@ -55,7 +55,8 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.UPDATE_VOUCHER,
     Routes.ADD_VOUCHER,
     Routes.REPORTS,
-    Routes.SELECT_INTERVIEW_SLOT
+    Routes.SELECT_INTERVIEW_SLOT,
+    Routes.GROUP_BUYING
   ],
   [UserRoleEnum.CONSULTANT]: [
     Routes.DASHBOARD_HOME,
@@ -90,7 +91,8 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.VOUCHER,
     Routes.UPDATE_VOUCHER,
     Routes.ADD_VOUCHER,
-    Routes.REPORTS
+    Routes.REPORTS,
+    Routes.GROUP_BUYING
   ],
   [UserRoleEnum.KOL]: [Routes.DASHBOARD_HOME, Routes.PROFILE_SETTINGS],
   [UserRoleEnum.CUSTOMER]: [], // Customers have no access to any dashboard routes
