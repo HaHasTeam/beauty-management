@@ -33,6 +33,7 @@
     --chart-foreground: 345 57% 0%;
     --chart-muted: 345 24% 91%;
     --chart-yellow: 50 100% 47%;
+    --chart-purple: 271 91% 70%;
     /* Grayscale chart colors (Light Mode) */
     --chart-gray-1: 0 0% 15%; /* Darkest Gray */
     --chart-gray-2: 0 0% 32%; /* Dark Gray */
@@ -109,6 +110,7 @@
     --chart-gray-3: 0 0% 45%; /* Medium Gray */
     --chart-gray-4: 0 0% 32%; /* Dark Gray */
     --chart-gray-5: 0 0% 15%; /* Darkest Gray */
+    --chart-purple: 271 91% 70%;
 
     /* mới thêm vào biến mới nè  */
     --warning: 48 96% 89%;
