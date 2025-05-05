@@ -10,8 +10,10 @@ import {
   Layers2Icon,
   Newspaper,
   Package,
+  Package2Icon,
   ReceiptText,
-  TicketPercent
+  TicketPercent,
+  Video
 } from 'lucide-react'
 import { GrSchedule } from 'react-icons/gr'
 import { HiOutlineCog8Tooth, HiOutlineHome } from 'react-icons/hi2'
@@ -89,6 +91,20 @@ export const routes: IRoute[] = [
     name: routesConfig[Routes.FLASH_SALE].name,
     path: routesConfig[Routes.FLASH_SALE].path,
     icon: <IoIosFlash className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false,
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER, UserRoleEnum.STAFF]
+  },
+  {
+    name: routesConfig[Routes.LIVESTREAM].name,
+    path: routesConfig[Routes.LIVESTREAM].path,
+    icon: <Video className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
+    collapse: false,
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER, UserRoleEnum.STAFF]
+  },
+  {
+    name: routesConfig[Routes.GROUP_BUYING].name,
+    path: routesConfig[Routes.GROUP_BUYING].path,
+    icon: <Package2Icon className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false,
     roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER, UserRoleEnum.STAFF]
   },
