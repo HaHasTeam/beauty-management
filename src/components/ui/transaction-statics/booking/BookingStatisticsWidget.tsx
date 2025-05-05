@@ -47,10 +47,7 @@ export function BookingStatisticsWidget({
       {header}
 
       {/* Render Booking Statistics in mini mode */}
-      <BookingStaticIndexPage
-        mode='mini'
-        consultantServiceId={consultantServiceId}
-      />
+      <BookingStaticIndexPage mode='mini' consultantServiceId={consultantServiceId} />
 
       {/* Related Booking Dialog */}
       <RelatedBookingDialog

@@ -100,22 +100,19 @@ export const Static = ({ data, consultantId }: Props) => {
       <CardContent className='flex-1 pb-0'>
         <ChartContainer config={chartConfig} className='mx-auto aspect-square max-h-[300px]'>
           <PieChart>
-            <ChartTooltip content={
-              <ChartTooltipContent indicator="dot"/>
-            } >
-            </ChartTooltip>
+            <ChartTooltip content={<ChartTooltipContent indicator='dot' />}></ChartTooltip>
             <Pie
               data={chartData}
               dataKey='suggestions'
-              nameKey="brandId" // *** IMPORTANT: Match key in chartConfig ***
+              nameKey='brandId' // *** IMPORTANT: Match key in chartConfig ***
               innerRadius={60}
               strokeWidth={5}
               className='cursor-pointer'
               onClick={(payload) => {
-                 // Payload is the data item; brandId is directly on it
-                 if (payload && payload.brandId) {
-                   handleBrandClick(payload.brandId)
-                 }
+                // Payload is the data item; brandId is directly on it
+                if (payload && payload.brandId) {
+                  handleBrandClick(payload.brandId)
+                }
               }}
             >
               <Label

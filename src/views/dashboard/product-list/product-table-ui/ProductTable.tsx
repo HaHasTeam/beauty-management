@@ -49,8 +49,7 @@ export function ProductTable({ data, pageCount, queryStates, isDialog, showCount
     queryFn: flattenCategoryApi.fn,
     enabled: isAdmin // Only fetch brands for admin users
   })
-  const brands = brandData?.data ?? []
-  const categories = categoryData?.data ?? []
+
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -64,6 +63,8 @@ export function ProductTable({ data, pageCount, queryStates, isDialog, showCount
    */
 
   const filterFields: DataTableFilterField<IResponseProduct>[] = React.useMemo(() => {
+    const brands = brandData?.data ?? []
+    const categories = categoryData?.data ?? []
     if (isDialog) {
       return []
     }
@@ -125,7 +126,7 @@ export function ProductTable({ data, pageCount, queryStates, isDialog, showCount
       })
     }
     return fields
-  }, [isDialog, brandData?.data, categories, isAdmin, t, brands])
+  }, [brandData?.data, categoryData?.data, isDialog, isAdmin, t])
 
   // Add brand filter for admin users
 

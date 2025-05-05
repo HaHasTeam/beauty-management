@@ -29,7 +29,7 @@ export default function IndexPage() {
   const { data: bookingStaticResponse, isLoading: isBookingStaticLoading } = useQuery({
     queryKey: [getConsultantRecommendationPercentageApi.queryKey, queryParams],
     queryFn: getConsultantRecommendationPercentageApi.fn,
-    enabled: !!( (isAdmin ? (queryStates[0].fieldFilters?.consultantId as string) : user?.id) as string)
+    enabled: !!((isAdmin ? (queryStates[0].fieldFilters?.consultantId as string) : user?.id) as string)
   })
 
   const bookingStaticData = bookingStaticResponse?.data

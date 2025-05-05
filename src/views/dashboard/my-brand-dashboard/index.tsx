@@ -9,21 +9,52 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/lib/utils'
 import { getBrandByIdApi } from '@/network/apis/brand'
 import { useStore } from '@/stores/store'
+import { BrandStatusEnum } from '@/types/brand' // Add this import if needed
 
 import { UploadDocumentDialog } from './UploadDocumentDialog'
 
-const getStatusColor = (status: string) => {
+const getStatusConfig = (status: BrandStatusEnum) => {
   switch (status) {
-    case 'ACTIVE':
-      return 'bg-green-100 text-green-800'
-    case 'NEED_ADDITIONAL_DOCUMENTS':
-      return 'bg-amber-100 text-amber-800'
-    case 'REJECTED':
-      return 'bg-red-100 text-red-800'
-    case 'PENDING':
-      return 'bg-blue-100 text-blue-800'
+    case BrandStatusEnum.PENDING_REVIEW:
+      return {
+        borderColor: 'border-amber-300',
+        bgColor: 'bg-amber-100',
+        bgTagColor: 'bg-amber-200',
+        titleColor: 'text-amber-600',
+        text: 'Đang chờ xét duyệt'
+      }
+    case BrandStatusEnum.NEED_ADDITIONAL_DOCUMENTS:
+      return {
+        borderColor: 'border-red-300',
+        bgColor: 'bg-red-100',
+        bgTagColor: 'bg-red-200',
+        titleColor: 'text-red-600',
+        text: 'Cần bổ sung hồ sơ'
+      }
+    case BrandStatusEnum.PRE_APPROVED_FOR_MEETING:
+      return {
+        borderColor: 'border-blue-300',
+        bgColor: 'bg-blue-100',
+        bgTagColor: 'bg-blue-200',
+        titleColor: 'text-blue-600',
+        text: 'Đã duyệt hồ sơ, chờ phỏng vấn'
+      }
+    case BrandStatusEnum.ACTIVE:
+      return {
+        borderColor: 'border-green-300',
+        bgColor: 'bg-green-100',
+        bgTagColor: 'bg-green-200',
+        titleColor: 'text-green-600',
+        text: 'Đã kích hoạt'
+      }
     default:
-      return 'bg-gray-100 text-gray-800'
+      return {
+        borderColor: 'border-gray-300',
+        bgColor: 'bg-gray-100',
+        bgTagColor: 'bg-gray-200',
+        titleColor: 'text-gray-600',
+        text: status
+      }
   }
 }
 
@@ -98,9 +129,15 @@ export default function BrandDashboard() {
           </div>
         </div>
         <div className='flex flex-col items-end gap-2'>
-          <Badge className={`${getStatusColor(brand.status)} px-3 py-1 text-xs font-medium`}>
-            {(brand.status || 'UNKNOWN').replace(/_/g, ' ')}
-          </Badge>
+          {/* Badge component with updated status config */}
+          {(() => {
+            const statusConfig = getStatusConfig(brand.status)
+            return (
+              <Badge className={`${statusConfig.bgColor} ${statusConfig.titleColor} px-3 py-1 text-xs font-medium`}>
+                {statusConfig.text}
+              </Badge>
+            )
+          })()}
           <p className='text-xs text-muted-foreground'>Last updated: {formatDate(brand.updatedAt || '')}</p>
         </div>
       </div>

@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Card } from '@/components/ui/card'
 
 interface Props {
-  mode?: 'full' | 'mini',
+  mode?: 'full' | 'mini'
   consultantServiceId?: string
 }
 

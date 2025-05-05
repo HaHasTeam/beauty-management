@@ -16,10 +16,10 @@ type Props = {
   eventId?: string
   mode?: 'full' | 'mini'
   header?: React.ReactNode
-  voucherId?:string
+  voucherId?: string
 }
 
-export default function IndexPage({ orderType, eventId, mode = 'full', header ,voucherId}: Props) {
+export default function IndexPage({ orderType, eventId, mode = 'full', header, voucherId }: Props) {
   const queryStates = useState<DataTableQueryState<TGetDailyOrderStatisticsParams>>(
     {} as DataTableQueryState<TGetDailyOrderStatisticsParams>
   )
@@ -38,10 +38,12 @@ export default function IndexPage({ orderType, eventId, mode = 'full', header ,v
         endDate: queryStates[0].fieldFilters?.endDate as string,
         orderType: orderType || (queryStates[0].fieldFilters?.orderType as OrderEnum),
         productIds: queryStates[0].fieldFilters?.productIds as string[],
-        eventIds: eventId ? [eventId] : [
-          ...(queryStates[0].fieldFilters?.groupProductIds || []),
-          ...(queryStates[0].fieldFilters?.flashSaleIds || [])
-        ],
+        eventIds: eventId
+          ? [eventId]
+          : [
+              ...(queryStates[0].fieldFilters?.groupProductIds || []),
+              ...(queryStates[0].fieldFilters?.flashSaleIds || [])
+            ],
         groupProductIds: queryStates[0].fieldFilters?.groupProductIds as string[],
         voucherId
       }
@@ -62,7 +64,12 @@ export default function IndexPage({ orderType, eventId, mode = 'full', header ,v
                   <Skeleton className='w-full h-[300px] rounded-lg' />
                 </div>
               ) : (
-                <OrderStaticCard data={userListData?.data as OrderStatic} queryStates={queryStates} mode={mode} showOnlyVoucher={!!voucherId? (userListData?.data.isParent?"platform":"shop"):undefined} />
+                <OrderStaticCard
+                  data={userListData?.data as OrderStatic}
+                  queryStates={queryStates}
+                  mode={mode}
+                  showOnlyVoucher={!!voucherId ? (userListData?.data.isParent ? 'platform' : 'shop') : undefined}
+                />
               )}
             </Shell>
           </div>

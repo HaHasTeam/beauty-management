@@ -54,7 +54,7 @@ export function BookingStaticCard({ queryStates, data, mode = 'full' }: BookingS
       }
     ]
 
-    if (mode === 'full') { 
+    if (mode === 'full') {
       if (isAdmin && consultants.length > 0) {
         fields.push({
           id: 'consultantId',
@@ -127,27 +127,27 @@ export function BookingStaticCard({ queryStates, data, mode = 'full' }: BookingS
       <CardWithFacetFilters mainContent={<Static data={data} mode={mode} />}>
         <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
           {mode === 'full' && (
-          <div className='flex items-center justify-end px-4 py-2'>
-            <Select onValueChange={handleTimeRangeChange}>
-              <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
-                <SelectValue placeholder='Select Time Range' />
-              </SelectTrigger>
-              <SelectContent className='rounded-xl'>
-                <SelectItem value='90d' className='rounded-lg'>
-                  Last 3 months
-                </SelectItem>
-                <SelectItem value='30d' className='rounded-lg'>
-                  Last 30 days
-                </SelectItem>
-                <SelectItem value='7d' className='rounded-lg'>
-                  Last 7 days
-                </SelectItem>
-                <SelectItem value='custom' className='rounded-lg'>
-                  Custom Range
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+            <div className='flex items-center justify-end px-4 py-2'>
+              <Select onValueChange={handleTimeRangeChange}>
+                <SelectTrigger className='w-[160px] rounded-lg' aria-label='Select time range'>
+                  <SelectValue placeholder='Select Time Range' />
+                </SelectTrigger>
+                <SelectContent className='rounded-xl'>
+                  <SelectItem value='90d' className='rounded-lg'>
+                    Last 3 months
+                  </SelectItem>
+                  <SelectItem value='30d' className='rounded-lg'>
+                    Last 30 days
+                  </SelectItem>
+                  <SelectItem value='7d' className='rounded-lg'>
+                    Last 7 days
+                  </SelectItem>
+                  <SelectItem value='custom' className='rounded-lg'>
+                    Custom Range
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           )}
         </DataTableToolbar>
       </CardWithFacetFilters>
