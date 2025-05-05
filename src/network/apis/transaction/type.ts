@@ -138,6 +138,7 @@ export type DailySystemStatisticsItem = {
   totalCommissionFee: number
   actualRevenue: number
   totalPlatformVoucherDiscount: number
+  totalPlatformRevenue: number
 }
 
 export type DailySystemStatisticsTotal = {
@@ -145,6 +146,7 @@ export type DailySystemStatisticsTotal = {
   totalCommissionFee: number
   actualRevenue: number
   totalPlatformVoucherDiscount: number
+  totalPlatformRevenue: number
 }
 
 export type DailySystemStatistics = {
