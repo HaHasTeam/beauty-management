@@ -34,7 +34,7 @@ interface ProductTableProps {
 export function ProductTable({ data, pageCount, queryStates, isDialog, showCount = false }: ProductTableProps) {
   const { t } = useTranslation()
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<IResponseProduct> | null>(null)
-  const columns = React.useMemo(() => getColumns({ setRowAction, showCount }), [])
+  const columns = React.useMemo(() => getColumns({ setRowAction, showCount }), [setRowAction, showCount])
 
   const { user } = useStore()
   const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
