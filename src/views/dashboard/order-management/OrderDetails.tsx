@@ -368,7 +368,9 @@ const OrderDetails = () => {
                         </p>
                         <p>
                           <span className='font-medium'>{t('orderDetail.notes')}:</span>{' '}
-                          {useOrderData?.data?.notes ?? t('orderDetail.no')}
+                          {useOrderData?.data?.notes && useOrderData?.data?.notes !== ''
+                            ? useOrderData?.data?.notes
+                            : t('orderDetail.no')}
                         </p>
                       </div>
                     }
@@ -425,9 +427,10 @@ const OrderDetails = () => {
                     totalPlatformDiscount={useOrderData?.data?.platformVoucherDiscount}
                     totalPayment={useOrderData?.data?.totalPrice}
                     paymentMethod={useOrderData?.data?.paymentMethod}
-                    brandVoucherId={useOrderData?.data?.shopVoucherId}
-                    platformVoucherId={useOrderData?.data?.platformVoucherId}
-                    livestreamId={useOrderData?.data?.livestreamId}
+                    brandVoucher={useOrderData?.data?.voucher || null}
+                    platformVoucher={useOrderData?.data?.parent.voucher || null}
+                    livestream={useOrderData?.data?.orderDetails[0]?.livestream || null}
+                    orderParent={useOrderData?.data?.parent || null}
                   />
                 </div>
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||

@@ -3,6 +3,7 @@ import { IClassification } from './classification'
 import { OrderEnum, PaymentMethod, RequestStatusEnum, ShippingStatusEnum } from './enum'
 import { IResponseFeedback } from './feedback'
 import { TServerFile } from './file'
+import { ILivestream } from './livestream'
 import { PaymentMethodEnum } from './payment'
 import { BaseParams } from './request'
 import { TUser, TUserUpdateStatusTracking } from './user'
@@ -29,6 +30,7 @@ export interface IOrderDetail {
   productClassification: IClassification
   productClassificationPreOrder: null | IClassification
   feedback: IResponseFeedback
+  livestream: ILivestream
 }
 
 // Order item interface
@@ -54,6 +56,7 @@ export interface IOrderItem {
   orderDetails: IOrderDetail[]
   voucher: TVoucher | null
   account: TUser
+  parent: IOrderItem
 }
 
 // Main order interface
@@ -75,12 +78,13 @@ export interface IOrder {
   shopVoucherDiscount: number
   platformVoucherId: string
   shopVoucherId: string
-  livestreamId: string
+  livestream: ILivestream
   account: TUser
   brand?: TBrand
   children?: IOrder[]
   orderDetails?: IOrderDetail[]
   isPaymentMethodUpdated: boolean
+  voucher: TVoucher | null
 }
 
 // Other interfaces (kept as they were, assuming they're still needed)

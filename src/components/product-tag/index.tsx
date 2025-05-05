@@ -85,6 +85,10 @@ export default function ProductTag({ tag, text, size = 'medium' }: ProductTagPro
       tagColorClass = 'bg-blue-100 text-blue-800 border border-blue-300'
       tagText = t('productTag.soldOut')
       break
+    case OrderEnum.LIVE_STREAM:
+      tagColorClass = 'bg-purple-500 text-white border border-purple-500'
+      tagText = t('productTag.liveStream')
+      break
     // for payment methods
     // case PaymentMethod.CARD:
     //   tagColorClass = 'bg-white text-yellow-500 border border-yellow-500'
