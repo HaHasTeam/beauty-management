@@ -64,7 +64,12 @@ export enum Routes {
   BOOKING_DETAILS = 'booking-details',
   ORIGINAL_ORDER_DETAILS = 'original-order-details',
   FORBIDDEN = 'forbidden',
-  FORBIDDEN_PUBLIC = 'forbidden-public'
+  FORBIDDEN_PUBLIC = 'forbidden-public',
+  ADD_LIVESTREAM = 'add-liveStream',
+  LIVESTREAM_DETAILS = 'liveStream-details',
+  GROUP_BUYING = 'group-buying',
+  GROUP_BUYING_DETAILS = 'group-buying-details',
+  ADD_GROUP_BUYING = 'add-group-buying'
 }
 
 export const routesConfig: TRoutes = {
@@ -496,5 +501,40 @@ export const routesConfig: TRoutes = {
     description: 'You do not have permission to access this resource',
     path: '/forbidden',
     getPath: () => '/forbidden'
+  },
+  [Routes.LIVESTREAM]: {
+    name: 'Livestream',
+    title: 'Livestream',
+    description: 'Livestream',
+    path: '/dashboard/livestream',
+    getPath: () => '/dashboard/livestream'
+  },
+  [Routes.ADD_LIVESTREAM]: {
+    name: 'Add Livestream',
+    title: 'Add Livestream',
+    description: 'Add Livestream',
+    path: '/dashboard/livestream/add',
+    getPath: () => '/dashboard/livestream/add'
+  },
+  [Routes.LIVESTREAM_DETAILS]: {
+    name: 'Livestream Details',
+    title: 'Livestream Details',
+    description: 'Livestream Details',
+    path: '/dashboard/livestream/:id',
+    getPath: (params) => `/dashboard/livestream/${params.id}`
+  },
+  [Routes.GROUP_BUYING]: {
+    name: 'Group Buying',
+    title: 'Group Buying',
+    description: 'Group Buying',
+    path: '/dashboard/group-buying',
+    getPath: () => '/dashboard/group-buying'
+  },
+  [Routes.GROUP_BUYING_DETAILS]: {
+    name: 'Group Buying Details',
+    title: 'Group Buying Details',
+    description: 'Group Buying Details',
+    path: '/dashboard/group-buying/:id',
+    getPath: (params) => `/dashboard/group-buying/${params.id}`
   }
 }
