@@ -107,14 +107,15 @@
     "newArrival": "New Arrival",
     "hotDeal": "Hot Deal",
     "flashSale": "Flash Sale",
-    "liveStream": "Live Stream",
+    "liveStream": "Livestream",
     "preOrder": "Pre Order",
     "groupBuying": "Group Buying",
     "hidden": "Hidden",
     "outOfStock": "Sold old",
     "waiting": "Upcoming",
     "cancelled": "Cancelled",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "soldOut": "Sold out"
   },
   "statusTag": {
     "default": "Default"
@@ -962,7 +963,9 @@
     "cancelReason": "Cancellation reason",
     "cancelOrderDetails": "Cancellation details",
     "customer": "Customer",
-    "brand": "Brand"
+    "brand": "Brand",
+    "orderParent": "Parent order",
+    "orderChildren": "Order children"
   },
   "validation": {
     "tagRequired": "Slug must be at least 3 characters.",

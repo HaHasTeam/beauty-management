@@ -34,6 +34,7 @@ interface ProductTableProps {
 export function ProductTable({ data, pageCount, queryStates, isDialog, showCount = false }: ProductTableProps) {
   const { t } = useTranslation()
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<IResponseProduct> | null>(null)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = React.useMemo(() => getColumns({ setRowAction, showCount }), [])
 
   const { user } = useStore()

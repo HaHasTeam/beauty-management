@@ -114,7 +114,8 @@
     "outOfStock": "Hết hàng",
     "waiting": "Sắp diễn ra",
     "cancelled": "Đã hủy",
-    "inactive": "Đã ẩn"
+    "inactive": "Đã ẩn",
+    "soldOut": "Hết hàng"
   },
   "statusTag": {
     "default": "Mặc định"
@@ -503,7 +504,6 @@
     "totalCost": "Tổng tiền hàng",
     "totalDiscount": "Tổng giảm giá từ voucher",
     "totalPayment": "Tổng tiền thanh toán",
-
     "discountDetails": "Chi tiết khuyến mãi",
     "productLeft": "Còn {{count}} sản phẩm",
     "updateClassificationSuccess": "Thay đổi phân loại sản phẩm thành công!",
@@ -944,7 +944,9 @@
     "cancelReason": "Lý do hủy",
     "cancelOrderDetails": "Chi tiết hủy đơn",
     "customer": "Khách hàng",
-    "brand": "Thương hiệu"
+    "brand": "Thương hiệu",
+    "orderParent": "Đơn hàng gốc",
+    "orderChildren": "Đơn hàng con"
   },
   "validation": {
     "tagRequired": "Đường dẫn phải có ít nhất 3 ký tự.",
@@ -1283,7 +1285,6 @@
     "videos": "Videos",
     "videosFile": "video",
     "imagesVideos": "Hình ảnh/Video",
-
     "videoFile": "video",
     "uploadHint": "Nhấp hoặc kéo tệp để tải lên",
     "maxFileSize": "Kích thước tệp tối đa: {{size}}MB"
@@ -1550,7 +1551,6 @@
       "CANCELLED": "Đã hủy",
       "Cancelled": "Đã hủy",
       "COMPLETED_CONSULTING_CALL": "Đã hoàn thành cuộc gọi tư vấn",
-
       "SENDED_RESULT_SHEET": "Đã gửi kết quả",
       "toPay": "Chờ thanh toán",
       "formSubmitted": "Đã gửi biểu mẫu",
@@ -1640,14 +1640,12 @@
     "invalidDob": "Ngày sinh phải là ngày hợp lệ (YYYY-MM-DD)",
     "emailRequired": "Email là bắt buộc",
     "passwordRequired": "Mật khẩu là bắt buộc",
-
     "fullNameMaxLength": "Họ và tên không được vượt quá 100 ký tự",
     "phoneMaxLength": "Số điện thoại không được vượt quá 100 ký tự",
     "districtMaxLength": "Quận/Huyện không được vượt quá 100 ký tự",
     "wardMaxLength": "Phường/Xã không được vượt quá 100 ký tự",
     "provinceMaxLength": "Tỉnh/Thành phố không được vượt quá 255 ký tự",
     "invalidType": "Loại địa chỉ không hợp lệ",
-
     "invalidStartTime": "Thời gian bắt đầu phải là chuỗi ngày hợp lệ",
     "invalidEndTime": "Thời gian kết thúc phải là chuỗi ngày hợp lệ",
     "totalPriceNonNegative": "Tổng giá phải là số không âm",
@@ -1655,7 +1653,6 @@
     "invalidBookingType": "Loại đặt lịch không hợp lệ",
     "invalidStatus": "Trạng thái không hợp lệ",
     "invalidResultNote": "Ghi chú kết quả không hợp lệ",
-
     "accountNotFound": "Tài khoản không tồn tại",
     "updatedByAccountNotFound": "Người cập nhật tài khoản không tồn tại",
     "emailAlreadyExists": "Email đã tồn tại",
@@ -1665,17 +1662,13 @@
     "consultantNotFound": "Tư vấn viên không tồn tại",
     "brandNotFound": "Thương hiệu không tồn tại",
     "exceededApprovedReportsLimit": "Tài khoản đã bị cấm do vượt quá giới hạn báo cáo được phê duyệt",
-
     "addressNotFound": "Địa chỉ không tồn tại",
     "atLeastOneDefaultAddress": "Phải có ít nhất một địa chỉ mặc định",
-
     "emailNotVerified": "Email chưa được xác minh",
     "invalidPassword": "Mật khẩu không hợp lệ",
     "loginMethodNotAllowed": "Người dùng phải đăng nhập bằng phương thức khác, không sử dụng mật khẩu",
-
     "blogNotExisted": "Blog không tồn tại",
     "blogTagAlreadyExisted": "Thẻ blog đã tồn tại",
-
     "bookingNotFound": "Đặt lịch không tồn tại",
     "onlyReviewerCanNoteResult": "Chỉ người đánh giá mới có thể ghi chú kết quả",
     "slotBooked": "Slot đã được đặt",
@@ -1693,7 +1686,6 @@
     "alreadyBookedSlot": "Bạn đã đặt một slot. Vui lòng chờ xử lý",
     "bookingCancelledSuccessfully": "Hủy đặt lịch thành công",
     "bookingStatusUpdatedSuccessfully": "Cập nhật trạng thái đặt lịch thành công",
-
     "classificationNotFound": "Phân loại sản phẩm không tồn tại",
     "invalidProduct": "Không thể thêm sản phẩm không hợp lệ",
     "quantityNotEnough": "Số lượng không đủ",
@@ -1704,30 +1696,25 @@
     "noItemsFoundForIds": "Không tìm thấy mục nào cho các ID được cung cấp",
     "accountIdRequired": "Yêu cầu ID tài khoản",
     "noItemsInCart": "Không tìm thấy mục nào trong giỏ hàng cho tài khoản đã cho",
-
     "categoryAlreadyExisted": "Danh mục đã tồn tại",
     "parentCategoryNotFound": "Không tìm thấy danh mục cha",
     "maxCategoryLevelExceeded": "Một danh mục không thể có hơn 4 cấp danh mục con",
     "categoryNotFound": "Không tìm thấy danh mục",
     "newParentCategoryNotFound": "Không tìm thấy danh mục cha mới",
-
     "bookingFormNotFound": "Biểu mẫu yêu cầu tư vấn dịch vụ không tồn tại",
     "systemServiceNotFoundOrInactive": "Dịch vụ hệ thống không tồn tại hoặc không hoạt động",
     "invalidStatusUpdate": "Không thể cập nhật trạng thái",
     "activeServicesUsingFormNotFound": "Không tìm thấy dịch vụ đang hoạt động sử dụng biểu mẫu này",
     "questionNotFound": "Câu hỏi không tồn tại",
     "imageNotFound": "Hình ảnh không tồn tại",
-
     "consultationCriteriaNotFound": "Tiêu chí tư vấn không tồn tại",
     "consultationCriteriaSectionNotFound": "Phần tiêu chí tư vấn không tồn tại",
     "criteriaCreationFailed": "Không thể tạo tiêu chí tư vấn",
     "criteriaUpdateFailed": "Không thể cập nhật tiêu chí tư vấn",
     "criteriaSectionUpdateFailed": "Không thể cập nhật phần tiêu chí tư vấn",
-
     "sectionNotFound": "Phần tiêu chí tư vấn không tồn tại",
     "livestreamNotFound": "Không tìm thấy livestream",
     "invalidLivestreamStatus": "Trạng thái livestream không hợp lệ",
-
     "classificationQuantityRequired": "Phân loại sản phẩm phải có ít nhất một số lượng",
     "skuRequired": "SKU là bắt buộc",
     "skuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
@@ -1737,24 +1724,19 @@
     "overlappingDiscountEvent": "Khoảng thời gian trùng với một sự kiện giảm giá hiện có",
     "preOrderProductNotFound": "Không tìm thấy sản phẩm đặt trước",
     "invalidFilterOptions": "Tùy chọn lọc không hợp lệ",
-
     "classificationSkuAlreadyExists": "SKU của phân loại sản phẩm đã tồn tại",
     "classificationTitleAlreadyExists": "Tiêu đề của phân loại sản phẩm đã tồn tại",
     "invalidSortBy": "Tham số sắp xếp không hợp lệ",
     "invalidProductStatus": "Trạng thái sản phẩm không hợp lệ",
-
     "productDiscountNotFound": "Không tìm thấy giảm giá sản phẩm",
     "classificationInvalid": "Phân loại sản phẩm không hợp lệ",
     "classificationQuantityInvalid": "Số lượng phân loại phải lớn hơn 0",
     "invalidClassificationQuantity": "Số lượng phân loại không hợp lệ: Số lượng phải nhỏ hơn hoặc bằng số lượng hiện tại",
     "productStatusInvalid": "Trạng thái sản phẩm không hợp lệ",
-
     "originalClassificationNotFound": "Không tìm thấy phân loại sản phẩm gốc",
-
     "deleteQuestionFailed": "Không thể xóa câu hỏi",
     "updateOrderIndexFailed": "Không thể cập nhật thứ tự câu hỏi",
     "imageDeleteFailed": "Không thể xóa hình ảnh liên kết với câu hỏi",
-
     "systemServiceNotFound": "Không tìm thấy dịch vụ hệ thống",
     "serviceAlreadyExisted": "Dịch vụ đã tồn tại",
     "activeServicesUsingCriteriaNotFound": "Không tìm thấy dịch vụ đang hoạt động sử dụng tiêu chí này",
@@ -1800,7 +1782,6 @@
     "refunded": "Đã hoàn tiền",
     "cancelled": "Đã hủy"
   },
-
   "report": {
     "title": "Báo cáo",
     "searchPlaceholder": "Tìm kiếm báo cáo...",
@@ -1875,13 +1856,10 @@
   },
   "common": {
     "cancel": "Hủy",
-
     "save": "Lưu",
-
     "edit": "Sửa",
     "add": "Thêm",
     "remove": "Xóa bỏ",
-
     "filter": "Lọc",
     "loading": "Đang tải...",
     "submit": "Gửi",
@@ -2120,20 +2098,16 @@
       "needHelp": "Cần Trợ Giúp?"
     }
   },
-
   "scheduleMeeting": {
     "pageTitle": "Lên lịch cuộc họp đăng ký",
     "pageDescription": "Lên lịch cuộc họp với người vận hành hệ thống để hoàn tất quá trình đăng ký thương hiệu của bạn.",
-
     "alertTitle": "Quy trình đăng ký",
     "alertDescription": "Cuộc họp này là bước bắt buộc để xác minh thông tin thương hiệu của bạn và hoàn tất quy trình đăng ký. Người vận hành hệ thống sẽ xem xét đơn đăng ký của bạn và trả lời bất kỳ câu hỏi nào bạn có thể có.",
-
     "reviewerInfo": {
       "title": "Thông tin người xét duyệt",
       "role": "Đại diện nền tảng",
       "about": "Người xét duyệt sẽ xác minh thông tin thương hiệu của bạn, giải thích các tính năng của nền tảng và giúp bạn hoàn tất quy trình đăng ký."
     },
-
     "brandInfo": {
       "title": "Thông tin thương hiệu của bạn",
       "role": "Đại diện thương hiệu",
@@ -2142,11 +2116,9 @@
       "descriptionTitle": "Mô tả thương hiệu",
       "statusTitle": "Trạng thái đăng ký"
     },
-
     "scheduleForm": {
       "title": "Lên lịch cuộc họp đăng ký của bạn",
       "description": "Vui lòng chọn ngày và giờ cho cuộc họp của bạn với người vận hành hệ thống để hoàn tất quá trình đăng ký thương hiệu.",
-
       "step1": {
         "title": "Chọn ngày họp",
         "label": "Ngày có sẵn",
@@ -2154,7 +2126,6 @@
         "placeholder": "Chọn một ngày",
         "description": "Các cuộc họp đăng ký có sẵn vào các ngày trong tuần trong 30 ngày tới."
       },
-
       "step2": {
         "title": "Chọn khung giờ",
         "label": "Thời gian có sẵn cho {{date}}",
@@ -2162,7 +2133,6 @@
         "noSlots": "Không có khung giờ nào cho ngày này.",
         "selectAnother": "Vui lòng chọn ngày khác để xem thời gian có sẵn."
       },
-
       "step3": {
         "title": "Thông tin bổ sung",
         "label": "Ghi chú cho người vận hành hệ thống (Tùy chọn)",
@@ -2171,13 +2141,11 @@
         "description": "Thông tin này sẽ giúp người vận hành hệ thống chuẩn bị cho cuộc họp đăng ký của bạn."
       }
     },
-
     "buttons": {
       "cancel": "Hủy",
       "confirm": "Xác nhận cuộc họp",
       "scheduling": "Đang lên lịch..."
     },
-
     "messages": {
       "success": "Cuộc họp đăng ký của bạn đã được lên lịch thành công!",
       "noSlotSelected": "Lỗi không có khung giờ nào được chọn",

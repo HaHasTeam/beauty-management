@@ -59,6 +59,7 @@ export enum Routes {
   BLOG_DETAILS = 'blog-details',
   MY_BRAND_DASHBOARD = 'my-brand',
   LIVESTREAM = 'liveStream',
+  LIVESTREAM_DETAILS = 'liveStream-details',
   TRANSACTION_MANAGEMENT = 'transaction-management',
   BOOKINGS_AND_REQUESTS = 'bookings-and-requests',
   BOOKING_DETAILS = 'booking-details',
@@ -286,6 +287,20 @@ export const routesConfig: TRoutes = {
     description: 'Manage your profile settings',
     path: '/dashboard/profile-settings',
     getPath: () => '/dashboard/profile-settings'
+  },
+  [Routes.LIVESTREAM]: {
+    name: 'Livestream',
+    title: 'Livestream',
+    description: 'Manage livestream',
+    path: '/dashboard/livestreams',
+    getPath: () => '/dashboard/livestreams'
+  },
+  [Routes.LIVESTREAM_DETAILS]: {
+    name: 'Livestream Details',
+    title: 'Livestream Details',
+    description: 'Livestream',
+    path: '/dashboard/livestreams/:id',
+    getPath: (params) => `/dashboard/livestreams/${params.id}`
   },
   [Routes.PRODUCT_LIST]: {
     name: 'Products',

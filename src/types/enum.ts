@@ -64,7 +64,12 @@ export enum BlogTypeEnum {
   CONDITION = 'CONDITION',
   BLOG = 'BLOG'
 }
-
+export enum LiveStreamEnum {
+  SCHEDULED = 'SCHEDULED',
+  LIVE = 'LIVE',
+  ENDED = 'ENDED',
+  CANCELLED = 'CANCELLED'
+}
 export enum OrderEnum {
   PRE_ORDER = 'PRE_ORDER',
   NORMAL = 'NORMAL',
