@@ -135,9 +135,9 @@ export default function ProductListDialog({
     >
       <DialogContent className='sm:max-w-[80%] max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle>Chọn sản phẩm</DialogTitle>
+          <DialogTitle>Choose products</DialogTitle>
           <DialogDescription>
-            Chọn các sản phẩm mà voucher này có thể áp dụng. Bạn có thể chọn nhiều sản phẩm.
+            Choose products that this voucher can be applied to. You can select multiple products.
           </DialogDescription>
         </DialogHeader>
 
@@ -153,12 +153,12 @@ export default function ProductListDialog({
 
         <DialogFooter>
           <div className='flex items-center justify-between w-full'>
-            <div className='text-sm text-muted-foreground'>Đã chọn {localSelectedProducts.length} sản phẩm</div>
+            <div className='text-sm text-muted-foreground'>Selected {localSelectedProducts.length} products</div>
             <div className='flex gap-2'>
               <Button variant='outline' onClick={handleCancel}>
-                Hủy
+                Cancel
               </Button>
-              <Button onClick={handleDone}>Xác nhận</Button>
+              <Button onClick={handleDone}>Confirm</Button>
             </div>
           </div>
         </DialogFooter>

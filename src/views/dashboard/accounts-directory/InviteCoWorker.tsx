@@ -76,7 +76,10 @@ const InviteCoWorker = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await inviteMultipleCoWorkersFn(values)
+      await inviteMultipleCoWorkersFn({
+        ...values,
+        brand: userData?.brands?.length ? userData?.brands[0].id : ''
+      })
       form.reset({
         emails: [],
         role: ''

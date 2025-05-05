@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 /**
  * used for identifying the split char and use will pasting
  */
-const SPLITTER_REGEX = /[\n#?=&\t,./-]+/
+const SPLITTER_REGEX = /[\n#?=&\t,/-]+/
 
 /**
  * used for formatting the pasted element for the correct value format to be added

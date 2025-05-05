@@ -29,6 +29,7 @@ import { Routes, routesConfig } from '@/configs/routes'
 import { formatDate } from '@/lib/utils'
 import { StatusEnum } from '@/types/enum'
 import { IResponseProduct, ProductStatusEnum } from '@/types/product'
+import { formatNumber } from '@/utils/number'
 
 import { ProductCategoryCell } from './ProductCategoryCell'
 import { ProductClassificationsCell } from './ProductClassificationsCell'
@@ -39,9 +40,10 @@ export interface DataTableRowAction<TData> {
 }
 interface GetColumnsProps {
   setRowAction: React.Dispatch<React.SetStateAction<DataTableRowAction<IResponseProduct> | null>>
+  showCount?: boolean
 }
-export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IResponseProduct>[] {
-  return [
+export function getColumns({ setRowAction, showCount = false }: GetColumnsProps): ColumnDef<IResponseProduct>[] {
+  const columns: ColumnDef<IResponseProduct>[] = [
     {
       id: 'product',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Product' />,
@@ -248,4 +250,21 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IRespon
       enableHiding: false
     }
   ]
+  if (showCount) {
+    columns.splice(2, 0, {
+      id: 'Suggestion Count',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Number of Suggestions' />,
+      cell: ({ cell }) => {
+        const count = cell.row.original.productClassifications.length
+          ? cell.row.original.productClassifications[0].count || 0
+          : 0
+
+        return <div className='text-center font-semibold'>{formatNumber(count)}</div>
+      },
+      enableSorting: false,
+      enableHiding: false,
+      size: 150
+    })
+  }
+  return columns
 }
