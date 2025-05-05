@@ -8,6 +8,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
+import { getBookingByIdApi } from '@/network/apis/booking/details'
 import { replyFeedbackApi } from '@/network/apis/feedback'
 import { getOrderByIdApi } from '@/network/apis/order'
 import { getProductApi } from '@/network/apis/product'
@@ -66,6 +67,9 @@ export const ReplyFeedbackForm = forwardRef<HTMLDivElement, ReplyFeedbackFormPro
         })
         queryClient.invalidateQueries({
           queryKey: [getProductApi.queryKey]
+        })
+        queryClient.invalidateQueries({
+          queryKey: [getBookingByIdApi.queryKey]
         })
         handleReset()
       }

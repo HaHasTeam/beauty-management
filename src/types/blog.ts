@@ -1,4 +1,4 @@
-import { BlogEnum } from './enum'
+import { BlogEnum, BlogTypeEnum } from './enum'
 import { TUser } from './user'
 
 export interface IServerCreateBlog {
@@ -7,6 +7,7 @@ export interface IServerCreateBlog {
   status: BlogEnum
   authorId?: string
   tag: string
+  type: BlogTypeEnum
 }
 export interface IBlogDetails {
   id: string
@@ -17,4 +18,5 @@ export interface IBlogDetails {
   tag: string
   status: BlogEnum
   author: TUser
+  type: BlogTypeEnum
 }

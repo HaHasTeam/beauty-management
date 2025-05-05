@@ -1,3 +1,5 @@
+import { blogSlugEnum, externalLinks, Routes } from '@/configs/routes'
+
 export default function Footer() {
   return (
     <div className='flex w-full flex-col items-center justify-between px-1 pb-8 pt-3 xl:flex-row'>
@@ -11,16 +13,25 @@ export default function Footer() {
           <li>
             <a
               target='blank'
-              href='#'
+              href={externalLinks + '/' + Routes.BLOG}
               className='text-sm font-medium text-zinc-500 hover:text-zinc-950 dark:text-zinc-400'
             >
-              FAQs
+              Blogs
             </a>
           </li>
           <li>
             <a
               target='blank'
-              href='#'
+              href={externalLinks + '/' + Routes.BLOG + '/' + blogSlugEnum.platformPrivacy}
+              className='text-sm font-medium text-zinc-500 hover:text-zinc-950 dark:text-zinc-400'
+            >
+              Allure Policy
+            </a>
+          </li>
+          <li>
+            <a
+              target='blank'
+              href={externalLinks + '/' + Routes.BLOG + '/' + blogSlugEnum.privacyPolicy}
               className='text-sm font-medium text-zinc-500 hover:text-zinc-950 dark:text-zinc-400'
             >
               Privacy Policy
@@ -29,7 +40,7 @@ export default function Footer() {
           <li>
             <a
               target='blank'
-              href='#'
+              href={externalLinks + '/' + Routes.BLOG + '/' + blogSlugEnum.termsAndConditions}
               className='text-sm font-medium text-zinc-500 hover:text-zinc-950 dark:text-zinc-400'
             >
               Terms & Conditions
@@ -38,10 +49,10 @@ export default function Footer() {
           <li>
             <a
               target='blank'
-              href='#'
+              href={externalLinks + '/' + Routes.BLOG + '/' + blogSlugEnum.returnCondition}
               className='text-sm font-medium text-zinc-500 hover:text-zinc-950 dark:text-zinc-400'
             >
-              Refund Policy
+              Return & Refund Policy
             </a>
           </li>
         </ul>

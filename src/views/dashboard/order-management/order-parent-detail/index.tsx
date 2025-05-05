@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { MessageSquareText, Truck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import AlertMessage from '@/components/alert/AlertMessage'
 import BrandOrderInformation from '@/components/branch/BrandOrderInformation'
@@ -129,8 +129,23 @@ const OrderParentDetail = () => {
 
               {useOrderData.data.children &&
                 useOrderData.data.children.length > 0 &&
-                useOrderData.data.children.map((orderItem) => (
-                  <div className='space-y-2'>
+                useOrderData.data.children.map((orderItem, index) => (
+                  <div className='space-y-2 p-3 bg-card border border-primary/30 shadow-md rounded-md'>
+                    {/* Order ID */}
+
+                    <div className='flex items-center justify-between gap-2'>
+                      <div>
+                        <span className='text-sm sm:text-base'>{t('orderDetail.orderChildren')}</span>
+                        <Link
+                          to={routesConfig[Routes.ORDER_LIST].getPath() + '/' + orderItem.id}
+                          className='ml-1 text-sm font-medium text-muted-foreground text-blue-500 no-underline'
+                        >
+                          #{orderItem.id.substring(0, 8).toUpperCase()}
+                        </Link>
+                      </div>
+                      <div className='text-muted-foreground text-sm'>#{index + 1}</div>
+                    </div>
+
                     {/* brand */}
                     <BrandOrderInformation
                       brandId={
@@ -177,11 +192,12 @@ const OrderParentDetail = () => {
                         totalProductCost={orderItem?.subTotal}
                         totalBrandDiscount={orderItem?.shopVoucherDiscount}
                         totalPlatformDiscount={orderItem?.platformVoucherDiscount}
-                        brandVoucherId={orderItem?.shopVoucherId}
-                        platformVoucherId={orderItem?.platformVoucherId}
-                        livestreamId={orderItem?.livestreamId}
+                        brandVoucher={orderItem?.voucher || null}
+                        platformVoucher={useOrderData?.data?.voucher || null}
+                        livestream={orderItem?.children?.[index]?.livestream || null}
                         totalPayment={orderItem?.totalPrice}
                         paymentMethod={orderItem?.paymentMethod}
+                        orderParent={null}
                       />
                     </div>
 

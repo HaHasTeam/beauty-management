@@ -59,6 +59,7 @@ export enum Routes {
   BLOG_DETAILS = 'blog-details',
   MY_BRAND_DASHBOARD = 'my-brand',
   LIVESTREAM = 'liveStream',
+  LIVESTREAM_DETAILS = 'liveStream-details',
   TRANSACTION_MANAGEMENT = 'transaction-management',
   BOOKINGS_AND_REQUESTS = 'bookings-and-requests',
   BOOKING_DETAILS = 'booking-details',
@@ -66,7 +67,6 @@ export enum Routes {
   FORBIDDEN = 'forbidden',
   FORBIDDEN_PUBLIC = 'forbidden-public',
   ADD_LIVESTREAM = 'add-liveStream',
-  LIVESTREAM_DETAILS = 'liveStream-details',
   GROUP_BUYING = 'group-buying',
   GROUP_BUYING_DETAILS = 'group-buying-details',
   ADD_GROUP_BUYING = 'add-group-buying'
@@ -537,4 +537,26 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/group-buying/:id',
     getPath: (params) => `/dashboard/group-buying/${params.id}`
   }
+}
+
+export const externalLinks = import.meta.env.VITE_API_CUSTOMER_URL || ''
+
+export const blogSlugEnum = {
+  privacyPolicy: 'chinh-sach-quyen-rieng-tu',
+  termsAndConditions: 'dieu-khoan-va-dieu-kien-su-dung-dich-vu',
+  returnCondition: 'chinh-sach-tra-hang-hoan-tien',
+  kolAndLivestreamPrivacy: 'chinh-sach-livestream-kol',
+  platformPrivacy: 'chinh-sach-cua-nen-tang',
+  consultantPolicy: 'chinh-sach-danh-cho-chuyen-gia-tu-van',
+  brandPolicy: 'chinh-sach-danh-cho-thuong-hieu',
+  voucherPolicy: 'chinh-sach-ma-giam-gia',
+  groupBuyingPolicy: 'chinh-sach-mua-chung',
+  preOrderPolicy: 'chinh-sach-dat-truoc',
+  flashSalePolicy: 'chinh-sach-flash-sale',
+  cashFlowWithdrawalPolicy: 'chinh-sach-dong-tien-rut-tien',
+  whyBuyAuthenticBeautyProducts: 'tai-sao-nen-mua-my-pham-chinh-hang-tren-allure',
+  beginnerSkincareGuide: 'skincare-routine-co-ban-cho-nguoi-moi-bat-dau-don-gian-nhung-hieu-qua',
+  commonMistakesBuyingCosmeticsOnline: 'nhung-loi-thuong-gap-khi-mua-my-pham-online',
+  dealHuntingTips: 'cach-san-deal-hieu-qua-tren-allure',
+  beautyReason: 'nhung-ly-do-tai-sao-allure-la-lua-chon-toi-uu-cho-nhung-nguoi-yeu-thich-lam-dep'
 }
