@@ -112,7 +112,7 @@ export default function PasswordSignIn() {
               )}
             />
             <div className='flex justify-end -mt-2'>
-              <Link to='/auth/signin/forgot_password' className='font-medium text-primary text-sm hover:underline'>
+              <Link to='/auth/forgot_password' className='font-medium text-primary text-sm hover:underline'>
                 {t('signIn.forgotPassword')}
               </Link>
             </div>
