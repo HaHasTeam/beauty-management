@@ -6,6 +6,7 @@ import { Ellipsis, EyeIcon, Pen, SettingsIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import {
@@ -18,6 +19,7 @@ import {
 import { Routes, routesConfig } from '@/configs/routes'
 import { formatDate } from '@/lib/utils'
 import { IBlogDetails } from '@/types/blog'
+import { BlogTypeEnum } from '@/types/enum'
 
 import { BlogStatusCell } from './BlogStatusCell'
 
@@ -93,6 +95,19 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
       cell: ({ row }) => {
         const tag = row.original.tag ?? ''
         return <div className='line-clamp-1 overflow-ellipsis'>{tag}</div>
+      },
+      size: 200
+    },
+    {
+      id: 'type',
+      header: ({ column }) => <DataTableColumnHeader column={column} title={i18next.t('createBlog.type')} />,
+      cell: ({ row }) => {
+        const type = row.original.type ?? ''
+        return (
+          <Badge variant={type === BlogTypeEnum.BLOG ? 'default' : 'secondary'} className='shrink-0'>
+            {type === BlogTypeEnum.BLOG ? t('createBlog.blog') : t('createBlog.condition')}
+          </Badge>
+        )
       },
       size: 200
     },

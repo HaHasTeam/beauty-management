@@ -35,7 +35,9 @@ export default function BlogState({ state, text, size = 'medium' }: BlogStatePro
   }
 
   return (
-    <span className={`${sizeClasses[size]} cursor-default rounded-full font-medium ${tagColorClass}`}>
+    <span
+      className={`${sizeClasses[size]} w-fit line-clamp-1 overflow-ellipsis cursor-default rounded-full font-medium ${tagColorClass}`}
+    >
       {text ? text : t(`blogDetails.status.${state.toLowerCase()}`)}
     </span>
   )

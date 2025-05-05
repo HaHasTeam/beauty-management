@@ -1,8 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 
 import { Routes, routesConfig } from '@/configs/routes'
-import { PaymentMethod } from '@/types/enum'
+import { useStore } from '@/stores/store'
+import { PaymentMethod, RoleEnum } from '@/types/enum'
+import { ILivestream } from '@/types/livestream'
+import { IOrder, IOrderItem } from '@/types/order'
+import { TVoucher } from '@/types/voucher'
 
 interface OrderSummaryProps {
   totalProductCost: number
@@ -10,21 +15,28 @@ interface OrderSummaryProps {
   totalPlatformDiscount: number
   totalPayment: number
   paymentMethod: PaymentMethod
-  brandVoucherId: string
-  platformVoucherId: string
-  livestreamId: string
+  brandVoucher: TVoucher | null
+  platformVoucher: TVoucher | null
+  livestream: ILivestream | null
+  orderParent: IOrder | null | IOrderItem
 }
 export default function OrderSummary({
   totalProductCost,
   totalBrandDiscount,
   totalPlatformDiscount,
-  brandVoucherId,
-  platformVoucherId,
+  brandVoucher,
+  platformVoucher,
   totalPayment,
   paymentMethod,
-  livestreamId
+  livestream,
+  orderParent
 }: OrderSummaryProps) {
   const { t } = useTranslation()
+  const { user } = useStore(
+    useShallow((state) => ({
+      user: state.user
+    }))
+  )
 
   return (
     <div className='w-full bg-white rounded-md shadow-sm p-4'>
@@ -38,13 +50,15 @@ export default function OrderSummary({
           <div className='flex justify-between items-center'>
             <div>
               <span className='text-sm text-muted-foreground'>{t('cart.discountBrand')}</span>
-              {brandVoucherId && (
+              {brandVoucher && brandVoucher?.id ? (
                 <Link
-                  to={routesConfig[Routes.VOUCHER] + '/' + brandVoucherId}
-                  className='text-sm text-muted-foreground text-blue-500 no-underline'
+                  to={routesConfig[Routes.VOUCHER].getPath() + '/' + brandVoucher.id}
+                  className='text-sm font-medium text-muted-foreground text-blue-500 no-underline ml-2'
                 >
-                  {brandVoucherId.substring(0, 8).toUpperCase()}
+                  #{brandVoucher.id.substring(0, 8).toUpperCase()}
                 </Link>
+              ) : (
+                <></>
               )}
             </div>
             <span className='text-green-700 font-medium'>
@@ -56,13 +70,19 @@ export default function OrderSummary({
           <div className='flex justify-between items-center'>
             <div>
               <span className='text-sm text-muted-foreground'>{t('cart.discountPlatform')}</span>
-              {platformVoucherId && (
+
+              {user &&
+              (user.role === RoleEnum.ADMIN || user.role === RoleEnum.OPERATOR) &&
+              platformVoucher &&
+              platformVoucher?.id ? (
                 <Link
-                  to={routesConfig[Routes.VOUCHER] + '/' + platformVoucherId}
-                  className='text-sm text-muted-foreground text-blue-500 no-underline'
+                  to={routesConfig[Routes.VOUCHER].getPath() + '/' + platformVoucher.id}
+                  className='text-sm font-medium text-muted-foreground text-blue-500 no-underline ml-2'
                 >
-                  {platformVoucherId.substring(0, 8).toUpperCase()}
+                  #{platformVoucher.id.substring(0, 8).toUpperCase()}
                 </Link>
+              ) : (
+                <></>
               )}
             </div>
             <span className='text-green-700 font-medium'>
@@ -86,16 +106,34 @@ export default function OrderSummary({
             <span className='text-sm sm:text-base'>{t('wallet.paymentMethod')}</span>
             <span className='font-semibold text-primary text-sm sm:text-base'>{t(`wallet.${paymentMethod}`)}</span>
           </div>
-          {livestreamId && (
+          {livestream && livestream?.id ? (
             <div className='flex justify-between items-center border-t pt-3'>
               <span className='text-sm sm:text-base'>{t('productTag.liveStream')}</span>
               <Link
-                to={routesConfig[Routes.LIVESTREAM] + '/' + livestreamId}
-                className='text-sm text-muted-foreground text-blue-500 no-underline'
+                to={routesConfig[Routes.LIVESTREAM].getPath() + '/' + livestream.id}
+                className='text-sm font-medium text-muted-foreground text-blue-500 no-underline'
               >
-                {livestreamId.substring(0, 8).toUpperCase()}
+                #{livestream.id.substring(0, 8).toUpperCase()}
               </Link>
             </div>
+          ) : (
+            <></>
+          )}
+          {user &&
+          (user.role === RoleEnum.ADMIN || user.role === RoleEnum.OPERATOR) &&
+          orderParent &&
+          orderParent?.id ? (
+            <div className='flex justify-between items-center border-t pt-3'>
+              <span className='text-sm sm:text-base'>{t('orderDetail.orderParent')}</span>
+              <Link
+                to={routesConfig[Routes.ORDER_PARENT_LIST].getPath() + '/' + orderParent.id}
+                className='text-sm font-medium text-muted-foreground text-blue-500 no-underline'
+              >
+                #{orderParent.id.substring(0, 8).toUpperCase()}
+              </Link>
+            </div>
+          ) : (
+            <></>
           )}
         </div>
       </div>
