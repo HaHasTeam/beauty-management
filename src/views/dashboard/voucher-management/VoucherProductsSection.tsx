@@ -62,7 +62,7 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
-            <Box /> Sản phẩm áp dụng
+            <Box /> Apply to specific products?
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -73,7 +73,7 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4 bg-muted/50'>
                   <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Áp dụng cho sản phẩm cụ thể?</FormLabel>
+                    <FormLabel className='text-base'>Apply to specific products?</FormLabel>
                   </div>
                   <FormControl>
                     <Switch
@@ -95,7 +95,7 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
             {applyType === VoucherApplyTypeEnum.ALL && (
               <p className='text-sm text-muted-foreground'>
                 <Store className='h-4 w-4 mr-1.5 inline-block align-text-bottom' />
-                Voucher sẽ được áp dụng cho tất cả sản phẩm trong cửa hàng của bạn.
+                Voucher will be applied to all products in your store.
               </p>
             )}
 
@@ -104,11 +104,11 @@ function VoucherProductsCard({ form }: { form: UseFormReturn<z.infer<typeof vouc
                 <div className='flex items-center justify-between bg-muted/30 rounded-lg p-2'>
                   <div className='flex items-center space-x-2 p-2 bg-muted/90 rounded-lg'>
                     <Badge variant='destructive'>{selectedProductIds.length}</Badge>
-                    <span className='text-sm text-muted-foreground'>sản phẩm được chọn</span>
+                    <span className='text-sm text-muted-foreground'>Selected products</span>
                   </div>
                   <Button type='button' size='sm' className='flex items-center' onClick={() => setOpen(true)}>
                     <ListPlus className='h-4 w-4 mr-1' />
-                    Thêm sản phẩm
+                    Add products
                   </Button>
                 </div>
                 <div className=''>
