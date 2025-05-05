@@ -60,6 +60,11 @@ export enum DiscountTypeEnum {
   AMOUNT = 'AMOUNT'
 }
 
+export enum BlogTypeEnum {
+  CONDITION = 'CONDITION',
+  BLOG = 'BLOG'
+}
+
 export enum OrderEnum {
   PRE_ORDER = 'PRE_ORDER',
   NORMAL = 'NORMAL',
