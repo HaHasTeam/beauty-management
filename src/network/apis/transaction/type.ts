@@ -14,6 +14,7 @@ export type TFilterTransactionsParams = BaseParams<{
   endDate?: string
   minAmount?: number
   maxAmount?: number
+  accountId?: string
 }>
 
 export enum PAY_TYPE {
@@ -34,6 +35,7 @@ export type TGetDailyOrderStatisticsParams = {
   groupProductIds?: string[]
   preOrderProductIds?: string[]
   flashSaleIds?: string[]
+  voucherId?: string
 }
 
 export type OrderStaticItem = {
@@ -99,6 +101,7 @@ export type TGetDailyBookingStatisticsParams = {
   startDate?: string
   endDate?: string
   consultantId?: string
+  consultantServiceId?: string
 }
 
 export type BookingStatDetail = {
@@ -110,16 +113,43 @@ export type BookingStatDetail = {
 
 export type BookingStaticItem = {
   date: string
-  refunded: BookingStatDetail
+  cancelled: BookingStatDetail
   booked: BookingStatDetail
 }
 
 export type BookingStaticTotal = {
-  refunded: BookingStatDetail
+  cancelled: BookingStatDetail
   booked: BookingStatDetail
 }
 
 export type BookingStatic = {
   total: BookingStaticTotal
   items: BookingStaticItem[]
+}
+
+export type TGetDailySystemStatisticsParams = {
+  startDate?: string
+  endDate?: string
+}
+
+export type DailySystemStatisticsItem = {
+  date: string
+  totalRevenue: number
+  totalCommissionFee: number
+  actualRevenue: number
+  totalPlatformVoucherDiscount: number
+  totalPlatformRevenue: number
+}
+
+export type DailySystemStatisticsTotal = {
+  totalRevenue: number
+  totalCommissionFee: number
+  actualRevenue: number
+  totalPlatformVoucherDiscount: number
+  totalPlatformRevenue: number
+}
+
+export type DailySystemStatistics = {
+  total: DailySystemStatisticsTotal
+  items: DailySystemStatisticsItem[]
 }

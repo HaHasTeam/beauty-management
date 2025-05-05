@@ -13,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/useToast'
 import { getBrandByIdApi, updateBrandByIdApi } from '@/network/apis/brand/index'
@@ -48,7 +47,7 @@ export function UploadDocumentDialog({
     formState: { errors }
   } = useForm<UploadDocumentFormValues>({
     defaultValues: {
-      documentName: '',
+      documentName: 'document1',
       files: []
     }
   })
@@ -119,21 +118,10 @@ export function UploadDocumentDialog({
         <DialogHeader>
           <DialogTitle>Upload Documents</DialogTitle>
           <DialogDescription>
-            Upload brand documents for verification. Supported formats include PDF, DOC, DOCX, JPG, and PNG.
+            Upload brand documents for verification. Supported formats include PDF, DOCX, JPG, and PNG.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
-          <div className='space-y-2'>
-            <Label htmlFor='documentName'>Document Name</Label>
-            <Controller
-              name='documentName'
-              control={control}
-              rules={{ required: 'Document name is required' }}
-              render={({ field }) => <Input id='documentName' placeholder='Enter document name' {...field} />}
-            />
-            {errors.documentName && <p className='text-sm text-red-500'>{errors.documentName.message}</p>}
-          </div>
-
           <div className='space-y-2'>
             <Label>Upload Files</Label>
             <Controller
@@ -148,7 +136,7 @@ export function UploadDocumentDialog({
                     accept: {
                       'image/*': ['.jpg', '.jpeg', '.png'],
                       'application/pdf': ['.pdf'],
-                      'application/msword': ['.doc', '.docx']
+                      'application/msword': ['.docx']
                     },
                     maxFiles: 5,
                     maxSize: 5 * 1024 * 1024 // 5MB

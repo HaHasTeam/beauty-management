@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-/* eslint-disable */
-import NavLink from '@/components/link/NavLink'
-import { IRoute } from '@/types/types'
-
-import { PropsWithChildren, useCallback } from 'react'
+import { type PropsWithChildren, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
+
+import NavLink from '@/components/link/NavLink'
+import type { IRoute } from '@/types/types'
 
 interface SidebarLinksProps extends PropsWithChildren {
   routes: IRoute[]
@@ -14,7 +14,6 @@ interface SidebarLinksProps extends PropsWithChildren {
 
 export function SidebarLinks(props: SidebarLinksProps) {
   const pathname = useLocation().pathname
-
   const { routes } = props
 
   // verifies if routeName is the one active (in browser input)
@@ -24,12 +23,6 @@ export function SidebarLinks(props: SidebarLinksProps) {
     },
     [pathname]
   )
-  // const activeLayout = useCallback(
-  //   (routeName: string) => {
-  //     return pathname?.includes('/ai')
-  //   },
-  //   [pathname]
-  // )
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes: IRoute[]) => {
@@ -88,7 +81,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
       }
     })
   }
-  //  BRAND
+
   return <>{createLinks(routes)}</>
 }
 

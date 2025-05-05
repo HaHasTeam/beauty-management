@@ -32,6 +32,8 @@ const BookingStatusTrackingDetail = ({ statusTrackingData, booking }: BookingSta
       [BookingStatusEnum.WAIT_FOR_CONFIRMATION]: t('booking.status.waitForConfirmation'),
       [BookingStatusEnum.BOOKING_CONFIRMED]: t('booking.status.bookingConfirmed'),
       [BookingStatusEnum.SERVICE_BOOKING_FORM_SUBMITED]: t('booking.status.formSubmitted'),
+      [BookingStatusEnum.COMPLETED_CONSULTING_CALL]: t('booking.status.completedConsultingCall'),
+
       [BookingStatusEnum.SENDED_RESULT_SHEET]: t('booking.status.sendedResultSheet'),
       [BookingStatusEnum.COMPLETED]: t('booking.status.completed'),
       [BookingStatusEnum.REFUNDED]: t('booking.status.refunded'),

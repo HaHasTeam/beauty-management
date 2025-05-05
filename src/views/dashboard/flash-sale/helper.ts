@@ -106,17 +106,8 @@ export const formSchema = z.object({
 
       for (let i = rawClassification.length - 1; i >= 0; i--) {
         const raw = rawClassification[i]
-
-        // Skip undefined values
-        if (!raw?.rawClassification?.originalClassification) continue
-
-        const originalClassification = raw.rawClassification.originalClassification
         const lastIndex = rawClassification.findIndex((item, index) => {
-          return (
-            index !== i &&
-            item?.rawClassification?.originalClassification &&
-            item.rawClassification.originalClassification === originalClassification
-          )
+          return index !== i && item.rawClassification.title === raw.rawClassification.title
         })
 
         if (lastIndex !== -1) {

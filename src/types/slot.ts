@@ -8,6 +8,7 @@ export type TSlot = TMetaData & {
   startTime: string
   endTime: string
   isActive?: boolean
+  isAvailable?: boolean // Is this slot available for booking?
   accounts?: TUser[] // Accounts using this slot as working slot
 }
 

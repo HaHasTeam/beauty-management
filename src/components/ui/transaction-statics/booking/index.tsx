@@ -12,7 +12,12 @@ import { BookingStaticCard } from './BookingStaticCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card } from '@/components/ui/card'
 
-export default function IndexPage() {
+interface Props {
+  mode?: 'full' | 'mini'
+  consultantServiceId?: string
+}
+
+export default function IndexPage({ mode = 'full', consultantServiceId }: Props) {
   const queryStates = useState<DataTableQueryState<TGetDailyBookingStatisticsParams>>(
     {} as DataTableQueryState<TGetDailyBookingStatisticsParams>
   )
@@ -23,7 +28,8 @@ export default function IndexPage() {
     () => ({
       startDate: queryStates[0].fieldFilters?.startDate as string | undefined,
       endDate: queryStates[0].fieldFilters?.endDate as string | undefined,
-      consultantId: isAdmin ? (queryStates[0].fieldFilters?.consultantId as string | undefined) : user?.id
+      consultantId: isAdmin ? (queryStates[0].fieldFilters?.consultantId as string | undefined) : user?.id,
+      consultantServiceId
     }),
     [queryStates[0].fieldFilters, isAdmin, user?.id]
   )
@@ -47,7 +53,7 @@ export default function IndexPage() {
                   <Skeleton className='w-full h-[300px] rounded-lg' />
                 </div>
               ) : (
-                <BookingStaticCard data={bookingStaticData as BookingStatic} queryStates={queryStates} />
+                <BookingStaticCard data={bookingStaticData as BookingStatic} queryStates={queryStates} mode={mode} />
               )}
             </Shell>
           </div>

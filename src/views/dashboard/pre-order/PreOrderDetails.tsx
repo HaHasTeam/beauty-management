@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import _ from 'lodash'
 import { Calendar, SaveIcon, Siren } from 'lucide-react'
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as z from 'zod'
 
 import Button from '@/components/button'
-import { TriggerUploadRef } from '@/components/file-input/UploadFiles'
 import { FlexDatePicker } from '@/components/flexible-date-picker/FlexDatePicker'
 import FormLabel from '@/components/form-label'
 import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
@@ -18,24 +18,34 @@ import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
+import { uploadFilesApi } from '@/network/apis/file'
 import { addPreOderApi, getPreOrderByIdApi, updatePreOrderApi } from '@/network/apis/pre-order'
 import { TAddPreOderRequestParams, TUpdatePreOrderRequestParams } from '@/network/apis/pre-order/type'
+import { ClassificationStatusEnum } from '@/types/classification'
+import { StatusEnum } from '@/types/enum'
+import { FileStatusEnum, TServerFile } from '@/types/file'
+import { IImage } from '@/types/image'
 import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
 import { ProductClassificationTypeEnum } from '@/types/product'
 
-import ClassificationConfig from './ClassificationConfig'
-import { convertFormToPreProduct, convertPreProductToForm, formSchema } from './helper'
+import ClassificationConfigFlex from './ClassificationConfigFlex'
+import { convertPreProductToForm, formSchema, SchemaType } from './helper'
 
 const PreOrderDetails = () => {
   const id = useId()
+  const [resetSignal, setResetSignal] = useState(false)
+  const [defineFormSignal, setDefineFormSignal] = useState(false)
   const params = useParams()
-  const triggerRef = useRef<TriggerUploadRef>(null)
   const queryClient = useQueryClient()
   const itemId = params.id !== 'add' ? params.id : undefined
   const { data: preProduct, isFetching: isGettingPreProduct } = useQuery({
     queryKey: [getPreOrderByIdApi.queryKey, itemId as string],
     queryFn: getPreOrderByIdApi.fn,
     enabled: !!itemId
+  })
+  const { mutateAsync: uploadFilesFn } = useMutation({
+    mutationKey: [uploadFilesApi.mutationKey],
+    mutationFn: uploadFilesApi.fn
   })
 
   const navigate = useNavigate()
@@ -46,17 +56,16 @@ const PreOrderDetails = () => {
       product: '',
       startTime: '',
       endTime: '',
-      productClassifications: [
-        {
-          append: {
-            images: [],
-            type: ProductClassificationTypeEnum.CUSTOM
-          }
-        }
-      ]
+      productClassifications: []
     }
   })
 
+  const product = form.watch('product')
+  useEffect(() => {
+    if (!itemId && product) {
+      setResetSignal((prev) => !prev)
+    }
+  }, [product, itemId])
   const { mutateAsync: addPreProductFn } = useMutation({
     mutationKey: [addPreOderApi.mutationKey],
     mutationFn: addPreOderApi.fn,
@@ -79,35 +88,141 @@ const PreOrderDetails = () => {
   })
 
   const handleServerError = useHandleServerError()
+  const convertFileToUrl = async (files: File[]) => {
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
 
-  async function onSubmit() {
-    try {
-      const triggerFns = triggerRef.current?.triggers
-      if (triggerFns) {
-        await Promise.all(triggerFns.map((trigger) => trigger()))
-      }
-      let values = { ...form.getValues() }
-      const isStartTimeDirty = form.formState.dirtyFields.startTime
-      const isEndTimeDirty = form.formState.dirtyFields.endTime
-      if (!isEndTimeDirty) {
-        values = { ...values, endTime: '' }
-      }
-      if (!isStartTimeDirty) {
-        values = { ...values, startTime: '' }
-      }
+    const uploadedFilesResponse = await uploadFilesFn(formData)
 
-      if (itemId) {
-        await updatePreProductFn(convertFormToPreProduct(values) as TUpdatePreOrderRequestParams)
-        queryClient.invalidateQueries({
-          queryKey: [getPreOrderByIdApi.queryKey, itemId as string]
+    return uploadedFilesResponse.data
+  }
+  const processImages = async (
+    originalImages: Array<IImage | TServerFile>,
+    currentImages: (File | IImage | TServerFile)[]
+  ) => {
+    const processedImages: Array<IImage> = []
+
+    // Track original image IDs to check for deletions
+    const originalImageIds = new Set(originalImages.filter((img) => img.id).map((img) => img.id))
+
+    // Process current images
+    for (const img of currentImages) {
+      if (img instanceof File) {
+        // New file upload
+        const uploadedUrls = await convertFileToUrl([img])
+        processedImages.push({ fileUrl: uploadedUrls[0] })
+      } else if (typeof img === 'object' && img.fileUrl) {
+        // Existing image
+        processedImages.push({
+          id: img.id,
+          fileUrl: img.fileUrl
         })
-      } else {
-        await addPreProductFn(
-          convertFormToPreProduct({
-            ...values
-          }) as TAddPreOderRequestParams
-        )
-        navigate(routesConfig[Routes.PRE_ORDER].getPath())
+
+        // Remove from tracked original images
+        if (img.id) {
+          originalImageIds.delete(img.id)
+        }
+      }
+    }
+
+    // Mark deleted images as inactive
+    originalImageIds.forEach((id) => {
+      const deletedImage = originalImages.find((img) => img.id === id)
+      if (deletedImage) {
+        processedImages.push({
+          id,
+          fileUrl: deletedImage.fileUrl,
+          status: StatusEnum.INACTIVE
+        })
+      }
+    })
+
+    return processedImages
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      {
+        const originalClassifications = preProduct?.data?.productClassifications ?? []
+        let processedClassifications = []
+        {
+          // Track IDs of classifications in form values
+          const formClassificationIds = new Set(
+            values.productClassifications
+              ?.filter((item) => item.title !== undefined)
+              ?.map((classification) => classification.id)
+              .filter((id): id is string => id !== undefined)
+          )
+
+          // Process classifications
+          const activeClassifications = await Promise.all(
+            (values.productClassifications ?? []).map(async (classification, index) => {
+              const originalClassImages = preProduct?.data?.productClassifications?.[index]?.images ?? []
+              const processedClassImages = await processImages(
+                originalClassImages as Array<IImage | TServerFile>,
+                classification?.images ?? []
+              )
+
+              // Include the original ID if it exists
+              const originalClassification = originalClassifications.find((oc) => oc.id === classification.id)
+
+              return {
+                ...classification,
+                id: originalClassification?.id,
+                color: classification?.color && classification?.color?.length > 0 ? classification.color : null,
+                size: classification?.size && classification?.size?.length > 0 ? classification.size : null,
+                other: classification?.other && classification?.other?.length > 0 ? classification.other : null,
+                images: processedClassImages,
+                status: StatusEnum.ACTIVE
+              }
+            })
+          )
+
+          // Add inactive status to classifications that are not in form values
+          const inactiveClassifications = originalClassifications
+            .filter(
+              (original) =>
+                original.id &&
+                !formClassificationIds.has(original.id) &&
+                original.status !== ClassificationStatusEnum.INACTIVE
+            )
+            .map((classification) => ({
+              ...classification,
+              status: StatusEnum.INACTIVE,
+              isAvailable: false
+            }))
+
+          processedClassifications = [...activeClassifications, ...inactiveClassifications]
+        }
+
+        let transformedData = {
+          ...values,
+          productClassifications: processedClassifications
+            .map((classification) => ({
+              ...classification
+            }))
+            .filter((item) => item.title !== undefined)
+        }
+        const isStartTimeDirty = form.formState.dirtyFields.startTime
+        const isEndTimeDirty = form.formState.dirtyFields.endTime
+        if (!isEndTimeDirty) {
+          transformedData = { ...transformedData, endTime: '' }
+        }
+        if (!isStartTimeDirty) {
+          transformedData = { ...transformedData, startTime: '' }
+        }
+        const cleanedData = _.omitBy(transformedData, (value) => value === undefined || Boolean(value) === false)
+        if (itemId) {
+          await updatePreProductFn(cleanedData as TUpdatePreOrderRequestParams)
+          queryClient.invalidateQueries({
+            queryKey: [getPreOrderByIdApi.queryKey, itemId as string]
+          })
+        } else {
+          await addPreProductFn(cleanedData as unknown as TAddPreOderRequestParams)
+          navigate(routesConfig[Routes.PRE_ORDER].getPath())
+        }
       }
     } catch (error) {
       handleServerError({
@@ -116,6 +231,75 @@ const PreOrderDetails = () => {
       })
     }
   }
+
+  const convertUrlsToFiles = async (urls: string[]) => {
+    try {
+      const files = await Promise.all(
+        urls.map(async (url) => {
+          const response = await fetch(url)
+          const blob = await response.blob()
+          return new File([blob], url.split('/').pop() || 'image', { type: blob.type })
+        })
+      )
+      return files
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+      return []
+    }
+  }
+
+  useEffect(() => {
+    if (preProduct?.data) {
+      const productClassifications = preProduct?.data?.productClassifications ?? []
+
+      // Check for type === CUSTOM
+      const hasCustomType = productClassifications.some(
+        (classification) =>
+          classification?.type === ProductClassificationTypeEnum.CUSTOM &&
+          classification.status === ClassificationStatusEnum.ACTIVE
+      )
+
+      // Determine productClassifications and fallback price/quantity
+      const updatedProductClassifications = hasCustomType
+        ? productClassifications
+            .filter((classification) => classification.status === ClassificationStatusEnum.ACTIVE)
+            .map((classification) => ({
+              ...classification,
+              id: classification?.id,
+              color: classification?.color || '',
+              size: classification?.size || '',
+              other: classification?.other || '',
+              images: classification.images?.filter((img) => img.status === FileStatusEnum.ACTIVE || !img.status) || []
+            }))
+        : []
+
+      const processFormValue = async () => {
+        const classificationImages = updatedProductClassifications?.map(
+          (classification) =>
+            classification?.images
+              ?.map((image) => image?.fileUrl)
+              .filter((fileUrl): fileUrl is string => fileUrl !== undefined) ?? []
+        )
+        const [convertedClassificationImages] = await Promise.all([
+          Promise.all(classificationImages.map(convertUrlsToFiles))
+        ])
+
+        const formValue: SchemaType = {
+          id: preProduct?.data?.id,
+          product: preProduct?.data?.product?.id,
+          startTime: preProduct?.data?.startTime,
+          endTime: preProduct?.data?.endTime,
+          productClassifications: updatedProductClassifications?.map((classification, index) => ({
+            ...classification,
+            images: convertedClassificationImages[index] || []
+          })) as unknown as SchemaType['productClassifications']
+        }
+        form.reset(formValue)
+        setDefineFormSignal((prev) => !prev)
+      }
+      processFormValue()
+    }
+  }, [form, resetSignal, preProduct?.data])
 
   useEffect(() => {
     if (preProduct?.data) {
@@ -260,6 +444,32 @@ const PreOrderDetails = () => {
             </AlertAction> */}
           </Alert>
         )
+      case PreOrderStatusEnum.CANCELLED:
+        return (
+          <Alert variant={'destructive'}>
+            <div className='flex items-center gap-2'>
+              <Siren className='size-4' />
+              <div>
+                <AlertTitle className='flex items-center gap-2'>
+                  <span className='p-0.5 px-2 rounded-lg border border-red-300 bg-red-400  text-white'>Cancelled</span>
+                  <span className='font-bold uppercase text-xs'>status</span>
+                </AlertTitle>
+                <AlertDescription>
+                  This event is currently cancelled. Make a new one if you want launch a new event.
+                </AlertDescription>
+              </div>
+            </div>
+            {/* <AlertAction
+              onClick={() => {
+                handleChangeStatus(PreOrderStatusEnum.INACTIVE)
+              }}
+              loading={isUpdatingPreProduct}
+              variant={'default'}
+            >
+              {'Close event'}
+            </AlertAction> */}
+          </Alert>
+        )
       default:
         return null
     }
@@ -267,13 +477,15 @@ const PreOrderDetails = () => {
 
   const getFooter = () => {
     switch (preProductData?.status) {
+      case PreOrderStatusEnum.CANCELLED:
+        return null
       default:
         return (
           <div className='flex items-center justify-end'>
             {
               <Button type='submit' form={`form-${id}`} loading={form.formState.isSubmitting}>
                 <SaveIcon />
-                Save Pre-order Product
+                Save preOrder product
               </Button>
             }
           </div>
@@ -306,7 +518,12 @@ const PreOrderDetails = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel required>Product</FormLabel>
-                      <SelectProduct {...field} multiple={false} />
+                      <SelectProduct
+                        {...field}
+                        multiple={false}
+                        readOnly={!!itemId}
+                        brandId={preProductData?.product.brand?.id || ''}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -376,7 +593,14 @@ const PreOrderDetails = () => {
               </div>
             </CardContent>
           </Card>
-          {<ClassificationConfig form={form} productId={form.watch('product')} triggerImageUploadRef={triggerRef} />}
+          {
+            <ClassificationConfigFlex
+              form={form}
+              resetSignal={resetSignal}
+              defineFormSignal={defineFormSignal}
+              mode={itemId ? 'update' : 'create'}
+            />
+          }
         </form>
         {getFooter()}
       </Form>

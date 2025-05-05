@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -6,7 +6,7 @@ import { DataTable } from '@/components/ui/data-table/data-table'
 import { DataTableToolbar } from '@/components/ui/data-table/data-table-toolbar'
 import { useDataTable } from '@/hooks/useDataTable'
 import { toSentenceCase } from '@/lib/utils'
-import { assignOperateToBrandApi } from '@/network/apis/brand'
+import { assignOperateToBrandApi, filterBrandsApi } from '@/network/apis/brand'
 import { useStore } from '@/stores/store'
 import { BrandStatusEnum, TBrand } from '@/types/brand'
 import { RoleEnum } from '@/types/enum'
@@ -34,6 +34,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
       }
     })
   )
+  const queryClient = useQueryClient()
   const isAdmin = user?.role === RoleEnum.ADMIN
   const [rowAction, setRowAction] = React.useState<DataTableRowAction<TBrand> | null>(null)
   const columns = React.useMemo(
@@ -134,6 +135,7 @@ export function BrandsTable({ data, pageCount, queryStates }: BrandTableProps) {
       brandId: brandId,
       operatorId: operatorId
     })
+    await queryClient.invalidateQueries({ queryKey: [filterBrandsApi.queryKey] })
     // Reset states after successful assignment
     setRowAction(null)
   }

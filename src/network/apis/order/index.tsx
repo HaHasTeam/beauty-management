@@ -279,6 +279,10 @@ export const filterOrdersApi = toQueryFetcher<IOrderFilter, TServerResponseWithP
     if (rest.productIds?.length) {
       body.productIds = rest.productIds
     }
+    if (rest.type && rest.eventId) {
+      body.type = rest.type
+      body.eventId = rest.eventId
+    }
 
     return privateRequest('/orders/filter', {
       method: 'POST',
@@ -327,3 +331,45 @@ export const filterParentOrdersApi = toQueryFetcher<IOrderFilter, TServerRespons
     })
   }
 )
+
+export const filterOrdersAndVoucherApi = toQueryFetcher<
+  IOrderFilter,
+  TServerResponseWithPaging<IOrder[], { isParent: boolean }>
+>('filterOrdersAndVoucherApi', async (filterData) => {
+  const { page, limit, sortBy, order, ...rest } = filterData || {}
+
+  const body: IOrderFilter = {}
+  if (rest.search) {
+    body.search = rest.search
+  }
+  if (rest.statuses?.length) {
+    body.statuses = rest.statuses
+  }
+  if (rest.types?.length) {
+    body.types = rest.types
+  }
+  if (rest.paymentMethods?.length) {
+    body.paymentMethods = rest.paymentMethods
+  }
+  if (rest.productIds?.length) {
+    body.productIds = rest.productIds
+  }
+  if (rest.type && rest.eventId) {
+    body.type = rest.type
+    body.eventId = rest.eventId
+  }
+  if (rest.voucherId) {
+    body.voucherId = rest.voucherId
+  }
+
+  return privateRequest('/orders/filter', {
+    method: 'POST',
+    data: body,
+    params: {
+      page,
+      limit,
+      sortBy,
+      order
+    }
+  })
+})

@@ -15,6 +15,7 @@ import AsyncSelect from '../ui/react-select/AsyncSelect'
 type Props = HTMLAttributes<HTMLSelectElement> &
   InputProps & {
     multiple?: boolean
+    brandId?: string
   }
 
 const getProductItemDisplay = (product: TProduct) => {
@@ -39,7 +40,8 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
     onChange,
     value,
     multiple = false,
-    readOnly = false
+    readOnly = false,
+    brandId: brandIdProps = ''
   } = props
   const { userData } = useStore(
     useShallow((state) => ({
@@ -47,7 +49,10 @@ const SelectProduct = forwardRef<HTMLSelectElement, Props>((props) => {
     }))
   )
 
-  const brandId = useMemo(() => (userData?.brands?.length ? userData.brands[0].id : ''), [userData])
+  const brandId = useMemo(
+    () => (userData?.brands?.length ? userData.brands[0].id : brandIdProps),
+    [userData, brandIdProps]
+  )
 
   const { data: productList, isFetching: isGettingProductList } = useQuery({
     queryKey: [

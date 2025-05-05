@@ -11,7 +11,12 @@ import { DataTableQueryState } from '@/types/table'
 
 import BookingTable from './BookingTable'
 
-export default function IndexPage() {
+type Props = {
+  consultantAccountId?: string
+  consultantServiceId?: string
+  mode?: 'full' | 'mini'
+}
+export default function IndexPage({ consultantAccountId, consultantServiceId, mode = 'full' }: Props) {
   const queryStates = useState<DataTableQueryState<TBooking, TFilterBookingsParams>>(
     {} as DataTableQueryState<TBooking, { search: string }>
   )
@@ -30,8 +35,8 @@ export default function IndexPage() {
         order: queryStates[0].sort?.[0]?.desc ? 'DESC' : 'ASC',
         statuses: statusesParam,
         search: queryStates[0].fieldFilters?.search as string,
-        consultantAccountId: queryStates[0].fieldFilters?.consultantAccountId,
-        consultantServiceId: queryStates[0].fieldFilters?.consultantServiceId,
+        consultantAccountId: consultantAccountId || queryStates[0].fieldFilters?.consultantAccountId,
+        consultantServiceId: consultantServiceId || queryStates[0].fieldFilters?.consultantServiceId,
         endDate: queryStates[0].fieldFilters?.endDate,
         startDate: queryStates[0].fieldFilters?.startDate,
         feedbackRating: queryStates[0].fieldFilters?.feedbackRating,
@@ -65,6 +70,7 @@ export default function IndexPage() {
                     React.Dispatch<React.SetStateAction<DataTableQueryState<TBooking>>>
                   ]
                 }
+                mode={mode}
               />
             )}
           </Shell>

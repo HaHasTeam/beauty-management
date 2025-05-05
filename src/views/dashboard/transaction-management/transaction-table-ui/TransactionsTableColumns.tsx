@@ -37,9 +37,9 @@ export function getColumns(): ColumnDef<TTransaction>[] {
         const avatarUrl = user?.avatar || ''
 
         return (
-          <div className='flex gap-1 items-center'>
+          <div className='flex gap-2 items-center'>
             <Avatar className='rounded-full'>
-              <AvatarImage src={avatarUrl} className='size-5' />
+              <AvatarImage src={avatarUrl} className='size-full' />
               <AvatarFallback>{initial}</AvatarFallback>
             </Avatar>
             <span className='max-w-[31.25rem] truncate'>{name}</span>

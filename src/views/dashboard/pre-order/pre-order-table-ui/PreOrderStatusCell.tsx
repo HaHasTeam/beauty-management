@@ -43,6 +43,14 @@ export function PreOrderStatusCell({ preOrder }: PreOrderStatusCellProps) {
         </Badge>
       )
 
+    case PreOrderStatusEnum.CANCELLED:
+      return (
+        <Badge variant='outline' className='border-red-200 bg-red-50 text-red-700 gap-1'>
+          <CircleX className='h-3.5 w-3.5' />
+          <span className='whitespace-nowrap'>Cancelled</span>
+        </Badge>
+      )
+
     default:
       return (
         <Badge variant='outline' className='border-gray-200 bg-gray-50 text-gray-700 gap-1'>

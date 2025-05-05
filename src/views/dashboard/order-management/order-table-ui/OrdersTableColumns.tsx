@@ -121,7 +121,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IOrder>
         return (
           <div className='flex gap-2 items-start'>
             <Avatar className='rounded-full'>
-              <AvatarImage src={avatarUrl} className='size-5' />
+              <AvatarImage src={avatarUrl} className='size-full' />
               <AvatarFallback className='text-xs'>{name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className='flex flex-col'>

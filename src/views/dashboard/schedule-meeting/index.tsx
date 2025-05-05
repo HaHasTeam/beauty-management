@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
 import { useShallow } from 'zustand/react/shallow'
@@ -57,6 +58,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 function ScheduleMeeting() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const handleServerError = useHandleServerError()
@@ -81,10 +83,10 @@ function ScheduleMeeting() {
     mutationFn: createBookingApi.fn,
     onSuccess: () => {
       successToast({
-        message: 'Your registration meeting has been scheduled successfully!'
+        message: t('scheduleMeeting.messages.success')
       })
       // Navigate to dashboard/Schedule on success
-      navigate('/dashboard/Schedule')
+      navigate('/dashboard/schedule-booking')
     }
   })
   const reviewer = user?.brands?.[0]?.reviewer || ''
@@ -104,7 +106,7 @@ function ScheduleMeeting() {
     try {
       const selectedSlot = availableSlots.find((slot) => slot.id === data.slotId)
       if (!selectedSlot) {
-        errorToast({ message: 'Error there is no slot selected', isShowDescription: false })
+        errorToast({ message: t('scheduleMeeting.messages.noSlotSelected'), isShowDescription: false })
         return
       }
 
@@ -133,9 +135,9 @@ function ScheduleMeeting() {
         form
       })
       errorToast({
-        message: 'Failed to schedule meeting. Please try again.',
+        message: t('scheduleMeeting.messages.failedSchedule'),
         isShowDescription: true,
-        description: 'There was an error processing your request.'
+        description: t('scheduleMeeting.messages.failedDescription')
       })
     }
   }
@@ -146,19 +148,14 @@ function ScheduleMeeting() {
   return (
     <div className='max-w-5xl mx-auto'>
       <div className='mb-6'>
-        <h1 className='text-3xl font-bold tracking-tight'>Schedule Registration Meeting</h1>
-        <p className='text-muted-foreground mt-1'>
-          Schedule a meeting with a system operator to complete your brand registration process.
-        </p>
+        <h1 className='text-3xl font-bold tracking-tight'>{t('scheduleMeeting.pageTitle')}</h1>
+        <p className='text-muted-foreground mt-1'>{t('scheduleMeeting.pageDescription')}</p>
       </div>
 
       <Alert className='mb-6 border-primary/20 bg-primary/5'>
         <ShieldCheck className='h-5 w-5 text-primary' />
-        <AlertTitle>Registration Process</AlertTitle>
-        <AlertDescription>
-          This meeting is a required step to verify your brand information and complete the registration process. The
-          system operator will review your application and answer any questions you may have.
-        </AlertDescription>
+        <AlertTitle>{t('scheduleMeeting.alertTitle')}</AlertTitle>
+        <AlertDescription>{t('scheduleMeeting.alertDescription')}</AlertDescription>
       </Alert>
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
@@ -169,7 +166,7 @@ function ScheduleMeeting() {
             <CardHeader className='bg-muted/30 pb-3'>
               <CardTitle className='text-lg font-semibold flex items-center'>
                 <ShieldCheck className='h-5 w-5 mr-2 text-primary' />
-                Reviewer Information
+                {t('scheduleMeeting.reviewerInfo.title')}
               </CardTitle>
             </CardHeader>
             <CardContent className='pt-4'>
@@ -192,7 +189,7 @@ function ScheduleMeeting() {
                         : 'Reviewer'}
                     </h3>
                     <Badge variant='outline' className='mt-1'>
-                      {reviewer && 'role' in reviewer ? reviewer.role : 'Platform Representative'}
+                      {reviewer && 'role' in reviewer ? reviewer.role : t('scheduleMeeting.reviewerInfo.role')}
                     </Badge>
                   </div>
                 </div>
@@ -223,10 +220,7 @@ function ScheduleMeeting() {
 
                 <div>
                   <h4 className='text-sm font-medium mb-1'>About</h4>
-                  <p className='text-sm text-muted-foreground'>
-                    The reviewer will verify your brand information, explain the platform features, and help you
-                    complete the registration process.
-                  </p>
+                  <p className='text-sm text-muted-foreground'>{t('scheduleMeeting.reviewerInfo.about')}</p>
                 </div>
               </div>
             </CardContent>
@@ -237,7 +231,7 @@ function ScheduleMeeting() {
             <CardHeader className='bg-muted/30 pb-3'>
               <CardTitle className='text-lg font-semibold flex items-center'>
                 <Building className='h-5 w-5 mr-2 text-primary' />
-                Your Brand Information
+                {t('scheduleMeeting.brandInfo.title')}
               </CardTitle>
             </CardHeader>
             <CardContent className='pt-4'>
@@ -252,7 +246,7 @@ function ScheduleMeeting() {
                   <div>
                     <h3 className='font-medium'>{user?.brands?.[0]?.name || 'FaceReco'}</h3>
                     <Badge variant='outline' className='mt-1'>
-                      Brand Representative
+                      {t('scheduleMeeting.brandInfo.role')}
                     </Badge>
                   </div>
                 </div>
@@ -262,11 +256,11 @@ function ScheduleMeeting() {
                 <div className='space-y-2'>
                   <div className='flex items-start'>
                     <User className='h-4 w-4 mr-2 mt-0.5 text-muted-foreground' />
-                    <span className='text-sm'>{user?.username || 'Not available'}</span>
+                    <span className='text-sm'>{user?.username || t('scheduleMeeting.brandInfo.username')}</span>
                   </div>
                   <div className='flex items-start'>
                     <Mail className='h-4 w-4 mr-2 mt-0.5 text-muted-foreground' />
-                    <span className='text-sm'>{user?.email || 'No email available'}</span>
+                    <span className='text-sm'>{user?.email || t('scheduleMeeting.brandInfo.email')}</span>
                   </div>
                   {user?.phone && (
                     <div className='flex items-start'>
@@ -280,7 +274,7 @@ function ScheduleMeeting() {
                   <>
                     <Separator />
                     <div>
-                      <h4 className='text-sm font-medium mb-1'>Brand Description</h4>
+                      <h4 className='text-sm font-medium mb-1'>{t('scheduleMeeting.brandInfo.descriptionTitle')}</h4>
                       <p className='text-sm text-muted-foreground'>{user?.brands?.[0]?.description}</p>
                     </div>
                   </>
@@ -290,7 +284,7 @@ function ScheduleMeeting() {
                   <>
                     <Separator />
                     <div>
-                      <h4 className='text-sm font-medium mb-1'>Registration Status</h4>
+                      <h4 className='text-sm font-medium mb-1'>{t('scheduleMeeting.brandInfo.statusTitle')}</h4>
                       <Badge variant='outline' className='bg-amber-50 text-amber-700 border-amber-200'>
                         {user?.brands?.[0]?.status}
                       </Badge>
@@ -308,12 +302,9 @@ function ScheduleMeeting() {
             <CardHeader className='bg-muted/30 pb-3 border-b'>
               <CardTitle className='text-xl font-semibold flex items-center'>
                 <CalendarIcon2 className='h-5 w-5 mr-2 text-primary' />
-                Schedule Your Registration Meeting
+                {t('scheduleMeeting.scheduleForm.title')}
               </CardTitle>
-              <CardDescription>
-                Please select a date and time for your meeting with the system operator to complete your brand
-                registration.
-              </CardDescription>
+              <CardDescription>{t('scheduleMeeting.scheduleForm.description')}</CardDescription>
             </CardHeader>
             <CardContent className='pt-6'>
               <Form {...form}>
@@ -325,7 +316,7 @@ function ScheduleMeeting() {
                         <span className='flex items-center justify-center rounded-full bg-primary/10 text-primary w-6 h-6 text-sm mr-2'>
                           1
                         </span>
-                        Select Meeting Date
+                        {t('scheduleMeeting.scheduleForm.step1.title')}
                       </h3>
 
                       <FormField
@@ -334,16 +325,16 @@ function ScheduleMeeting() {
                         render={({ field }) => (
                           <FormItem className='flex flex-col'>
                             <div className='flex justify-between items-center'>
-                              <FormLabel className='text-sm font-medium mb-1'>Available Dates</FormLabel>
+                              <FormLabel className='text-sm font-medium mb-1'>
+                                {t('scheduleMeeting.scheduleForm.step1.label')}
+                              </FormLabel>
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <HelpCircle className='h-4 w-4 text-muted-foreground' />
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>
-                                      Choose a date for your registration meeting. Only available dates are selectable.
-                                    </p>
+                                    <p>{t('scheduleMeeting.scheduleForm.step1.tooltip')}</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -361,7 +352,7 @@ function ScheduleMeeting() {
                                     {field.value ? (
                                       format(field.value, 'EEEE, MMMM d, yyyy')
                                     ) : (
-                                      <span>Select a date</span>
+                                      <span>{t('scheduleMeeting.scheduleForm.step1.placeholder')}</span>
                                     )}
                                     <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                                   </Button>
@@ -401,7 +392,7 @@ function ScheduleMeeting() {
                                       } catch (error) {
                                         handleServerError({ error })
                                         errorToast({
-                                          message: 'Failed to load available slots',
+                                          message: t('scheduleMeeting.messages.failedLoadSlots'),
                                           isShowDescription: false
                                         })
                                       } finally {
@@ -418,9 +409,7 @@ function ScheduleMeeting() {
                                 />
                               </PopoverContent>
                             </Popover>
-                            <FormDescription>
-                              Registration meetings are available on weekdays for the next 30 days.
-                            </FormDescription>
+                            <FormDescription>{t('scheduleMeeting.scheduleForm.step1.description')}</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -434,7 +423,7 @@ function ScheduleMeeting() {
                           <span className='flex items-center justify-center rounded-full bg-primary/10 text-primary w-6 h-6 text-sm mr-2'>
                             2
                           </span>
-                          Select Time Slot
+                          {t('scheduleMeeting.scheduleForm.step2.title')}
                         </h3>
 
                         <FormField
@@ -444,7 +433,9 @@ function ScheduleMeeting() {
                             <FormItem>
                               <div className='flex justify-between items-center'>
                                 <FormLabel className='text-sm font-medium mb-1'>
-                                  Available Times for {format(selectedDate, 'MMMM d, yyyy')}
+                                  {t('scheduleMeeting.scheduleForm.step2.label', {
+                                    date: format(selectedDate, 'MMMM d, yyyy')
+                                  })}
                                 </FormLabel>
                                 <TooltipProvider>
                                   <Tooltip>
@@ -452,7 +443,7 @@ function ScheduleMeeting() {
                                       <HelpCircle className='h-4 w-4 text-muted-foreground' />
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p>Choose a time slot that works best for your schedule.</p>
+                                      <p>{t('scheduleMeeting.scheduleForm.step2.tooltip')}</p>
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -473,6 +464,7 @@ function ScheduleMeeting() {
                                         'transition-colors justify-start h-auto py-3',
                                         field.value === slot.id ? 'bg-primary text-primary-foreground' : 'bg-background'
                                       )}
+                                      disabled={!slot.isAvailable}
                                       onClick={() => field.onChange(slot.id)}
                                     >
                                       <Clock className='mr-2 h-4 w-4 flex-shrink-0' />
@@ -485,9 +477,11 @@ function ScheduleMeeting() {
                               ) : (
                                 <div className='text-center py-8 px-4 border rounded-md bg-muted/20'>
                                   <ClipboardList className='h-8 w-8 mx-auto text-muted-foreground mb-2' />
-                                  <p className='text-muted-foreground font-medium'>No available slots for this date.</p>
+                                  <p className='text-muted-foreground font-medium'>
+                                    {t('scheduleMeeting.scheduleForm.step2.noSlots')}
+                                  </p>
                                   <p className='text-sm text-muted-foreground mt-1'>
-                                    Please select another date to see available times.
+                                    {t('scheduleMeeting.scheduleForm.step2.selectAnother')}
                                   </p>
                                 </div>
                               )}
@@ -504,7 +498,7 @@ function ScheduleMeeting() {
                         <span className='flex items-center justify-center rounded-full bg-primary/10 text-primary w-6 h-6 text-sm mr-2'>
                           3
                         </span>
-                        Additional Information
+                        {t('scheduleMeeting.scheduleForm.step3.title')}
                       </h3>
 
                       <FormField
@@ -514,7 +508,7 @@ function ScheduleMeeting() {
                           <FormItem>
                             <div className='flex justify-between items-center'>
                               <FormLabel className='text-sm font-medium mb-1'>
-                                Notes for the System Operator (Optional)
+                                {t('scheduleMeeting.scheduleForm.step3.label')}
                               </FormLabel>
                               <TooltipProvider>
                                 <Tooltip>
@@ -522,24 +516,19 @@ function ScheduleMeeting() {
                                     <HelpCircle className='h-4 w-4 text-muted-foreground' />
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>
-                                      Add any questions or information you'd like to discuss during the registration
-                                      meeting.
-                                    </p>
+                                    <p>{t('scheduleMeeting.scheduleForm.step3.tooltip')}</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             </div>
                             <FormControl>
                               <Textarea
-                                placeholder="Add any questions about the registration process, specific requirements, or topics you'd like to discuss during the meeting"
+                                placeholder={t('scheduleMeeting.scheduleForm.step3.placeholder')}
                                 className='min-h-[120px] resize-none'
                                 {...field}
                               />
                             </FormControl>
-                            <FormDescription>
-                              This information will help the system operator prepare for your registration meeting.
-                            </FormDescription>
+                            <FormDescription>{t('scheduleMeeting.scheduleForm.step3.description')}</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -551,14 +540,14 @@ function ScheduleMeeting() {
             </CardContent>
             <CardFooter className='bg-muted/20 border-t flex justify-between pt-4'>
               <Button variant='outline' onClick={() => navigate(-1)}>
-                Cancel
+                {t('scheduleMeeting.buttons.cancel')}
               </Button>
               <Button
                 onClick={form.handleSubmit(onSubmit)}
                 disabled={isBookingPending || !form.formState.isValid}
                 className='min-w-[150px]'
               >
-                {isBookingPending ? 'Scheduling...' : 'Confirm Meeting'}
+                {isBookingPending ? t('scheduleMeeting.buttons.scheduling') : t('scheduleMeeting.buttons.confirm')}
                 <ChevronRight className='ml-2 h-4 w-4' />
               </Button>
             </CardFooter>

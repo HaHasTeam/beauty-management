@@ -1,6 +1,154 @@
 import i18next from 'i18next'
 
 const messageMap: Record<string, string> = {
-  'Invalid email': 'backendError.invalidEmail'
+  'Invalid email': 'backendError.invalidEmail',
+
+  'First name is required': 'backendError.firstNameRequired',
+  'First name cannot exceed 100 characters': 'backendError.firstNameMaxLength',
+  'Last name is required': 'backendError.lastNameRequired',
+  'Last name cannot exceed 100 characters': 'backendError.lastNameMaxLength',
+  'Username is required and must be at least 3 characters long': 'backendError.usernameRequired',
+  'Username cannot exceed 20 characters': 'backendError.usernameMaxLength',
+  'User name should starting with a letter, 3-20 characters and can contain letters, numbers and underscores':
+    'backendError.invalidUsername',
+  'Invalid email address': 'backendError.invalidEmail',
+  'Password must be at least 8 characters long': 'backendError.passwordMinLength',
+  'avatar must more than 1 character': 'backendError.avatarMinLength',
+  'Phone must be a string with 10 to 15 digits': 'backendError.invalidPhone',
+  'Date of birth must be a valid date (YYYY-MM-DD)': 'backendError.invalidDob',
+  'Email is required': 'backendError.emailRequired',
+  'Password is required': 'backendError.passwordRequired',
+
+  'String must contain at most 100 character(s)': 'backendError.fullNameMaxLength',
+  'Phone must contain at most 100 character(s)': 'backendError.phoneMaxLength',
+  'District must contain at most 100 character(s)': 'backendError.districtMaxLength',
+  'Ward must contain at most 100 character(s)': 'backendError.wardMaxLength',
+  'Province must contain at most 255 character(s)': 'backendError.provinceMaxLength',
+  'Invalid enum value. Expected AddressEnum': 'backendError.invalidType',
+
+  'Start time must be a valid date string': 'backendError.invalidStartTime',
+  'End time must be a valid date string': 'backendError.invalidEndTime',
+  'Number must be greater than or equal to 0': 'backendError.totalPriceNonNegative',
+
+  'Account not found': 'backendError.accountNotFound',
+  'Updated by account not found': 'backendError.updatedByAccountNotFound',
+  'Email already exists!': 'backendError.emailAlreadyExists',
+  'Username already exists!': 'backendError.usernameAlreadyExists',
+  'Invalid role provided': 'backendError.invalidRoleProvided',
+  'Certificate is only available for role CONSULTANT and KOL': 'backendError.certificateNotAllowed',
+  'Consultant not found': 'backendError.consultantNotFound',
+  'Brand not found': 'backendError.brandNotFound',
+  'Account has been banned due to exceeding the approved reports limit': 'backendError.exceededApprovedReportsLimit',
+
+  'Address not found': 'backendError.addressNotFound',
+  'Should be at least one default address': 'backendError.atLeastOneDefaultAddress',
+
+  'Email is not verified': 'backendError.emailNotVerified',
+  'Invalid password': 'backendError.invalidPassword',
+  'User must login by another way not using password': 'backendError.loginMethodNotAllowed',
+
+  'Blog Not Existed!': 'backendError.blogNotExisted',
+  'Blog tag already Existed': 'backendError.blogTagAlreadyExisted',
+
+  'Booking not found': 'backendError.bookingNotFound',
+  'Only reviewer can note result': 'backendError.onlyReviewerCanNoteResult',
+  'Slot has been booked': 'backendError.slotBooked',
+  'BrandId required': 'backendError.brandIdRequired',
+  'ConsultantServiceId required': 'backendError.consultantServiceIdRequired',
+  'ConsultantService not found': 'backendError.consultantServiceNotFound',
+  'Slot is required': 'backendError.slotRequired',
+  'You cannot complete the booking because the report has not been completed yet.':
+    'backendError.cannotCompleteBooking',
+  'Can not cancelled booking in status: ': 'backendError.cannotCancelBooking',
+  'Dont have wallet': 'backendError.walletNotFound',
+  'Please select active product': 'backendError.activeProductRequired',
+  'Product not found': 'backendError.productNotFound',
+  'Only apply for consultant or operator': 'backendError.onlyConsultantOrOperator',
+  'Overlap time slot': 'backendError.overlapTimeSlot',
+  'You have already booked a slot. Please wait for process': 'backendError.alreadyBookedSlot',
+  'Booking cancelled successfully': 'backendError.bookingCancelledSuccessfully',
+  'Booking service status updated successfully': 'backendError.bookingStatusUpdatedSuccessfully',
+
+  'Classification not found': 'backendError.classificationNotFound',
+  'Can not add invalid Product': 'backendError.invalidProduct',
+  'Quantity is not enough': 'backendError.quantityNotEnough',
+  'Group Buying invalid': 'backendError.groupBuyingInvalid',
+  'Livestream invalid': 'backendError.livestreamInvalid',
+  'Cart Item not found': 'backendError.cartItemNotFound',
+  'Invalid or empty itemIds array': 'backendError.invalidOrEmptyItemIds',
+  'No items found for the provided IDs': 'backendError.noItemsFoundForIds',
+  'Account ID is required': 'backendError.accountIdRequired',
+  'No items found in the cart for the given account': 'backendError.noItemsInCart',
+
+  'Category already Existed': 'backendError.categoryAlreadyExisted',
+  'Parent category not found': 'backendError.parentCategoryNotFound',
+  'A category cannot have more than 4 levels of subcategories': 'backendError.maxCategoryLevelExceeded',
+  'Category not found.': 'backendError.categoryNotFound',
+  'New parent category not found.': 'backendError.newParentCategoryNotFound',
+
+  'Consultant service not found.': 'backendError.consultantServiceNotFound',
+  'Booking Form not found.': 'backendError.bookingFormNotFound',
+  'System service not found or inactive.': 'backendError.systemServiceNotFoundOrInactive',
+  'Cannot update status.': 'backendError.invalidStatusUpdate',
+  'No active services using this form found.': 'backendError.activeServicesUsingFormNotFound',
+  'Question not found.': 'backendError.questionNotFound',
+  'Image not found.': 'backendError.imageNotFound',
+
+  'Consultation Criteria not found': 'backendError.consultationCriteriaNotFound',
+  'Consultation Criteria Section not found': 'backendError.consultationCriteriaSectionNotFound',
+  'Failed to create Consultation Criteria.': 'backendError.criteriaCreationFailed',
+  'Failed to update Consultation Criteria.': 'backendError.criteriaUpdateFailed',
+  'Failed to update Consultation Criteria Section.': 'backendError.criteriaSectionUpdateFailed',
+
+  'Section not found': 'backendError.sectionNotFound',
+  'Livestream not found': 'backendError.livestreamNotFound',
+  'Invalid livestream status': 'backendError.invalidLivestreamStatus',
+
+  'Product invalid: Product not found': 'backendError.invalidProduct',
+  'Product invalid: Product INACTIVE': 'backendError.invalidProduct',
+  'Product invalid: Product BANNED': 'backendError.invalidProduct',
+  'Product invalid: Product UN_PUBLISHED': 'backendError.invalidProduct',
+  'Product classification must have at least one quantity.': 'backendError.classificationQuantityRequired',
+  'sku is required': 'backendError.skuRequired',
+  'sku of classification already exists': 'backendError.skuAlreadyExists',
+  'Invalid datetime string': 'backendError.invalidDatetime',
+  'Start time must be earlier than end time': 'backendError.invalidTimeRange',
+  'The time range overlaps with an existing pre-order event': 'backendError.overlappingPreOrderEvent',
+  'The time range overlaps with an existing discount event': 'backendError.overlappingDiscountEvent',
+  'Pre-order Product not found': 'backendError.preOrderProductNotFound',
+
+  'Category not found': 'backendError.categoryNotFound',
+  'sku already exists': 'backendError.skuAlreadyExists',
+  'title of classification already exists': 'backendError.classificationTitleAlreadyExists',
+  'Invalid sortBy': 'backendError.invalidSortBy',
+  'Invalid product status': 'backendError.invalidProductStatus',
+
+  'PreOrderProduct not found': 'backendError.preOrderProductNotFound',
+  'ProductDiscount not found': 'backendError.productDiscountNotFound',
+  'SKU already exists in the brand': 'backendError.skuAlreadyExists',
+  'Classification not found!': 'backendError.classificationNotFound',
+  'Classification invalid!': 'backendError.classificationInvalid',
+  'Classification quantity must be greater than 0!': 'backendError.classificationQuantityInvalid',
+  'Invalid classification quantity: Quantity should be smaller than the current stock':
+    'backendError.invalidClassificationQuantity',
+  'The Product is BANNED!': 'backendError.productStatusInvalid',
+  'The Product is INACTIVE!': 'backendError.productStatusInvalid',
+  'The Product is UN_PUBLISHED!': 'backendError.productStatusInvalid',
+
+  'Original classification not found': 'backendError.originalClassificationNotFound',
+  'Invalid filter options': 'backendError.invalidFilterOptions',
+
+  'Question not found': 'backendError.questionNotFound',
+  'Failed to delete question': 'backendError.deleteQuestionFailed',
+  'Failed to update order index for questions': 'backendError.updateOrderIndexFailed',
+  'Failed to delete image associated with the question': 'backendError.imageDeleteFailed',
+
+  'System service not found.': 'backendError.systemServiceNotFound',
+  'Service already Existed': 'backendError.serviceAlreadyExisted',
+  'No active services using this criteria found.': 'backendError.activeServicesUsingCriteriaNotFound',
+  'Failed to update image associated with the system service': 'backendError.imageUpdateFailed',
+  'Failed to update consultation criteria section.': 'backendError.criteriaSectionUpdateFailed',
+
+  'Invalid status value': 'backendError.invalidStatusValue'
 }
 export const translateError = (message: string) => i18next.t(messageMap[message] ?? message)

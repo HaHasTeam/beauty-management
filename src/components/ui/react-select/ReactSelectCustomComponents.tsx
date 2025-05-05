@@ -37,6 +37,8 @@ export const MultiValueRemove = (props: MultiValueRemoveProps) => {
 
 export const Option = (props: OptionProps) => {
   const option = props.data as { label: string; display?: React.ReactNode }
+
+  console.log()
   return (
     <components.Option {...props} className=''>
       <div className='flex items-center justify-between w-full mr-2 truncate'>
@@ -74,6 +76,7 @@ export const MenuList = (props: MenuListProps) => {
   if (!childrenArray || childrenArray.length - 1 === 0) {
     return <components.MenuList {...props} />
   }
+
   return (
     <List
       height={height}

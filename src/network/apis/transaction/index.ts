@@ -7,13 +7,15 @@ import { privateRequest } from '@/utils/request'
 
 import {
   BookingStatic,
+  DailySystemStatistics,
   OrderStatic,
   PAY_TYPE,
   TFilterTransactionsParams,
   TGetBrandRevenueStatisticsParams,
   TGetBrandRevenueStatisticsResponse,
   TGetDailyBookingStatisticsParams,
-  TGetDailyOrderStatisticsParams
+  TGetDailyOrderStatisticsParams,
+  TGetDailySystemStatisticsParams
 } from './type'
 
 /**
@@ -42,7 +44,7 @@ export const payTransactionApi = toMutationFetcher<
 export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TServerResponseWithPaging<TTransaction[]>>(
   'filterTransactions',
   async (params) => {
-    const { page, limit, order, sortBy, ...filterParams } = params || {}
+    const { page, limit, order, sortBy, accountId, ...filterParams } = params || {}
     const dataPre: TFilterTransactionsParams = {}
     if (filterParams.startDate) {
       dataPre.startDate = filterParams.startDate
@@ -53,6 +55,10 @@ export const filterTransactions = toQueryFetcher<TFilterTransactionsParams, TSer
     if (filterParams.types?.length) {
       dataPre.types = filterParams.types
     }
+    if (accountId) {
+      dataPre.accountId = accountId
+    }
+
     return privateRequest('/transactions/filter', {
       method: 'POST',
       data: dataPre,
@@ -82,40 +88,46 @@ export const getTransactionStatistics = toQueryFetcher<
 /**
  * Get daily order statistics for a brand
  */
-export const getDailyOrderStatistics = toQueryFetcher<TGetDailyOrderStatisticsParams, TServerResponse<OrderStatic>>(
-  'getDailyOrderStatistics',
-  async (params) => {
-    if (!params) throw new Error('Params is required')
+export const getDailyOrderStatistics = toQueryFetcher<
+  TGetDailyOrderStatisticsParams,
+  TServerResponse<OrderStatic, undefined, { isParent: boolean }>
+>('getDailyOrderStatistics', async (params) => {
+  if (!params) throw new Error('Params is required')
 
-    // Remove falsy values and empty arrays
-    const cleanedData = _.omitBy(params, (value) => {
-      if (value === undefined || value === null) return true
-      if (typeof value === 'string' && value === '') return true
-      if (typeof value === 'boolean' && value === false) return true
-      if (Array.isArray(value) && value.length === 0) return true
-      return false
-    })
+  // Remove falsy values and empty arrays
+  const cleanedData = _.omitBy(params, (value) => {
+    if (value === undefined || value === null) return true
+    if (typeof value === 'string' && value === '') return true
+    if (typeof value === 'boolean' && value === false) return true
+    if (Array.isArray(value) && value.length === 0) return true
+    return false
+  })
 
-    return privateRequest(`/transactions/get-daily-order-statistics`, {
-      method: 'POST',
-      data: cleanedData
-    })
-  }
-)
+  return privateRequest(`/transactions/get-daily-order-statistics`, {
+    method: 'POST',
+    data: cleanedData
+  })
+})
 
 /**
  * Get financial summary
  */
 export const getFinancialSummary = toQueryFetcher<
-  void,
+  { accountId: string },
   TServerResponse<{
-    totalRevenue: number
-    totalExpense: number
-    netIncome: number
+    totalAmountFromDeposit: number
+    totalAmountFromWithDrawal: number
+    balance: number
+    availableBalance: number
   }>
->('getFinancialSummary', async () => {
+>('getFinancialSummary', async (params) => {
+  if (!params) throw new Error('Params is required')
+  const { accountId } = params
   return privateRequest('/transactions/get-financial-summary', {
-    method: 'GET'
+    method: 'POST',
+    data: {
+      accountId
+    }
   })
 })
 
@@ -180,3 +192,26 @@ export const getDailyBookingStatistics = toQueryFetcher<
     })
   }
 )
+
+/**
+ * Get daily system statistics
+ */
+export const getDailySystemStatistics = toQueryFetcher<
+  TGetDailySystemStatisticsParams,
+  TServerResponse<DailySystemStatistics>
+>('getDailySystemStatistics', async (params) => {
+  if (!params) throw new Error('Params is required')
+
+  // Remove falsy values and empty arrays
+  const cleanedData = _.omitBy(params, (value) => {
+    if (value === undefined || value === null) return true
+    if (typeof value === 'string' && value === '') return true
+    if (Array.isArray(value) && value.length === 0) return true
+    return false
+  })
+
+  return privateRequest(`/transactions/get-daily-system-statistics`, {
+    method: 'POST',
+    data: cleanedData
+  })
+})

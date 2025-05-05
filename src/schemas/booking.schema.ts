@@ -98,6 +98,7 @@ export const getConsultationResultSchema = () => {
     suggestedProductClassifications: z.array(
       z.object({
         productClassificationId: z.string(),
+        productId: z.string(),
         name: z.string().min(1, i18next.t('validation.required'))
       })
     )

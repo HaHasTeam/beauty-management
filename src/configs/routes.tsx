@@ -62,7 +62,9 @@ export enum Routes {
   TRANSACTION_MANAGEMENT = 'transaction-management',
   BOOKINGS_AND_REQUESTS = 'bookings-and-requests',
   BOOKING_DETAILS = 'booking-details',
-  ORIGINAL_ORDER_DETAILS = 'original-order-details'
+  ORIGINAL_ORDER_DETAILS = 'original-order-details',
+  FORBIDDEN = 'forbidden',
+  FORBIDDEN_PUBLIC = 'forbidden-public'
 }
 
 export const routesConfig: TRoutes = {
@@ -167,8 +169,8 @@ export const routesConfig: TRoutes = {
     getPath: (id) => `/dashboard/voucher/update/${id}`
   },
   [Routes.PRE_ORDER]: {
-    name: 'Pre-order Product',
-    title: 'Pre-order Product',
+    name: 'PreOrder Products',
+    title: 'PreOrder Products',
     description: 'Pre Order',
     path: '/dashboard/pre-order',
     getPath: () => '/dashboard/pre-order'
@@ -264,13 +266,6 @@ export const routesConfig: TRoutes = {
     path: '/dashboard/accounts',
     getPath: () => '/dashboard/accounts'
   },
-  // [Routes.BOOKING_LIST]: {
-  //   name: 'Booking List ',
-  //   title: 'Booking List',
-  //   description: 'Booking List',
-  //   path: '/dashboard/bookings',
-  //   getPath: () => '/dashboard/bookings'
-  // },
   [Routes.ACCOUNT_DETAILS]: {
     name: 'Account Details',
     title: 'Account Details',
@@ -487,5 +482,19 @@ export const routesConfig: TRoutes = {
     description: 'Booking List',
     path: '/dashboard/bookings',
     getPath: () => '/dashboard/bookings'
+  },
+  [Routes.FORBIDDEN]: {
+    name: 'Access Denied',
+    title: 'Access Denied',
+    description: 'You do not have permission to access this page',
+    path: '/dashboard/forbidden',
+    getPath: () => '/dashboard/forbidden'
+  },
+  [Routes.FORBIDDEN_PUBLIC]: {
+    name: 'Access Denied',
+    title: 'Access Denied',
+    description: 'You do not have permission to access this resource',
+    path: '/forbidden',
+    getPath: () => '/forbidden'
   }
 }

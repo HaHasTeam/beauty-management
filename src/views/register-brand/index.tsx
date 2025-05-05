@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { BadgePlus, Images, Info } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ import Confirmation from '@/components/branch/Confirmation'
 // import DocumentDetails from '@/components/branch/DocumentDetails'
 import UplImagesUploader from '@/components/branch/UplImagesUploader'
 import ImageWithFallback from '@/components/image/ImageWithFallback'
+import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import Stepper from '@/components/steppers'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -31,6 +32,8 @@ function RegisterBrand() {
   const { successToast } = useToast()
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+
   // const accountId = accessToken ? jwtDecode<TEmailDecoded>(accessToken).accountId : undefined
   const brandCreateSchema = getCreateBrandSchema()
   const form = useForm<z.infer<typeof brandCreateSchema>>({
@@ -52,11 +55,11 @@ function RegisterBrand() {
     }
   })
   const handleServerError = useHandleServerError()
-  const { mutateAsync: uploadFilesFn, isPending: isUploading } = useMutation({
+  const { mutateAsync: uploadFilesFn } = useMutation({
     mutationKey: [uploadFilesApi.mutationKey],
     mutationFn: uploadFilesApi.fn
   })
-  const { mutateAsync: requestCreateBrandFn, isPending } = useMutation({
+  const { mutateAsync: requestCreateBrandFn } = useMutation({
     mutationKey: [requestCreateBrandApi.mutationKey],
     mutationFn: requestCreateBrandApi.fn,
     onSuccess: () => {
@@ -66,6 +69,7 @@ function RegisterBrand() {
       successToast({ message: 'Your request to create a brand has been successfully completed.' })
     }
   })
+
   const convertFileToUrl = async (files: File[]) => {
     const formData = new FormData()
     files.forEach((file) => {
@@ -122,7 +126,7 @@ function RegisterBrand() {
             goBackfn={goBack}
             steppers={steppers}
             form={form}
-            isSubmitting={isPending || isUploading}
+            isSubmitting={isLoading}
           />
         )
     }
@@ -131,6 +135,7 @@ function RegisterBrand() {
 
   async function onSubmit(values: z.infer<typeof brandCreateSchema>) {
     try {
+      setIsLoading(true)
       const filesToConvert =
         values.logo && values.logo?.length > 0 ? [...values.logo, ...values.document] : values.document
       const imgUrls = await convertFileToUrl(filesToConvert)
@@ -155,7 +160,10 @@ function RegisterBrand() {
 
         await requestCreateBrandFn(formatData)
       }
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
+
       handleServerError({
         error,
         form
@@ -164,38 +172,42 @@ function RegisterBrand() {
   }
 
   return (
-    <div className='min-h-screen bg-primary/10'>
-      <header className='border-b bg-primary text-white px-4 py-3 shadow-md'>
-        <div className='flex items-center gap-2'>
-          <ImageWithFallback
-            fallback={fallBackImage}
-            src={MockImage}
-            alt='Logo'
-            width={32}
-            height={32}
-            className='h-8 w-8 object-contain'
-          />
-          <span className='text-lg'>{t('header.registerBrand')}</span>
-        </div>
-      </header>
+    <>
+      {isLoading && <LoadingLayer />}
 
-      <main className='m-auto max-w-3xl px-4 py-8 mt-10 bg-white rounded-lg backdrop-blur-3xl'>
-        <Stepper steppers={steppers} activeStep={activeStep} />
+      <div className='min-h-screen bg-primary/10'>
+        <header className='border-b bg-primary text-white px-4 py-3 shadow-md'>
+          <div className='flex items-center gap-2'>
+            <ImageWithFallback
+              fallback={fallBackImage}
+              src={MockImage}
+              alt='Logo'
+              width={32}
+              height={32}
+              className='h-8 w-8 object-contain'
+            />
+            <span className='text-lg'>{t('header.registerBrand')}</span>
+          </div>
+        </header>
 
-        <div className='p-6'>
-          <Form {...form}>
-            <form
-              noValidate
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='w-full grid gap-4 mb-8'
-              id={`form-create-branch`}
-            >
-              {Silde}
-            </form>
-          </Form>
-        </div>
-      </main>
-    </div>
+        <main className='m-auto max-w-3xl px-4 py-8 mt-10 bg-white rounded-lg backdrop-blur-3xl'>
+          <Stepper steppers={steppers} activeStep={activeStep} />
+
+          <div className='p-6'>
+            <Form {...form}>
+              <form
+                noValidate
+                onSubmit={form.handleSubmit(onSubmit)}
+                className='w-full grid gap-4 mb-8'
+                id={`form-create-branch`}
+              >
+                {Silde}
+              </form>
+            </Form>
+          </div>
+        </main>
+      </div>
+    </>
   )
 }
 

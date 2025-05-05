@@ -111,7 +111,9 @@ export type IResponseProduct = TMetaData & {
   description: string
   status?: string
   detail?: string
-  productClassifications: IServerProductClassification[]
+  productClassifications: (IServerProductClassification & {
+    count?: number
+  })[]
   price?: number
   quantity?: number
   sku?: string

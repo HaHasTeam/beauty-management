@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 /**
  * used for identifying the split char and use will pasting
  */
-const SPLITTER_REGEX = /[\n#?=&\t,./-]+/
+const SPLITTER_REGEX = /[\n#?=&\t,/-]+/
 
 /**
  * used for formatting the pasted element for the correct value format to be added
@@ -196,6 +196,7 @@ export const TagsInput = React.forwardRef<HTMLDivElement, TagsInputProps>(
           case 'Enter':
             if (inputValue.trim() !== '') {
               e.preventDefault()
+              e.stopPropagation()
               onValueChangeHandler(inputValue)
               setInputValue('')
             }
@@ -211,7 +212,7 @@ export const TagsInput = React.forwardRef<HTMLDivElement, TagsInputProps>(
     }, [])
 
     const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.currentTarget.value)
+      setInputValue(e.target.value)
     }, [])
 
     return (

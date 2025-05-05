@@ -40,6 +40,10 @@
     "fileFormat": "Format: .JPEG, .PNG"
   },
   "home": {
+    "ctaTitle": "Let's build something amazing together!",
+    "ctaDescription": "You're ready to start a new project? Contact us now!",
+    "ctaButton": "Contact",
+    "heroCTA": "Get Started",
     "consultantTitle": "Beauty Consulting",
     "standardConsultantTitle": "Standard Consultation",
     "premiumConsultantTitle": "Premium Consultation",
@@ -54,7 +58,8 @@
     "description": "Discover authentic beauty products and personalized expert advice in one trusted platform.",
     "login": "Login",
     "register": "Register",
-    "heroImageAlt": "Premium beauty products collection",
+    "heroTitle": "Allure accompany with you",
+    "heroSubtitle": "Allure is a comprehensive system for beauty product sales and makeup consultation services.",
     "featuresTitle": "Why Choose Allure",
     "featuresSubtitle": "We're transforming the online beauty shopping experience with trust and expertise",
     "feature1Title": "Authentic Products",
@@ -66,7 +71,30 @@
     "problemTitle": "The Beauty Market Challenge",
     "problemDescription": "The online beauty market is overwhelming with endless options, unreliable information, and the risk of fake products, making it difficult to find what truly works for you.",
     "solutionTitle": "How Allure Helps",
-    "solutionDescription": "We provide a curated selection of genuine products and professional consultations, making it easier to find the right products, learn how to use them, and feel more confident in your beauty choices."
+    "solutionDescription": "We provide a curated selection of genuine products and professional consultations, making it easier to find the right products, learn how to use them, and feel more confident in your beauty choices.",
+    "testimonial2Role": "Product Manager",
+    "testimonial2Quote": "The UI is clean and the features are exactly what we needed.",
+    "heroSubtitle2": "Allure is a comprehensive system for beauty product sales and makeup consultation services.",
+    "heroImageAlt": "Booking Statistics Overview",
+    "heroOrderStaticsAlt": "Order Statistics Snippet",
+    "featureFlashSaleTitle": "Flash Sales",
+    "featureFlashSaleDesc": "Easily create and manage timed promotions.",
+    "featureFlashSaleAlt": "Flash Sale Management Interface",
+    "featureGroupSaleTitle": "Group Buying",
+    "featureGroupSaleDesc": "Organize group purchase offers.",
+    "featureGroupSaleAlt": "Group Sale Offer Display",
+    "featureVoucherTitle": "Voucher System",
+    "featureVoucherDesc": "Generate and track discount vouchers.",
+    "featureVoucherAlt": "Voucher Creation Tool",
+    "processTitle": "Our Process",
+    "process1Title": "Register and Verify Account",
+    "process1Desc": "Complete registration and verify your email.",
+    "process2Title": "Fill in Information & Terms",
+    "process2Desc": "Provide necessary information and agree to the terms.",
+    "process3Title": "Schedule Appointment with Staff",
+    "process3Desc": "Book a suitable appointment with support staff.",
+    "process4Title": "Become an Allure Member",
+    "process4Desc": "Start experiencing Allure's exclusive services."
   },
   "productCard": {
     "currentPrice": "{{price, currency}}",
@@ -1065,6 +1093,7 @@
     "beingChoosing": "Currently selecting",
     "detailInformation": "Detailed Information",
     "pleaseChooseCategoryToViewInformation": "Please select a category to view details",
+    "pleaseChooseProductToViewInformation": "Please select a product to view details",
     "completed": "Completed",
     "pleaseSelect": "Please select",
     "noResults": "No results found",
@@ -1563,7 +1592,7 @@
     "resultNotePlaceholder": "Enter your notes here...",
     "status": {
       "TO_PAY": "To Pay",
-      "WAIT_FOR_CONFIRMATION": "Waiting for Confirmation",
+      "WAIT_FOR_CONFIRMATION": "Waiting For Confirmation",
       "BOOKING_CONFIRMED": "Booking Confirmed",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled",
@@ -1684,7 +1713,118 @@
     }
   },
   "backendError": {
-    "invalidEmail": "Email is invalid"
+    "invalidEmail": "Invalid email",
+    "firstNameRequired": "First name is required",
+    "firstNameMaxLength": "First name cannot exceed 100 characters",
+    "lastNameRequired": "Last name is required",
+    "lastNameMaxLength": "Last name cannot exceed 100 characters",
+    "usernameRequired": "Username is required and must be at least 3 characters long",
+    "usernameMaxLength": "Username cannot exceed 20 characters",
+    "invalidUsername": "User name should starting with a letter, 3-20 characters and can contain letters, numbers and underscores",
+    "invalidEmailAddress": "Invalid email address",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "avatarMinLength": "avatar must more than 1 character",
+    "invalidPhone": "Phone must be a string with 10 to 15 digits",
+    "invalidDob": "Date of birth must be a valid date (YYYY-MM-DD)",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Paassword is required",
+    "fullNameMaxLength": "String must contain at most 100 character(s)",
+    "phoneMaxLength": "Phone must contain at most 100 character(s)",
+    "districtMaxLength": "District must contain at most 100 character(s)",
+    "wardMaxLength": "Ward must contain at most 100 character(s)",
+    "provinceMaxLength": "Province must contain at most 255 character(s)",
+    "invalidType": "Invalid enum value. Expected AddressEnum",
+    "invalidStartTime": "Start time must be a valid date string",
+    "invalidEndTime": "End time must be a valid date string",
+    "totalPriceNonNegative": "Number must be greater than or equal to 0",
+    "accountNotFound": "Account not found",
+    "updatedByAccountNotFound": "Updated by account not found",
+    "emailAlreadyExists": "Email already exists!",
+    "usernameAlreadyExists": "Username already exists!",
+    "invalidRoleProvided": "Invalid role provided",
+    "certificateNotAllowed": "Certificate is only available for role CONSULTANT and KOL",
+    "consultantNotFound": "Consultant not found",
+    "brandNotFound": "Brand not found",
+    "exceededApprovedReportsLimit": "Account has been banned due to exceeding the approved reports limit",
+    "addressNotFound": "Address not found",
+    "atLeastOneDefaultAddress": "Should be at least one default address",
+    "emailNotVerified": "Email is not verified",
+    "invalidPassword": "Invalid password",
+    "loginMethodNotAllowed": "User must login by another way not using password",
+    "blogNotExisted": "Blog Not Existed!",
+    "blogTagAlreadyExisted": "Blog tag already Existed",
+    "bookingNotFound": "Booking not found",
+    "onlyReviewerCanNoteResult": "Only reviewer can note result",
+    "slotBooked": "Slot has been booked",
+    "brandIdRequired": "BrandId required",
+    "consultantServiceIdRequired": "ConsultantServiceId required",
+    "consultantServiceNotFound": "ConsultantService not found",
+    "slotRequired": "Slot is required",
+    "cannotCompleteBooking": "You cannot complete the booking because the report has not been completed yet.",
+    "cannotCancelBooking": "Can not cancelled booking in status: ",
+    "walletNotFound": "Dont have wallet",
+    "activeProductRequired": "Please select active product",
+    "productNotFound": "Product not found",
+    "onlyConsultantOrOperator": "Only apply for consultant or operator",
+    "overlapTimeSlot": "Overlap time slot",
+    "alreadyBookedSlot": "You have already booked a slot. Please wait for process",
+    "bookingCancelledSuccessfully": "Booking cancelled successfully",
+    "bookingStatusUpdatedSuccessfully": "Booking service status updated successfully",
+    "classificationNotFound": "Classification not found",
+    "invalidProduct": "Can not add invalid Product",
+    "quantityNotEnough": "Quantity is not enough",
+    "groupBuyingInvalid": "Group Buying invalid",
+    "livestreamInvalid": "Livestream invalid",
+    "cartItemNotFound": "Cart Item not found",
+    "invalidOrEmptyItemIds": "Invalid or empty itemIds array",
+    "noItemsFoundForIds": "No items found for the provided IDs",
+    "accountIdRequired": "Account ID is required",
+    "noItemsInCart": "No items found in the cart for the given account",
+    "categoryAlreadyExisted": "Category already Existed",
+    "parentCategoryNotFound": "Parent category not found",
+    "maxCategoryLevelExceeded": "A category cannot have more than 4 levels of subcategories",
+    "categoryNotFound": "Category not found.",
+    "newParentCategoryNotFound": "New parent category not found.",
+    "bookingFormNotFound": "Booking Form not found.",
+    "systemServiceNotFoundOrInactive": "System service not found or inactive.",
+    "invalidStatusUpdate": "Cannot update status.",
+    "activeServicesUsingFormNotFound": "No active services using this form found.",
+    "questionNotFound": "Question not found.",
+    "imageNotFound": "Image not found",
+    "consultationCriteriaNotFound": "Consultation Criteria not found",
+    "consultationCriteriaSectionNotFound": "Consultation Criteria Section not found",
+    "criteriaCreationFailed": "Failed to create Consultation Criteria.",
+    "criteriaUpdateFailed": "Failed to update Consultation Criteria.",
+    "criteriaSectionUpdateFailed": "Failed to update Consultation Criteria Section.",
+    "sectionNotFound": "Section not found",
+    "livestreamNotFound": "Livestream not found",
+    "invalidLivestreamStatus": "Invalid livestream status",
+    "classificationQuantityRequired": "Product classification must have at least one quantity.",
+    "skuRequired": "sku is required",
+    "skuAlreadyExists": "sku of classification already exists",
+    "invalidDatetime": "Invalid datetime string",
+    "invalidTimeRange": "Start time must be earlier than end time",
+    "overlappingPreOrderEvent": "The time range overlaps with an existing pre-order event",
+    "overlappingDiscountEvent": "The time range overlaps with an existing discount event",
+    "preOrderProductNotFound": "Pre-order Product not found",
+    "classificationTitleAlreadyExists": "title of classification already exists",
+    "invalidSortBy": "Invalid sortBy",
+    "invalidProductStatus": "Invalid product status",
+    "productDiscountNotFound": "ProductDiscount not found",
+    "classificationInvalid": "Classification invalid!",
+    "classificationQuantityInvalid": "Classification quantity must be greater than 0!",
+    "invalidClassificationQuantity": "Invalid classification quantity: Quantity should be smaller than the current stock",
+    "productStatusInvalid": "The Product is BANNED!",
+    "originalClassificationNotFound": "Original classification not found",
+    "invalidFilterOptions": "Invalid filter options",
+    "deleteQuestionFailed": "Failed to delete question",
+    "updateOrderIndexFailed": "Failed to update order index for questions",
+    "imageDeleteFailed": "Failed to delete image associated with the question",
+    "systemServiceNotFound": "System service not found.",
+    "serviceAlreadyExisted": "Service already Existed",
+    "activeServicesUsingCriteriaNotFound": "No active services using this criteria found.",
+    "imageUpdateFailed": "Failed to update image associated with the system service",
+    "invalidStatusValue": "Invalid status value"
   },
   "payment": {
     "methods": {
@@ -1854,5 +1994,262 @@
   },
   "store": {
     "chat": "Chat"
+  },
+  "signUp": {
+    "title": "Create your account",
+    "subtitle": "Fill in the details below to get started",
+    "email": "Email",
+    "emailPlaceholder": "e.g. allure@gmail.com",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your full name",
+    "phone": "Phone Number",
+    "phoneDescription": "This is the phone number that will be displayed on your profile",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "••••••••",
+    "signUpButton": "Sign up",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "welcomeMessage": "Welcome!, {{email}}, check your email for verification",
+    "passwordsDoNotMatch": "Passwords do not match"
+  },
+  "signIn": {
+    "email": "Email",
+    "emailPlaceholder": "e.g. allure@gmail.com",
+    "password": "Password",
+    "passwordPlaceholder": "e.g. ********",
+    "signInButton": "Sign in",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "welcomeBack": "Welcome back!, {{email}}"
+  },
+  "authLayout": {
+    "backToWebsite": "Back to the website",
+    "portalName": "Allure Portal",
+    "testimonial": "\"Allure Portal is a powerful tool that allows us to manage our data, grant access to our clients and partners, and monitor the performance of our business in real-time. It's a game-changer for us.\"",
+    "testimonialAuthor": "- Allure team -"
+  },
+  "authUI": {
+    "titles": {
+      "signIn": "Sign In",
+      "emailSignIn": "Email Sign In",
+      "forgotPassword": "Forgot Password",
+      "updatePassword": "Update Password",
+      "signup": "Sign Up",
+      "emailVerification": "Verify Your Email"
+    },
+    "descriptions": {
+      "signIn": "Enter your email and password to sign in!",
+      "emailSignIn": "Enter your email to get a magic link!",
+      "forgotPassword": "Enter your email to get a password reset link!",
+      "updatePassword": "Choose a new password for your account!",
+      "signup": "Fill in the details below to get started",
+      "emailVerification": "Check your email & click the link to activate your account."
+    },
+    "buttons": {
+      "resendEmail": "Resend Email",
+      "enterNewEmail": "Enter New Email",
+      "contactSupport": "Contact Support"
+    }
+  },
+  "branchCreation": {
+    "welcomeTitle": "Welcome to",
+    "brandName": "Allure",
+    "description": "Create, grow, and manage your brand on our powerful selling platform. Start your journey to success today!",
+    "createButton": "Create Your Brand"
+  },
+  "branchDetails": {
+    "step": "Step-{{stepIndex}}",
+    "generalInformation": "General Information",
+    "name": {
+      "label": "Name",
+      "placeholder": "Please enter your brand name"
+    },
+    "email": {
+      "label": "Email Brand",
+      "placeholder": "e.g. allure@gmail.com"
+    },
+    "address": {
+      "label": "Address",
+      "addNew": "Add New Address"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Description"
+    },
+    "phone": {
+      "label": "Phone"
+    },
+    "document": {
+      "label": "Document",
+      "uploadDescription": "You must upload at least 1 document for your license details. To help you, we've provided a template file. Please download it, fill in the necessary details, and upload it back:",
+      "downloadTemplate": "Download License Details Template"
+    },
+    "navigation": {
+      "back": "Back",
+      "next": "Next"
+    }
+  },
+  "fileUpload": {
+    "dragDrop": {
+      "dragActive": "Drop your file here",
+      "dragInactive": "Drag & drop your files here",
+      "clickToSelect": "or click to select files",
+      "fileRestrictions": "You can upload up to {{maxFiles}} files. Accepted file formats are {{formats}}. Each file must be under {{maxSize}}MB.",
+      "maxFilesReached": "You have reached the maximum number of files allowed"
+    },
+    "fileList": {
+      "filesSelected": "{{count}} file(s) selected"
+    },
+    "preview": {
+      "image": "Image Preview",
+      "file": "File Preview"
+    }
+  },
+  "imagesUploader": {
+    "step": "Step-{{stepIndex}}",
+    "title": "Images Uploader",
+    "logo": {
+      "label": "Logo",
+      "description": "Please choose your logo"
+    },
+    "businessTaxCode": {
+      "label": "Business Tax Code",
+      "placeholder": "Business Tax Code"
+    },
+    "establishmentDate": {
+      "label": "Establishment Date"
+    },
+    "businessRegistrationCode": {
+      "label": "Business Registration Code",
+      "placeholder": "Business Registration Code",
+      "description": "A number or code assigned to the business upon registration, serving as a formal identifier for the company."
+    },
+    "businessRegistrationAddress": {
+      "label": "Business Registration Address",
+      "placeholder": "Business Registration Address",
+      "description": "The official address of the business as stated during registration."
+    },
+    "navigation": {
+      "back": "Back",
+      "next": "Next"
+    }
+  },
+  "confirmation": {
+    "step": "Step-{{stepIndex}}",
+    "title": "Confirmation",
+    "reviewMessage": "Please review the information before submitting, you can go back to refill the form if there is any mistake.",
+    "card": {
+      "title": "Confirm Your Brand",
+      "status": {
+        "pending": "PENDING"
+      }
+    },
+    "fields": {
+      "name": "Brand Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "description": "Description",
+      "logo": "Logo",
+      "document": "Document"
+    },
+    "fileInfo": {
+      "files": "{{count}} file(s)"
+    },
+    "notAvailable": "N/A",
+    "navigation": {
+      "back": "Back",
+      "confirm": "Confirm"
+    }
+  },
+  "forbidden": {
+    "public": {
+      "error": "Error",
+      "accessDenied": "Access Denied",
+      "noPermission": "You don't have permission to access the requested resource.",
+      "contactSupport": "Please contact support if you believe this is an error.",
+      "attemptedAccess": "Attempted to access:",
+      "goToHome": "Go to Home",
+      "contactSupportButton": "Contact Support",
+      "copyright": " 2023 Your Company. All rights reserved."
+    },
+    "dashboard": {
+      "error": "Error",
+      "accessDenied": "Access Denied",
+      "noPermission": "You don't have permission to access this page.",
+      "noPermissionGeneric": "You don't have permission to access the requested page.",
+      "contactAdmin": "Please contact your administrator if you believe this is an error.",
+      "attemptedAccess": "Attempted to access:",
+      "backToDashboard": "Back to Dashboard",
+      "needHelp": "Need Help?"
+    }
+  },
+  "scheduleMeeting": {
+    "pageTitle": "Schedule Registration Meeting",
+    "pageDescription": "Schedule a meeting with a system operator to complete your brand registration process.",
+
+    "alertTitle": "Registration Process",
+    "alertDescription": "This meeting is a required step to verify your brand information and complete the registration process. The system operator will review your application and answer any questions you may have.",
+
+    "reviewerInfo": {
+      "title": "Reviewer Information",
+      "role": "Platform Representative",
+      "about": "The reviewer will verify your brand information, explain the platform features, and help you complete the registration process."
+    },
+
+    "brandInfo": {
+      "title": "Your Brand Information",
+      "role": "Brand Representative",
+      "username": "Not available",
+      "email": "No email available",
+      "descriptionTitle": "Brand Description",
+      "statusTitle": "Registration Status"
+    },
+
+    "scheduleForm": {
+      "title": "Schedule Your Registration Meeting",
+      "description": "Please select a date and time for your meeting with the system operator to complete your brand registration.",
+
+      "step1": {
+        "title": "Select Meeting Date",
+        "label": "Available Dates",
+        "tooltip": "Choose a date for your registration meeting. Only available dates are selectable.",
+        "placeholder": "Select a date",
+        "description": "Registration meetings are available on weekdays for the next 30 days."
+      },
+
+      "step2": {
+        "title": "Select Time Slot",
+        "label": "Available Times for {{date}}",
+        "tooltip": "Choose a time slot that works best for your schedule.",
+        "noSlots": "No available slots for this date.",
+        "selectAnother": "Please select another date to see available times."
+      },
+
+      "step3": {
+        "title": "Additional Information",
+        "label": "Notes for the System Operator (Optional)",
+        "tooltip": "Add any questions or information you'd like to discuss during the registration meeting.",
+        "placeholder": "Add any questions about the registration process, specific requirements, or topics you'd like to discuss during the meeting",
+        "description": "This information will help the system operator prepare for your registration meeting."
+      }
+    },
+
+    "buttons": {
+      "cancel": "Cancel",
+      "confirm": "Confirm Meeting",
+      "scheduling": "Scheduling..."
+    },
+
+    "messages": {
+      "success": "Your registration meeting has been scheduled successfully!",
+      "noSlotSelected": "Error there is no slot selected",
+      "failedSchedule": "Failed to schedule meeting. Please try again.",
+      "failedDescription": "There was an error processing your request.",
+      "failedLoadSlots": "Failed to load available slots"
+    }
   }
 }

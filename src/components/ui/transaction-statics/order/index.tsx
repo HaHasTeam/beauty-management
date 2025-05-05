@@ -11,7 +11,15 @@ import { OrderStaticCard } from './OrderStaticCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card } from '../../card'
 
-export default function IndexPage() {
+type Props = {
+  orderType?: OrderEnum
+  eventId?: string
+  mode?: 'full' | 'mini'
+  header?: React.ReactNode
+  voucherId?: string
+}
+
+export default function IndexPage({ orderType, eventId, mode = 'full', header, voucherId }: Props) {
   const queryStates = useState<DataTableQueryState<TGetDailyOrderStatisticsParams>>(
     {} as DataTableQueryState<TGetDailyOrderStatisticsParams>
   )
@@ -28,13 +36,16 @@ export default function IndexPage() {
         brandId: brandId || (queryStates[0].fieldFilters?.brandId as string),
         startDate: queryStates[0].fieldFilters?.startDate as string,
         endDate: queryStates[0].fieldFilters?.endDate as string,
-        orderType: queryStates[0].fieldFilters?.orderType as OrderEnum,
+        orderType: orderType || (queryStates[0].fieldFilters?.orderType as OrderEnum),
         productIds: queryStates[0].fieldFilters?.productIds as string[],
-        eventIds: [
-          ...(queryStates[0].fieldFilters?.groupProductIds || []),
-          ...(queryStates[0].fieldFilters?.flashSaleIds || [])
-        ],
-        groupProductIds: queryStates[0].fieldFilters?.groupProductIds as string[]
+        eventIds: eventId
+          ? [eventId]
+          : [
+              ...(queryStates[0].fieldFilters?.groupProductIds || []),
+              ...(queryStates[0].fieldFilters?.flashSaleIds || [])
+            ],
+        groupProductIds: queryStates[0].fieldFilters?.groupProductIds as string[],
+        voucherId
       }
     ],
     queryFn: getDailyOrderStatistics.fn,
@@ -42,8 +53,8 @@ export default function IndexPage() {
   })
 
   return (
-    <div className='flex flex-col gap-4'>
-      <h1 className='text-2xl font-bold'>Order Statistics</h1>
+    <div className='flex flex-col gap-4 w-full'>
+      {header || <h1 className='text-2xl font-bold'>Order Statistics</h1>}
       <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
         <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
           <div className='w-full flex items-center gap-4'>
@@ -53,7 +64,12 @@ export default function IndexPage() {
                   <Skeleton className='w-full h-[300px] rounded-lg' />
                 </div>
               ) : (
-                <OrderStaticCard data={userListData?.data as OrderStatic} queryStates={queryStates} />
+                <OrderStaticCard
+                  data={userListData?.data as OrderStatic}
+                  queryStates={queryStates}
+                  mode={mode}
+                  showOnlyVoucher={!!voucherId ? (userListData?.data.isParent ? 'platform' : 'shop') : undefined}
+                />
               )}
             </Shell>
           </div>
