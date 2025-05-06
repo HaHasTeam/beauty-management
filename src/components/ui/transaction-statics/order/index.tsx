@@ -69,6 +69,7 @@ export default function IndexPage({ orderType, eventId, mode = 'full', header, v
                   queryStates={queryStates}
                   mode={mode}
                   showOnlyVoucher={!!voucherId ? (userListData?.data.isParent ? 'platform' : 'shop') : undefined}
+                  showFilter={orderType !== OrderEnum.GROUP_BUYING}
                 />
               )}
             </Shell>

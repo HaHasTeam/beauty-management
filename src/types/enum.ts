@@ -75,7 +75,8 @@ export enum OrderEnum {
   NORMAL = 'NORMAL',
   GROUP_BUYING = 'GROUP_BUYING',
   FLASH_SALE = 'FLASH_SALE',
-  LIVE_STREAM = 'LIVE_STREAM'
+  LIVE_STREAM = 'LIVE_STREAM',
+  GROUP_PRODUCT = 'GROUP_PRODUCT'
 }
 
 export enum VoucherVisibilityEnum {
