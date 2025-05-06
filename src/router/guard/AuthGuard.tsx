@@ -6,7 +6,7 @@ import { type FC, type PropsWithChildren, useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
-import LoadingContentLayer from '@/components/loading-icon/LoadingContentLayer'
+import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import { Routes, routesConfig } from '@/configs/routes'
 import { getUserProfileApi } from '@/network/apis/user'
 import { useStore } from '@/stores/store'
@@ -164,10 +164,10 @@ const AuthGuard: FC<PropsWithChildren> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <>
+      <div className=''>
         {children}
-        <LoadingContentLayer />
-      </>
+        <LoadingLayer />
+      </div>
     )
   }
   // Debug query status
