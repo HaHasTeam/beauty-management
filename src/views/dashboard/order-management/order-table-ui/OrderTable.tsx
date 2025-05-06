@@ -79,7 +79,7 @@ export function OrderTable({ data, pageCount, queryStates }: OrderTableProps) {
         id: 'type',
         label: 'Type',
         options: Object.keys(OrderEnum)
-          .filter((type) => [OrderEnum.NORMAL, OrderEnum.GROUP_BUYING].includes(type as OrderEnum))
+          // .filter((type) => [OrderEnum.NORMAL, OrderEnum.GROUP_BUYING].includes(type as OrderEnum))
           .map((type) => {
             const value = OrderEnum[type as keyof typeof OrderEnum]
             return {
