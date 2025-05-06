@@ -228,6 +228,16 @@
     "highToLow": "High to Low"
   },
   "empty": {
+    "groupBuyingDetail": {
+      "title": "Group Buying Not Found",
+      "description": "The group buying you're looking for doesn't exist or has been removed.",
+      "button": "Back to Group Buying"
+    },
+    "livestreamDetail": {
+      "title": "Livestream Not Found",
+      "description": "The livestream you're looking for doesn't exist or has been removed.",
+      "button": "Back to Livestream List"
+    },
     "blog": {
       "title": "No Blog Found",
       "description": "The blog you're looking for either does not exist, has been removed, or is currently unavailable.",
@@ -482,6 +492,12 @@
     "viewNotification": "View Notifications"
   },
   "cart": {
+    "brands": "Brand's ",
+    "netRevenue": "{{brands}}Net Revenue",
+    "commissionFee": "Commission Fee",
+    "netRevenueDescription": "Net Revenue = Total payment + Discount from platform vouchers - Commission Fee",
+    "comissionFeeDescription": "Commission Fee = (Total payment + Discount from platform vouchers) * Commission Rate",
+    "estimated": "Estimated",
     "title": "Cart",
     "total": "Total",
     "remove": "Remove",
@@ -2254,5 +2270,69 @@
       "failedDescription": "There was an error processing your request.",
       "failedLoadSlots": "Failed to load available slots"
     }
+  },
+  "livestream": {
+    "title": "Livestreams",
+    "create": "Create Livestream",
+    "detail": {
+      "title": "Livestream Details",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "notEnded": "Not ended yet",
+      "recording": "Recording",
+      "viewRecording": "View Recording",
+      "streamerInfo": "Streamer Information",
+      "phone": "Phone",
+      "status": "Status",
+      "products": "Products",
+      "product": "Product",
+      "sku": "SKU",
+      "price": "Original Price",
+      "discount": "Discount",
+      "finalPrice": "Final Price",
+      "noProducts": "No products in this livestream"
+    },
+    "Scheduled": "scheduled",
+    "Live": "Live",
+    "Ended": "Ended",
+    "Cancelled": "Cancelled"
+  },
+  "groupBuying": {
+    "title": "Group Buying",
+    "create": "Create Group Buying",
+    "detail": {
+      "title": "Group Buying Details",
+      "endTime": "End Time",
+      "createdAt": "Created At",
+      "maxBuyAmount": "Maximum Purchase Amount",
+      "itemsPerPerson": "items per person",
+      "description": "Description",
+      "creatorInfo": "Creator Information",
+      "username": "Username",
+      "phone": "Phone",
+      "gender": "Gender",
+      "status": "Status",
+      "discountCriteria": "Discount Criteria",
+      "peopleThreshold": "People Threshold",
+      "voucherCode": "Voucher Code",
+      "discountType": "Discount Type",
+      "discountValue": "Discount Value",
+      "percentage": "Percentage",
+      "fixedAmount": "Fixed Amount",
+      "people": "people",
+      "products": "Products",
+      "product": "Product",
+      "sku": "SKU",
+      "price": "Price",
+      "noCriteria": "No discount criteria defined",
+      "noProducts": "No products in this group buying"
+    }
+  },
+  "consultant": {
+    "consultant": "Consutlant's ",
+    "netRevenue": "{{consultant}}Net Revenue",
+    "commissionFee": "Commission Fee",
+    "netRevenueDescription": "Net Revenue = Total payment  - Commission Fee",
+    "comissionFeeDescription": "Commission Fee = Total payment * Commission Rate"
   }
 }

@@ -342,6 +342,7 @@ const OrderDetails = () => {
                         <OrderStatusTrackingDetail
                           statusTrackingData={useStatusTrackingData?.data}
                           cancelAndReturnRequest={cancelAndReturnRequestData?.data}
+                          orderCreatedAt={useOrderData?.data?.createdAt}
                         />
                       ) : (
                         <p></p>
@@ -431,6 +432,9 @@ const OrderDetails = () => {
                     platformVoucher={useOrderData?.data?.parent.voucher || null}
                     livestream={useOrderData?.data?.orderDetails[0]?.livestream || null}
                     orderParent={useOrderData?.data?.parent || null}
+                    orderStatus={useOrderData?.data?.status || ''}
+                    groupBuying={useOrderData?.data.groupBuying}
+                    commissionFee={useOrderData?.data?.commissionFee}
                   />
                 </div>
                 {(useOrderData?.data?.status === ShippingStatusEnum.TO_PAY ||

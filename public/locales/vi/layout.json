@@ -228,6 +228,16 @@
     "highToLow": "Từ cao đến thấp"
   },
   "empty": {
+    "groupBuyingDetail": {
+      "title": "Không tìm thấy Mua Chung",
+      "description": "Chương trình mua chung bạn đang tìm kiếm không tồn tại hoặc đã bị gỡ bỏ.",
+      "button": "Quay lại danh sách mua chung"
+    },
+    "livestreamDetail": {
+      "title": "Không Tìm Thấy Livestream",
+      "description": "Livestream bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.",
+      "button": "Quay lại danh sách livestream"
+    },
     "blog": {
       "title": "Không tìm thấy blog",
       "description": "Blog bạn đang tìm kiếm không tồn tại, đã bị xóa hoặc hiện không khả dụng.",
@@ -482,6 +492,12 @@
     "viewNotification": "Xem thông báo"
   },
   "cart": {
+    "brands": " của thương hiệu",
+    "netRevenue": "Doanh thu thực nhận{{brands}}",
+    "commissionFee": "Tiền phí hoa hồng",
+    "netRevenueDescription": "Doanh thu thực nhận = Tổng tiền thanh toán + Giảm giá từ mã khuyến mãi của nền tảng - Tiền phí hoa hồng",
+    "comissionFeeDescription": "Tiền phí hoa hồng = (Tổng tiền thanh toán + Giảm giá từ mã khuyến mãi của nền tảng) * Phí hoa hồng",
+    "estimated": "Tạm tính",
     "title": "Giỏ hàng",
     "total": "Tổng",
     "remove": "Xóa",
@@ -2162,5 +2178,69 @@
       "failedDescription": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn.",
       "failedLoadSlots": "Không thể tải các khung giờ có sẵn"
     }
+  },
+  "livestream": {
+    "title": "Livestream",
+    "create": "Tạo Livestream",
+    "detail": {
+      "title": "Chi Tiết Livestream",
+      "startTime": "Thời Gian Bắt Đầu",
+      "endTime": "Thời Gian Kết Thúc",
+      "notEnded": "Chưa kết thúc",
+      "recording": "Bản Ghi Hình",
+      "viewRecording": "Xem Bản Ghi",
+      "streamerInfo": "Thông Tin Streamer",
+      "phone": "Số Điện Thoại",
+      "status": "Trạng Thái",
+      "products": "Sản Phẩm",
+      "product": "Sản Phẩm",
+      "sku": "Mã SKU",
+      "price": "Giá Gốc",
+      "discount": "Giảm Giá",
+      "finalPrice": "Giá Cuối Cùng",
+      "noProducts": "Không có sản phẩm nào trong livestream này"
+    },
+    "Scheduled": "Đã Lên Lịch",
+    "Live": "Đang Trực Tiếp",
+    "Ended": "Đã Kết Thúc",
+    "Cancelled": "Đã Hủy"
+  },
+  "groupBuying": {
+    "title": "Mua Chung",
+    "create": "Tạo Mua Chung",
+    "detail": {
+      "title": "Chi Tiết Mua Chung",
+      "endTime": "Thời Gian Kết Thúc",
+      "createdAt": "Ngày Tạo",
+      "maxBuyAmount": "Số Lượng Mua Tối Đa",
+      "itemsPerPerson": "sản phẩm mỗi người",
+      "description": "Mô Tả",
+      "creatorInfo": "Thông Tin Người Tạo",
+      "username": "Tên Người Dùng",
+      "phone": "Số Điện Thoại",
+      "gender": "Giới Tính",
+      "status": "Trạng Thái",
+      "discountCriteria": "Tiêu Chí Giảm Giá",
+      "peopleThreshold": "Ngưỡng Số Người",
+      "voucherCode": "Mã Giảm Giá",
+      "discountType": "Loại Giảm Giá",
+      "discountValue": "Giá Trị Giảm",
+      "percentage": "Phần Trăm",
+      "fixedAmount": "Số Tiền Cố Định",
+      "people": "người",
+      "products": "Sản Phẩm",
+      "product": "Sản Phẩm",
+      "sku": "Mã SKU",
+      "price": "Giá",
+      "noCriteria": "Chưa có tiêu chí giảm giá nào được thiết lập",
+      "noProducts": "Không có sản phẩm nào trong chương trình mua chung này"
+    }
+  },
+  "consultant": {
+    "consultant": " của tư vấn viên",
+    "netRevenue": "Doanh thu thực nhận {{consultant}}",
+    "commissionFee": "Tiền phí hoa hồng",
+    "netRevenueDescription": "Doanh thu thực nhận = Tổng tiền thanh toán - Tiền phí hoa hồng",
+    "comissionFeeDescription": "Tiền phí hoa hồng = Tổng tiền thanh toán * Phí hoa hồng"
   }
 }

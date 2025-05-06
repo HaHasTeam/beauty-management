@@ -42,6 +42,7 @@ export type IBooking = TMetaData & {
   endTime: string
   voucherDiscount: number
   paymentMethod: PaymentMethodEnum
+  commissionFee: number
   notes: string | null
   meetUrl: string
   record: string | null
