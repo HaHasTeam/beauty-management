@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { exportTableToCSV } from '@/lib/export'
 import { IConsultantService } from '@/types/consultant-service'
+import { RoleEnum } from '@/types/enum'
 
 import { BanConsultantServicesDialog } from './BanConsultantServiceDialog'
 
@@ -18,7 +20,7 @@ export function ConsultantServiceTableToolbarActions({ table }: ConsultantServic
   const handleAddConsultantService = () => {
     navigate(routesConfig[Routes.ADD_CONSULTANT_SERVICE].getPath())
   }
-
+  const isGranted = useGrant([RoleEnum.CONSULTANT])
   return (
     <div className='flex items-center gap-2'>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -27,10 +29,12 @@ export function ConsultantServiceTableToolbarActions({ table }: ConsultantServic
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
-      <Button size={'sm'} onClick={handleAddConsultantService}>
-        <ListPlusIcon />
-        Add Consultant Service
-      </Button>
+      {isGranted ? (
+        <Button size={'sm'} onClick={handleAddConsultantService}>
+          <ListPlusIcon />
+          Add Consultant Service
+        </Button>
+      ) : null}
       <Button
         variant='outline'
         size='sm'
