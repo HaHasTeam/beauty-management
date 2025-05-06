@@ -56,10 +56,12 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.ADD_VOUCHER,
     Routes.REPORTS,
     Routes.SELECT_INTERVIEW_SLOT,
-    Routes.GROUP_BUYING
+    Routes.GROUP_BUYING,
+    Routes.REPORTS
   ],
   [UserRoleEnum.CONSULTANT]: [
     Routes.DASHBOARD_HOME,
+    Routes.TRANSACTION_MANAGEMENT,
     Routes.PROFILE_SETTINGS,
     Routes.CONSULTANT_SERVICE,
     Routes.CONSULTANT_SERVICE_DETAILS,
@@ -68,7 +70,8 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.BOOKINGS_AND_REQUESTS,
     Routes.BOOKING_DETAILS,
     Routes.BOOKING_DETAIL,
-    Routes.BOOKING_LIST
+    Routes.BOOKING_LIST,
+    Routes.REPORTS
   ],
   [UserRoleEnum.STAFF]: [
     Routes.DASHBOARD_HOME,
@@ -92,9 +95,10 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.UPDATE_VOUCHER,
     Routes.ADD_VOUCHER,
     Routes.REPORTS,
-    Routes.GROUP_BUYING
+    Routes.GROUP_BUYING,
+    Routes.REPORTS
   ],
-  [UserRoleEnum.KOL]: [Routes.DASHBOARD_HOME, Routes.PROFILE_SETTINGS],
+  [UserRoleEnum.KOL]: [Routes.DASHBOARD_HOME, Routes.PROFILE_SETTINGS, Routes.REPORTS],
   [UserRoleEnum.CUSTOMER]: [], // Customers have no access to any dashboard routes
   [UserRoleEnum.OPERATOR]: [
     Routes.DASHBOARD_HOME,
@@ -116,7 +120,8 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.SCHEDULE_BOOKING,
     Routes.WORKING_TIME,
     Routes.SYSTEM_SERVICE_LIST,
-    Routes.BLOG
+    Routes.BLOG,
+    Routes.REPORTS
   ]
 }
 

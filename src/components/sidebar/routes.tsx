@@ -52,7 +52,7 @@ export const routes: IRoute[] = [
     path: routesConfig[Routes.TRANSACTION_MANAGEMENT].path,
     icon: <Banknote className='-mt-[7px] h-4 w-4 stroke-2 text-inherit' />,
     collapse: false,
-    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR]
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.OPERATOR, UserRoleEnum.MANAGER, UserRoleEnum.CONSULTANT]
   },
   {
     name: routesConfig[Routes.BRAND].name,

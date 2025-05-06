@@ -96,7 +96,7 @@ export function BrandRecommendCard({ queryStates, data }: BrandRecommendCardProp
   })
 
   return (
-    <div className='space-y-4 w-full overflow-auto'>
+    <div className='space-y-4 w-full overflow-auto h-full'>
       <CardWithFacetFilters
         mainContent={
           <Static data={data} consultantId={(queryStates?.[0]?.fieldFilters?.consultantId as string) || ''} />
