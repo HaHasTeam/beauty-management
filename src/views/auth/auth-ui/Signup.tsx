@@ -15,6 +15,7 @@ import Button from '@/components/button'
 import FormLabel from '@/components/form-label'
 import { PasswordInput } from '@/components/password-input'
 import { PhoneInputWithCountries } from '@/components/phone-input'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Routes, routesConfig } from '@/configs/routes'
@@ -41,7 +42,10 @@ const getFormSchame = () => {
         .regex(defaultRequiredRegex.pattern, defaultRequiredRegex.message())
         .regex(usernameRegex.pattern, usernameRegex.message()),
       phone: z.string().refine(phoneRegex.pattern, phoneRegex.message()).optional(),
-      passwordConfirm: z.string().regex(passwordRegexEasy.pattern, passwordRegexEasy.message())
+      passwordConfirm: z.string().regex(passwordRegexEasy.pattern, passwordRegexEasy.message()),
+      acceptTerms: z.boolean().refine((val) => val === true, {
+        message: i18next.t('form.validation.acceptTerms')
+      })
     })
     .refine((data) => data.password === data.passwordConfirm, {
       message: i18next.t('signUp.passwordsDoNotMatch'),
@@ -220,6 +224,31 @@ export default function SignUp() {
                       <PasswordInput placeholder={t('signUp.confirmPasswordPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='acceptTerms'
+                render={({ field }) => (
+                  <FormItem className='flex flex-row items-start space-x-3 space-y-0  p-4'>
+                    <FormControl>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <div className='space-y-1 leading-none'>
+                      <FormLabel>
+                        {' '}
+                        {t('form.termsAndConditions.label').replace(t('form.termsAndConditions.linkText'), '')}
+                        <Link
+                          to='https://allure-e.netlify.app/blogs/chinh-sach-dong-tien-rut-tien'
+                          className='text-primary hover:underline'
+                        >
+                          {t('form.termsAndConditions.linkText')}
+                        </Link>
+                      </FormLabel>
+
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />

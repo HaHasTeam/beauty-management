@@ -13,6 +13,15 @@
     "allureBeauty": "Allure Beauty",
     "logo": "Logo Allure"
   },
+  "form": {
+    "termsAndConditions": {
+      "label": "Tôi chấp nhận Điều khoản và Điều kiện",
+      "linkText": "Điều khoản và Điều kiện"
+    },
+    "validation": {
+      "acceptTerms": "Bạn phải chấp nhận điều khoản và điều kiện"
+    }
+  },
   "profile": {
     "myProfile": "Hồ Sơ Của Tôi",
     "profileDescription": "Quản lý thông tin hồ sơ để bảo mật tài khoản",

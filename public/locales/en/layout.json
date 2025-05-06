@@ -13,6 +13,15 @@
     "allureBeauty": "Allure Beauty",
     "logo": "Allure Logo"
   },
+  "form": {
+    "termsAndConditions": {
+      "label": "I accept the Terms and Conditions",
+      "linkText": "Terms and Conditions"
+    },
+    "validation": {
+      "acceptTerms": "You must accept the terms and conditions"
+    }
+  },
   "profile": {
     "myProfile": "My Profile",
     "profileDescription": "Manage your profile information to secure your account",
