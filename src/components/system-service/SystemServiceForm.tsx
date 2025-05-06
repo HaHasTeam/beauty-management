@@ -8,8 +8,10 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { getAllCategoryApi } from '@/network/apis/category'
 import { ISystemServiceFormData, SystemServiceSchema } from '@/schemas/system-service.schema'
+import { RoleEnum } from '@/types/enum'
 
 import LoadingLayer from '../loading-icon/LoadingLayer'
 import SectionCollapsable from '../section-collapsable'
@@ -34,6 +36,7 @@ const SystemServiceForm = ({
   defineFormSignal,
   mode = 'create'
 }: SystemServiceFormProps) => {
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { data: useCategoryData } = useQuery({
@@ -76,22 +79,24 @@ const SystemServiceForm = ({
               />
             </div>
 
-            <div className='flex justify-end space-x-4'>
-              <Button
-                variant='outline'
-                type='submit'
-                className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
-                onClick={() => {
-                  form.reset()
-                  navigate(routesConfig[Routes.SYSTEM_SERVICE_LIST].getPath())
-                }}
-              >
-                {t('button.cancel')}
-              </Button>
-              <Button form={formId} type='submit'>
-                {t('button.create')}
-              </Button>
-            </div>
+            {isGrant ? (
+              <div className='flex justify-end space-x-4'>
+                <Button
+                  variant='outline'
+                  type='submit'
+                  className='border border-primary text-primary hover:text-primary hover:bg-primary/10'
+                  onClick={() => {
+                    form.reset()
+                    navigate(routesConfig[Routes.SYSTEM_SERVICE_LIST].getPath())
+                  }}
+                >
+                  {t('button.cancel')}
+                </Button>
+                <Button form={formId} type='submit'>
+                  {t('button.create')}
+                </Button>
+              </div>
+            ) : null}
           </form>
         </Form>
       }

@@ -20,13 +20,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
 import { createVoucherApi, getAllVouchersApi, getVoucherByIdApi, updateVoucherByIdApi } from '@/network/apis/voucher'
 import { voucherCreateSchema } from '@/schemas'
 import { useStore } from '@/stores/store'
-import { DiscountTypeEnum, discountTypeEnumArray, StatusEnum, VoucherEnum, VoucherVisibilityEnum } from '@/types/enum'
+import {
+  DiscountTypeEnum,
+  discountTypeEnumArray,
+  RoleEnum,
+  StatusEnum,
+  VoucherEnum,
+  VoucherVisibilityEnum
+} from '@/types/enum'
 import type { TVoucher } from '@/types/voucher'
 import { generateMeaningfulCode } from '@/utils'
 
@@ -128,6 +136,8 @@ function VoucherForm({
       })
     }
   }
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.MANAGER, RoleEnum.STAFF, RoleEnum.OPERATOR])
+
   const getHeader = () => {
     if (!id) return null
     switch (voucherData?.status) {
@@ -144,15 +154,17 @@ function VoucherForm({
                 <AlertDescription>This voucher is currently active and visible to your customers.</AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(StatusEnum.INACTIVE)
-              }}
-              loading={isUpdating}
-              variant={'default'}
-            >
-              {'Close voucher'}
-            </AlertAction>
+            {isGrant ? (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(StatusEnum.INACTIVE)
+                }}
+                loading={isUpdating}
+                variant={'default'}
+              >
+                {'Close voucher'}
+              </AlertAction>
+            ) : null}
           </Alert>
         )
       case StatusEnum.INACTIVE:
@@ -170,15 +182,17 @@ function VoucherForm({
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(StatusEnum.ACTIVE)
-              }}
-              loading={isUpdating}
-              variant={'success'}
-            >
-              {'Open voucher'}
-            </AlertAction>
+            {isGrant ? (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(StatusEnum.ACTIVE)
+                }}
+                loading={isUpdating}
+                variant={'success'}
+              >
+                {'Open voucher'}
+              </AlertAction>
+            ) : null}
           </Alert>
         )
 
@@ -521,17 +535,19 @@ function VoucherForm({
           <VoucherProductsCard form={form} />
 
           {/* Save Button - Moved to the end */}
-          <div className='flex justify-end mt-4'>
-            <Button
-              type='submit'
-              className='flex gap-2 items-center'
-              form={`form-${id}`}
-              loading={form.formState.isSubmitting}
-            >
-              <LuSaveAll />
-              <span>{voucherData ? 'Update Voucher' : 'Create Voucher'}</span>
-            </Button>
-          </div>
+          {isGrant ? (
+            <div className='flex justify-end mt-4'>
+              <Button
+                type='submit'
+                className='flex gap-2 items-center'
+                form={`form-${id}`}
+                loading={form.formState.isSubmitting}
+              >
+                <LuSaveAll />
+                <span>{voucherData ? 'Update Voucher' : 'Create Voucher'}</span>
+              </Button>
+            </div>
+          ) : null}
         </form>
       </Form>
     </>
