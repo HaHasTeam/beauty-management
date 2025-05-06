@@ -3,6 +3,7 @@ import { IClassification } from './classification'
 import { OrderEnum, PaymentMethod, RequestStatusEnum, ShippingStatusEnum } from './enum'
 import { IResponseFeedback } from './feedback'
 import { TServerFile } from './file'
+import { TGroupBuying } from './group-buying'
 import { ILivestream } from './livestream'
 import { PaymentMethodEnum } from './payment'
 import { BaseParams } from './request'
@@ -57,6 +58,8 @@ export interface IOrderItem {
   voucher: TVoucher | null
   account: TUser
   parent: IOrderItem
+  groupBuying: TGroupBuying
+  commissionFee: number
 }
 
 // Main order interface
@@ -85,6 +88,8 @@ export interface IOrder {
   orderDetails?: IOrderDetail[]
   isPaymentMethodUpdated: boolean
   voucher: TVoucher | null
+  groupBuying: TGroupBuying
+  commissionFee: number
 }
 
 // Other interfaces (kept as they were, assuming they're still needed)

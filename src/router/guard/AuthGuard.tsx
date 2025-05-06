@@ -56,7 +56,10 @@ const roleBasedRoutes: Record<UserRoleEnum, string[]> = {
     Routes.ADD_VOUCHER,
     Routes.REPORTS,
     Routes.SELECT_INTERVIEW_SLOT,
-    Routes.GROUP_BUYING
+    Routes.GROUP_BUYING,
+    Routes.GROUP_BUYING_DETAILS,
+    Routes.LIVESTREAM,
+    Routes.LIVESTREAM_DETAILS
   ],
   [UserRoleEnum.CONSULTANT]: [
     Routes.DASHBOARD_HOME,

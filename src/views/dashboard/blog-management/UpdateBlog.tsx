@@ -29,6 +29,7 @@ const UpdateBlog = () => {
   // const [resetSignal, setResetSignal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [editorContent, setEditorContent] = useState('')
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
   const { id } = useParams<{ id: string }>() // Get blog ID from URL params
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
@@ -109,6 +110,7 @@ const UpdateBlog = () => {
         type: blogData.data.type
       })
       setEditorContent(blogData.data.content)
+      setIsDataLoaded(true)
     }
   }, [blogData, form])
 
@@ -213,15 +215,24 @@ const UpdateBlog = () => {
                       </div>
                       <div className='w-full space-y-1'>
                         <FormControl>
-                          <ReactQuill
-                            modules={modules}
-                            placeholder={t('updateBlog.contentPlaceholder')}
-                            className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
-                            theme='snow'
-                            {...field}
-                            value={editorContent}
-                            onChange={(content) => setEditorContent(content)}
-                          />
+                          {isDataLoaded ? (
+                            <ReactQuill
+                              modules={modules}
+                              placeholder={t('updateBlog.contentPlaceholder')}
+                              className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
+                              theme='snow'
+                              {...field}
+                              value={editorContent}
+                              onChange={(content) => {
+                                setEditorContent(content)
+                                field.onChange(content)
+                              }}
+                            />
+                          ) : (
+                            <div className='h-40 flex items-center justify-center border rounded-lg'>
+                              <LoadingLayer />
+                            </div>
+                          )}
                         </FormControl>
                         <FormMessage />
                       </div>
