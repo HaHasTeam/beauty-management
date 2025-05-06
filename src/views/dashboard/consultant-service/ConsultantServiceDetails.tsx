@@ -38,6 +38,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import SortableLinks from '@/components/ui/SortableLinks'
 import { Textarea } from '@/components/ui/textarea'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
@@ -52,6 +53,7 @@ import {
   UpdateConsultantServiceByIdRequestParams
 } from '@/network/apis/consultant-service/type'
 import { ConsultantServiceStatusEnum, ConsultantServiceTypeEnum } from '@/types/consultant-service'
+import { RoleEnum } from '@/types/enum'
 import { TFile } from '@/types/file'
 import { modules } from '@/variables/textEditor'
 
@@ -216,6 +218,8 @@ const ConsultantServiceDetails = () => {
   }
 
   const service = detailConsultantServiceById?.data
+  const isAdmin = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
+  const isConsultant = useGrant([RoleEnum.CONSULTANT])
   const getHeader = () => {
     if (!consultantServiceId) return null
     switch (service?.status) {
@@ -235,15 +239,28 @@ const ConsultantServiceDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(ConsultantServiceStatusEnum.INACTIVE)
-              }}
-              loading={isUpdatingService}
-              variant={'default'}
-            >
-              {'Close  service'}
-            </AlertAction>
+            {isConsultant && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(ConsultantServiceStatusEnum.INACTIVE)
+                }}
+                loading={isUpdatingService}
+                variant={'default'}
+              >
+                {'Close  service'}
+              </AlertAction>
+            )}
+            {isAdmin && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(ConsultantServiceStatusEnum.BANNED)
+                }}
+                loading={isUpdatingService}
+                variant={'destructive'}
+              >
+                {'Ban service'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case ConsultantServiceStatusEnum.INACTIVE:
@@ -261,15 +278,28 @@ const ConsultantServiceDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(ConsultantServiceStatusEnum.ACTIVE)
-              }}
-              loading={isUpdatingService}
-              variant={'success'}
-            >
-              {'Open service'}
-            </AlertAction>
+            {isConsultant && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(ConsultantServiceStatusEnum.ACTIVE)
+                }}
+                loading={isUpdatingService}
+                variant={'success'}
+              >
+                {'Open service'}
+              </AlertAction>
+            )}
+            {isAdmin && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(ConsultantServiceStatusEnum.BANNED)
+                }}
+                loading={isUpdatingService}
+                variant={'destructive'}
+              >
+                {'Ban service'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case ConsultantServiceStatusEnum.BANNED:
@@ -287,6 +317,17 @@ const ConsultantServiceDetails = () => {
                 </AlertDescription>
               </div>
             </div>
+            {isAdmin && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(ConsultantServiceStatusEnum.ACTIVE)
+                }}
+                loading={isUpdatingService}
+                variant={'success'}
+              >
+                {'Open service'}
+              </AlertAction>
+            )}
           </Alert>
         )
       default:
@@ -299,12 +340,12 @@ const ConsultantServiceDetails = () => {
       default:
         return (
           <div className='flex items-center justify-end'>
-            {
+            {isConsultant && (
               <Button type='submit' form={`form-${id}`} loading={form.formState.isSubmitting}>
                 <SaveIcon />
                 Save Service
               </Button>
-            }
+            )}
           </div>
         )
     }
