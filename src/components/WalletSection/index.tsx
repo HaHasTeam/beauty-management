@@ -66,7 +66,7 @@ export default function BalanceOverview() {
 
   const { user } = useStore()
 
-  const isBrand = [RoleEnum.MANAGER].includes(user?.role as RoleEnum)
+  const isBrand = [RoleEnum.MANAGER, RoleEnum.CONSULTANT, RoleEnum.CUSTOMER].includes(user?.role as RoleEnum)
 
   // Mask account number for security
   const maskAccountNumber = (accountNumber: string): string => {

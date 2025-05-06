@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ConsultantSuggestedProductsDialog } from '@/components/dialog/ConsultantSuggestedProductsDialog'
 import Empty from '@/components/empty/Empty'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { useStore } from '@/stores/store'
 
 type Props = {
   data: TConsultantRecommendationData | null | undefined // Allow null/undefined
@@ -36,6 +37,8 @@ const brandColors = [
 
 export const Static = ({ data, consultantId }: Props) => {
   // State for Dialog
+  const { user } = useStore()
+  consultantId = consultantId || user?.id
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [selectedBrandId, setSelectedBrandId] = React.useState<string | null>(null)
 
@@ -68,6 +71,8 @@ export const Static = ({ data, consultantId }: Props) => {
     }
     return config
   }, [data?.brandRecommendations])
+  console.log(selectedBrandId, 'selectedBrandId')
+  console.log(consultantId, 'consultantId')
 
   // Memoize chart data preparation - ensure FILL is included
   const chartData = React.useMemo(() => {
@@ -93,11 +98,10 @@ export const Static = ({ data, consultantId }: Props) => {
       </div>
     )
   }
-  console.log(consultantId, selectedBrandId, 'DSAf')
 
   return (
-    <Card className='flex flex-col'>
-      <CardContent className='flex-1 pb-0'>
+    <Card className='flex flex-col h-full'>
+      <CardContent className='pb-0 mt-auto'>
         <ChartContainer config={chartConfig} className='mx-auto aspect-square max-h-[300px]'>
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent indicator='dot' />}></ChartTooltip>

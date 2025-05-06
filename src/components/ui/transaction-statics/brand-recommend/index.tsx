@@ -35,15 +35,15 @@ export default function IndexPage() {
   const bookingStaticData = bookingStaticResponse?.data
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-4 h-full'>
       <h1 className='text-2xl font-bold'>Brand Recommendation Statistics</h1>
-      <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full'}>
-        <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
-          <div className='w-full flex items-center gap-4'>
-            <Shell className='gap-2'>
+      <Card className={'border-zinc-200 p-3 dark:border-zinc-800 w-full flex-1'}>
+        <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden h-full'>
+          <div className='w-full flex items-center gap-4 h-full'>
+            <Shell className='gap-2 h-full'>
               {isBookingStaticLoading ? (
-                <div className='w-full'>
-                  <Skeleton className='w-full h-[300px] rounded-lg' />
+                <div className='w-full h-full'>
+                  <Skeleton className='w-full h-full rounded-lg min-h-[300px]' />
                 </div>
               ) : (
                 <BrandRecommendCard

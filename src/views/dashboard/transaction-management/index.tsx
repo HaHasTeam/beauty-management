@@ -35,7 +35,7 @@ export default function TransactionManagementPage({ specifiedAccountId, showTran
 
   return (
     <div className='flex flex-col gap-4'>
-      {!specifiedAccountId && <RevenueStatic />}
+      {!specifiedAccountId && <RevenueStatic showWalletOverview={false} />}
       <div className=''>
         <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
           <TabsList className='w-fit grid-cols-2 mb-6'>

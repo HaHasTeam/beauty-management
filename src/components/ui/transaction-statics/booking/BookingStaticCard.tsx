@@ -20,9 +20,10 @@ interface BookingStaticCardProps {
     React.Dispatch<React.SetStateAction<DataTableQueryState<TGetDailyBookingStatisticsParams>>>
   ]
   mode?: 'full' | 'mini'
+  isAdminMini?: boolean
 }
 
-export function BookingStaticCard({ queryStates, data, mode = 'full' }: BookingStaticCardProps) {
+export function BookingStaticCard({ queryStates, data, mode = 'full', isAdminMini }: BookingStaticCardProps) {
   const { user } = useStore()
   const isAdmin = [RoleEnum.ADMIN, RoleEnum.OPERATOR].includes(user?.role as RoleEnum)
 
@@ -124,7 +125,7 @@ export function BookingStaticCard({ queryStates, data, mode = 'full' }: BookingS
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} />}>
+      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} isAdminMini={isAdminMini} />}>
         <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
           {mode === 'full' && (
             <div className='flex items-center justify-end px-4 py-2'>
