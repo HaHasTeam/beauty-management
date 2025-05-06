@@ -1,12 +1,8 @@
-import { MessageSquare, Store } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 
-import Button from '@/components/button'
 import State from '@/components/state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Ratings } from '@/components/ui/rating'
-import { Routes, routesConfig } from '@/configs/routes'
 import { IBrand } from '@/types/brand'
 
 interface BrandSectionProps {
@@ -30,9 +26,7 @@ const BrandSection = ({ brand }: BrandSectionProps) => {
             <div className='flex flex-col gap-1'>
               <div className='flex gap-2 items-start'>
                 <div className='flex flex-col'>
-                  <Link to={routesConfig[Routes.BRAND].path + '/' + brand.id} className='text-xl font-bold'>
-                    {brand.name}
-                  </Link>
+                  <span className='text-xl font-bold'>{brand.name}</span>
                   <Ratings rating={brand.star ?? 0} size={13} variant='yellow' />
                 </div>
                 <State state={brand.status} />
@@ -43,20 +37,6 @@ const BrandSection = ({ brand }: BrandSectionProps) => {
               </p>
             </div>
           </div>
-        </div>
-
-        <div className='flex gap-2 w-full md:w-auto'>
-          <Button className='sm:gap-2 gap-1 flex-1 md:flex-none bg-primary hover:bg-primary/80 px-2 sm:px-3' size='sm'>
-            <MessageSquare className='w-4 h-4 sm:mr-2 mr-1 sm:inline hidden' />
-            <span>{t('brand.chatNow')}</span>
-          </Button>
-          <Link
-            to={routesConfig[Routes.BRAND].path + '/' + brand.id}
-            className='sm:gap-2 gap-1 px-2 rounded-md flex items-center flex-1 md:flex-none border border-primary text-primary hover:text-primary hover:bg-primary/10 text-sm'
-          >
-            <Store className='w-4 h-4 sm:mr-2 mr-1 sm:inline hidden' />
-            <span>{t('brand.viewShop')}</span>
-          </Link>
         </div>
       </div>
       <div className='grid sm:grid-cols-4 grids-cols-2 gap-4'>

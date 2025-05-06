@@ -25,15 +25,20 @@ interface IStep {
 interface OrderStatusTrackingDetailProps {
   statusTrackingData: IStatusTracking[]
   cancelAndReturnRequest?: ICancelAndReturnRequest
+  orderCreatedAt: string
 }
-const OrderStatusTrackingDetail = ({ statusTrackingData, cancelAndReturnRequest }: OrderStatusTrackingDetailProps) => {
+const OrderStatusTrackingDetail = ({
+  orderCreatedAt,
+  statusTrackingData,
+  cancelAndReturnRequest
+}: OrderStatusTrackingDetailProps) => {
   const { t } = useTranslation()
   const [openMediaStep, setOpenMediaStep] = useState<number | null>(null)
 
   const defaultTimeline = [
     {
       status: 'ORDER_CREATED',
-      createdAt: statusTrackingData[0]?.createdAt,
+      createdAt: orderCreatedAt,
       text: t('order.created'),
       icon: <Package className='w-5 h-5' />,
       reason: '',

@@ -1,5 +1,5 @@
 import { ILivestream } from '@/types/live-stream'
-import { TServerResponseWithPagination } from '@/types/request'
+import { TServerResponse, TServerResponseWithPagination } from '@/types/request'
 import { toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
@@ -31,3 +31,10 @@ export const filterLivestreamsApi = toQueryFetcher<
     }
   })
 })
+
+export const getLivestreamByIdApi = toQueryFetcher<string, TServerResponse<ILivestream>>(
+  'getLivestreamByIdApi',
+  async (id) => {
+    return privateRequest(`/livestreams/get-by-id/${id}`)
+  }
+)

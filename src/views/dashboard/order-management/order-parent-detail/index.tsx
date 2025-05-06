@@ -119,7 +119,9 @@ const OrderParentDetail = () => {
                         </p>
                         <p>
                           <span className='font-medium'>{t('orderDetail.notes')}:</span>{' '}
-                          {useOrderData?.data?.notes ?? t('orderDetail.no')}
+                          {useOrderData?.data?.notes && useOrderData?.data?.notes !== ''
+                            ? useOrderData?.data?.notes
+                            : t('orderDetail.no')}
                         </p>
                       </div>
                     }
@@ -198,6 +200,9 @@ const OrderParentDetail = () => {
                         totalPayment={orderItem?.totalPrice}
                         paymentMethod={orderItem?.paymentMethod}
                         orderParent={null}
+                        orderStatus={orderItem?.status}
+                        groupBuying={orderItem?.groupBuying}
+                        commissionFee={orderItem?.commissionFee}
                       />
                     </div>
 

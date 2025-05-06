@@ -1,5 +1,5 @@
 import { TGroupBuying } from '@/types/group-buying'
-import { BaseParams, TServerResponseWithPagination } from '@/types/request'
+import { BaseParams, TServerResponse, TServerResponseWithPagination } from '@/types/request'
 import { toQueryFetcher } from '@/utils/query'
 import { privateRequest } from '@/utils/request'
 
@@ -35,3 +35,10 @@ export const filterGroupBuyingsApi = toQueryFetcher<
     }
   })
 })
+
+export const getGroupBuyingByIdApi = toQueryFetcher<string, TServerResponse<TGroupBuying>>(
+  'getGroupBuyingByIdApi',
+  async (id) => {
+    return privateRequest(`/group-buyings/get-by-id/${id}`)
+  }
+)

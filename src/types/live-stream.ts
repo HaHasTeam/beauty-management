@@ -11,7 +11,7 @@ export interface ILivestream {
   record: string | null
   thumbnail: string
   status: LiveStreamStatusEnum
-  products: TProduct[] | null
+  livestreamProducts: TProduct[] | null
   account: TUser
 }
 export enum LiveStreamStatusEnum {
