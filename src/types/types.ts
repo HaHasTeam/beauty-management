@@ -2,6 +2,13 @@ import { ComponentType } from 'react'
 
 import { UserRoleEnum } from './role'
 
+export type TPaginationResponse<T> = {
+  items: T[]
+  total: number
+  page: number
+  limit: number
+}
+
 export type Provider =
   | 'apple'
   | 'azure'

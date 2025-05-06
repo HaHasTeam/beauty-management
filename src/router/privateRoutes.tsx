@@ -24,9 +24,13 @@ import FlashSale from '@/views/dashboard/flash-sale'
 import FlashSaleDetailsById from '@/views/dashboard/flash-sale/[id]'
 import AddFlashSale from '@/views/dashboard/flash-sale/AddFlashSale'
 import Forbidden403 from '@/views/dashboard/forbidden'
+import GroupBuy from '@/views/dashboard/group-buying'
+import GroupBuyDetailById from '@/views/dashboard/group-buying/[id]'
 import GroupProduct from '@/views/dashboard/group-product'
 import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
+import Livestream from '@/views/dashboard/live-stream'
+import LivestreamDetail from '@/views/dashboard/live-stream/[id]'
 import MyBrandDashBoard from '@/views/dashboard/my-brand-dashboard'
 import OrderList from '@/views/dashboard/order-management'
 import OrderParentDetail from '@/views/dashboard/order-management/order-parent-detail'
@@ -317,11 +321,37 @@ export const privateRoutes: RouteObject[] = [
         ]
       },
       {
+        path: routesConfig[Routes.LIVESTREAM].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <Livestream />
+          },
+          {
+            path: ':id',
+            element: <LivestreamDetail />
+          }
+        ]
+      },
+      {
         path: routesConfig[Routes.REPORTS].path.replace('/dashboard/', ''),
         children: [
           {
             index: true,
             element: <Reports />
+          }
+        ]
+      },
+      {
+        path: routesConfig[Routes.GROUP_BUYING].path.replace('/dashboard/', ''),
+        children: [
+          {
+            index: true,
+            element: <GroupBuy />
+          },
+          {
+            path: ':id',
+            element: <GroupBuyDetailById />
           }
         ]
       },

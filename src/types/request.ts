@@ -53,3 +53,8 @@ export type TServerResponseWithPagination<TItems = undefined> = {
     totalPages: number
   }
 }
+
+export type TResponse<T> = {
+  message: string
+  data: T
+}
