@@ -9,9 +9,10 @@ type OrderStaticProps = {
   data: OrderStatic | undefined
   mode?: 'full' | 'mini'
   showOnlyVoucher?: 'platform' | 'shop'
+  isAdminMini?: boolean
 }
 
-const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
+const Static = ({ data, mode = 'full', showOnlyVoucher, isAdminMini }: OrderStaticProps) => {
   const fullChartConfig: ChartConfig = {
     revenue: {
       label: 'Revenue',
@@ -151,7 +152,32 @@ const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
       </div>
     </div>
   )
-
+  const revenueCardMini = (
+    <div className='flex items-center space-x-2 rounded-lg border border-[hsl(var(--chart-1))] p-2 bg-[hsla(var(--chart-1)/0.05)] hover:bg-[hsla(var(--chart-1)/0.1)] transition-colors flex-1 min-w-[150px]'>
+      <div className='rounded-full bg-[hsla(var(--chart-1)/0.2)] p-1.5 shrink-0'>
+        <DollarSign className='h-3.5 w-3.5 text-[hsl(var(--chart-1))] ' />
+      </div>
+      <div className='min-w-0 flex-1 overflow-hidden'>
+        <p className='text-xs font-medium text-muted-foreground truncate'>Revenue</p>
+        <p className='text-sm font-bold truncate text-[hsl(var(--chart-1))] '>
+          {formatCurrency(data.total.totalRevenue, 'vi-VN')}
+        </p>
+      </div>
+    </div>
+  )
+  const commissionFeeCardMini = (
+    <div className='flex items-center space-x-2 rounded-lg border border-[hsl(var(--chart-gray-4))] p-2 bg-[hsla(var(--chart-gray-4)/0.05)] hover:bg-[hsla(var(--chart-gray-4)/0.1)] transition-colors flex-1 min-w-[150px]'>
+      <div className='rounded-full bg-[hsla(var(--chart-gray-4)/0.2)] p-1.5 shrink-0'>
+        <Banknote className='h-3.5 w-3.5 text-[hsl(var(--chart-gray-4))] ' />
+      </div>
+      <div className='min-w-0 flex-1 overflow-hidden'>
+        <p className='text-xs font-medium text-muted-foreground truncate'>Commission Fee</p>
+        <p className='text-sm font-bold truncate text-[hsl(var(--chart-gray-4))] '>
+          {formatCurrency(data.total.totalCommissionFee, 'vi-VN')}
+        </p>
+      </div>
+    </div>
+  )
   const actualRevenueCardMini = (
     <div className='flex items-center space-x-2 rounded-lg border border-[hsl(var(--chart-blue))] p-2 bg-[hsla(var(--chart-blue)/0.05)] hover:bg-[hsla(var(--chart-blue)/0.1)] transition-colors flex-1 min-w-[150px]'>
       <div className='rounded-full bg-[hsla(var(--chart-blue)/0.2)] p-1.5 shrink-0'>
@@ -229,6 +255,12 @@ const Static = ({ data, mode = 'full', showOnlyVoucher }: OrderStaticProps) => {
         platformDiscountCardMini
       ) : showOnlyVoucher === 'shop' ? (
         shopDiscountCardMini
+      ) : isAdminMini ? (
+        <>
+          {revenueCardMini}
+          {platformDiscountCardMini}
+          {commissionFeeCardMini}
+        </>
       ) : (
         <>
           {actualRevenueCardMini}

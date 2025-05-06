@@ -17,9 +17,10 @@ type Props = {
   mode?: 'full' | 'mini'
   header?: React.ReactNode
   voucherId?: string
+  isAdminMini?: boolean
 }
 
-export default function IndexPage({ orderType, eventId, mode = 'full', header, voucherId }: Props) {
+export default function IndexPage({ orderType, eventId, mode = 'full', header, voucherId, isAdminMini }: Props) {
   const queryStates = useState<DataTableQueryState<TGetDailyOrderStatisticsParams>>(
     {} as DataTableQueryState<TGetDailyOrderStatisticsParams>
   )
@@ -70,6 +71,7 @@ export default function IndexPage({ orderType, eventId, mode = 'full', header, v
                   mode={mode}
                   showOnlyVoucher={!!voucherId ? (userListData?.data.isParent ? 'platform' : 'shop') : undefined}
                   showFilter={orderType !== OrderEnum.GROUP_BUYING}
+                  isAdminMini={isAdminMini}
                 />
               )}
             </Shell>

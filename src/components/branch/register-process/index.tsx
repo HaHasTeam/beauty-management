@@ -285,3 +285,4 @@ function RegisterProcess({ userProfileData }: { userProfileData?: TUser }) {
 }
 
 export default RegisterProcess
+export { useUserStatus }
