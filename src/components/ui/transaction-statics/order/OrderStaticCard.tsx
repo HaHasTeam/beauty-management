@@ -28,6 +28,7 @@ interface OrderStaticCardProps {
   mode?: 'full' | 'mini'
   showOnlyVoucher?: 'platform' | 'shop'
   showFilter?: boolean
+  isAdminMini?: boolean
 }
 
 export function OrderStaticCard({
@@ -35,7 +36,8 @@ export function OrderStaticCard({
   data,
   mode = 'full',
   showOnlyVoucher,
-  showFilter
+  showFilter,
+  isAdminMini = false
 }: OrderStaticCardProps) {
   // Get currently selected date range and order type
   const [selectedOrderType, setSelectedOrderType] = React.useState<OrderEnum | null>(null)
@@ -283,7 +285,9 @@ export function OrderStaticCard({
 
   return (
     <div className='space-y-4 w-full overflow-auto'>
-      <CardWithFacetFilters mainContent={<Static data={data} mode={mode} showOnlyVoucher={showOnlyVoucher} />}>
+      <CardWithFacetFilters
+        mainContent={<Static data={data} mode={mode} showOnlyVoucher={showOnlyVoucher} isAdminMini={isAdminMini} />}
+      >
         {showFilter && (
           <DataTableToolbar table={table} filterFields={filterFields} isTable={false}>
             {mode === 'full' && (

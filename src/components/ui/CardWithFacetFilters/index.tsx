@@ -9,9 +9,9 @@ interface CardWithFacetFiltersProps extends React.HTMLAttributes<HTMLDivElement>
 
 export function CardWithFacetFilters({ children, className, mainContent, ...props }: CardWithFacetFiltersProps) {
   return (
-    <div className={cn('w-full space-y-2.5 overflow-auto', className)} {...props}>
+    <div className={cn('w-full space-y-2.5 overflow-auto h-full', className)} {...props}>
       {children}
-      <div className='overflow-hidden'>{mainContent}</div>
+      <div className='overflow-hidden h-full'>{mainContent}</div>
     </div>
   )
 }
