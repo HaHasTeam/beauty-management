@@ -150,13 +150,13 @@ const OrderParentDetail = () => {
 
                     {/* brand */}
                     <BrandOrderInformation
-                      brandId={
-                        (
-                          orderItem?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-                          orderItem?.orderDetails?.[0]?.productClassification?.productDiscount ??
-                          orderItem?.orderDetails?.[0]?.productClassification
-                        )?.product?.brand?.id ?? ''
-                      }
+                      // brandId={
+                      //   (
+                      //     orderItem?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
+                      //     orderItem?.orderDetails?.[0]?.productClassification?.productDiscount ??
+                      //     orderItem?.orderDetails?.[0]?.productClassification
+                      //   )?.product?.brand?.id ?? ''
+                      // }
                       brandName={
                         (
                           orderItem?.orderDetails?.[0]?.productClassification?.preOrderProduct ??

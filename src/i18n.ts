@@ -19,8 +19,8 @@ i18n
     },
     ns: ['layout'],
     defaultNS: 'layout',
-    fallbackLng: ['vi'],
-    lng: 'vi',
+    fallbackLng: ['en'],
+    lng: 'en',
     interpolation: {
       escapeValue: false,
       format: (value, format, lng) => {
