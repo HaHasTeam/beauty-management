@@ -22,12 +22,9 @@ export default function FinancialSettings({ data, isEditing, onChange }: Financi
           <div className='flex items-center'>
             <Input
               id='commissionFee'
-              type='number'
-              step='0.01'
-              min='0'
-              max='1'
+              type='text'
               value={data.commissionFee}
-              onChange={(e) => onChange('commissionFee', e.target.value)}
+              onChange={(e) => onChange('commissionFee', Number(e.target.value))}
               disabled={!isEditing}
               className='max-w-[200px]'
             />
