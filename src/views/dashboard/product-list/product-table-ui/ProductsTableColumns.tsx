@@ -26,8 +26,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { formatDate } from '@/lib/utils'
-import { StatusEnum } from '@/types/enum'
+import { RoleEnum, StatusEnum } from '@/types/enum'
 import { IResponseProduct, ProductStatusEnum } from '@/types/product'
 import { formatNumber } from '@/utils/number'
 
@@ -179,6 +180,8 @@ export function getColumns({ setRowAction, showCount = false }: GetColumnsProps)
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
+        const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -199,17 +202,19 @@ export function getColumns({ setRowAction, showCount = false }: GetColumnsProps)
                 </Link>
               </DropdownMenuItem>
 
-              <DropdownMenuItem className='text-blue-500'>
-                <Link
-                  to={routesConfig[Routes.UPDATE_PRODUCT].getPath({
-                    id: row.original.id
-                  })}
-                  className='w-full flex gap-2 items-center'
-                >
-                  <FilePenLine size={16} strokeWidth={3} />
-                  <span className='font-semibold'>Edit</span>
-                </Link>
-              </DropdownMenuItem>
+              {isGranted && (
+                <DropdownMenuItem className='text-blue-500'>
+                  <Link
+                    to={routesConfig[Routes.UPDATE_PRODUCT].getPath({
+                      id: row.original.id
+                    })}
+                    className='w-full flex gap-2 items-center'
+                  >
+                    <FilePenLine size={16} strokeWidth={3} />
+                    <span className='font-semibold'>Edit</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuSeparator />
 
