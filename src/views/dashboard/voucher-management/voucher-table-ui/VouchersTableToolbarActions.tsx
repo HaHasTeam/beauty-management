@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { exportTableToCSV } from '@/lib/export'
-import { StatusEnum } from '@/types/enum'
+import { RoleEnum, StatusEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
 
 import { UpdateStatusVoucherDialog } from './UpdateStatusVoucherDialog'
@@ -22,7 +23,7 @@ export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActio
 
   const selectedRows = table.getFilteredSelectedRowModel().rows
   const hasSelectedRows = selectedRows.length > 0
-
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.MANAGER, RoleEnum.STAFF, RoleEnum.OPERATOR])
   return (
     <div className='flex items-center gap-2'>
       {hasSelectedRows ? (
@@ -39,10 +40,12 @@ export function VouchersTableToolbarActions({ table }: VouchersTableToolbarActio
           />
         </>
       ) : null}
-      <Button size={'sm'} onClick={handleAddVoucher} className='gap-2'>
-        <ListPlusIcon className='size-4' />
-        Add Voucher
-      </Button>
+      {isGrant ? (
+        <Button size={'sm'} onClick={handleAddVoucher} className='gap-2'>
+          <ListPlusIcon className='size-4' />
+          Add Voucher
+        </Button>
+      ) : null}
       <Button
         variant='outline'
         size='sm'

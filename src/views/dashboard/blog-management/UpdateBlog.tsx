@@ -16,12 +16,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getBlogApi, updateBlogApi } from '@/network/apis/blog'
 import { getFormBlogSchema } from '@/schemas/blog.schema'
 import { IServerCreateBlog } from '@/types/blog'
-import { BlogEnum, BlogTypeEnum } from '@/types/enum'
+import { BlogEnum, BlogTypeEnum, RoleEnum } from '@/types/enum'
 import { modules } from '@/variables/textEditor'
 
 const UpdateBlog = () => {
@@ -113,6 +114,8 @@ const UpdateBlog = () => {
       setIsDataLoaded(true)
     }
   }, [blogData, form])
+
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
 
   async function onSubmit(values: z.infer<typeof FormBlogSchema>) {
     if (!id) return
@@ -320,14 +323,16 @@ const UpdateBlog = () => {
           </CardContent>
         </Card>
         {/* Submit Button */}
-        <div className='flex justify-end gap-4'>
-          <Button type='button' variant='outline' onClick={handleReset}>
-            {t('button.cancel')}
-          </Button>
-          <Button type='submit' loading={isLoading}>
-            {t('button.submit')}
-          </Button>
-        </div>
+        {isGrant && (
+          <div className='flex justify-end gap-4'>
+            <Button type='button' variant='outline' onClick={handleReset}>
+              {t('button.cancel')}
+            </Button>
+            <Button type='submit' loading={isLoading}>
+              {t('button.submit')}
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   )

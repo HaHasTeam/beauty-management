@@ -14,7 +14,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { cn, formatDate } from '@/lib/utils'
+import { RoleEnum } from '@/types/enum'
 import { UserRoleEnum } from '@/types/role'
 import { TUser, UserStatusEnum } from '@/types/user'
 
@@ -196,6 +198,8 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
           navigate(path)
         }
 
+        const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR, RoleEnum.MANAGER])
+
         return (
           <div className='flex justify-end'>
             <DropdownMenu modal={false}>
@@ -211,7 +215,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
                   Explore Account
                 </DropdownMenuItem>
 
-                {(user.status === UserStatusEnum.INACTIVE || user.status === UserStatusEnum.PENDING) && (
+                {(user.status === UserStatusEnum.INACTIVE || user.status === UserStatusEnum.PENDING) && isGrant && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
@@ -230,31 +234,33 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TUser>[
 
                 <DropdownMenuSeparator />
 
-                {user.status !== UserStatusEnum.BANNED ? (
-                  <DropdownMenuItem
-                    className='text-red-500'
-                    onClick={() => {
-                      setRowAction({ row: row, type: 'ban' })
-                    }}
-                  >
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <ShieldX className='h-4 w-4' />
-                      <span className='font-semibold'>Ban Account</span>
-                    </span>
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem
-                    className='text-green-500'
-                    onClick={() => {
-                      setRowAction({ row: row, type: 'unbanned' })
-                    }}
-                  >
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <ShieldCheck className='h-4 w-4' />
-                      <span className='font-semibold'>Unban Account</span>
-                    </span>
-                  </DropdownMenuItem>
-                )}
+                {user.status !== UserStatusEnum.BANNED
+                  ? isGrant && (
+                      <DropdownMenuItem
+                        className='text-red-500'
+                        onClick={() => {
+                          setRowAction({ row: row, type: 'ban' })
+                        }}
+                      >
+                        <span className='w-full flex gap-2 items-center cursor-pointer'>
+                          <ShieldX className='h-4 w-4' />
+                          <span className='font-semibold'>Ban Account</span>
+                        </span>
+                      </DropdownMenuItem>
+                    )
+                  : isGrant && (
+                      <DropdownMenuItem
+                        className='text-green-500'
+                        onClick={() => {
+                          setRowAction({ row: row, type: 'unbanned' })
+                        }}
+                      >
+                        <span className='w-full flex gap-2 items-center cursor-pointer'>
+                          <ShieldCheck className='h-4 w-4' />
+                          <span className='font-semibold'>Unban Account</span>
+                        </span>
+                      </DropdownMenuItem>
+                    )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

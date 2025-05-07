@@ -9,7 +9,9 @@ import Empty from '@/components/empty/Empty'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { externalLinks, Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { getBlogApi } from '@/network/apis/blog'
+import { RoleEnum } from '@/types/enum'
 
 const BlogDetails = () => {
   const { t } = useTranslation()
@@ -21,6 +23,7 @@ const BlogDetails = () => {
     queryFn: getBlogApi.fn,
     enabled: !!id // Only fetch if blogId exists
   })
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
 
   if (isBlogLoading) {
     return <LoadingLayer />
@@ -45,13 +48,15 @@ const BlogDetails = () => {
             <BlogState state={blogData.data.status} />
           </div>
           <div className='flex gap-2 items-center'>
-            <Link
-              to={routesConfig[Routes.UPDATE_BLOG].getPath({ id: blogData.data.id })}
-              className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-white hover:text-white flex items-center gap-1 bg-primary hover:bg-primary/80 border border-primary'
-            >
-              {t('button.edit')}
-              <Pencil className='w-5 h-5 sm:block hidden' />
-            </Link>
+            {isGrant && (
+              <Link
+                to={routesConfig[Routes.UPDATE_BLOG].getPath({ id: blogData.data.id })}
+                className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-white hover:text-white flex items-center gap-1 bg-primary hover:bg-primary/80 border border-primary'
+              >
+                {t('button.edit')}
+                <Pencil className='w-5 h-5 sm:block hidden' />
+              </Link>
+            )}
             <Link
               to={routesConfig[Routes.BLOG].getPath()}
               className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'

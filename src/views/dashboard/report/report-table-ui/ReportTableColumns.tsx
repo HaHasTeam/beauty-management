@@ -27,6 +27,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import useGrant from '@/hooks/useGrant'
+import { useStore } from '@/stores/store'
+import { RoleEnum } from '@/types/enum'
 import { IReport, ReportTypeEnum } from '@/types/report'
 import { formatCurrency } from '@/utils/number'
 import { getDisplayString } from '@/utils/string'
@@ -253,7 +256,9 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IReport
       cell: function Cell({ row }) {
         const isAssigned = !!row.original.assignee?.id
         const isResolved = !!row.original.resultNote
-
+        const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
+        const { user } = useStore()
+        const isAssignedToMe = row.original.assignee?.id === user?.id
         return (
           <div className='flex justify-end'>
             <DropdownMenu modal={false}>
@@ -270,34 +275,37 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<IReport
                     <span>View report details</span>
                   </span>
                 </DropdownMenuItem>
-
-                {!isAssigned && (
+                {isGrant && (
                   <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className='text-blue-500'
-                      onClick={() => setRowAction({ row: row, type: 'assign' })}
-                    >
-                      <span className='w-full flex gap-2 items-center cursor-pointer'>
-                        <UserPlus className='h-4 w-4' />
-                        <span className='font-semibold'>Assign to staff</span>
-                      </span>
-                    </DropdownMenuItem>
-                  </>
-                )}
+                    {!isAssigned && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className='text-blue-500'
+                          onClick={() => setRowAction({ row: row, type: 'assign' })}
+                        >
+                          <span className='w-full flex gap-2 items-center cursor-pointer'>
+                            <UserPlus className='h-4 w-4' />
+                            <span className='font-semibold'>Assign to staff</span>
+                          </span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
 
-                {isAssigned && !isResolved && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className='text-green-500'
-                      onClick={() => setRowAction({ row: row, type: 'resolve' })}
-                    >
-                      <span className='w-full flex gap-2 items-center cursor-pointer'>
-                        <CheckCircle className='h-4 w-4' />
-                        <span className='font-semibold'>Mark as resolved</span>
-                      </span>
-                    </DropdownMenuItem>
+                    {isAssigned && !isResolved && isAssignedToMe && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className='text-green-500'
+                          onClick={() => setRowAction({ row: row, type: 'resolve' })}
+                        >
+                          <span className='w-full flex gap-2 items-center cursor-pointer'>
+                            <CheckCircle className='h-4 w-4' />
+                            <span className='font-semibold'>Mark as resolved</span>
+                          </span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                   </>
                 )}
               </DropdownMenuContent>
