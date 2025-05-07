@@ -31,6 +31,7 @@ import GroupProductDetailById from '@/views/dashboard/group-product/[id]'
 import AddGroupProduct from '@/views/dashboard/group-product/AddGroupProduct'
 import Livestream from '@/views/dashboard/live-stream'
 import LivestreamDetail from '@/views/dashboard/live-stream/[id]'
+import MasterConfig from '@/views/dashboard/master-config'
 import MyBrandDashBoard from '@/views/dashboard/my-brand-dashboard'
 import OrderList from '@/views/dashboard/order-management'
 import OrderParentDetail from '@/views/dashboard/order-management/order-parent-detail'
@@ -235,6 +236,10 @@ export const privateRoutes: RouteObject[] = [
       {
         path: routesConfig[Routes.PROFILE_SETTINGS].path.replace('/dashboard/', ''),
         element: <ProfileSettings />
+      },
+      {
+        path: routesConfig[Routes.MASTER_CONFIG_DETAILS].path.replace('/dashboard/', ''),
+        element: <MasterConfig />
       },
       {
         path: routesConfig[Routes.PRODUCT_LIST].path.replace('/dashboard/', ''),
