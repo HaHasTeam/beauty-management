@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { formatDate } from '@/lib/utils'
+import { RoleEnum } from '@/types/enum'
 import { TPreOrder } from '@/types/pre-order'
 
 import { PreOrderClassificationsCell } from './PreOrderClassificationsCell'
@@ -116,6 +118,8 @@ export function getColumns(): ColumnDef<TPreOrder>[] {
         const handleNavigate = () => {
           navigate(routesConfig[Routes.PRE_ORDER_DETAILS].getPath({ id: row.original.id }))
         }
+        const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -127,7 +131,7 @@ export function getColumns(): ColumnDef<TPreOrder>[] {
               <DropdownMenuItem onClick={handleNavigate} className='text-blue-500'>
                 <span className='w-full flex gap-2 items-center cursor-pointer'>
                   <FilePenLine size={16} strokeWidth={3} />
-                  <span className='font-semibold'>Edit</span>
+                  <span className='font-semibold'>{isGranted ? 'Edit' : 'View'}</span>
                 </span>
               </DropdownMenuItem>
             </DropdownMenuContent>

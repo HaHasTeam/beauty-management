@@ -17,11 +17,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { addFlashSaleApi, getFlashSaleByIdApi, updateFlashSaleApi } from '@/network/apis/flash-sale'
 import { TAddFlashSaleRequestParams, TUpdateFlashSaleRequestParams } from '@/network/apis/flash-sale/type'
 import { getProductApi } from '@/network/apis/product'
+import { RoleEnum } from '@/types/enum'
 import { FlashSaleStatusEnum } from '@/types/flash-sale'
 
 import ClassificationConfig from './ClassificationConfig'
@@ -40,6 +42,7 @@ const FlashSaleDetails = () => {
     enabled: !!itemId
   })
   // const triggerImageUploadRef = useRef<TriggerUploadRef>(null)
+  const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
 
   const navigate = useNavigate()
   const { successToast } = useToast()
@@ -177,15 +180,17 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
-              }}
-              loading={isUpdatingFlashSale}
-              variant={'default'}
-            >
-              {'Close event'}
-            </AlertAction>
+            {isGranted && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
+                }}
+                loading={isUpdatingFlashSale}
+                variant={'default'}
+              >
+                {'Close event'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case FlashSaleStatusEnum.INACTIVE:
@@ -203,6 +208,7 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
+
             {/* <AlertAction
               onClick={() => {
                 handleChangeStatus(FlashSaleStatusEnum.WAITING)
@@ -232,15 +238,17 @@ const FlashSaleDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
-              }}
-              loading={isUpdatingFlashSale}
-              variant={'default'}
-            >
-              {'Close event'}
-            </AlertAction>
+            {isGranted && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(FlashSaleStatusEnum.CANCELLED)
+                }}
+                loading={isUpdatingFlashSale}
+                variant={'default'}
+              >
+                {'Close event'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case FlashSaleStatusEnum.SOLD_OUT:
@@ -311,12 +319,12 @@ const FlashSaleDetails = () => {
       default:
         return (
           <div className='flex items-center justify-end'>
-            {
+            {isGranted && (
               <Button type='submit' form={`form-${id}`} loading={form.formState.isSubmitting}>
                 <SaveIcon />
                 Save Flash Sale Product
               </Button>
-            }
+            )}
           </div>
         )
     }

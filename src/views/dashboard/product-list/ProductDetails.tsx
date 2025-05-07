@@ -16,12 +16,14 @@ import UpdateProductQuantity from '@/components/product/UpdateProductQuantity'
 import UpdateProductStatus from '@/components/product/UpdateProductStatus'
 import SectionCollapsable from '@/components/section-collapsable'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { getProductApi } from '@/network/apis/product'
 import { useStore } from '@/stores/store'
 import { ProductEnum, RoleEnum } from '@/types/enum'
 
 const ProductDetails = () => {
   const PRODUCT_QUANTITY_WARNING = 15
+  const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
 
   const { t } = useTranslation()
   const { id } = useParams()
@@ -57,15 +59,17 @@ const ProductDetails = () => {
               {productData.data.name}
             </h3>
             <div className='flex gap-2 items-center'>
-              {productData.data.status !== ProductEnum.INACTIVE && productData.data.status !== ProductEnum.BANNED && (
-                <Link
-                  to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
-                  className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-white hover:text-white flex items-center gap-1 bg-primary hover:bg-primary/80 border border-primary'
-                >
-                  {t('button.edit')}
-                  <Pencil className='w-5 h-5 sm:block hidden' />
-                </Link>
-              )}
+              {productData.data.status !== ProductEnum.INACTIVE &&
+                productData.data.status !== ProductEnum.BANNED &&
+                isGranted && (
+                  <Link
+                    to={routesConfig[Routes.UPDATE_PRODUCT].getPath({ id: productData.data.id })}
+                    className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-white hover:text-white flex items-center gap-1 bg-primary hover:bg-primary/80 border border-primary'
+                  >
+                    {t('button.edit')}
+                    <Pencil className='w-5 h-5 sm:block hidden' />
+                  </Link>
+                )}
               <Link
                 to={routesConfig[Routes.PRODUCT_LIST].getPath()}
                 className='md:text-base sm:text-sm text-xs min-w-fit px-2 py-1 rounded-md text-primary hover:text-primary flex items-center gap-1 bg-white hover:bg-primary/10 border border-primary'

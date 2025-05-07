@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
@@ -29,7 +30,7 @@ import {
 } from '@/network/apis/group-product'
 import { TUpdateGroupProductRequestParams } from '@/network/apis/group-product/type'
 import { useStore } from '@/stores/store'
-import { DiscountTypeEnum, VoucherApplyTypeEnum } from '@/types/enum'
+import { DiscountTypeEnum, RoleEnum, VoucherApplyTypeEnum } from '@/types/enum'
 import { GroupProductStatusEnum } from '@/types/group-product'
 import { generateMeaningfulCode } from '@/utils'
 
@@ -43,6 +44,7 @@ const GroupProductDetails = () => {
       userData: state.user
     }))
   )
+  const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
 
   const brandId = useMemo(() => (userData?.brands?.length ? userData.brands[0].id : ''), [userData])
 
@@ -185,15 +187,17 @@ const GroupProductDetails = () => {
               </AlertDescription>
             </div>
           </div>
-          <AlertAction
-            onClick={() => {
-              toggleGroupProductStatusFn(itemId)
-            }}
-            loading={isTogglingGroupProductStatus}
-            variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'default' : 'success'}
-          >
-            {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'Close group' : 'Activate group'}
-          </AlertAction>
+          {isGranted && (
+            <AlertAction
+              onClick={() => {
+                toggleGroupProductStatusFn(itemId)
+              }}
+              loading={isTogglingGroupProductStatus}
+              variant={groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'default' : 'success'}
+            >
+              {groupProduct?.data.status === GroupProductStatusEnum.ACTIVE ? 'Close group' : 'Activate group'}
+            </AlertAction>
+          )}
         </Alert>
       )}
 

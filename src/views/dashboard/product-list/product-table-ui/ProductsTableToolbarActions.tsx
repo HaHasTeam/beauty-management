@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { exportTableToCSV } from '@/lib/export'
+import { RoleEnum } from '@/types/enum'
 import { IResponseProduct } from '@/types/product'
 
 import { BanProductsDialog } from './BanProductsDialog'
@@ -18,7 +20,7 @@ export function ProductTableToolbarActions({ table }: ProductTableToolbarActions
   const handleAddProduct = () => {
     navigate(routesConfig[Routes.CREATE_PRODUCT].getPath())
   }
-
+  const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
   return (
     <div className='flex items-center gap-2'>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -27,10 +29,14 @@ export function ProductTableToolbarActions({ table }: ProductTableToolbarActions
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
-      <Button size={'sm'} onClick={handleAddProduct}>
-        <ListPlusIcon />
-        Add Product
-      </Button>
+
+      {isGranted && (
+        <Button size={'sm'} onClick={handleAddProduct}>
+          <ListPlusIcon />
+          Add Product
+        </Button>
+      )}
+
       <Button
         variant='outline'
         size='sm'
