@@ -105,7 +105,7 @@ const MasterConfig = () => {
           })
 
           // Assign the updated array back to the config
-          updatedConfig[sectionKey] = updatedArray as unknown
+          updatedConfig[sectionKey] = updatedArray as any
         }
 
         return updatedConfig as IMasterConfig
