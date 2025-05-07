@@ -93,7 +93,7 @@ export function RelatedOrdersDialog({ type, eventId, open, onOpenChange, voucher
             </DialogDescription>
           </DialogHeader>
           {/* Reusing the structure from the order management index */}
-          <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden mt-4 max-h-[70vh] overflow-auto'>
+          <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap overflow-auto mt-4 max-h-[70vh]'>
             <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
               <TabsList className='w-fit grid-cols-2 mb-6'>
                 <TabsTrigger value='orders' className='flex items-center gap-2'>
@@ -106,7 +106,7 @@ export function RelatedOrdersDialog({ type, eventId, open, onOpenChange, voucher
                 </TabsTrigger>
               </TabsList>
               <TabsContent value='orders'>
-                <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
+                <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap overflow-auto'>
                   <div className='w-full flex items-center gap-4'>
                     <Shell className='gap-2'>
                       {isOrderListLoading ? (
@@ -150,7 +150,7 @@ export function RelatedOrdersDialog({ type, eventId, open, onOpenChange, voucher
                 </div>
               </TabsContent>
               <TabsContent value='group-buying'>
-                <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
+                <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap overflow-auto'>
                   <div className='w-full flex items-center gap-4'>
                     <Shell className='gap-2'>
                       {isLoading ? (
@@ -187,14 +187,14 @@ export function RelatedOrdersDialog({ type, eventId, open, onOpenChange, voucher
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {/* Increase max width for better table view */}
-      <DialogContent className='sm:max-w-[80%]'>
+      <DialogContent className='sm:max-w-[80%] max-h-[80vh] overflow-auto'>
         <DialogHeader>
           <DialogTitle>Orders that related to this event</DialogTitle>
           <DialogDescription>Showing orders related to the selected criteria.</DialogDescription>
         </DialogHeader>
         {/* Reusing the structure from the order management index */}
-        <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden mt-4 max-h-[70vh] overflow-auto'>
-          <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden'>
+        <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap mt-4'>
+          <div className='flex w-full flex-row sm:flex-wrap lg:flex-nowrap'>
             <div className='w-full flex items-center gap-4'>
               <Shell className='gap-2'>
                 {isOrderListLoading ? (
