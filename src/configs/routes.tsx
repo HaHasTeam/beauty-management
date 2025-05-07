@@ -11,7 +11,6 @@ export enum Routes {
   SERVICES_CATALOG = 'services-catalog',
   PROFILE_SETTINGS = 'profile-settings',
   MASTER_CONFIG_DETAILS = 'master-configs',
-  UPDATE_MASTER_CONFIG = 'update/master-configs',
   ACCOUNTS_DIRECTORY = 'accounts-management',
   ACCOUNT_DETAILS = 'account-details',
   AUTH_SIGN_UP = 'auth-sign-up',
@@ -321,13 +320,6 @@ export const routesConfig: TRoutes = {
     description: 'Beauty product',
     path: '/dashboard/products/:id',
     getPath: (params) => `/dashboard/products/${params.id}`
-  },
-  [Routes.UPDATE_MASTER_CONFIG]: {
-    name: 'Update Master Config',
-    title: 'Update Master Config',
-    description: 'Update master config',
-    path: '/dashboard/master-config/update/',
-    getPath: () => `/dashboard/master-config/update`
   },
   [Routes.MASTER_CONFIG_DETAILS]: {
     name: 'Master Config',
