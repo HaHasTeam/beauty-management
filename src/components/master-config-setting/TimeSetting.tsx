@@ -11,8 +11,41 @@ interface TimeSettingsProps {
   onChange: (key: string, value: unknown) => void
 }
 
+interface TimeSettingsProps {
+  data: IMasterConfig
+  isEditing: boolean
+  onChange: (key: string, value: unknown) => void
+}
+
+// Create a type for the valid time setting keys in IMasterConfig
+type TimeSettingKey = keyof Pick<
+  IMasterConfig,
+  | 'groupBuyingRemainingTime'
+  | 'autoCancelOrderTime'
+  | 'autoCompleteOrderTime'
+  | 'autoApproveRefundRequestTime'
+  | 'feedbackTimeExpired'
+  | 'refundTimeExpired'
+  | 'complaintTimeExpired'
+  | 'autoUpdateOrderToRefundedStatusTime'
+  | 'expiredReceivedTime'
+  | 'pendingAdminCheckRejectRefundRequestTime'
+  | 'pendingAdminCheckComplaintRequestTime'
+  | 'expiredCustomerReceivedTime'
+  | 'pendingCustomerShippingReturnTime'
+  | 'expiredBookingToPay'
+  | 'expiredBookingWaitForConfirm'
+  | 'expiredBookingConfirmed'
+  | 'expiredBookinFormSubmited'
+  | 'expiredBookinCompletedCall'
+>
+interface TimeSetting {
+  key: TimeSettingKey
+  label: string
+  description: string
+}
 export default function TimeSettings({ data, isEditing, onChange }: TimeSettingsProps) {
-  const timeSettings = [
+  const timeSettings: TimeSetting[] = [
     {
       key: 'groupBuyingRemainingTime',
       label: 'Group Buying Remaining Time',
@@ -124,8 +157,10 @@ export default function TimeSettings({ data, isEditing, onChange }: TimeSettings
                 disabled={!isEditing}
               />
               <p className='text-xs text-muted-foreground'>{setting.description}</p>
-              {data[setting.key] && (
-                <p className='text-xs font-medium'>{formatDuration(Number.parseInt(data[setting.key]))}</p>
+              {formatDuration(
+                typeof data[setting.key] === 'string'
+                  ? Number.parseInt(data[setting.key] as string)
+                  : Number(data[setting.key])
               )}
             </div>
           ))}

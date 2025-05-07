@@ -136,8 +136,10 @@ export default function LimitSettings({ data, isEditing, onChange }: LimitSettin
                 disabled={!isEditing}
               />
               <p className='text-xs text-muted-foreground'>{setting.description}</p>
-              {setting.type === 'size' && data[setting.key] && typeof data[setting.key] === 'string' && (
-                <p className='text-xs font-medium'>{formatFileSize(Number.parseInt(data[setting.key]))}</p>
+              {formatFileSize(
+                typeof data[setting.key] === 'string'
+                  ? Number.parseInt(data[setting.key] as string)
+                  : Number(data[setting.key])
               )}
             </div>
           ))}

@@ -35,4 +35,9 @@ export interface IMasterConfig extends TMetaData {
   requestReturnOrderMaxImages: number
   requestReturnOrderMaxVideos: number
   requestReturnOrderMaxSize: string
+  expiredBookingToPay: string
+  expiredBookingWaitForConfirm: string
+  expiredBookingConfirmed: string
+  expiredBookinFormSubmited: string
+  expiredBookinCompletedCall: string
 }

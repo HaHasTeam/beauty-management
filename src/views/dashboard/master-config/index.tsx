@@ -97,15 +97,10 @@ const MasterConfig = () => {
           const typedArray = [...sectionData] as ConfigSection<typeof sectionData>
 
           // Map through the array and update the matching item
-          const updatedArray = typedArray.map((item) => {
-            if ('id' in item && item.id === key) {
-              return { ...item, ...(value as object) }
-            }
-            return item
-          })
+          const updatedArray = typedArray.map((item) => (item.id === key ? { ...item, ...(value as object) } : item))
 
-          // Assign the updated array back to the config
-          updatedConfig[sectionKey] = updatedArray as any
+          // Set the updated array back to the config
+          ;(updatedConfig as Record<string, unknown>)[section] = updatedArray
         }
 
         return updatedConfig as IMasterConfig
