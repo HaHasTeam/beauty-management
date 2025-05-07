@@ -6,6 +6,7 @@ export interface IMasterConfig extends TMetaData {
   name: string
   logo: string
   maxLevelCategory: number
+  commissionFee: string
   groupBuyingRemainingTime: number
   autoCancelOrderTime: string
   autoCompleteOrderTime: string
