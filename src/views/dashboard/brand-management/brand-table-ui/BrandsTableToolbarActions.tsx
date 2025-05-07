@@ -1,9 +1,9 @@
 import { type Table } from '@tanstack/react-table'
-import { Download, ListPlusIcon } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Download } from 'lucide-react'
 
+// import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Routes, routesConfig } from '@/configs/routes'
+// import { Routes, routesConfig } from '@/configs/routes'
 import { exportTableToCSV } from '@/lib/export'
 import { TBrand } from '@/types/brand'
 
@@ -14,10 +14,10 @@ interface BrandsTableToolbarActionsProps {
 }
 
 export function BrandsTableToolbarActions({ table }: BrandsTableToolbarActionsProps) {
-  const navigate = useNavigate()
-  const handleAddBrand = () => {
-    navigate(routesConfig[Routes.ADD_BRAND].getPath())
-  }
+  // const navigate = useNavigate()
+  // const handleAddBrand = () => {
+  //   navigate(routesConfig[Routes.ADD_BRAND].getPath())
+  // }
 
   return (
     <div className='flex items-center gap-2'>
@@ -27,10 +27,10 @@ export function BrandsTableToolbarActions({ table }: BrandsTableToolbarActionsPr
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
-      <Button size={'sm'} onClick={handleAddBrand}>
+      {/* <Button size={'sm'} onClick={handleAddBrand}>
         <ListPlusIcon />
         Add Brand
-      </Button>
+      </Button> */}
       <Button
         variant='outline'
         size='sm'

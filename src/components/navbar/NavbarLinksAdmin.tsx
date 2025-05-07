@@ -1,18 +1,12 @@
 import { useContext } from 'react'
 import { FiAlignJustify } from 'react-icons/fi'
 import { HiX } from 'react-icons/hi'
-import {
-  HiOutlineArrowRightOnRectangle,
-  HiOutlineInformationCircle,
-  HiOutlineMoon,
-  HiOutlineSun
-} from 'react-icons/hi2'
+import { HiOutlineArrowRightOnRectangle, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2'
 import { Link, useNavigate } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
 import { OpenContext } from '@/contexts/layout'
 import { useTheme } from '@/contexts/ThemeProvider'
@@ -84,7 +78,7 @@ export default function HeaderLinks() {
       <LanguageSwitcher />
 
       {/* Dropdown Menu */}
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant='outline'
@@ -115,7 +109,7 @@ export default function HeaderLinks() {
             </Button>
           </a>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
 
       <Button
         onClick={handleSignOut}
