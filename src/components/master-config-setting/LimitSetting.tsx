@@ -9,9 +9,32 @@ interface LimitSettingsProps {
   isEditing: boolean
   onChange: (key: string, value: unknown) => void
 }
+type LimitSettingKey = keyof Pick<
+  IMasterConfig,
+  | 'maximumUpdateBrandProfileTime'
+  | 'maxFeedbackImages'
+  | 'maxFeedbackVideos'
+  | 'maxFeedbackSize'
+  | 'maxProductImages'
+  | 'maxProductClassificationImages'
+  | 'amountProductWarning'
+  | 'maxEvidenceImages'
+  | 'maxEvidenceVideos'
+  | 'maxEvidenceSize'
+  | 'requestReturnOrderMaxImages'
+  | 'requestReturnOrderMaxVideos'
+  | 'requestReturnOrderMaxSize'
+>
+
+interface LimitSetting {
+  key: LimitSettingKey
+  label: string
+  description: string
+  type: 'number' | 'size'
+}
 
 export default function LimitSettings({ data, isEditing, onChange }: LimitSettingsProps) {
-  const limitSettings = [
+  const limitSettings: LimitSetting[] = [
     {
       key: 'maximumUpdateBrandProfileTime',
       label: 'Maximum Update Brand Profile Time',
@@ -113,7 +136,7 @@ export default function LimitSettings({ data, isEditing, onChange }: LimitSettin
                 disabled={!isEditing}
               />
               <p className='text-xs text-muted-foreground'>{setting.description}</p>
-              {setting.type === 'size' && data[setting.key] && (
+              {setting.type === 'size' && data[setting.key] && typeof data[setting.key] === 'string' && (
                 <p className='text-xs font-medium'>{formatFileSize(Number.parseInt(data[setting.key]))}</p>
               )}
             </div>

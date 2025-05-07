@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Loader2, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import Button from '@/components/button'
 import LoadingLayer from '@/components/loading-icon/LoadingLayer'
@@ -18,7 +17,6 @@ import { TServerFile } from '@/types/file'
 import { IMasterConfig } from '@/types/master-config'
 
 const MasterConfig = () => {
-  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [isEditing, setIsEditing] = useState(false)
   const [configData, setConfigData] = useState<IMasterConfig | null>(null)
@@ -69,16 +67,48 @@ const MasterConfig = () => {
     setIsEditing(true)
   }
 
+  type ConfigSection<T> = T extends unknown[] ? T : never
+
   const handleChange = (section: string, key: string, value: TServerFile | string | number | unknown) => {
+    if (!configData) return
+
     if (section === 'root') {
+      // For root-level properties
       setConfigData({
         ...configData,
         [key]: value
-      })
+      } as IMasterConfig)
     } else {
-      setConfigData({
-        ...configData,
-        [section]: configData?.[section]?.map((item: IMasterConfig) => (item.id === key ? { ...item, ...value } : item))
+      // For nested updates with arrays
+      setConfigData((prevConfig) => {
+        if (!prevConfig) return null
+
+        // Create a copy to avoid direct mutation
+        const updatedConfig = { ...prevConfig }
+
+        // More explicit type handling
+        const sectionKey = section as keyof IMasterConfig
+        const sectionData = updatedConfig[sectionKey]
+
+        // Check if the section exists and is an array
+        if (Array.isArray(sectionData)) {
+          // Using type casting with a more specific approach
+          // We create a type-safe copy of the array
+          const typedArray = [...sectionData] as ConfigSection<typeof sectionData>
+
+          // Map through the array and update the matching item
+          const updatedArray = typedArray.map((item) => {
+            if ('id' in item && item.id === key) {
+              return { ...item, ...(value as object) }
+            }
+            return item
+          })
+
+          // Assign the updated array back to the config
+          updatedConfig[sectionKey] = updatedArray as unknown
+        }
+
+        return updatedConfig as IMasterConfig
       })
     }
   }
@@ -151,7 +181,7 @@ const MasterConfig = () => {
               onAddBanner={(banner) =>
                 setConfigData({
                   ...configData,
-                  banners: [...configData.banners, banner]
+                  banners: [...(configData.banners as TServerFile[]), banner as TServerFile]
                 })
               }
               onRemoveBanner={(bannerId) =>
