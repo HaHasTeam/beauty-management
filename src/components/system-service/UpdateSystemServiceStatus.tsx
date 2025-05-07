@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import {
@@ -14,7 +15,7 @@ import {
   updateSystemServiceStatusApi
 } from '@/network/apis/system-service'
 import { getUpdateSystemServiceStatusSchema } from '@/schemas/system-service.schema'
-import { StatusEnum } from '@/types/enum'
+import { RoleEnum, StatusEnum } from '@/types/enum'
 import { IResponseSystemService } from '@/types/system-service'
 
 import Button from '../button'
@@ -38,6 +39,8 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
   const handleReset = () => {
     form.reset()
   }
+
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
   const form = useForm<z.infer<typeof UpdateSystemServiceStatusSchema>>({
     resolver: zodResolver(UpdateSystemServiceStatusSchema),
     defaultValues: defaultProductValues
@@ -129,20 +132,22 @@ export default function UpdateSystemServiceStatus({ systemService }: UpdateSyste
             </div>
           </div>
         </div>
-        <div className='flex gap-2 items-center md:m-0 ml-3'>
-          {config.nextStatus && (
-            <Button
-              onClick={() => {
-                handleUpdateStatus({ status: config.nextStatus })
-              }}
-              loading={isLoading}
-              className={`${config.buttonBg} flex gap-2`}
-            >
-              {config.buttonText}
-              <CircleChevronRight />
-            </Button>
-          )}
-        </div>
+        {isGrant ? (
+          <div className='flex gap-2 items-center md:m-0 ml-3'>
+            {config.nextStatus && (
+              <Button
+                onClick={() => {
+                  handleUpdateStatus({ status: config.nextStatus })
+                }}
+                loading={isLoading}
+                className={`${config.buttonBg} flex gap-2`}
+              >
+                {config.buttonText}
+                <CircleChevronRight />
+              </Button>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   )

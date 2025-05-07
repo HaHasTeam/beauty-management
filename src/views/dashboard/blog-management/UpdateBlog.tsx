@@ -16,12 +16,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getBlogApi, updateBlogApi } from '@/network/apis/blog'
 import { getFormBlogSchema } from '@/schemas/blog.schema'
 import { IServerCreateBlog } from '@/types/blog'
-import { BlogEnum, BlogTypeEnum } from '@/types/enum'
+import { BlogEnum, BlogTypeEnum, RoleEnum } from '@/types/enum'
 import { modules } from '@/variables/textEditor'
 
 const UpdateBlog = () => {
@@ -29,6 +30,7 @@ const UpdateBlog = () => {
   // const [resetSignal, setResetSignal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [editorContent, setEditorContent] = useState('')
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
   const { id } = useParams<{ id: string }>() // Get blog ID from URL params
   const { successToast } = useToast()
   const handleServerError = useHandleServerError()
@@ -109,8 +111,11 @@ const UpdateBlog = () => {
         type: blogData.data.type
       })
       setEditorContent(blogData.data.content)
+      setIsDataLoaded(true)
     }
   }, [blogData, form])
+
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
 
   async function onSubmit(values: z.infer<typeof FormBlogSchema>) {
     if (!id) return
@@ -213,15 +218,24 @@ const UpdateBlog = () => {
                       </div>
                       <div className='w-full space-y-1'>
                         <FormControl>
-                          <ReactQuill
-                            modules={modules}
-                            placeholder={t('updateBlog.contentPlaceholder')}
-                            className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
-                            theme='snow'
-                            {...field}
-                            value={editorContent}
-                            onChange={(content) => setEditorContent(content)}
-                          />
+                          {isDataLoaded ? (
+                            <ReactQuill
+                              modules={modules}
+                              placeholder={t('updateBlog.contentPlaceholder')}
+                              className='border border-primary/10 focus-within:border-primary transition-colors duration-200 rounded-lg'
+                              theme='snow'
+                              {...field}
+                              value={editorContent}
+                              onChange={(content) => {
+                                setEditorContent(content)
+                                field.onChange(content)
+                              }}
+                            />
+                          ) : (
+                            <div className='h-40 flex items-center justify-center border rounded-lg'>
+                              <LoadingLayer />
+                            </div>
+                          )}
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -309,14 +323,16 @@ const UpdateBlog = () => {
           </CardContent>
         </Card>
         {/* Submit Button */}
-        <div className='flex justify-end gap-4'>
-          <Button type='button' variant='outline' onClick={handleReset}>
-            {t('button.cancel')}
-          </Button>
-          <Button type='submit' loading={isLoading}>
-            {t('button.submit')}
-          </Button>
-        </div>
+        {isGrant && (
+          <div className='flex justify-end gap-4'>
+            <Button type='button' variant='outline' onClick={handleReset}>
+              {t('button.cancel')}
+            </Button>
+            <Button type='submit' loading={isLoading}>
+              {t('button.submit')}
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   )

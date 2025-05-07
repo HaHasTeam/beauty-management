@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 
 import { Routes, routesConfig } from '@/configs/routes'
+import { cn } from '@/lib/utils'
 import { useStore } from '@/stores/store'
-import { PaymentMethod, RoleEnum } from '@/types/enum'
+import { PaymentMethod, RoleEnum, ShippingStatusEnum } from '@/types/enum'
+import { TGroupBuying } from '@/types/group-buying'
 import { ILivestream } from '@/types/livestream'
 import { IOrder, IOrderItem } from '@/types/order'
 import { TVoucher } from '@/types/voucher'
@@ -19,6 +21,9 @@ interface OrderSummaryProps {
   platformVoucher: TVoucher | null
   livestream: ILivestream | null
   orderParent: IOrder | null | IOrderItem
+  orderStatus: ShippingStatusEnum
+  groupBuying: TGroupBuying
+  commissionFee: number
 }
 export default function OrderSummary({
   totalProductCost,
@@ -29,7 +34,10 @@ export default function OrderSummary({
   totalPayment,
   paymentMethod,
   livestream,
-  orderParent
+  orderParent,
+  orderStatus,
+  groupBuying,
+  commissionFee
 }: OrderSummaryProps) {
   const { t } = useTranslation()
   const { user } = useStore(
@@ -37,6 +45,7 @@ export default function OrderSummary({
       user: state.user
     }))
   )
+  const brandRecivedPrice = totalPayment + totalPlatformDiscount - commissionFee
 
   return (
     <div className='w-full bg-white rounded-md shadow-sm p-4'>
@@ -49,11 +58,14 @@ export default function OrderSummary({
 
           <div className='flex justify-between items-center'>
             <div>
-              <span className='text-sm text-muted-foreground'>{t('cart.discountBrand')}</span>
+              <span className='text-sm text-muted-foreground'>
+                {t('cart.discountBrand')}
+                {orderStatus === ShippingStatusEnum.JOIN_GROUP_BUYING ? ` (${t('cart.estimated')})` : ''}{' '}
+              </span>
               {brandVoucher && brandVoucher?.id ? (
                 <Link
                   to={routesConfig[Routes.VOUCHER].getPath() + '/' + brandVoucher.id}
-                  className='text-sm font-medium text-muted-foreground text-blue-500 no-underline ml-2'
+                  className='text-sm font-medium text-muted-foreground text-blue-500 no-underline ml-1'
                 >
                   #{brandVoucher.id.substring(0, 8).toUpperCase()}
                 </Link>
@@ -61,7 +73,7 @@ export default function OrderSummary({
                 <></>
               )}
             </div>
-            <span className='text-green-700 font-medium'>
+            <span className='text-red-500 font-medium'>
               {totalBrandDiscount > 0 ? '-' : ''}
               {t('productCard.price', { price: totalBrandDiscount })}
             </span>
@@ -77,7 +89,7 @@ export default function OrderSummary({
               platformVoucher?.id ? (
                 <Link
                   to={routesConfig[Routes.VOUCHER].getPath() + '/' + platformVoucher.id}
-                  className='text-sm font-medium text-muted-foreground text-blue-500 no-underline ml-2'
+                  className='text-sm font-medium text-muted-foreground text-blue-500 no-underline ml-1'
                 >
                   #{platformVoucher.id.substring(0, 8).toUpperCase()}
                 </Link>
@@ -85,7 +97,7 @@ export default function OrderSummary({
                 <></>
               )}
             </div>
-            <span className='text-green-700 font-medium'>
+            <span className={'font-medium text-red-500'}>
               {totalPlatformDiscount > 0 ? '-' : ''}
               {t('productCard.price', { price: totalPlatformDiscount })}
             </span>
@@ -93,15 +105,55 @@ export default function OrderSummary({
 
           <div className='flex flex-col'>
             <div className='flex justify-between items-center pt-3 border-t'>
-              <span className='text-sm sm:text-base'>{t('cart.totalPayment')}</span>
-              <span className='font-semibold text-red-500 text-lg'>
-                {t('productCard.price', { price: totalPayment })}
+              <span className='text-sm sm:text-base font-semibold'>
+                {t('cart.totalPayment')}
+                {orderStatus === ShippingStatusEnum.JOIN_GROUP_BUYING ? ` (${t('cart.estimated')})` : ''}{' '}
               </span>
+              <span className='font-semibold text-lg'>{t('productCard.price', { price: totalPayment })}</span>
             </div>
+
             <div className='flex-col gap-3'>
               <p className='text-sm text-muted-foreground my-3 text-right'>{t('cart.checkoutDescription')}</p>
             </div>
+            <div className='flex justify-between items-center pt-3 border-t'>
+              <span className='text-sm sm:text-base'>{t('cart.commissionFee')}</span>
+              <span
+                className={cn(
+                  'font-semibold text-lg',
+                  user && (user.role === RoleEnum.ADMIN || user.role === RoleEnum.OPERATOR)
+                    ? 'text-green-600'
+                    : 'text-red-500'
+                )}
+              >
+                {t('productCard.price', { price: commissionFee })}
+              </span>
+            </div>
+            <div>
+              <p className='text-sm text-muted-foreground my-3 text-right'>{t('cart.comissionFeeDescription')}</p>
+            </div>
+            <div className='flex justify-between items-center pt-3'>
+              <span className='text-sm sm:text-base font-semibold'>
+                {t('cart.netRevenue', {
+                  brands:
+                    user && (user.role === RoleEnum.ADMIN || user.role === RoleEnum.OPERATOR) ? t('cart.brands') : ''
+                })}
+              </span>
+              <span
+                className={cn(
+                  'font-semibold text-lg',
+                  user && (user.role === RoleEnum.ADMIN || user.role === RoleEnum.OPERATOR)
+                    ? 'text-red-500'
+                    : 'text-green-800'
+                )}
+              >
+                {t('productCard.price', { price: brandRecivedPrice })}
+              </span>
+            </div>
+            <div>
+              <p className='text-sm text-muted-foreground my-3 text-right'>{t('cart.netRevenueDescription')}</p>
+            </div>
           </div>
+
           <div className='flex justify-between items-center border-t pt-3'>
             <span className='text-sm sm:text-base'>{t('wallet.paymentMethod')}</span>
             <span className='font-semibold text-primary text-sm sm:text-base'>{t(`wallet.${paymentMethod}`)}</span>
@@ -114,6 +166,19 @@ export default function OrderSummary({
                 className='text-sm font-medium text-muted-foreground text-blue-500 no-underline'
               >
                 #{livestream.id.substring(0, 8).toUpperCase()}
+              </Link>
+            </div>
+          ) : (
+            <></>
+          )}
+          {groupBuying && groupBuying?.id ? (
+            <div className='flex justify-between items-center border-t pt-3'>
+              <span className='text-sm sm:text-base'>{t('productTag.groupBuying')}</span>
+              <Link
+                to={routesConfig[Routes.GROUP_BUYING].getPath() + '/' + groupBuying.id}
+                className='text-sm font-medium text-muted-foreground text-blue-500 no-underline'
+              >
+                #{groupBuying.id.substring(0, 8).toUpperCase()}
               </Link>
             </div>
           ) : (

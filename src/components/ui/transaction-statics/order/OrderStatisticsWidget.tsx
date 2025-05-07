@@ -16,6 +16,7 @@ interface OrderStatisticsWidgetProps {
   className?: string
   header?: React.ReactNode
   voucherId?: string
+  groupBuyingId?: string
 }
 
 export function OrderStatisticsWidget({

@@ -15,9 +15,10 @@ import { Card } from '@/components/ui/card'
 interface Props {
   mode?: 'full' | 'mini'
   consultantServiceId?: string
+  isAdminMini?: boolean
 }
 
-export default function IndexPage({ mode = 'full', consultantServiceId }: Props) {
+export default function IndexPage({ mode = 'full', consultantServiceId, isAdminMini }: Props) {
   const queryStates = useState<DataTableQueryState<TGetDailyBookingStatisticsParams>>(
     {} as DataTableQueryState<TGetDailyBookingStatisticsParams>
   )
@@ -53,7 +54,12 @@ export default function IndexPage({ mode = 'full', consultantServiceId }: Props)
                   <Skeleton className='w-full h-[300px] rounded-lg' />
                 </div>
               ) : (
-                <BookingStaticCard data={bookingStaticData as BookingStatic} queryStates={queryStates} mode={mode} />
+                <BookingStaticCard
+                  data={bookingStaticData as BookingStatic}
+                  queryStates={queryStates}
+                  mode={mode}
+                  isAdminMini={isAdminMini}
+                />
               )}
             </Shell>
           </div>

@@ -2,7 +2,9 @@ import { type Table } from '@tanstack/react-table'
 import { Download } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import useGrant from '@/hooks/useGrant'
 import { exportTableToCSV } from '@/lib/export'
+import { RoleEnum } from '@/types/enum'
 import { TUser, UserStatusEnum } from '@/types/user'
 
 import InviteCoWorker from '../InviteCoWorker'
@@ -13,6 +15,7 @@ interface AccountTableToolbarActionsProps {
 }
 
 export function AccountTableToolbarActions({ table }: AccountTableToolbarActionsProps) {
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.MANAGER])
   return (
     <div className='flex items-center gap-2'>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -22,7 +25,7 @@ export function AccountTableToolbarActions({ table }: AccountTableToolbarActions
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
-      <InviteCoWorker />
+      {isGrant ? <InviteCoWorker /> : null}
       <Button
         variant='outline'
         size='sm'

@@ -10,7 +10,7 @@ const GroupProductSummary = () => {
     <div>
       <OrderStatisticsWidget
         eventId={id as string}
-        orderType={OrderEnum.GROUP_BUYING}
+        orderType={OrderEnum.GROUP_PRODUCT}
         header={<h1 className='text-2xl font-bold'>Group Product Statistics</h1>}
       />
     </div>

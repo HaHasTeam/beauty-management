@@ -9,17 +9,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { formatDate } from '@/lib/utils'
 import { IBlogDetails } from '@/types/blog'
-import { BlogTypeEnum } from '@/types/enum'
+import { BlogTypeEnum, RoleEnum } from '@/types/enum'
 
 import { BlogStatusCell } from './BlogStatusCell'
 
@@ -129,6 +124,7 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
       id: 'actions',
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
+        const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
         return (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -149,19 +145,20 @@ export function getColumns(): ColumnDef<IBlogDetails>[] {
                   </span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link
-                  to={routesConfig[Routes.UPDATE_BLOG].getPath({
-                    id: row.original.id
-                  })}
-                >
-                  <span className='w-full flex gap-2 items-center cursor-pointer'>
-                    <Pen />
-                    {i18next.t('button.update')}
-                  </span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              {isGrant && (
+                <DropdownMenuItem>
+                  <Link
+                    to={routesConfig[Routes.UPDATE_BLOG].getPath({
+                      id: row.original.id
+                    })}
+                  >
+                    <span className='w-full flex gap-2 items-center cursor-pointer'>
+                      <Pen />
+                      {i18next.t('button.update')}
+                    </span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               {/* {(row.original.status == ProductStatusEnum.OFFICIAL ||
                 row.original.status == ProductStatusEnum.PENDING) && (

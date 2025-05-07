@@ -332,6 +332,7 @@ const BookingDetail = () => {
                 totalPrice={bookingData?.data?.totalPrice}
                 voucherDiscount={0} // Replace with actual value when available
                 paymentMethod={bookingData?.data?.paymentMethod}
+                commissionFee={bookingData?.data?.commissionFee}
               />
 
               {/* Action buttons */}

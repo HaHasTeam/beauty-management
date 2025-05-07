@@ -31,6 +31,7 @@ import Creatable from '@/components/ui/react-select/Creatable'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import SortableLinks from '@/components/ui/SortableLinks'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
@@ -43,6 +44,7 @@ import {
   categoryTypeOptions,
   InputTypeEnum
 } from '@/types/category'
+import { RoleEnum } from '@/types/enum'
 
 import { CategoryType, convertFormToCategory, formSchema, FormType } from './helper'
 
@@ -58,6 +60,7 @@ const CategoryDetails = () => {
     })
   )
   const navigate = useNavigate()
+  const isAdmin = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
 
   const id = useId()
   const form = useForm<FormType>({
@@ -255,15 +258,17 @@ const CategoryDetails = () => {
                 <AlertDescription>This category is currently active and visible to your customers.</AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(CategoryStatusEnum.INACTIVE)
-              }}
-              loading={isUpdatingCategory}
-              variant={'default'}
-            >
-              {'Close category'}
-            </AlertAction>
+            {isAdmin && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(CategoryStatusEnum.INACTIVE)
+                }}
+                loading={isUpdatingCategory}
+                variant={'default'}
+              >
+                {'Close category'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case CategoryStatusEnum.INACTIVE:
@@ -281,15 +286,17 @@ const CategoryDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(CategoryStatusEnum.ACTIVE)
-              }}
-              loading={isUpdatingCategory}
-              variant={'success'}
-            >
-              {'Open category'}
-            </AlertAction>
+            {isAdmin && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(CategoryStatusEnum.ACTIVE)
+                }}
+                loading={isUpdatingCategory}
+                variant={'success'}
+              >
+                {'Open category'}
+              </AlertAction>
+            )}
           </Alert>
         )
       default:
@@ -599,10 +606,12 @@ const CategoryDetails = () => {
             </CardContent>
           </Card>
           <div className='justify-end flex w-full gap-4'>
-            <Button type='submit' className='mt-4' loading={form.formState.isSubmitting}>
-              <SaveAll />
-              Save Category
-            </Button>
+            {isAdmin && (
+              <Button type='submit' className='mt-4' loading={form.formState.isSubmitting}>
+                <SaveAll />
+                Save Category
+              </Button>
+            )}
           </div>
         </form>
       </Form>

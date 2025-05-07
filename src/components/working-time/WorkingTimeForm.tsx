@@ -9,10 +9,11 @@ import { z } from 'zod'
 import Button from '@/components/button'
 import { Form } from '@/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { getAllWorkingSlotsApi, updateActiveSlotsApi } from '@/network/apis/slots'
-import { WeekDay } from '@/types/enum'
+import { RoleEnum, WeekDay } from '@/types/enum'
 import { TSlot } from '@/types/slot'
 
 import { Card, CardContent } from '../ui/card'
@@ -174,6 +175,8 @@ export function WorkingTimeForm() {
       })
     }
   })
+
+  const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR, RoleEnum.CONSULTANT])
 
   // Create a manual submit handler separate from form.handleSubmit
   const handleManualSubmit = async () => {
@@ -396,18 +399,20 @@ export function WorkingTimeForm() {
               </TabsContent>
             </Tabs>
 
-            <div className='flex justify-end pt-4 border-t border-border mt-6'>
-              <Button
-                type='button'
-                className='gap-2'
-                onClick={handleManualSubmit}
-                loading={isSubmitting}
-                disabled={isSubmitting}
-              >
-                <SaveIcon className='h-4 w-4' />
-                Save Schedule
-              </Button>
-            </div>
+            {isGrant && (
+              <div className='flex justify-end pt-4 border-t border-border mt-6'>
+                <Button
+                  type='button'
+                  className='gap-2'
+                  onClick={handleManualSubmit}
+                  loading={isSubmitting}
+                  disabled={isSubmitting}
+                >
+                  <SaveIcon className='h-4 w-4' />
+                  Save Schedule
+                </Button>
+              </div>
+            )}
           </form>
         </Form>
       </CardContent>

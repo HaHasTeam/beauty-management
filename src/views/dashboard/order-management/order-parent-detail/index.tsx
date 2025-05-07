@@ -119,7 +119,9 @@ const OrderParentDetail = () => {
                         </p>
                         <p>
                           <span className='font-medium'>{t('orderDetail.notes')}:</span>{' '}
-                          {useOrderData?.data?.notes ?? t('orderDetail.no')}
+                          {useOrderData?.data?.notes && useOrderData?.data?.notes !== ''
+                            ? useOrderData?.data?.notes
+                            : t('orderDetail.no')}
                         </p>
                       </div>
                     }
@@ -148,13 +150,13 @@ const OrderParentDetail = () => {
 
                     {/* brand */}
                     <BrandOrderInformation
-                      brandId={
-                        (
-                          orderItem?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
-                          orderItem?.orderDetails?.[0]?.productClassification?.productDiscount ??
-                          orderItem?.orderDetails?.[0]?.productClassification
-                        )?.product?.brand?.id ?? ''
-                      }
+                      // brandId={
+                      //   (
+                      //     orderItem?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
+                      //     orderItem?.orderDetails?.[0]?.productClassification?.productDiscount ??
+                      //     orderItem?.orderDetails?.[0]?.productClassification
+                      //   )?.product?.brand?.id ?? ''
+                      // }
                       brandName={
                         (
                           orderItem?.orderDetails?.[0]?.productClassification?.preOrderProduct ??
@@ -198,6 +200,9 @@ const OrderParentDetail = () => {
                         totalPayment={orderItem?.totalPrice}
                         paymentMethod={orderItem?.paymentMethod}
                         orderParent={null}
+                        orderStatus={orderItem?.status}
+                        groupBuying={orderItem?.groupBuying}
+                        commissionFee={orderItem?.commissionFee}
                       />
                     </div>
 

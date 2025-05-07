@@ -199,3 +199,11 @@ export enum ProductStatusEnum {
   UN_PUBLISHED = 'UN_PUBLISHED'
 }
 // enum ends
+
+export interface ILivestreamProduct {
+  id: string
+  createdAt: string
+  updatedAt: string
+  discount: number
+  product: IProduct
+}

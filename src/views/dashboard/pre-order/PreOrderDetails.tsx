@@ -16,13 +16,14 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/u
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import useHandleServerError from '@/hooks/useHandleServerError'
 import { useToast } from '@/hooks/useToast'
 import { uploadFilesApi } from '@/network/apis/file'
 import { addPreOderApi, getPreOrderByIdApi, updatePreOrderApi } from '@/network/apis/pre-order'
 import { TAddPreOderRequestParams, TUpdatePreOrderRequestParams } from '@/network/apis/pre-order/type'
 import { ClassificationStatusEnum } from '@/types/classification'
-import { StatusEnum } from '@/types/enum'
+import { RoleEnum, StatusEnum } from '@/types/enum'
 import { FileStatusEnum, TServerFile } from '@/types/file'
 import { IImage } from '@/types/image'
 import { PreOrderStatusEnum, TPreOrder } from '@/types/pre-order'
@@ -328,6 +329,7 @@ const PreOrderDetails = () => {
       })
     }
   }
+  const isGranted = useGrant([RoleEnum.MANAGER, RoleEnum.STAFF])
 
   const getHeader = (preProductData: TPreOrder) => {
     if (!itemId) return null
@@ -348,15 +350,17 @@ const PreOrderDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(PreOrderStatusEnum.CANCELLED)
-              }}
-              loading={isUpdatingPreProduct}
-              variant={'default'}
-            >
-              {'Close event'}
-            </AlertAction>
+            {isGranted && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(PreOrderStatusEnum.CANCELLED)
+                }}
+                loading={isUpdatingPreProduct}
+                variant={'default'}
+              >
+                {'Close event'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case PreOrderStatusEnum.INACTIVE:
@@ -404,15 +408,17 @@ const PreOrderDetails = () => {
                 </AlertDescription>
               </div>
             </div>
-            <AlertAction
-              onClick={() => {
-                handleChangeStatus(PreOrderStatusEnum.CANCELLED)
-              }}
-              loading={isUpdatingPreProduct}
-              variant={'default'}
-            >
-              {'Close event'}
-            </AlertAction>
+            {isGranted && (
+              <AlertAction
+                onClick={() => {
+                  handleChangeStatus(PreOrderStatusEnum.CANCELLED)
+                }}
+                loading={isUpdatingPreProduct}
+                variant={'default'}
+              >
+                {'Close event'}
+              </AlertAction>
+            )}
           </Alert>
         )
       case PreOrderStatusEnum.SOLD_OUT:
@@ -482,12 +488,12 @@ const PreOrderDetails = () => {
       default:
         return (
           <div className='flex items-center justify-end'>
-            {
+            {isGranted && (
               <Button type='submit' form={`form-${id}`} loading={form.formState.isSubmitting}>
                 <SaveIcon />
                 Save preOrder product
               </Button>
-            }
+            )}
           </div>
         )
     }

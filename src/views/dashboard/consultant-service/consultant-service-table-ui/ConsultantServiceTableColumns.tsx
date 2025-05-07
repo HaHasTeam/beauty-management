@@ -1,5 +1,5 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
-import { Ellipsis, FilePenLine, Image, SettingsIcon } from 'lucide-react'
+import { Ellipsis, Eye, FilePenLine, Image, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { cn, formatDate } from '@/lib/utils'
 import { ConsultantServiceStatusEnum, IConsultantService } from '@/types/consultant-service'
+import { RoleEnum } from '@/types/enum'
 import { formatCurrency, formatNumber } from '@/utils/number'
 import { getDisplayString } from '@/utils/string'
 
@@ -135,6 +137,7 @@ export const getColumns = (): ColumnDef<IConsultantService>[] => {
         const handleNavigate = () => {
           navigate(routesConfig[Routes.CONSULTANT_SERVICE_DETAILS].getPath({ id: row.original.id }))
         }
+        const isGranted = useGrant([RoleEnum.CONSULTANT])
         return (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -143,11 +146,21 @@ export const getColumns = (): ColumnDef<IConsultantService>[] => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem onClick={handleNavigate} className='bg-blue-200 text-blue-500'>
-                <span className='w-full flex gap-2 items-center cursor-pointer'>
-                  <FilePenLine size={16} strokeWidth={3} />
-                  <span className='font-semibold'>Edit</span>
-                </span>
+              <DropdownMenuItem
+                onClick={handleNavigate}
+                className={cn('text-blue-500', !isGranted ? 'text-gray-500' : '')}
+              >
+                {isGranted ? (
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <FilePenLine size={16} strokeWidth={3} />
+                    <span className='font-semibold'>Edit</span>
+                  </span>
+                ) : (
+                  <span className='w-full flex gap-2 items-center cursor-pointer'>
+                    <Eye size={16} strokeWidth={3} />
+                    <span className='font-semibold'>View</span>
+                  </span>
+                )}
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator />
               {row.original.status !== FlashSaleStatusEnum.INACTIVE ? (

@@ -22,9 +22,10 @@ interface TableProps {
     DataTableQueryState<TGroupBuying>,
     React.Dispatch<React.SetStateAction<DataTableQueryState<TGroupBuying>>>
   ]
+  showGroupBuyingName?: boolean
 }
 
-export function Table({ data, pageCount, queryStates }: TableProps) {
+export function Table({ data, pageCount, queryStates, showGroupBuyingName = true }: TableProps) {
   const columns = React.useMemo(() => getColumns(), [])
 
   /**
@@ -43,31 +44,46 @@ export function Table({ data, pageCount, queryStates }: TableProps) {
     queryKey: [getAllGroupProductsListApi.queryKey],
     queryFn: getAllGroupProductsListApi.fn
   })
-  const filterFields: DataTableFilterField<TGroupBuying>[] = [
-    {
-      id: 'groupProductId',
-      label: 'Group Product',
-      placeholder: 'Search by group product',
-      options: groupProducts?.data?.map((groupProduct) => ({
-        label: groupProduct.name,
-        value: groupProduct.id
-      })),
-      isCustomFilter: true,
-      isSingleChoice: true
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      options: Object.keys(GroupBuyingStatusEnum).map((status) => {
-        const value = GroupBuyingStatusEnum[status as keyof typeof GroupBuyingStatusEnum]
-        return {
-          label: toSentenceCase(value),
-          value: value,
-          icon: getStatusIcon(value).icon
+  const filterFields: DataTableFilterField<TGroupBuying>[] = showGroupBuyingName
+    ? [
+        {
+          id: 'groupProductId',
+          label: 'Group Product',
+          placeholder: 'Search by group product',
+          options: groupProducts?.data?.map((groupProduct) => ({
+            label: groupProduct.name,
+            value: groupProduct.id
+          })),
+          isCustomFilter: true,
+          isSingleChoice: true
+        },
+        {
+          id: 'status',
+          label: 'Status',
+          options: Object.keys(GroupBuyingStatusEnum).map((status) => {
+            const value = GroupBuyingStatusEnum[status as keyof typeof GroupBuyingStatusEnum]
+            return {
+              label: toSentenceCase(value),
+              value: value,
+              icon: getStatusIcon(value).icon
+            }
+          })
         }
-      })
-    }
-  ]
+      ]
+    : [
+        {
+          id: 'status',
+          label: 'Status',
+          options: Object.keys(GroupBuyingStatusEnum).map((status) => {
+            const value = GroupBuyingStatusEnum[status as keyof typeof GroupBuyingStatusEnum]
+            return {
+              label: toSentenceCase(value),
+              value: value,
+              icon: getStatusIcon(value).icon
+            }
+          })
+        }
+      ]
 
   /**
    * Advanced filter fields for the data table.

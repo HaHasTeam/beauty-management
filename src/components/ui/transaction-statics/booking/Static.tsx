@@ -8,9 +8,10 @@ import { Banknote, DollarSign, InfoIcon, ListOrdered, Percent } from 'lucide-rea
 type BookingStaticChartProps = {
   data: BookingStatic | undefined
   mode?: 'full' | 'mini'
+  isAdminMini?: boolean
 }
 
-const BookingStaticChart = ({ data, mode = 'full' }: BookingStaticChartProps) => {
+const BookingStaticChart = ({ data, mode = 'full', isAdminMini }: BookingStaticChartProps) => {
   const chartConfig = {
     bookedPrice: {
       label: 'Booked Price',
@@ -138,10 +139,60 @@ const BookingStaticChart = ({ data, mode = 'full' }: BookingStaticChartProps) =>
     </div>
   )
 
+  const bookedPriceCardMini = (
+    <div className='flex items-center space-x-2 rounded-lg border border-[hsl(var(--chart-blue))] p-2 bg-[hsla(var(--chart-blue)/0.05)] hover:bg-[hsla(var(--chart-blue)/0.1)] transition-colors flex-1 min-w-[150px]'>
+      <div className='rounded-full bg-[hsla(var(--chart-blue)/0.2)] p-1.5 shrink-0'>
+        <DollarSign className='h-3.5 w-3.5 text-[hsl(var(--chart-blue))] ' />
+      </div>
+      <div className='min-w-0 flex-1 overflow-hidden'>
+        <p className='text-xs font-medium text-muted-foreground truncate'>Booked Price</p>
+        <p className='text-sm font-bold truncate text-[hsl(var(--chart-blue))] '>
+          {formatCurrency(data.total.booked?.totalPrice || 0, 'vi-VN')}
+        </p>
+      </div>
+    </div>
+  )
+
+  const commissionFeeCardMini = (
+    <div className='flex items-center space-x-2 rounded-lg border border-[hsl(var(--chart-gray-4))] p-2 bg-[hsla(var(--chart-gray-4)/0.05)] hover:bg-[hsla(var(--chart-gray-4)/0.1)] transition-colors flex-1 min-w-[150px]'>
+      <div className='rounded-full bg-[hsla(var(--chart-gray-4)/0.2)] p-1.5 shrink-0'>
+        <Percent className='h-3.5 w-3.5 text-[hsl(var(--chart-gray-4))] ' />
+      </div>
+      <div className='min-w-0 flex-1 overflow-hidden'>
+        <p className='text-xs font-medium text-muted-foreground truncate'>Commission Fee</p>
+        <p className='text-sm font-bold truncate text-[hsl(var(--chart-gray-4))] '>
+          {formatCurrency(data.total.booked?.commissionFee || 0, 'vi-VN')}
+        </p>
+      </div>
+    </div>
+  )
+  const refundedPriceCardMini = (
+    <div className='flex items-center space-x-2 rounded-lg border border-[hsl(var(--chart-red))] p-2 bg-[hsla(var(--chart-red)/0.05)] hover:bg-[hsla(var(--chart-red)/0.1)] transition-colors flex-1 min-w-[150px]'>
+      <div className='rounded-full bg-[hsla(var(--chart-red)/0.2)] p-1.5 shrink-0'>
+        <Percent className='h-3.5 w-3.5 text-[hsl(var(--chart-red))] ' />
+      </div>
+      <div className='min-w-0 flex-1 overflow-hidden'>
+        <p className='text-xs font-medium text-muted-foreground truncate'>Refunded Price</p>
+        <p className='text-sm font-bold truncate text-[hsl(var(--chart-red))] '>
+          {formatCurrency(data.total.cancelled?.totalPrice || 0, 'vi-VN')}
+        </p>
+      </div>
+    </div>
+  )
   const miniDescriptionNode = (
     <div className='w-full flex flex-row flex-wrap gap-3 pt-2'>
-      {actualRevenueCardMini}
-      {bookingCountCardMini}
+      {isAdminMini ? (
+        <>
+          {bookedPriceCardMini}
+          {commissionFeeCardMini}
+          {refundedPriceCardMini}
+        </>
+      ) : (
+        <>
+          {actualRevenueCardMini}
+          {bookingCountCardMini}
+        </>
+      )}
     </div>
   )
 

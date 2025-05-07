@@ -23,8 +23,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { formatDate } from '@/lib/utils'
-import { DiscountTypeEnum, StatusEnum, VoucherVisibilityEnum } from '@/types/enum'
+import { DiscountTypeEnum, RoleEnum, StatusEnum, VoucherVisibilityEnum } from '@/types/enum'
 import { TVoucher } from '@/types/voucher'
 import { formatCurrency, formatNumber } from '@/utils/number'
 
@@ -206,6 +207,7 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
       header: () => <SettingsIcon className='-translate-x-1' />,
       cell: function Cell({ row }) {
         const voucher = row.original
+        const isGrant = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR, RoleEnum.MANAGER, RoleEnum.STAFF])
         return (
           <div className='flex justify-end'>
             <DropdownMenu modal={false}>
@@ -224,41 +226,45 @@ export function getColumns({ setRowAction }: GetColumnsProps): ColumnDef<TVouche
                     </span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to={routesConfig[Routes.UPDATE_VOUCHER].getPath(voucher.id)} className='w-full'>
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <FilePenLine className='mr-2 h-4 w-4' aria-hidden='true' />
-                      <span>Edit</span>
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
-
+                {isGrant && (
+                  <DropdownMenuItem>
+                    <Link to={routesConfig[Routes.UPDATE_VOUCHER].getPath(voucher.id)} className='w-full'>
+                      <span className='w-full flex gap-2 items-center cursor-pointer'>
+                        <FilePenLine className='mr-2 h-4 w-4' aria-hidden='true' />
+                        <span>Edit</span>
+                      </span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
-
-                {voucher.status === StatusEnum.ACTIVE ? (
-                  <DropdownMenuItem
-                    className='text-amber-500'
-                    onClick={() => {
-                      setRowAction({ row: row, type: 'deactivate' })
-                    }}
-                  >
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <XCircle className='h-4 w-4' />
-                      <span className='font-semibold'>Deactivate Voucher</span>
-                    </span>
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem
-                    className='text-green-500'
-                    onClick={() => {
-                      setRowAction({ row: row, type: 'activate' })
-                    }}
-                  >
-                    <span className='w-full flex gap-2 items-center cursor-pointer'>
-                      <CheckCircle2 className='h-4 w-4' />
-                      <span className='font-semibold'>Activate Voucher</span>
-                    </span>
-                  </DropdownMenuItem>
+                {isGrant && (
+                  <>
+                    {voucher.status === StatusEnum.ACTIVE ? (
+                      <DropdownMenuItem
+                        className='text-amber-500'
+                        onClick={() => {
+                          setRowAction({ row: row, type: 'deactivate' })
+                        }}
+                      >
+                        <span className='w-full flex gap-2 items-center cursor-pointer'>
+                          <XCircle className='h-4 w-4' />
+                          <span className='font-semibold'>Deactivate Voucher</span>
+                        </span>
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem
+                        className='text-green-500'
+                        onClick={() => {
+                          setRowAction({ row: row, type: 'activate' })
+                        }}
+                      >
+                        <span className='w-full flex gap-2 items-center cursor-pointer'>
+                          <CheckCircle2 className='h-4 w-4' />
+                          <span className='font-semibold'>Activate Voucher</span>
+                        </span>
+                      </DropdownMenuItem>
+                    )}
+                  </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>

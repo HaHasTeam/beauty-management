@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Routes, routesConfig } from '@/configs/routes'
+import useGrant from '@/hooks/useGrant'
 import { exportTableToCSV } from '@/lib/export'
 import { ICategory } from '@/types/category'
+import { RoleEnum } from '@/types/enum'
 
 interface CategoryTableToolbarActionsProps {
   table: Table<ICategory>
@@ -16,13 +18,17 @@ export function CategoryTableToolbarActions({ table }: CategoryTableToolbarActio
   const handleAddCategory = () => {
     navigate(routesConfig[Routes.ADD_CATEGORY].getPath())
   }
+  const isAdmin = useGrant([RoleEnum.ADMIN, RoleEnum.OPERATOR])
 
   return (
     <div className='flex items-center gap-2'>
-      <Button size={'sm'} onClick={handleAddCategory}>
-        <ListPlusIcon />
-        Add Category
-      </Button>
+      {isAdmin && (
+        <Button size={'sm'} onClick={handleAddCategory}>
+          <ListPlusIcon />
+          Add Category
+        </Button>
+      )}
+
       <Button
         variant='outline'
         size='sm'
