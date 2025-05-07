@@ -7,10 +7,11 @@ export enum Routes {
   AUTH_EMAIL_VERIFICATION = 'auth-email-verification',
   DASHBOARD_HOME = 'dashboard-home',
   REQUESTS_QUEUE = 'requests-queue',
-  MERCHANTS_DIRECTORY = 'merchants-directory',
+  MERCHANTS_DIRECTORY = 'merchants-management',
   SERVICES_CATALOG = 'services-catalog',
   PROFILE_SETTINGS = 'profile-settings',
-  ACCOUNTS_DIRECTORY = 'accounts-directory',
+  MASTER_CONFIG_DETAILS = 'master-configs',
+  ACCOUNTS_DIRECTORY = 'accounts-management',
   ACCOUNT_DETAILS = 'account-details',
   AUTH_SIGN_UP = 'auth-sign-up',
   PRE_ORDER = 'pre-order',
@@ -319,6 +320,13 @@ export const routesConfig: TRoutes = {
     description: 'Beauty product',
     path: '/dashboard/products/:id',
     getPath: (params) => `/dashboard/products/${params.id}`
+  },
+  [Routes.MASTER_CONFIG_DETAILS]: {
+    name: 'Master Config',
+    title: 'Master Config',
+    description: 'Master config',
+    path: '/dashboard/master-config/',
+    getPath: () => `/dashboard/master-config`
   },
   [Routes.BLOG]: {
     name: 'Blog Management',

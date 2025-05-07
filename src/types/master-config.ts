@@ -6,6 +6,7 @@ export interface IMasterConfig extends TMetaData {
   name: string
   logo: string
   maxLevelCategory: number
+  commissionFee: string
   groupBuyingRemainingTime: number
   autoCancelOrderTime: string
   autoCompleteOrderTime: string
@@ -22,4 +23,21 @@ export interface IMasterConfig extends TMetaData {
   pendingAdminCheckRejectRefundRequestTime: string // fe add
   pendingAdminCheckComplaintRequestTime: string // fe add
   pendingCustomerShippingReturnTime: string // fe add
+  maxFeedbackImages: number
+  maxFeedbackVideos: number
+  maxFeedbackSize: string
+  maxProductImages: number
+  maxProductClassificationImages: number
+  amountProductWarning: number
+  maxEvidenceImages: number
+  maxEvidenceVideos: number
+  maxEvidenceSize: string
+  requestReturnOrderMaxImages: number
+  requestReturnOrderMaxVideos: number
+  requestReturnOrderMaxSize: string
+  expiredBookingToPay: string
+  expiredBookingWaitForConfirm: string
+  expiredBookingConfirmed: string
+  expiredBookinFormSubmited: string
+  expiredBookinCompletedCall: string
 }
